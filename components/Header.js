@@ -6,9 +6,10 @@ import {
   Platform,
   Dimensions,
 } from "react-native";
-import { Button, Block, NavBar, Text, theme } from "galio-framework";
+import NavBar from "./NavBar";
 
 import Icon from "./Icon";
+import Block from "./Block";
 import Input from "./Input";
 import argonTheme from "../constants/Theme";
 
@@ -23,7 +24,6 @@ const BellButton = ({ isWhite, style, navigation }) => (
     onPress={() => navigation.navigate("Placeholder")}
   >
     <Icon
-      family="ArgonExtra"
       size={16}
       name="bell"
       color={argonTheme.COLORS[isWhite ? "WHITE" : "ICON"]}
@@ -38,9 +38,8 @@ const BasketButton = ({ isWhite, style, navigation }) => (
     onPress={() => navigation.navigate("Placeholder")}
   >
     <Icon
-      family="ArgonExtra"
       size={16}
-      name="basket"
+      name="shopping-cart"
       color={argonTheme.COLORS[isWhite ? "WHITE" : "ICON"]}
     />
   </TouchableOpacity>
@@ -53,9 +52,8 @@ const SearchButton = ({ isWhite, style, navigation }) => (
   >
     <Icon
       size={16}
-      family="Galio"
-      name="search-zoom-in"
-      color={theme.COLORS[isWhite ? "WHITE" : "ICON"]}
+      name="search"
+      color={argonTheme.COLORS[isWhite ? "WHITE" : "ICON"]}
     />
   </TouchableOpacity>
 );
@@ -191,70 +189,16 @@ class Header extends React.Component {
         placeholderTextColor={"#8898AA"}
         // onFocus={() => navigation.navigate("Placeholder")}
         iconContent={
-          <Icon
-            size={16}
-            color={theme.COLORS.MUTED}
-            name="search-zoom-in"
-            family="ArgonExtra"
-          />
+          <Icon size={16} color={argonTheme.COLORS.MUTED} name="search" />
         }
       />
-    );
-  };
-  renderOptions = () => {
-    const { navigation, optionLeft, optionRight } = this.props;
-
-    return (
-      <Block row style={styles.options}>
-        <Button
-          shadowless
-          style={[styles.tab, styles.divider]}
-          onPress={() => navigation.navigate("Placeholder")}
-        >
-          <Block row middle>
-            <Icon
-              size={16}
-              name="bag-17"
-              family="ArgonExtra"
-              style={{ paddingRight: 8 }}
-              color={argonTheme.COLORS.ICON}
-            />
-
-            <Text size={16} style={styles.tabTitle}>
-              {optionLeft || "Meal Kits"}
-            </Text>
-          </Block>
-        </Button>
-        <Button
-          shadowless
-          style={styles.tab}
-          onPress={() => navigation.navigate("Placeholder")}
-        >
-          <Block row middle>
-            <Icon
-              name="diamond"
-              family="ArgonExtra"
-              style={{ paddingRight: 8 }}
-              color={argonTheme.COLORS.ICON}
-            />
-            <Text size={16} style={styles.tabTitle}>
-              {optionRight || "Recipes"}
-            </Text>
-          </Block>
-        </Button>
-      </Block>
     );
   };
 
   renderHeader = () => {
     const { search, options, tabs } = this.props;
     if (search || tabs || options) {
-      return (
-        <Block center>
-          {search ? this.renderSearch() : null}
-          {options ? this.renderOptions() : null}
-        </Block>
-      );
+      return <Block center>{search ? this.renderSearch() : null}</Block>;
     }
   };
   render() {
@@ -335,12 +279,12 @@ const styles = StyleSheet.create({
   },
   navbar: {
     paddingVertical: 0,
-    paddingBottom: theme.SIZES.BASE * 1.5,
-    paddingTop: iPhoneX ? theme.SIZES.BASE * 4 : theme.SIZES.BASE,
+    paddingBottom: 16 * 1.5,
+    paddingTop: iPhoneX ? 16 * 4 : 16,
     zIndex: 5,
   },
   shadow: {
-    backgroundColor: theme.COLORS.WHITE,
+    backgroundColor: argonTheme.COLORS.WHITE,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
@@ -350,18 +294,18 @@ const styles = StyleSheet.create({
   notify: {
     backgroundColor: argonTheme.COLORS.LABEL,
     borderRadius: 4,
-    height: theme.SIZES.BASE / 2,
-    width: theme.SIZES.BASE / 2,
+    height: 16 / 2,
+    width: 16 / 2,
     position: "absolute",
     top: 9,
     right: 12,
   },
   header: {
-    backgroundColor: theme.COLORS.WHITE,
+    backgroundColor: argonTheme.COLORS.WHITE,
   },
   divider: {
     borderRightWidth: 0.3,
-    borderRightColor: theme.COLORS.ICON,
+    borderRightColor: argonTheme.COLORS.ICON,
   },
   search: {
     height: 48,
@@ -377,7 +321,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   tab: {
-    backgroundColor: theme.COLORS.TRANSPARENT,
+    backgroundColor: argonTheme.COLORS.TRANSPARENT,
     width: width * 0.35,
     borderRadius: 0,
     borderWidth: 0,

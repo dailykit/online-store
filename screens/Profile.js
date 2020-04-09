@@ -5,9 +5,10 @@ import {
   ScrollView,
   Image,
   ImageBackground,
-  Platform
+  Platform,
+  Text,
 } from "react-native";
-import { Block, Text, theme } from "galio-framework";
+import Block from "../components/Block";
 
 import { Button } from "../components";
 import { Images, argonTheme } from "../constants";
@@ -29,7 +30,7 @@ class Profile extends React.Component {
           >
             <ScrollView
               showsVerticalScrollIndicator={false}
-              style={{ width, marginTop: '25%' }}
+              style={{ width, marginTop: "25%" }}
             >
               <Block flex style={styles.profileCard}>
                 <Block middle style={styles.avatarContainer}>
@@ -64,11 +65,13 @@ class Profile extends React.Component {
                         bold
                         size={18}
                         color="#525F7F"
-                        style={{ marginBottom: 4 }}
+                        style={{ marginBottom: 4, fontWeight: "bold" }}
                       >
                         2K
                       </Text>
-                      <Text size={12} color={argonTheme.COLORS.TEXT}>Orders</Text>
+                      <Text size={12} color={argonTheme.COLORS.TEXT}>
+                        Orders
+                      </Text>
                     </Block>
                     <Block middle>
                       <Text
@@ -79,7 +82,9 @@ class Profile extends React.Component {
                       >
                         10
                       </Text>
-                      <Text size={12} color={argonTheme.COLORS.TEXT}>Photos</Text>
+                      <Text size={12} color={argonTheme.COLORS.TEXT}>
+                        Photos
+                      </Text>
                     </Block>
                     <Block middle>
                       <Text
@@ -90,7 +95,9 @@ class Profile extends React.Component {
                       >
                         89
                       </Text>
-                      <Text size={12} color={argonTheme.COLORS.TEXT}>Comments</Text>
+                      <Text size={12} color={argonTheme.COLORS.TEXT}>
+                        Comments
+                      </Text>
                     </Block>
                   </Block>
                 </Block>
@@ -120,7 +127,7 @@ class Profile extends React.Component {
                       textStyle={{
                         color: "#233DD2",
                         fontWeight: "500",
-                        fontSize: 16
+                        fontSize: 16,
                       }}
                     >
                       Show more
@@ -288,60 +295,60 @@ const styles = StyleSheet.create({
   profile: {
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
     // marginBottom: -HeaderHeight * 2,
-    flex: 1
+    flex: 1,
   },
   profileContainer: {
     width: width,
     height: height,
     padding: 0,
-    zIndex: 1
+    zIndex: 1,
   },
   profileBackground: {
     width: width,
-    height: height / 2
+    height: height / 2,
   },
   profileCard: {
     // position: "relative",
-    padding: theme.SIZES.BASE,
-    marginHorizontal: theme.SIZES.BASE,
+    padding: 16,
+    marginHorizontal: 16,
     marginTop: 65,
     borderTopLeftRadius: 6,
     borderTopRightRadius: 6,
-    backgroundColor: theme.COLORS.WHITE,
+    backgroundColor: argonTheme.COLORS.WHITE,
     shadowColor: "black",
     shadowOffset: { width: 0, height: 0 },
     shadowRadius: 8,
     shadowOpacity: 0.2,
-    zIndex: 2
+    zIndex: 2,
   },
   info: {
-    paddingHorizontal: 40
+    paddingHorizontal: 40,
   },
   avatarContainer: {
     position: "relative",
-    marginTop: -80
+    marginTop: -80,
   },
   avatar: {
     width: 124,
     height: 124,
     borderRadius: 62,
-    borderWidth: 0
+    borderWidth: 0,
   },
   nameInfo: {
-    marginTop: 35
+    marginTop: 35,
   },
   divider: {
     width: "90%",
     borderWidth: 1,
-    borderColor: "#E9ECEF"
+    borderColor: "#E9ECEF",
   },
   thumb: {
     borderRadius: 4,
     marginVertical: 4,
     alignSelf: "center",
     width: thumbMeasure,
-    height: thumbMeasure
-  }
+    height: thumbMeasure,
+  },
 });
 
 export default Profile;

@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Dimensions, FlatList, Animated } from "react-native";
-import { Block, theme } from "galio-framework";
+import Block from "./Block";
 
 const { width } = Dimensions.get("screen");
 import argonTheme from "../constants/Theme";
@@ -117,18 +117,18 @@ export default class Tabs extends React.Component {
 const styles = StyleSheet.create({
   container: {
     width: width,
-    backgroundColor: theme.COLORS.WHITE,
+    backgroundColor: argonTheme.COLORS.WHITE,
     zIndex: 2,
   },
   shadow: {
-    shadowColor: theme.COLORS.BLACK,
+    shadowColor: argonTheme.COLORS.BLACK,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 8,
     shadowOpacity: 0.2,
     elevation: 4,
   },
   menu: {
-    paddingHorizontal: theme.SIZES.BASE * 2.5,
+    paddingHorizontal: 16 * 2.5,
     paddingTop: 8,
     paddingBottom: 16,
   },

@@ -1,10 +1,10 @@
 import React from "react";
-import { StyleSheet, Dimensions, ScrollView } from "react-native";
-import { Block, theme } from "galio-framework";
+import { StyleSheet, Dimensions, ScrollView, View } from "react-native";
+import Block from "../components/Block";
 
 import { Card } from "../components";
 import articles from "../constants/articles";
-const { width } = Dimensions.get("screen");
+const { width, height } = Dimensions.get("screen");
 import Tabs from "../components/Tabs";
 
 class Home extends React.Component {
@@ -18,15 +18,10 @@ class Home extends React.Component {
         >
           <Block flex>
             <Card item={articles[0]} horizontal />
-            <Block flex row>
-              <Card
-                item={articles[1]}
-                style={{ marginRight: theme.SIZES.BASE }}
-              />
-              <Card item={articles[2]} />
-            </Block>
+            <Card item={articles[1]} horizontal />
+            <Card item={articles[2]} horizontal />
             <Card item={articles[3]} horizontal />
-            <Card item={articles[4]} full />
+            <Card item={articles[4]} horizontal />
           </Block>
         </ScrollView>
       </>
@@ -35,7 +30,7 @@ class Home extends React.Component {
 
   render() {
     return (
-      <Block flex center style={styles.home}>
+      <Block flex center style={[styles.home]}>
         {this.renderArticles()}
       </Block>
     );
@@ -47,8 +42,18 @@ const styles = StyleSheet.create({
     width: width,
   },
   articles: {
-    width: width - theme.SIZES.BASE * 2,
-    paddingVertical: theme.SIZES.BASE,
+    width: width - 16 * 2,
+    paddingVertical: 16,
+  },
+  flex: {
+    flex: 1,
+  },
+  center: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  row: {
+    flexDirection: "row",
   },
 });
 

@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { Block, Text, theme } from "galio-framework";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import Block from "./Block";
 
 import Icon from "./Icon";
 import argonTheme from "../constants/Theme";
@@ -13,8 +13,7 @@ class DrawerItem extends React.Component {
       case "Home":
         return (
           <Icon
-            name="shop"
-            family="ArgonExtra"
+            name="home"
             size={14}
             color={focused ? "white" : argonTheme.COLORS.PRIMARY}
           />
@@ -31,8 +30,7 @@ class DrawerItem extends React.Component {
       case "Profile":
         return (
           <Icon
-            name="chart-pie-35"
-            family="ArgonExtra"
+            name="user"
             size={14}
             color={focused ? "white" : argonTheme.COLORS.WARNING}
           />
@@ -79,7 +77,10 @@ class DrawerItem extends React.Component {
             <Text
               size={15}
               bold={focused ? true : false}
-              color={focused ? "white" : "rgba(0,0,0,0.5)"}
+              style={{
+                color: focused ? "white" : "rgba(0,0,0,0.5)",
+                fontWeight: focused ? "bold" : "normal",
+              }}
             >
               {title}
             </Text>
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   shadow: {
-    shadowColor: theme.COLORS.BLACK,
+    shadowColor: argonTheme.COLORS.BLACK,
     shadowOffset: {
       width: 0,
       height: 2,

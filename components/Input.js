@@ -1,7 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-
-import { Input } from "galio-framework";
+import { StyleSheet, TextInput } from "react-native";
 
 import Icon from "./Icon";
 import { argonTheme } from "../constants";
@@ -19,20 +17,13 @@ class ArInput extends React.Component {
     ];
 
     return (
-      <Input
-        placeholder="write something here"
+      <TextInput
+        placeholder="Search"
         placeholderTextColor={argonTheme.COLORS.MUTED}
         style={inputStyles}
-        color={argonTheme.COLORS.HEADER}
-        iconContent={
-          <Icon
-            size={14}
-            color={argonTheme.COLORS.ICON}
-            name="link"
-            family="AntDesign"
-          />
-        }
-        {...this.props}
+        // iconContent={
+        //   <Icon size={14} color={argonTheme.COLORS.ICON} name="link" />
+        // }
       />
     );
   }
@@ -44,6 +35,8 @@ const styles = StyleSheet.create({
     borderColor: argonTheme.COLORS.BORDER,
     height: 44,
     backgroundColor: "#FFFFFF",
+    padding: 16,
+    color: argonTheme.COLORS.HEADER,
   },
   success: {
     borderColor: argonTheme.COLORS.INPUT_SUCCESS,

@@ -5,8 +5,9 @@ import {
   StatusBar,
   Dimensions,
   Platform,
+  Text,
 } from "react-native";
-import { Block, Text, theme } from "galio-framework";
+import Block from "../components/Block";
 
 const { height, width } = Dimensions.get("screen");
 import { Images, argonTheme } from "../constants";
@@ -28,26 +29,18 @@ export default class Placeholder extends React.Component {
             <Block>
               <Block>
                 <Block>
-                  <Text color="white" size={60}>
+                  <Text style={{ color: "white", fontSize: 60 }}>
                     Placeholder
                   </Text>
                 </Block>
                 <Block>
-                  <Text color="white" size={60}>
-                    Screen
-                  </Text>
+                  <Text style={{ color: "white", fontSize: 60 }}>Screen</Text>
                 </Block>
                 <Block row>
-                  <Text color="white" size={60}>
-                    Dailykit
-                  </Text>
+                  <Text style={{ color: "white", fontSize: 60 }}>Dailykit</Text>
                 </Block>
               </Block>
-              <Text
-                size={16}
-                color="rgba(255,255,255,0.6)"
-                style={{ marginTop: 35 }}
-              >
+              <Text style={{ color: "white", fontSize: 35 }}>
                 Under construction.
               </Text>
             </Block>
@@ -60,19 +53,18 @@ export default class Placeholder extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: theme.COLORS.BLACK,
+    backgroundColor: "#000",
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
   },
   padded: {
-    paddingHorizontal: theme.SIZES.BASE * 2,
+    paddingHorizontal: 16 * 2,
     zIndex: 3,
     position: "absolute",
-    bottom:
-      Platform.OS === "android" ? theme.SIZES.BASE * 2 : theme.SIZES.BASE * 3,
+    bottom: Platform.OS === "android" ? 16 * 2 : 16 * 3,
   },
   button: {
-    width: width - theme.SIZES.BASE * 4,
-    height: theme.SIZES.BASE * 3,
+    width: width - 16 * 4,
+    height: 16 * 3,
     shadowRadius: 0,
     shadowOpacity: 0,
   },

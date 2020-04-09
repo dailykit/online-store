@@ -2,11 +2,14 @@ import React from "react";
 import { withNavigation } from "@react-navigation/compat";
 import {
   StyleSheet,
-  Dimensions,
   Image,
   TouchableWithoutFeedback,
+  Text,
+  Dimensions,
 } from "react-native";
-import { Text, theme, Block } from "galio-framework";
+import Block from "./Block";
+
+const { height, width } = Dimensions.get("window");
 
 import { argonTheme } from "../constants";
 
@@ -23,6 +26,7 @@ class Card extends React.Component {
     } = this.props;
 
     const imageStyles = [
+      styles.image,
       full ? styles.fullImage : styles.horizontalImage,
       imageStyle,
     ];
@@ -51,9 +55,10 @@ class Card extends React.Component {
             </Text>
             <Text
               size={12}
-              muted={!ctaColor}
-              color={ctaColor || argonTheme.COLORS.ACTIVE}
-              bold
+              style={{
+                color: ctaColor || argonTheme.COLORS.ACTIVE,
+                fontWeight: "bold",
+              }}
             >
               {item.cta}
             </Text>
@@ -66,11 +71,13 @@ class Card extends React.Component {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: theme.COLORS.WHITE,
-    marginVertical: theme.SIZES.BASE,
+    backgroundColor: argonTheme.COLORS.WHITE,
+    marginVertical: 10,
     borderWidth: 0,
     minHeight: 114,
     marginBottom: 16,
+    borderRadius: 5,
+    height: height * 0.2,
   },
   cardTitle: {
     flex: 1,
@@ -78,18 +85,22 @@ const styles = StyleSheet.create({
     paddingBottom: 6,
   },
   cardDescription: {
-    padding: theme.SIZES.BASE / 2,
+    padding: 5,
   },
   imageContainer: {
     borderRadius: 3,
     elevation: 1,
     overflow: "hidden",
+    flex: 1,
   },
   image: {
-    // borderRadius: 3,
+    borderRadius: 3,
+    resizeMode: "cover",
+    flex: 1,
+    height: null,
+    width: null,
   },
   horizontalImage: {
-    height: 122,
     width: "auto",
   },
   horizontalStyles: {
@@ -99,12 +110,13 @@ const styles = StyleSheet.create({
   verticalStyles: {
     borderBottomRightRadius: 0,
     borderBottomLeftRadius: 0,
+    flex: 1,
   },
   fullImage: {
-    height: 215,
+    height: 214,
   },
   shadow: {
-    shadowColor: theme.COLORS.BLACK,
+    shadowColor: argonTheme.COLORS.BLACK,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     shadowOpacity: 0.1,

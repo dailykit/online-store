@@ -2,7 +2,8 @@ import React from "react";
 import { Image } from "react-native";
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
-import { Block, GalioProvider } from "galio-framework";
+
+import Block from "./components/Block";
 import { NavigationContainer } from "@react-navigation/native";
 
 // Before rendering any navigation stack
@@ -52,11 +53,9 @@ export default class App extends React.Component {
     } else {
       return (
         <NavigationContainer>
-          <GalioProvider theme={argonTheme}>
-            <Block flex>
-              <Screens />
-            </Block>
-          </GalioProvider>
+          <Block flex>
+            <Screens />
+          </Block>
         </NavigationContainer>
       );
     }

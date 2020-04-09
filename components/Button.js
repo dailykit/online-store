@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Button } from "galio-framework";
+import { Button } from "react-native-elements";
 
 import argonTheme from "../constants/Theme";
 
