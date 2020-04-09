@@ -1,6 +1,5 @@
 import React from "react";
 import { withNavigation } from "@react-navigation/compat";
-import PropTypes from "prop-types";
 import {
   StyleSheet,
   Dimensions,
@@ -64,14 +63,6 @@ class Card extends React.Component {
     );
   }
 }
-
-Card.propTypes = {
-  item: PropTypes.object,
-  horizontal: PropTypes.bool,
-  full: PropTypes.bool,
-  ctaColor: PropTypes.string,
-  imageStyle: PropTypes.any,
-};
 
 const styles = StyleSheet.create({
   card: {
