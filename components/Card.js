@@ -6,7 +6,8 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Block, Text, theme } from "galio-framework";
+import { Text, theme } from "galio-framework";
+import Block from "./Block";
 
 import { argonTheme } from "../constants";
 
