@@ -1,5 +1,5 @@
 import React from "react";
-import { Image } from "react-native";
+import { Image, SafeAreaView } from "react-native";
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 
