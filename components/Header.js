@@ -224,6 +224,7 @@ class Header extends React.Component {
     const headerStyles = [
       !noShadow ? styles.shadow : null,
       transparent ? { backgroundColor: "rgba(0,0,0,0)" } : null,
+      { paddingBottom: 20 },
     ];
 
     const navbarStyles = [

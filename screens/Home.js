@@ -1,59 +1,65 @@
 import React from "react";
-import { StyleSheet, Dimensions, ScrollView, View } from "react-native";
-import Block from "../components/Block";
+import {
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  View,
+  Image,
+  Text,
+} from "react-native";
 
-import { Card } from "../components";
-import articles from "../constants/articles";
 const { width, height } = Dimensions.get("screen");
-import Tabs from "../components/Tabs";
+import Card from "../components/Card";
 
 class Home extends React.Component {
-  renderArticles = () => {
-    return (
-      <>
-        <Tabs />
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.articles}
-        >
-          <Block flex>
-            <Card item={articles[0]} horizontal />
-            <Card item={articles[1]} horizontal />
-            <Card item={articles[2]} horizontal />
-            <Card item={articles[3]} horizontal />
-            <Card item={articles[4]} horizontal />
-          </Block>
-        </ScrollView>
-      </>
-    );
-  };
-
   render() {
     return (
-      <Block flex center style={[styles.home]}>
-        {this.renderArticles()}
-      </Block>
+      <View style={styles.home}>
+        <ScrollView>
+          <View style={styles.img_container}>
+            <Image
+              source={{
+                uri:
+                  "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+              }}
+              style={styles.cover_image}
+            />
+          </View>
+          <View style={styles.picker_container}>
+            <Text style={styles.picker_placeholder}>Picker 1</Text>
+            <Text style={styles.picker_placeholder}>Picker 2</Text>
+          </View>
+          {[1, 2, 3].map((data, _id) => {
+            return <Card key={_id} data={data} />;
+          })}
+        </ScrollView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  home: {
-    width: width,
+  home: {},
+  img_container: {
+    height: height * 0.2,
+    width,
   },
-  articles: {
-    width: width - 16 * 2,
-    paddingVertical: 16,
-  },
-  flex: {
+  cover_image: {
     flex: 1,
+    resizeMode: "cover",
+    height: null,
+    width: null,
   },
-  center: {
+  picker_container: {
+    height: height * 0.06,
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#f3f3f3",
   },
-  row: {
-    flexDirection: "row",
+  picker_placeholder: {
+    flex: 1,
+    textAlign: "center",
   },
 });
 
