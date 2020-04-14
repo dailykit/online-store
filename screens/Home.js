@@ -6,15 +6,42 @@ import {
   View,
   Image,
   Text,
+  Modal,
+  ActivityIndicator,
 } from "react-native";
 
 const { width, height } = Dimensions.get("screen");
 import Card from "../components/Card";
+import Tabs from "../components/Tabs";
+import axios from "axios";
 
 class Home extends React.Component {
+  state = {
+    loading: true,
+  };
+  async componentDidMount() {
+    try {
+      // let res = await axios.get(
+      //   "http://restaurantmealkits.com/api/menu/5e84484b6ab57abd3498d508"
+      // );
+      // let res_name = res.data.data.name
+      this.setState({ loading: false });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={styles.flexContainer}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     return (
       <View style={styles.home}>
+        <Tabs />
         <ScrollView>
           <View style={styles.img_container}>
             <Image
@@ -60,6 +87,11 @@ const styles = StyleSheet.create({
   picker_placeholder: {
     flex: 1,
     textAlign: "center",
+  },
+  flexContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

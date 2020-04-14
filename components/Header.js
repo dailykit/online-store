@@ -281,7 +281,6 @@ const styles = StyleSheet.create({
   navbar: {
     paddingVertical: 0,
     paddingBottom: 16 * 1.5,
-    paddingTop: iPhoneX ? 16 * 4 : 16,
     zIndex: 5,
   },
   shadow: {

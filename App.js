@@ -2,9 +2,13 @@ import React from "react";
 import { Image, SafeAreaView } from "react-native";
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
+import Constants from "expo-constants";
 
 import Block from "./components/Block";
 import { NavigationContainer } from "@react-navigation/native";
+
+import * as Font from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
 
 // Before rendering any navigation stack
 import { enableScreens } from "react-native-screens";
@@ -53,7 +57,7 @@ export default class App extends React.Component {
     } else {
       return (
         <NavigationContainer>
-          <Block flex>
+          <Block style={{ paddingTop: Constants.statusBarHeight }} flex>
             <Screens />
           </Block>
         </NavigationContainer>
@@ -62,6 +66,11 @@ export default class App extends React.Component {
   }
 
   _loadResourcesAsync = async () => {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      ...Ionicons.font,
+    });
     return Promise.all([...cacheImages(assetImages)]);
   };
 
