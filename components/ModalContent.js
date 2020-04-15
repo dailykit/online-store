@@ -28,7 +28,12 @@ export default class ModalContent extends Component {
             <Text style={styles.item_category}>vegeterian</Text>
           </View>
           <View style={styles.close_container}>
-            <TouchableOpacity onPress={() => this.props.closeModal()}>
+            <TouchableOpacity
+              onPress={() => {
+                console.log("object");
+                this.props.navigation.navigate("Home");
+              }}
+            >
               <AntDesign size={30} name="close" />
             </TouchableOpacity>
           </View>

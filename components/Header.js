@@ -178,29 +178,7 @@ class Header extends React.Component {
         break;
     }
   };
-  renderSearch = () => {
-    const { navigation } = this.props;
-    return (
-      <Input
-        right
-        color="black"
-        style={styles.search}
-        placeholder="What are you looking for?"
-        placeholderTextColor={"#8898AA"}
-        // onFocus={() => navigation.navigate("Placeholder")}
-        iconContent={
-          <Icon size={16} color={argonTheme.COLORS.MUTED} name="search" />
-        }
-      />
-    );
-  };
 
-  renderHeader = () => {
-    const { search, options, tabs } = this.props;
-    if (search || tabs || options) {
-      return <Block center>{search ? this.renderSearch() : null}</Block>;
-    }
-  };
   render() {
     const {
       back,
@@ -225,6 +203,7 @@ class Header extends React.Component {
       !noShadow ? styles.shadow : null,
       transparent ? { backgroundColor: "rgba(0,0,0,0)" } : null,
       { paddingBottom: 20 },
+      { height: 40 },
     ];
 
     const navbarStyles = [
@@ -262,7 +241,6 @@ class Header extends React.Component {
           ]}
           {...props}
         />
-        {this.renderHeader()}
       </Block>
     );
   }
@@ -308,7 +286,7 @@ const styles = StyleSheet.create({
     borderRightColor: argonTheme.COLORS.ICON,
   },
   search: {
-    height: 48,
+    height: 0,
     width: width - 32,
     marginHorizontal: 16,
     borderWidth: 1,
