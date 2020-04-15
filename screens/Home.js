@@ -44,7 +44,7 @@ class Home extends React.Component {
     return (
       <View style={styles.home}>
         <Tabs />
-        <ScrollView>
+        <ScrollView style={{ flex: 1 }}>
           <View style={styles.img_container}>
             <Image
               source={{
@@ -89,7 +89,7 @@ class Home extends React.Component {
             </Picker>
           </View>
           {[1, 2, 3].map((data, _id) => {
-            return <Card key={_id} data={data} />;
+            return <Card {...this.props} key={_id} data={data} />;
           })}
         </ScrollView>
       </View>
@@ -98,7 +98,9 @@ class Home extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  home: {},
+  home: {
+    flex: 1,
+  },
   img_container: {
     height: height * 0.2,
     width,

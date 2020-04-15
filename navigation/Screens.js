@@ -11,12 +11,14 @@ import Placeholder from "../screens/Placeholder";
 import Profile from "../screens/Profile";
 import Register from "../screens/Register";
 import AddToCart from "../screens/AddToCart";
+import ModalContect from "../components/ModalContent";
 // drawer
 import CustomDrawerContent from "./Menu";
 
 // header for screens
 import { Icon, Header } from "../components";
 import { argonTheme, tabs } from "../constants";
+import ModalContent from "../components/ModalContent";
 
 const { width } = Dimensions.get("screen");
 
@@ -88,17 +90,16 @@ function HomeStack(props) {
         name="Placeholder"
         component={Placeholder}
         options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title=""
-              back
-              white
-              transparent
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          headerTransparent: true,
+          headerMode: false,
+          header: null,
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Modal"
+        component={ModalContent}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

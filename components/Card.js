@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  Modal,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 
@@ -14,7 +13,14 @@ import ModalContent from "./ModalContent";
 
 const { width, height } = Dimensions.get("window");
 
-const Item = ({ isLast, isSelected, setSelected, _id, openModal }) => (
+const Item = ({
+  isLast,
+  isSelected,
+  setSelected,
+  _id,
+  openModal,
+  navigation,
+}) => (
   <TouchableOpacity
     onPress={() => {
       console.log(_id);
@@ -52,7 +58,7 @@ const Item = ({ isLast, isSelected, setSelected, _id, openModal }) => (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.item_title}>Dal Makhani </Text>
 
-        <TouchableOpacity onPress={() => openModal()}>
+        <TouchableOpacity onPress={() => navigation.navigate("Modal")}>
           <Feather size={14} name="info" />
         </TouchableOpacity>
       </View>
@@ -106,6 +112,7 @@ export default class Card extends Component {
                   isLast={last}
                   key={_id}
                   openModal={() => this.setState({ modalVisible: true })}
+                  navigation={this.props.navigation}
                 />
               );
             })}
@@ -124,16 +131,22 @@ export default class Card extends Component {
             </View>
           </View>
         </View>
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {}}
+        {/* <View
+          // animationType="slide"
+          // transparent={false}
+          // visible={this.state.modalVisible}
+          // onRequestClose={() => {}}
+          style={{
+            height,
+            width,
+            position: "absolute",
+            zIndex: 1000,
+          }}
         >
           <ModalContent
             closeModal={() => this.setState({ modalVisible: false })}
           />
-        </Modal>
+        </View> */}
       </>
     );
   }
@@ -141,7 +154,7 @@ export default class Card extends Component {
 
 const styles = StyleSheet.create({
   card_container: {
-    height: height * 0.42,
+    height: height * 0.55,
     width,
     paddingHorizontal: 20,
     elevation: 2,
