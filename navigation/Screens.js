@@ -10,6 +10,7 @@ import Home from "../screens/Home";
 import Placeholder from "../screens/Placeholder";
 import Profile from "../screens/Profile";
 import Register from "../screens/Register";
+import AddToCart from "../screens/AddToCart";
 // drawer
 import CustomDrawerContent from "./Menu";
 

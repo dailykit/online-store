@@ -6,6 +6,8 @@ import Constants from "expo-constants";
 
 import Block from "./components/Block";
 import { NavigationContainer } from "@react-navigation/native";
+import { Provider } from "react-redux";
+import store from "./store";
 
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
@@ -58,7 +60,9 @@ export default class App extends React.Component {
       return (
         <NavigationContainer>
           <Block style={{ paddingTop: Constants.statusBarHeight }} flex>
-            <Screens />
+            <Provider store={store}>
+              <Screens />
+            </Provider>
           </Block>
         </NavigationContainer>
       );

@@ -14,6 +14,8 @@ const { width, height } = Dimensions.get("screen");
 import Card from "../components/Card";
 import Tabs from "../components/Tabs";
 import axios from "axios";
+import { Picker, DatePicker } from "native-base";
+import { Feather } from "@expo/vector-icons";
 
 class Home extends React.Component {
   state = {
@@ -53,8 +55,38 @@ class Home extends React.Component {
             />
           </View>
           <View style={styles.picker_container}>
-            <Text style={styles.picker_placeholder}>Picker 1</Text>
-            <Text style={styles.picker_placeholder}>Picker 2</Text>
+            <View style={styles.picker_placeholder}>
+              <DatePicker
+                defaultDate={new Date()}
+                minimumDate={new Date(2018, 1, 1)}
+                // maximumDate={new Date(2018, 12, 31)}
+                locale={"en"}
+                timeZoneOffsetInMinutes={undefined}
+                modalTransparent={false}
+                animationType={"slide"}
+                androidMode={"default"}
+                placeHolderText="Select date"
+                textStyle={{ color: "#000" }}
+                placeHolderTextStyle={{ color: "#000" }}
+                onDateChange={(date) => console.log(date)}
+                disabled={false}
+                style={{ flex: 1 }}
+              />
+            </View>
+            <Picker
+              mode="dropdown"
+              iosHeader="Category"
+              iosIcon={<Feather name="arrow-down" />}
+              style={styles.picker_placeholder}
+              selectedValue={"key1"}
+              onValueChange={(value) => console.log(value)}
+            >
+              <Picker.Item label="Wallet" value="key0" />
+              <Picker.Item label="ATM Card" value="key1" />
+              <Picker.Item label="Debit Card" value="key2" />
+              <Picker.Item label="Credit Card" value="key3" />
+              <Picker.Item label="Net Banking" value="key4" />
+            </Picker>
           </View>
           {[1, 2, 3].map((data, _id) => {
             return <Card key={_id} data={data} />;
@@ -80,13 +112,11 @@ const styles = StyleSheet.create({
   picker_container: {
     height: height * 0.06,
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f3f3f3",
   },
   picker_placeholder: {
     flex: 1,
-    textAlign: "center",
   },
   flexContainer: {
     flex: 1,
