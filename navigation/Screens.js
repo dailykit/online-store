@@ -102,6 +102,13 @@ function HomeStack(props) {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="AddToCart"
+        component={AddToCart}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 }

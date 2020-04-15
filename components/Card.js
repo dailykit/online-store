@@ -13,7 +13,7 @@ import ModalContent from "./ModalContent";
 
 const { width, height } = Dimensions.get("window");
 
-const Item = ({
+export const Item = ({
   isLast,
   isSelected,
   setSelected,
@@ -123,7 +123,10 @@ export default class Card extends Component {
               <Text style={styles.price_text}>$ 2.50</Text>
             </View>
             <View style={styles.add_to_cart_container}>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate("AddToCart")}
+                style={styles.button}
+              >
                 <Text style={styles.add_to_card_text}>
                   <Feather size={14} name="plus" /> ADD TO CART
                 </Text>
@@ -131,22 +134,6 @@ export default class Card extends Component {
             </View>
           </View>
         </View>
-        {/* <View
-          // animationType="slide"
-          // transparent={false}
-          // visible={this.state.modalVisible}
-          // onRequestClose={() => {}}
-          style={{
-            height,
-            width,
-            position: "absolute",
-            zIndex: 1000,
-          }}
-        >
-          <ModalContent
-            closeModal={() => this.setState({ modalVisible: false })}
-          />
-        </View> */}
       </>
     );
   }

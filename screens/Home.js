@@ -16,6 +16,7 @@ import Tabs from "../components/Tabs";
 import axios from "axios";
 import { Picker, DatePicker } from "native-base";
 import { Feather } from "@expo/vector-icons";
+import Cart from "../components/Cart";
 
 class Home extends React.Component {
   state = {
@@ -91,7 +92,9 @@ class Home extends React.Component {
           {[1, 2, 3].map((data, _id) => {
             return <Card {...this.props} key={_id} data={data} />;
           })}
+          <View style={{ height: height * 0.08 }} />
         </ScrollView>
+        <Cart text="Checkout" />
       </View>
     );
   }
