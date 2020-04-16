@@ -44,8 +44,8 @@ class Home extends React.Component {
     }
     return (
       <View style={styles.home}>
-        <Tabs />
-        <ScrollView style={{ flex: 1 }}>
+        {/* <Tabs /> */}
+        <ScrollView style={{ flex: 1, marginTop: 20 }}>
           <View style={styles.img_container}>
             <Image
               source={{

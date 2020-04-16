@@ -14,9 +14,6 @@ import Input from "./Input";
 import argonTheme from "../constants/Theme";
 
 const { height, width } = Dimensions.get("window");
-const iPhoneX = () =>
-  Platform.OS === "ios" &&
-  (height === 812 || width === 812 || height === 896 || width === 896);
 
 const BellButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity
@@ -202,7 +199,6 @@ class Header extends React.Component {
     const headerStyles = [
       !noShadow ? styles.shadow : null,
       transparent ? { backgroundColor: "rgba(0,0,0,0)" } : null,
-      { paddingBottom: 20 },
       { height: 40 },
     ];
 
@@ -258,7 +254,6 @@ const styles = StyleSheet.create({
   },
   navbar: {
     paddingVertical: 0,
-    paddingBottom: 16 * 1.5,
     zIndex: 5,
   },
   shadow: {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, SafeAreaView, StatusBar } from "react-native";
+import { Image, SafeAreaView, StatusBar, Platform } from "react-native";
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import Constants from "expo-constants";
@@ -59,12 +59,14 @@ export default class App extends React.Component {
     } else {
       return (
         <NavigationContainer>
-          <Block style={{ paddingTop: Constants.statusBarHeight }} flex>
-            <Provider store={store}>
-              <StatusBar barStyle="dark-content" />
-              <Screens />
-            </Provider>
-          </Block>
+          <SafeAreaView style={{ flex: 1 }}>
+            <Block flex>
+              <Provider store={store}>
+                {Platform.OS == "ios" && <StatusBar barStyle="dark-content" />}
+                <Screens />
+              </Provider>
+            </Block>
+          </SafeAreaView>
         </NavigationContainer>
       );
     }
