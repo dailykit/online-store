@@ -27,6 +27,34 @@ export default class Cart extends Component {
     );
   }
 }
+
+export class CartSummary extends Component {
+  render() {
+    return (
+      <View style={styles.container}>
+        <View style={styles.container_left}>
+          <Text style={[styles.text, { fontSize: 18 }]}>2 items | $ 2.50</Text>
+          <Text style={[styles.text, { fontSize: 10 }]}>
+            *extra charges may apply
+          </Text>
+        </View>
+        <View style={styles.container_right}>
+          <Text style={styles.text}>
+            {this.props.text}
+            {"    "}
+          </Text>
+          <Ionicons
+            name="ios-arrow-forward"
+            color="#fff"
+            size={20}
+            style={{ marginTop: 2 }}
+          />
+        </View>
+      </View>
+    );
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
     height: height * 0.08,
@@ -40,17 +68,16 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "white",
-    fontSize: 20,
+    fontSize: 16,
   },
   container_left: {
-    flex: 1,
+    flex: 2,
     paddingHorizontal: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    justifyContent: "center",
   },
   container_right: {
-    flex: 1,
+    flex: 3,
     paddingHorizontal: 20,
     flexDirection: "row",
     alignItems: "center",

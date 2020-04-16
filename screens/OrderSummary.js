@@ -5,42 +5,124 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { Picker } from "native-base";
 import Summary from "../components/Summary";
+
+import { CartSummary } from "../components/Cart";
 
 const { width, height } = Dimensions.get("window");
 
 export default class OrderSummary extends Component {
   render() {
     return (
-      <View style={styles.conatiner}>
-        <View style={styles.title_container}>
-          <View style={styles.title_container_left}>
-            <Text style={styles.deliver_on_text}>Deliver on</Text>
-            <Text style={styles.time_text}>Monday, Dec 9</Text>
-          </View>
-          <View style={styles.title_container_middle}>
-            <Text style={[styles.time_text, { textAlign: "center", flex: 1 }]}>
-              9am - 10am
-            </Text>
-          </View>
-          <View style={styles.title_container_right}>
-            <View style={styles.edit}>
-              <Text style={styles.edit_text}>edit{"  "}</Text>
-              <Ionicons
-                style={{ paddingTop: 2 }}
-                size={16}
-                name="ios-arrow-forward"
-              />
+      <>
+        <ScrollView style={styles.conatiner}>
+          <View style={styles.title_container}>
+            <View style={styles.title_container_left}>
+              <Text style={styles.deliver_on_text}>Deliver on</Text>
+              <Text style={styles.time_text}>Monday, Dec 9</Text>
+            </View>
+            <View style={styles.title_container_middle}>
+              <Text
+                style={[styles.time_text, { textAlign: "center", flex: 1 }]}
+              >
+                9am - 10am
+              </Text>
+            </View>
+            <View style={styles.title_container_right}>
+              <View style={styles.edit}>
+                <Text style={styles.edit_text}>edit{"  "}</Text>
+                <Ionicons
+                  style={{ paddingTop: 2 }}
+                  size={16}
+                  name="ios-arrow-forward"
+                />
+              </View>
             </View>
           </View>
-        </View>
-        {[1, 2, 3].map((item, index) => {
-          return <Summary item={item} key={index} />;
-        })}
-      </View>
+          {[1, 2, 3].map((item, index) => {
+            return <Summary item={item} key={index} />;
+          })}
+          <View style={styles.billing_details}>
+            <View style={styles.bill_child_container}>
+              <Text style={styles.billing_details_title_text}>
+                Bill Details
+              </Text>
+            </View>
+            <View style={styles.bill_child_container}>
+              <View style={styles.bill_child_container_left}>
+                <Text style={styles.billing_details_left_text}>Item Total</Text>
+              </View>
+              <View style={styles.bill_child_container_right}>
+                <Text style={styles.billing_details_right_text}>$ 4.50</Text>
+              </View>
+            </View>
+            <View style={styles.bill_child_container}>
+              <View style={styles.bill_child_container_left}>
+                <Text style={styles.billing_details_left_text}>
+                  Delivery Fee
+                </Text>
+              </View>
+              <View style={styles.bill_child_container_right}>
+                <Text style={styles.billing_details_right_text}>$ 1.50</Text>
+              </View>
+            </View>
+            <View style={styles.bill_child_container}>
+              <View style={styles.bill_child_container_left}>
+                <Text style={styles.billing_details_left_text}>Tax @2.5%</Text>
+              </View>
+              <View style={styles.bill_child_container_right}>
+                <Text style={styles.billing_details_right_text}>$ 2.50</Text>
+              </View>
+            </View>
+            <View style={styles.bill_child_container}>
+              <View style={styles.bill_child_container_left}>
+                <Text style={styles.billing_details_left_text}>Tip</Text>
+              </View>
+              <View style={styles.bill_child_container_right}>
+                <Text
+                  style={[
+                    styles.billing_details_right_text,
+                    {
+                      fontWeight: "bold",
+                      color: "#3fa4fd",
+                    },
+                  ]}
+                >
+                  Add
+                </Text>
+              </View>
+            </View>
+            <View style={styles.bill_child_container}>
+              <View style={styles.bill_child_container_left}>
+                <Text
+                  style={[
+                    styles.billing_details_left_text,
+                    { fontWeight: "bold" },
+                  ]}
+                >
+                  To Pay
+                </Text>
+              </View>
+              <View style={styles.bill_child_container_right}>
+                <Text
+                  style={[
+                    styles.billing_details_right_text,
+                    { fontWeight: "bold" },
+                  ]}
+                >
+                  $ 7.50
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={{ height: height * 0.08 }} />
+        </ScrollView>
+        <CartSummary text="CONFIRM AND PAY" />
+      </>
     );
   }
 }
@@ -94,91 +176,31 @@ const styles = StyleSheet.create({
   edit_text: {
     fontSize: 16,
   },
-  summary_container: {
-    height: height * 0.2,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 1, height: 1 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    // elevation: 1,
-    borderBottomColor: "rgba(0,0,0,0.1)",
-    borderBottomWidth: 1,
-    borderTopWidth: 0,
-    borderTopColor: "#fff",
-  },
-  summary_title_conatiner: {
-    flex: 1,
-    flexDirection: "row",
+  billing_details: {
     paddingHorizontal: 30,
-    justifyContent: "center",
   },
-  picker_container: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  summary_bottom_conatiner: {
-    flex: 1,
+  bill_child_container: {
     flexDirection: "row",
-    justifyContent: "center",
+    height: 40,
   },
-  summary_title_conatiner_left: {
+  bill_child_container_left: {
+    flex: 4,
+  },
+  bill_child_container_right: {
     flex: 1,
     justifyContent: "center",
+    alignItems: "flex-end",
   },
-  summary_title_conatiner_right: {
+  billing_details_right_text: {
     flex: 1,
-    justifyContent: "center",
-  },
-  summary_title_text: {
     fontSize: 16,
+  },
+  billing_details_title_text: {
+    fontSize: 16,
+    color: "rgba(0,0,0,0.6)",
     fontWeight: "bold",
   },
-  summary_bottom_conatiner_left: {
-    flex: 1,
-    justifyContent: "center",
-    paddingHorizontal: 30,
-  },
-  summary_bottom_conatiner_right: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 30,
-  },
-  button_container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 2,
-    borderColor: "#3fa4ff",
-  },
-  price_text: {
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  button_container_left: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#3fa4ff",
-    height: height * 0.04,
-  },
-  button_container_middle: {
-    flex: 2,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#278ce8",
-    height: height * 0.04,
-  },
-  button_container_right: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#3fa4ff",
-    height: height * 0.04,
-  },
-  quantity_text: {
-    color: "white",
+  billing_details_left_text: {
     fontSize: 16,
   },
 });

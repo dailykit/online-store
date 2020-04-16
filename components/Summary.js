@@ -75,54 +75,6 @@ const Summary = () => {
 };
 
 const styles = StyleSheet.create({
-  conatiner: {
-    flex: 1,
-  },
-  title_container: {
-    height: height * 0.1,
-    width,
-    flexDirection: "row",
-    backgroundColor: "#ededed",
-    paddingVertical: 10,
-  },
-  title_container_left: {
-    flex: 1,
-    justifyContent: "space-between",
-    padding: 5,
-    paddingLeft: 20,
-  },
-  title_container_middle: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "flex-end",
-    padding: 5,
-    paddingLeft: 20,
-  },
-  title_container_right: {
-    flex: 1,
-    padding: 5,
-    flexDirection: "row",
-    alignItems: "flex-start",
-    paddingRight: 20,
-    justifyContent: "flex-end",
-  },
-  deliver_on_text: {
-    fontWeight: "bold",
-    fontSize: 16,
-    color: "rgba(0,0,0,0.6)",
-  },
-  edit: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  time_text: {
-    fontSize: 16,
-    color: "rgba(0,0,0,0.6)",
-  },
-  edit_text: {
-    fontSize: 16,
-  },
   summary_container: {
     height: height * 0.2,
     marginBottom: 20,
