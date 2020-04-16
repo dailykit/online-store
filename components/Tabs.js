@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   menu: {
     paddingHorizontal: 16 * 2.5,
-    paddingTop: 8,
+    paddingTop: 30,
     paddingBottom: 16,
   },
   titleContainer: {
