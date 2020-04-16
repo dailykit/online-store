@@ -11,6 +11,7 @@ import Placeholder from "../screens/Placeholder";
 import Profile from "../screens/Profile";
 import Register from "../screens/Register";
 import AddToCart from "../screens/AddToCart";
+import OrderSummary from "../screens/OrderSummary";
 import ModalContect from "../components/ModalContent";
 // drawer
 import CustomDrawerContent from "./Menu";
@@ -69,7 +70,11 @@ function ProfileStack(props) {
 
 function HomeStack(props) {
   return (
-    <Stack.Navigator mode="card" headerMode="screen">
+    <Stack.Navigator
+      initialRouteName="OrderSummary"
+      mode="card"
+      headerMode="screen"
+    >
       <Stack.Screen
         name="Home"
         component={Home}
@@ -105,6 +110,13 @@ function HomeStack(props) {
       <Stack.Screen
         name="AddToCart"
         component={AddToCart}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="OrderSummary"
+        component={OrderSummary}
         options={{
           headerShown: false,
         }}
