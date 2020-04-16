@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, Dimensions } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const { width, height } = Dimensions.get("window");
@@ -7,7 +13,10 @@ const { width, height } = Dimensions.get("window");
 export default class Cart extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => this.props.navigation.navigate("OrderSummary")}
+        style={styles.container}
+      >
         <View style={styles.container_left}>
           <Text style={styles.text}>$ 2.50</Text>
         </View>
@@ -23,7 +32,7 @@ export default class Cart extends Component {
             style={{ marginTop: 2 }}
           />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

@@ -70,11 +70,7 @@ function ProfileStack(props) {
 
 function HomeStack(props) {
   return (
-    <Stack.Navigator
-      initialRouteName="OrderSummary"
-      mode="card"
-      headerMode="screen"
-    >
+    <Stack.Navigator mode="card" headerMode="screen">
       <Stack.Screen
         name="Home"
         component={Home}

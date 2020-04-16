@@ -213,7 +213,7 @@ export default class ModalContent extends Component {
           </View>
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
-        <Cart text="Proceed" />
+        <Cart {...this.props} text="Proceed" />
       </View>
     );
   }

@@ -30,8 +30,7 @@ export default class ModalContent extends Component {
           <View style={styles.close_container}>
             <TouchableOpacity
               onPress={() => {
-                console.log("object");
-                this.props.navigation.navigate("Home");
+                this.props.navigation.goBack();
               }}
             >
               <AntDesign size={30} name="close" />
