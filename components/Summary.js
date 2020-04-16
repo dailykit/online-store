@@ -46,7 +46,7 @@ const Summary = () => {
               onPress={() => setquantity(quantity + 1)}
               style={styles.button_container_left}
             >
-              <Feather color="#fff" size={16} name="plus" />
+              <Feather color="#fff" size={16} name="minus" />
             </TouchableOpacity>
             <View style={styles.button_container_middle}>
               <Text style={styles.quantity_text}>{quantity}</Text>
@@ -55,7 +55,7 @@ const Summary = () => {
               onPress={() => setquantity(quantity - 1)}
               style={styles.button_container_right}
             >
-              <Feather color="#fff" size={16} name="minus" />
+              <Feather color="#fff" size={16} name="plus" />
             </TouchableOpacity>
           </View>
         </View>
