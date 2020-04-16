@@ -18,16 +18,6 @@ const Summary = () => {
   }
   return (
     <View style={styles.summary_container}>
-      <View style={styles.summary_title_conatiner}>
-        <View style={styles.summary_title_conatiner_left}>
-          <Text style={styles.summary_title_text}>Order Summary</Text>
-        </View>
-        <View style={styles.summary_title_conatiner_right}>
-          <Text style={[styles.summary_title_text, { textAlign: "right" }]}>
-            3 items
-          </Text>
-        </View>
-      </View>
       <View style={styles.picker_container}>
         <Picker
           mode="dropdown"

@@ -60,7 +60,13 @@ export default class App extends React.Component {
       return (
         <NavigationContainer>
           <SafeAreaView style={{ flex: 1 }}>
-            <Block flex>
+            <Block
+              style={{
+                marginTop:
+                  Platform.OS == "android" ? Constants.statusBarHeight : 0,
+              }}
+              flex
+            >
               <Provider store={store}>
                 {Platform.OS == "ios" && <StatusBar barStyle="dark-content" />}
                 <Screens />

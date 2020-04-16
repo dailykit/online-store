@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
+  SafeAreaView,
 } from "react-native";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { Picker } from "native-base";
@@ -18,7 +19,7 @@ const { width, height } = Dimensions.get("window");
 export default class OrderSummary extends Component {
   render() {
     return (
-      <>
+      <SafeAreaView style={{ flex: 1 }}>
         <ScrollView style={styles.conatiner}>
           <View style={styles.title_container}>
             <View style={styles.title_container_left}>
@@ -41,6 +42,16 @@ export default class OrderSummary extends Component {
                   name="ios-arrow-forward"
                 />
               </View>
+            </View>
+          </View>
+          <View style={styles.summary_title_conatiner}>
+            <View style={styles.summary_title_conatiner_left}>
+              <Text style={styles.summary_title_text}>Order Summary</Text>
+            </View>
+            <View style={styles.summary_title_conatiner_right}>
+              <Text style={[styles.summary_title_text, { textAlign: "right" }]}>
+                3 products
+              </Text>
             </View>
           </View>
           {[1, 2, 3].map((item, index) => {
@@ -122,7 +133,7 @@ export default class OrderSummary extends Component {
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
         <CartSummary text="CONFIRM AND PAY" />
-      </>
+      </SafeAreaView>
     );
   }
 }
@@ -130,6 +141,33 @@ export default class OrderSummary extends Component {
 const styles = StyleSheet.create({
   conatiner: {
     flex: 1,
+  },
+  summary_title_conatiner: {
+    flex: 1,
+    flexDirection: "row",
+    paddingHorizontal: 30,
+    justifyContent: "center",
+  },
+  picker_container: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  summary_bottom_conatiner: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  summary_title_conatiner_left: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  summary_title_conatiner_right: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  summary_title_text: {
+    fontSize: 16,
+    fontWeight: "bold",
   },
   title_container: {
     height: height * 0.1,
