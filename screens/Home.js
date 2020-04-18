@@ -10,17 +10,22 @@ import {
   ActivityIndicator,
 } from "react-native";
 
+
 const { width, height } = Dimensions.get("screen");
 import Card from "../components/Card";
 import Tabs from "../components/Tabs";
 import axios from "axios";
-import { Picker, DatePicker } from "native-base";
+import { Picker } from "native-base";
+import { Datepicker } from '@ui-kitten/components'
 import { Feather } from "@expo/vector-icons";
 import Cart from "../components/Cart";
+import { IndexPath, Layout, Select, SelectItem } from '@ui-kitten/components';
+
 
 class Home extends React.Component {
   state = {
     loading: true,
+    selectedIndex: new IndexPath(1)
   };
   async componentDidMount() {
     try {
@@ -35,6 +40,11 @@ class Home extends React.Component {
   }
 
   render() {
+    const data = [
+      'Breakfast',
+      'Lunch',
+      'Dinner',
+    ];
     if (this.state.loading) {
       return (
         <View style={styles.flexContainer}>
@@ -57,37 +67,30 @@ class Home extends React.Component {
           </View>
           <View style={styles.picker_container}>
             <View style={styles.picker_placeholder}>
-              <DatePicker
-                defaultDate={new Date()}
-                minimumDate={new Date(2018, 1, 1)}
-                // maximumDate={new Date(2018, 12, 31)}
-                locale={"en"}
-                timeZoneOffsetInMinutes={undefined}
-                modalTransparent={false}
-                animationType={"slide"}
-                androidMode={"default"}
-                placeHolderText="Select date"
-                textStyle={{ color: "#000" }}
-                placeHolderTextStyle={{ color: "#000" }}
-                onDateChange={(date) => console.log(date)}
-                disabled={false}
-                style={{ flex: 1 }}
+              <Datepicker
+                date={new Date()}
+
+                onSelect={(date) => console.log(date)}
+
               />
             </View>
-            <Picker
-              mode="dropdown"
-              iosHeader="Category"
-              iosIcon={<Feather name="arrow-down" />}
-              style={styles.picker_placeholder}
-              selectedValue={"key1"}
-              onValueChange={(value) => console.log(value)}
-            >
-              <Picker.Item label="Wallet" value="key0" />
-              <Picker.Item label="ATM Card" value="key1" />
-              <Picker.Item label="Debit Card" value="key2" />
-              <Picker.Item label="Credit Card" value="key3" />
-              <Picker.Item label="Net Banking" value="key4" />
-            </Picker>
+            <View style={styles.picker_placeholder}>
+              <Select
+                selectedIndex={this.state.selectedIndex}
+                value={data[this.state.selectedIndex.row]}
+                onSelect={selectedIndex => { this.setState({ selectedIndex }); console.log(selectedIndex.equals()) }}
+              >
+
+                <SelectItem title="Wallet" />
+                <SelectItem title="ATM Card" />
+                <SelectItem title="Debit Card" />
+                <SelectItem title="Credit Card" />
+                <SelectItem title="Net Banking" />
+              </Select>
+
+            </View>
+
+
           </View>
           {[1, 2, 3].map((data, _id) => {
             return <Card {...this.props} key={_id} data={data} />;
@@ -122,6 +125,7 @@ const styles = StyleSheet.create({
   },
   picker_placeholder: {
     flex: 1,
+    justifyContent: 'center'
   },
   flexContainer: {
     flex: 1,

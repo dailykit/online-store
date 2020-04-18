@@ -4,6 +4,9 @@ import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import Constants from "expo-constants";
 
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider } from '@ui-kitten/components';
+
 import Block from "./components/Block";
 import { NavigationContainer } from "@react-navigation/native";
 import { Provider } from "react-redux";
@@ -69,7 +72,9 @@ export default class App extends React.Component {
             >
               <Provider store={store}>
                 {Platform.OS == "ios" && <StatusBar barStyle="dark-content" />}
-                <Screens />
+                <ApplicationProvider {...eva} theme={eva.light}>
+                  <Screens />
+                </ApplicationProvider>
               </Provider>
             </Block>
           </SafeAreaView>
