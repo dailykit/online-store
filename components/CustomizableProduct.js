@@ -20,7 +20,10 @@ export const ServingSelect = ({ index, isSelected, setServingIndex }) => {
       onPress={() => setServingIndex(index - 1)}
       style={[
         styles.servingSelectContainer,
-        { borderColor: isSelected ? '#3fa4ff' : '#ececec' },
+        {
+          borderColor: isSelected ? '#3fa4ff' : '#ececec',
+          backgroundColor: '#fff',
+        },
       ]}
     >
       <View style={styles.servingSelectContainer_one}>
@@ -64,18 +67,18 @@ export const Item = ({
         style={[
           styles.item_container,
           {
-            borderBottomWidth: isLast ? 0 : 1,
             flex: isSelected ? 8 : 7,
+            backgroundColor: '#fff',
+            borderColor: isSelected ? '#3fa4ff' : '#ececec',
+            borderWidth: 1,
+            marginBottom: 2,
+            paddingBottom: 20,
+            paddingHorizontal: 10,
+            marginTop: 4,
           },
         ]}
       >
-        <View
-          style={[
-            styles.item_container_one,
-            { display: isSelected ? 'flex' : 'none' },
-          ]}
-        >
-          <Text style={styles.item_image_title}>Dal</Text>
+        <View style={[styles.item_container_one]}>
           <Image
             source={{
               uri:
@@ -105,15 +108,24 @@ export const Item = ({
         </View>
         <View style={styles.item_container_three}>
           <View style={styles.item_three_upper}>
-            <TouchableOpacity>
-              <Text style={styles.options_text}>3 options</Text>
-            </TouchableOpacity>
+            {isSelected && (
+              <View
+                style={{
+                  backgroundColor: '#3fa4ff',
+                  borderRadius: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginLeft: 5,
+                  height: 20,
+                  width: 20,
+                }}
+              >
+                <MaterialIcons name='done' size={16} color='#fff' />
+              </View>
+            )}
           </View>
           <View style={styles.item_three_lower}>
-            <Text style={styles.item_details}>
-              Mealkit | <Feather name='user' />{' '}
-              <Text style={{ fontWeight: 'bold' }}>1</Text>
-            </Text>
+            <Text style={styles.item_details}>$ 1.2</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -177,19 +189,7 @@ export default class ModalContent extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView style={styles.container}>
-          <View style={styles.title_container}>
-            <View style={styles.details}>
-              <Text style={styles.title}>Dal Makhani</Text>
-            </View>
-            <View style={styles.close_container}>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Home')}
-              >
-                <AntDesign size={30} name='close' />
-              </TouchableOpacity>
-            </View>
-          </View>
+        <View style={styles.container}>
           <View style={styles.item_parent_container}>
             {[1, 2, 3].map((data, _id) => {
               let last = false;
@@ -211,9 +211,7 @@ export default class ModalContent extends Component {
               );
             })}
           </View>
-          <View style={{ height: height * 0.08 }} />
-        </ScrollView>
-        <Cart {...this.props} text='Proceed' />
+        </View>
       </View>
     );
   }
@@ -277,6 +275,7 @@ const styles = StyleSheet.create({
   },
   item_parent_container: {
     flex: 5,
+    backgroundColor: '#f3f3f3',
   },
   item_container: {
     flex: 1,
@@ -285,7 +284,6 @@ const styles = StyleSheet.create({
     borderBottomColor: 'rgba(0,0,0,0.1)',
     paddingBottom: 5,
     backgroundColor: '#f3f3f3',
-    paddingHorizontal: 20,
   },
   item_container_one: {
     flex: 2,
@@ -407,7 +405,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderWidth: 1,
     marginBottom: 5,
-    borderColor: '#ececec',
+    borderColor: '#fff',
   },
   servingSelectContainer_one: {
     flex: 7,
@@ -425,5 +423,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  item_three_upper: {
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    marginTop: 15,
   },
 });

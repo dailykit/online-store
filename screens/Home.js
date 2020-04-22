@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   StyleSheet,
   Dimensions,
@@ -8,24 +8,22 @@ import {
   Text,
   Modal,
   ActivityIndicator,
-} from "react-native";
+} from 'react-native';
 
-
-const { width, height } = Dimensions.get("screen");
-import Card from "../components/Card";
-import Tabs from "../components/Tabs";
-import axios from "axios";
-import { Picker } from "native-base";
-import { Datepicker } from '@ui-kitten/components'
-import { Feather } from "@expo/vector-icons";
-import Cart from "../components/Cart";
+const { width, height } = Dimensions.get('screen');
+import Card from '../components/Card';
+import Tabs from '../components/Tabs';
+import axios from 'axios';
+import { Picker } from 'native-base';
+import { Datepicker } from '@ui-kitten/components';
+import { Feather } from '@expo/vector-icons';
+import Cart from '../components/Cart';
 import { IndexPath, Layout, Select, SelectItem } from '@ui-kitten/components';
-
 
 class Home extends React.Component {
   state = {
     loading: true,
-    selectedIndex: new IndexPath(1)
+    selectedIndex: new IndexPath(1),
   };
   async componentDidMount() {
     try {
@@ -40,11 +38,7 @@ class Home extends React.Component {
   }
 
   render() {
-    const data = [
-      'Breakfast',
-      'Lunch',
-      'Dinner',
-    ];
+    const data = ['Breakfast', 'Lunch', 'Dinner'];
     if (this.state.loading) {
       return (
         <View style={styles.flexContainer}>
@@ -60,7 +54,7 @@ class Home extends React.Component {
             <Image
               source={{
                 uri:
-                  "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+                  'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
               }}
               style={styles.cover_image}
             />
@@ -69,35 +63,32 @@ class Home extends React.Component {
             <View style={styles.picker_placeholder}>
               <Datepicker
                 date={new Date()}
-
                 onSelect={(date) => console.log(date)}
-
               />
             </View>
             <View style={styles.picker_placeholder}>
               <Select
                 selectedIndex={this.state.selectedIndex}
                 value={data[this.state.selectedIndex.row]}
-                onSelect={selectedIndex => { this.setState({ selectedIndex }); console.log(selectedIndex.equals()) }}
+                onSelect={(selectedIndex) => {
+                  this.setState({ selectedIndex });
+                  console.log(selectedIndex.equals());
+                }}
               >
-
-                <SelectItem title="Wallet" />
-                <SelectItem title="ATM Card" />
-                <SelectItem title="Debit Card" />
-                <SelectItem title="Credit Card" />
-                <SelectItem title="Net Banking" />
+                <SelectItem title='Wallet' />
+                <SelectItem title='ATM Card' />
+                <SelectItem title='Debit Card' />
+                <SelectItem title='Credit Card' />
+                <SelectItem title='Net Banking' />
               </Select>
-
             </View>
-
-
           </View>
           {[1, 2, 3].map((data, _id) => {
             return <Card {...this.props} key={_id} data={data} />;
           })}
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
-        <Cart {...this.props} text="Checkout" />
+        <Cart {...this.props} text='Checkout' />
       </View>
     );
   }
@@ -113,24 +104,25 @@ const styles = StyleSheet.create({
   },
   cover_image: {
     flex: 1,
-    resizeMode: "cover",
+    resizeMode: 'cover',
     height: null,
     width: null,
   },
   picker_container: {
     height: height * 0.06,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#f3f3f3",
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f3f3f3',
+    
   },
   picker_placeholder: {
     flex: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   flexContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
