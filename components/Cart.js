@@ -46,7 +46,7 @@ export class CartSummary extends Component {
         onPress={() => this.props.navigation.navigate('OrderPlaced')}
         style={styles.container}
       >
-        <View style={styles.container_left}>
+        <View style={[styles.container_left, { flex: 3 }]}>
           <Text style={[styles.text, { fontSize: 18 }]}>2 items | $ 2.50</Text>
           <Text style={[styles.text, { fontSize: 10 }]}>
             *extra charges may apply

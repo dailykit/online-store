@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: '#3fa4ff',
+    width: '80%',
   },
   price_text: {
     fontWeight: 'bold',
