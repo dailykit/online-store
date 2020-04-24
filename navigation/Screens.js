@@ -13,6 +13,7 @@ import Register from '../screens/Register';
 import AddToCart from '../screens/AddToCart';
 import OrderSummary from '../screens/OrderSummary';
 import ModalContect from '../components/ModalContent';
+import OrderPlaced from '../screens/OrderPlaced';
 // drawer
 import CustomDrawerContent from './Menu';
 
@@ -114,6 +115,13 @@ function HomeStack(props) {
       <Stack.Screen
         name='OrderSummary'
         component={OrderSummary}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='OrderPlaced'
+        component={OrderPlaced}
         options={{
           headerShown: false,
         }}

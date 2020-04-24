@@ -41,23 +41,30 @@ const Summary = ({ useQuantity }) => {
           <Text style={styles.price_text}>$ 2.50</Text>
         </View>
         <View style={styles.summary_bottom_conatiner_right}>
-          <View style={styles.button_container}>
-            <TouchableOpacity
-              onPress={() => setquantity(quantity - 1)}
-              style={styles.button_container_left}
-            >
-              <Feather color='#fff' size={16} name='minus' />
-            </TouchableOpacity>
-            <View style={styles.button_container_middle}>
-              <Text style={styles.quantity_text}>{quantity}</Text>
+          {!useQuantity && (
+            <View style={styles.button_container}>
+              <TouchableOpacity
+                onPress={() => setquantity(quantity - 1)}
+                style={styles.button_container_left}
+              >
+                <Feather color='#fff' size={16} name='minus' />
+              </TouchableOpacity>
+              <View style={styles.button_container_middle}>
+                <Text style={styles.quantity_text}>{quantity}</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setquantity(quantity + 1)}
+                style={styles.button_container_right}
+              >
+                <Feather color='#fff' size={16} name='plus' />
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={() => setquantity(quantity + 1)}
-              style={styles.button_container_right}
-            >
-              <Feather color='#fff' size={16} name='plus' />
-            </TouchableOpacity>
-          </View>
+          )}
+          {useQuantity && (
+            <Text style={{ fontSize: 18 }}>
+              Qty: <Text style={{ fontWeight: 'bold' }}>1</Text>
+            </Text>
+          )}
         </View>
       </View>
     </View>

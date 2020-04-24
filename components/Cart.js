@@ -1,20 +1,22 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Text,
   View,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+} from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
 export default class Cart extends Component {
   render() {
     return (
       <TouchableOpacity
-        onPress={() => this.props.navigation.navigate("OrderSummary")}
+        onPress={() => {
+          this.props.navigation.navigate('OrderSummary');
+        }}
         style={styles.container}
       >
         <View style={styles.container_left}>
@@ -23,11 +25,11 @@ export default class Cart extends Component {
         <View style={styles.container_right}>
           <Text style={styles.text}>
             {this.props.text}
-            {"    "}
+            {'    '}
           </Text>
           <Ionicons
-            name="ios-arrow-forward"
-            color="#fff"
+            name='ios-arrow-forward'
+            color='#fff'
             size={20}
             style={{ marginTop: 2 }}
           />
@@ -40,7 +42,10 @@ export default class Cart extends Component {
 export class CartSummary extends Component {
   render() {
     return (
-      <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => this.props.navigation.navigate('OrderPlaced')}
+        style={styles.container}
+      >
         <View style={styles.container_left}>
           <Text style={[styles.text, { fontSize: 18 }]}>2 items | $ 2.50</Text>
           <Text style={[styles.text, { fontSize: 10 }]}>
@@ -50,16 +55,16 @@ export class CartSummary extends Component {
         <View style={styles.container_right}>
           <Text style={styles.text}>
             {this.props.text}
-            {"    "}
+            {'    '}
           </Text>
           <Ionicons
-            name="ios-arrow-forward"
-            color="#fff"
+            name='ios-arrow-forward'
+            color='#fff'
             size={20}
             style={{ marginTop: 2 }}
           />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
@@ -68,28 +73,28 @@ const styles = StyleSheet.create({
   container: {
     height: height * 0.08,
     width,
-    backgroundColor: "#3fa4ff",
-    position: "absolute",
+    backgroundColor: '#3fa4ff',
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   text: {
-    color: "white",
+    color: 'white',
     fontSize: 16,
   },
   container_left: {
     flex: 2,
     paddingHorizontal: 20,
-    alignItems: "flex-start",
-    justifyContent: "center",
+    alignItems: 'flex-start',
+    justifyContent: 'center',
   },
   container_right: {
     flex: 3,
     paddingHorizontal: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
 });
