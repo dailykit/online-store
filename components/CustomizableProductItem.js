@@ -11,6 +11,7 @@ const CustomizableProductItem = ({
   isLast,
   openModal,
   navigation,
+  data,
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -20,6 +21,7 @@ const CustomizableProductItem = ({
       <CustomizableProductItemExpanded
         isSelected={isSelected}
         _id={_id}
+        data={data}
         setSelected={setSelected}
         isLast={isLast}
         openModal={openModal}
@@ -32,6 +34,7 @@ const CustomizableProductItem = ({
     <CustomizableProductItemCollapsed
       isSelected={isSelected}
       _id={_id}
+      data={data}
       setSelected={setSelected}
       isLast={isLast}
       openModal={openModal}

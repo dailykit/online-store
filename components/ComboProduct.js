@@ -1,5 +1,12 @@
 import React, { Component, useState } from 'react';
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
+import axios from 'axios';
 
 import CustomizableProductItem from './CustomizableProductItem';
 
@@ -9,18 +16,67 @@ export default class ComboProduct extends Component {
   state = {
     selected: 0,
     modalVisible: false,
+    isLoading: true,
+    data: null,
   };
+  async componentDidMount() {
+    try {
+      let res = await axios({
+        url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
+        method: 'POST',
+        data: JSON.stringify({
+          query: `
+        {
+          comboProduct(id: ${this.props.id}) {
+            name
+            comboProductComponents {
+              customizableProductId
+              customizableProduct {
+                customizableProductOptions {
+                  simpleRecipeProduct {
+                    name
+                    default
+                    simpleRecipeProductOptions {
+                      price
+                      recipeYieldId
+                    }
+                  }
+                }
+                name
+                id
+                default
+              }
+            }
+          }
+        }
+        `,
+        }),
+      });
+      this.setState({ data: res.data.data.comboProduct });
+      this.setState({ isLoading: false });
+    } catch (e) {
+      console.log(e);
+    }
+  }
   render() {
+    let { data, isLoading } = this.state;
+    if (isLoading || data == null || data == undefined) {
+      return (
+        <View style={styles.flexContainer}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         <View style={styles.card_title}>
           <Text style={styles.card_title_text}>
-            Dal Makhani with Brown Rice
+            {data.name ? data.name : 'Resturant Name'}
           </Text>
           <Text style={styles.is_customizable}>Customizeable</Text>
         </View>
         <View style={styles.item_parent_container}>
-          {[1, 2, 3].map((data, _id) => {
+          {data.comboProductComponents.map((data, _id) => {
             let last = false;
             let selected = this.state.selected;
             let isSelected = selected == _id ? true : false;
@@ -31,6 +87,7 @@ export default class ComboProduct extends Component {
               <CustomizableProductItem
                 isSelected={isSelected}
                 _id={_id}
+                data={data}
                 setSelected={(index) => this.setState({ selected: index })}
                 isLast={last}
                 key={_id}
@@ -74,5 +131,10 @@ const styles = StyleSheet.create({
   item_parent_container: {
     flex: 5,
     backgroundColor: '#fff',
+  },
+  flexContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

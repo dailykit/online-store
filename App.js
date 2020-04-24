@@ -1,16 +1,9 @@
+import 'react-native-get-random-values';
 import React from 'react';
 import { Image, SafeAreaView, StatusBar, Platform } from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import Constants from 'expo-constants';
-
-// GraphQL
-import { ApolloProvider } from '@apollo/react-hooks';
-import ApolloClient from 'apollo-boost';
-
-const client = new ApolloClient({
-  uri: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
-});
 
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
@@ -81,9 +74,7 @@ export default class App extends React.Component {
               <Provider store={store}>
                 {Platform.OS == 'ios' && <StatusBar barStyle='dark-content' />}
                 <ApplicationProvider {...eva} theme={eva.light}>
-                  <ApolloProvider client={client}>
-                    <Screens />
-                  </ApolloProvider>
+                  <Screens />
                 </ApplicationProvider>
               </Provider>
             </Block>

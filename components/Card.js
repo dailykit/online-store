@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import ComboProduct from './ComboProduct';
+import * as uuid from 'uuid';
 
 const { width, height } = Dimensions.get('window');
 
@@ -15,12 +16,17 @@ export default class Card extends Component {
   state = {
     modalVisible: false,
   };
+  componentDidMount() {
+    console.log(this.props.id, this.props.type);
+  }
   render() {
     return (
       <>
         <View style={styles.card_container}>
           <View style={styles.item_parent_container}>
-            <ComboProduct {...this.props} />
+            {this.props.type == 'comboProducts' && (
+              <ComboProduct id={this.props.id} {...this.props} />
+            )}
           </View>
 
           <View style={styles.bottom_container}>

@@ -10,39 +10,42 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import { useQuery } from '@apollo/react-hooks';
 import { GET_MENU } from '../gql/Queries';
 
 const { width, height } = Dimensions.get('screen');
 import Card from '../components/Card';
-import Tabs from '../components/Tabs';
 import axios from 'axios';
-import { Picker } from 'native-base';
 import { Datepicker } from '@ui-kitten/components';
-import { Feather } from '@expo/vector-icons';
 import Cart from '../components/Cart';
-import { IndexPath, Layout, Select, SelectItem } from '@ui-kitten/components';
+import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 
 class Home extends React.Component {
   state = {
     loading: true,
     selectedIndex: new IndexPath(1),
+    picker: null,
+    data: null,
   };
   async componentDidMount() {
     try {
-      let res = await fetch(
-        'https://dailykitdatahub.herokuapp.com/v1/graphql',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            query: GET_MENU,
-          }),
-        }
-      );
-      console.log(res.data);
+      let res = await axios({
+        url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
+        method: 'POST',
+        data: JSON.stringify({ query: GET_MENU }),
+      });
+      let picker = [];
+      let data = {};
+      res.data.data.getMenu.forEach((category, _id) => {
+        picker.push(category.name);
+        data[category.name] = {};
+        Object.keys(category).forEach((key) => {
+          if (key != 'name') {
+            data[category.name][key] = category[key];
+          }
+        });
+      });
+      this.setState({ picker, data });
+      this.setState({ loading: false });
     } catch (e) {
       console.log(e);
     }
@@ -80,23 +83,28 @@ class Home extends React.Component {
             <View style={styles.picker_placeholder}>
               <Select
                 selectedIndex={this.state.selectedIndex}
-                value={data[this.state.selectedIndex.row]}
+                value={this.state.picker[this.state.selectedIndex.row]}
                 onSelect={(selectedIndex) => {
                   this.setState({ selectedIndex });
                   console.log(selectedIndex.equals());
                 }}
               >
-                <SelectItem title='Wallet' />
-                <SelectItem title='ATM Card' />
-                <SelectItem title='Debit Card' />
-                <SelectItem title='Credit Card' />
-                <SelectItem title='Net Banking' />
+                {this.state.picker.map((title, key) => (
+                  <SelectItem key={key} title={title} />
+                ))}
               </Select>
             </View>
           </View>
-          {[1, 2, 3].map((data, _id) => {
-            return <Card {...this.props} key={_id} data={data} />;
-          })}
+          {Object.keys(this.state.data[this.state.picker[0]]).map(
+            (type, _id) => {
+              // this data var is like comboprod : [1,2,3], inventory prod, etc..
+              // now loop on this data
+
+              return this.state.data[this.state.picker[0]][type].map((id) => (
+                <Card {...this.props} type={type} key={id} id={id} />
+              ));
+            }
+          )}
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
         <Cart {...this.props} text='Checkout' />
