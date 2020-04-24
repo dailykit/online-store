@@ -1,27 +1,27 @@
-import React from "react";
-import { Easing, Animated, Dimensions } from "react-native";
+import React from 'react';
+import { Easing, Animated, Dimensions } from 'react-native';
 
-import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // screens
-import Home from "../screens/Home";
-import Placeholder from "../screens/Placeholder";
-import Profile from "../screens/Profile";
-import Register from "../screens/Register";
-import AddToCart from "../screens/AddToCart";
-import OrderSummary from "../screens/OrderSummary";
-import ModalContect from "../components/ModalContent";
+import Home from '../screens/Home';
+import Placeholder from '../screens/Placeholder';
+import Profile from '../screens/Profile';
+import Register from '../screens/Register';
+import AddToCart from '../screens/AddToCart';
+import OrderSummary from '../screens/OrderSummary';
+import ModalContect from '../components/ModalContent';
 // drawer
-import CustomDrawerContent from "./Menu";
+import CustomDrawerContent from './Menu';
 
 // header for screens
-import { Icon, Header } from "../components";
-import { argonTheme, tabs } from "../constants";
-import ModalContent from "../components/ModalContent";
+import { Icon, Header } from '../components';
+import { argonTheme, tabs } from '../constants';
+import ModalContent from '../components/ModalContent';
 
-const { width } = Dimensions.get("screen");
+const { width } = Dimensions.get('screen');
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -29,31 +29,31 @@ const Tab = createBottomTabNavigator();
 
 function ProfileStack(props) {
   return (
-    <Stack.Navigator initialRouteName="Profile" mode="card" headerMode="screen">
+    <Stack.Navigator initialRouteName='Profile' mode='card' headerMode='screen'>
       <Stack.Screen
-        name="Profile"
+        name='Profile'
         component={Profile}
         options={{
           header: ({ navigation, scene }) => (
             <Header
               transparent
               white
-              title="Profile"
+              title='Profile'
               navigation={navigation}
               scene={scene}
             />
           ),
-          cardStyle: { backgroundColor: "#FFFFFF" },
+          cardStyle: { backgroundColor: '#FFFFFF' },
           headerTransparent: true,
         }}
       />
       <Stack.Screen
-        name="Placeholder"
+        name='Placeholder'
         component={Placeholder}
         options={{
           header: ({ navigation, scene }) => (
             <Header
-              title=""
+              title=''
               back
               white
               transparent
@@ -70,48 +70,49 @@ function ProfileStack(props) {
 
 function HomeStack(props) {
   return (
-    <Stack.Navigator mode="card" headerMode="screen">
+    <Stack.Navigator mode='card' headerMode='screen'>
       <Stack.Screen
-        name="Home"
+        name='Home'
         component={Home}
         options={{
           header: ({ navigation, scene }) => (
             <Header
-              title="Home"
+              title='Home'
               search
               options
               navigation={navigation}
               scene={scene}
             />
           ),
-          cardStyle: { backgroundColor: "#F8F9FE" },
+          cardStyle: { backgroundColor: '#F8F9FE' },
         }}
       />
       <Stack.Screen
-        name="Placeholder"
+        name='Placeholder'
         component={Placeholder}
         options={{
           headerMode: false,
           header: null,
           headerShown: false,
+          stackPresentation: 'modal',
         }}
       />
       <Stack.Screen
-        name="Modal"
+        name='Modal'
         component={ModalContent}
         options={{
           headerShown: false,
         }}
       />
       <Stack.Screen
-        name="AddToCart"
+        name='AddToCart'
         component={AddToCart}
         options={{
           headerShown: false,
         }}
       />
       <Stack.Screen
-        name="OrderSummary"
+        name='OrderSummary'
         component={OrderSummary}
         options={{
           headerShown: false,
@@ -123,8 +124,8 @@ function HomeStack(props) {
 
 export default function OnboardingStack(props) {
   return (
-    <Stack.Navigator mode="card" headerMode="none">
-      <Stack.Screen name="App" component={AppStack} />
+    <Stack.Navigator mode='card' headerMode='none'>
+      <Stack.Screen name='App' component={AppStack} />
     </Stack.Navigator>
   );
 }
@@ -135,32 +136,32 @@ function AppStack(props) {
       style={{ flex: 1 }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       drawerStyle={{
-        backgroundColor: "white",
+        backgroundColor: 'white',
         width: width * 0.8,
       }}
       drawerContentOptions={{
-        activeTintcolor: "white",
-        inactiveTintColor: "#000",
-        activeBackgroundColor: "transparent",
+        activeTintcolor: 'white',
+        inactiveTintColor: '#000',
+        activeBackgroundColor: 'transparent',
         itemStyle: {
           width: width * 0.75,
-          backgroundColor: "transparent",
+          backgroundColor: 'transparent',
           paddingVertical: 16,
           paddingHorizonal: 12,
-          justifyContent: "center",
-          alignContent: "center",
-          alignItems: "center",
-          overflow: "hidden",
+          justifyContent: 'center',
+          alignContent: 'center',
+          alignItems: 'center',
+          overflow: 'hidden',
         },
         labelStyle: {
           fontSize: 18,
           marginLeft: 12,
-          fontWeight: "normal",
+          fontWeight: 'normal',
         },
       }}
-      initialRouteName="Home"
+      initialRouteName='Home'
     >
-      <Drawer.Screen name="Home" component={HomeStack} />
+      <Drawer.Screen name='Home' component={HomeStack} />
       {/* <Drawer.Screen name="Profile" component={ProfileStack} /> */}
       {/* <Drawer.Screen name="Account" component={Register} /> */}
       {/* <Drawer.Screen name="Articles" component={ArticlesStack} /> */}
