@@ -10,6 +10,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
+import { useQuery } from '@apollo/react-hooks';
+import { GET_MENU } from '../gql/Queries';
+
 const { width, height } = Dimensions.get('screen');
 import Card from '../components/Card';
 import Tabs from '../components/Tabs';
@@ -27,11 +30,19 @@ class Home extends React.Component {
   };
   async componentDidMount() {
     try {
-      // let res = await axios.get(
-      //   "http://restaurantmealkits.com/api/menu/5e84484b6ab57abd3498d508"
-      // );
-      // let res_name = res.data.data.name
-      this.setState({ loading: false });
+      let res = await fetch(
+        'https://dailykitdatahub.herokuapp.com/v1/graphql',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: GET_MENU,
+          }),
+        }
+      );
+      console.log(res.data);
     } catch (e) {
       console.log(e);
     }

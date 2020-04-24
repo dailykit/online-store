@@ -1,26 +1,34 @@
-import React from "react";
-import { Image, SafeAreaView, StatusBar, Platform } from "react-native";
-import { AppLoading } from "expo";
-import { Asset } from "expo-asset";
-import Constants from "expo-constants";
+import React from 'react';
+import { Image, SafeAreaView, StatusBar, Platform } from 'react-native';
+import { AppLoading } from 'expo';
+import { Asset } from 'expo-asset';
+import Constants from 'expo-constants';
+
+// GraphQL
+import { ApolloProvider } from '@apollo/react-hooks';
+import ApolloClient from 'apollo-boost';
+
+const client = new ApolloClient({
+  uri: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
+});
 
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
 
-import Block from "./components/Block";
-import { NavigationContainer } from "@react-navigation/native";
-import { Provider } from "react-redux";
-import store from "./store";
+import Block from './components/Block';
+import { NavigationContainer } from '@react-navigation/native';
+import { Provider } from 'react-redux';
+import store from './store';
 
-import * as Font from "expo-font";
-import { Ionicons } from "@expo/vector-icons";
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 
 // Before rendering any navigation stack
-import { enableScreens } from "react-native-screens";
+import { enableScreens } from 'react-native-screens';
 enableScreens();
 
-import Screens from "./navigation/Screens";
-import { Images, articles, argonTheme } from "./constants";
+import Screens from './navigation/Screens';
+import { Images, articles, argonTheme } from './constants';
 
 // cache app images
 const assetImages = [
@@ -37,7 +45,7 @@ articles.map((article) => assetImages.push(article.image));
 
 function cacheImages(images) {
   return images.map((image) => {
-    if (typeof image === "string") {
+    if (typeof image === 'string') {
       return Image.prefetch(image);
     } else {
       return Asset.fromModule(image).downloadAsync();
@@ -66,14 +74,16 @@ export default class App extends React.Component {
             <Block
               style={{
                 marginTop:
-                  Platform.OS == "android" ? Constants.statusBarHeight : 0,
+                  Platform.OS == 'android' ? Constants.statusBarHeight : 0,
               }}
               flex
             >
               <Provider store={store}>
-                {Platform.OS == "ios" && <StatusBar barStyle="dark-content" />}
+                {Platform.OS == 'ios' && <StatusBar barStyle='dark-content' />}
                 <ApplicationProvider {...eva} theme={eva.light}>
-                  <Screens />
+                  <ApolloProvider client={client}>
+                    <Screens />
+                  </ApolloProvider>
                 </ApplicationProvider>
               </Provider>
             </Block>
@@ -85,8 +95,8 @@ export default class App extends React.Component {
 
   _loadResourcesAsync = async () => {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
       ...Ionicons.font,
     });
     return Promise.all([...cacheImages(assetImages)]);
