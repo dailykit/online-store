@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 
-import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed';
-import CustomizableProductItemExpanded from './CustomizableProductItemExpanded';
+import InventoryProductItemCollapsed from './InventoryProductItemCollapsed';
+import InventoryProductItemExpanded from './InventoryProductItemExpanded';
 
 const CustomizableProductItem = ({
   isSelected,
@@ -16,42 +16,30 @@ const CustomizableProductItem = ({
   const [expanded, setExpanded] = useState(false);
 
   const [isSelectedInside, setisSelectedInside] = useState(0);
-  let default_first_product =
-    data.customizableProduct !== null
-      ? data.customizableProduct.customizableProductOptions[0]
-      : null;
-  if (
-    data.customizableProduct == null ||
-    data.customizableProduct.customizableProductOptions == null
-  ) {
-    return <Text>Bad data</Text>;
-  }
   if (expanded && isSelected) {
     return (
-      <CustomizableProductItemExpanded
+      <InventoryProductItemExpanded
         isSelected={isSelected}
         _id={_id}
-        data={data.customizableProduct.customizableProductOptions}
+        data={data}
         setSelected={setSelected}
         isLast={isLast}
         openModal={openModal}
         navigation={navigation}
         setExpanded={setExpanded}
-        label={data.label}
       />
     );
   }
   return (
-    <CustomizableProductItemCollapsed
+    <InventoryProductItemCollapsed
       isSelected={isSelected}
       _id={_id}
-      data={default_first_product}
+      data={data}
       setSelected={setSelected}
       isLast={isLast}
       openModal={openModal}
       navigation={navigation}
       setExpanded={setExpanded}
-      label={data.label}
     />
   );
 };

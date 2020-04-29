@@ -31,7 +31,19 @@ class Home extends React.Component {
       let res = await axios({
         url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
         method: 'POST',
-        data: JSON.stringify({ query: GET_MENU }),
+        data: JSON.stringify({
+          query: `
+        {
+          getMenu(year: 2020, month: 5, day: 28) {
+            name
+            comboProducts 
+            customizableProducts 
+            inventoryProducts
+            simpleRecipeProducts
+          }
+        }
+        `,
+        }),
       });
       let picker = [];
       let data = {};

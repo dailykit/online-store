@@ -21,6 +21,7 @@ const Item = ({
   navigation,
   setExpanded,
   setSelected,
+  data,
 }) => {
   const [typeSelected, setTypeSelected] = useState(true);
   const [servingIndex, setServingIndex] = useState(0);
@@ -41,105 +42,120 @@ const Item = ({
         </TouchableOpacity>
       </View>
 
-      {[1, 2, 3].map((item, _key) => (
-        <>
-          <TouchableOpacity
-            key={_key}
-            onPress={() => {
-              setisSelected(_key);
-            }}
-            style={[
-              styles.item_container,
-              {
-                flex: isSelected ? 8 : 7,
-                borderColor: isSelected == _key ? '#3fa4ff' : '#ececec',
-                borderBottomColor: isSelected == _key ? '#3fa4ff' : '#ececec',
-              },
-            ]}
-          >
-            <View style={[styles.item_container_one]}>
-              <Image
-                source={{
-                  uri:
-                    'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
-                }}
-                style={styles.item_image}
-              />
-            </View>
-            <View style={[styles.item_container_two]}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={styles.item_title}>Dal Makhani </Text>
+      {data.map((item, _key) => {
+        let simpleRecipeProduct = item.simpleRecipeProduct;
+        return (
+          <>
+            <TouchableOpacity
+              key={_key}
+              onPress={() => {
+                setisSelected(_key);
+              }}
+              style={[
+                styles.item_container,
+                {
+                  flex: isSelected ? 8 : 7,
+                  borderColor: isSelected == _key ? '#3fa4ff' : '#ececec',
+                  borderBottomColor: isSelected == _key ? '#3fa4ff' : '#ececec',
+                },
+              ]}
+            >
+              <View style={[styles.item_container_one]}>
+                <Image
+                  source={{
+                    uri:
+                      'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+                  }}
+                  style={styles.item_image}
+                />
+              </View>
+              <View style={[styles.item_container_two]}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text
+                    style={styles.item_title}
+                  >{`${simpleRecipeProduct.name}`}</Text>
 
-                <TouchableOpacity onPress={() => navigation.navigate('Modal')}>
-                  <Feather size={14} name='info' />
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.item_chef}>Gordon Ramsay</Text>
-              <Text style={styles.item_category}>vegeterian</Text>
-            </View>
-            <View style={styles.item_container_three}>
-              <View style={styles.item_three_upper}>
-                {isSelected == _key && (
-                  <View style={styles.done_container}>
-                    <MaterialIcons name='done' size={16} color='#fff' />
-                  </View>
-                )}
-              </View>
-              <View style={styles.item_three_lower}>
-                <Text style={styles.item_details}>$ 1.2</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-          {isSelected == _key && (
-            <View style={{ paddingHorizontal: 20 }}>
-              <View style={styles.type_container}>
-                <View style={{ flex: 1 }}></View>
-                <View style={styles.type_container_right}>
                   <TouchableOpacity
-                    style={[
-                      styles.type_button,
-                      typeSelected ? styles.selected_type_conatiner : {},
-                    ]}
-                    onPress={() => setTypeSelected(!typeSelected)}
+                    onPress={() => navigation.navigate('Modal')}
                   >
-                    <Text style={styles.type_text}>Meal Kit</Text>
-                    {typeSelected && (
-                      <View style={styles.done_container}>
-                        <MaterialIcons name='done' size={16} color='#fff' />
-                      </View>
-                    )}
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setTypeSelected(!typeSelected)}
-                    style={[
-                      styles.type_button,
-                      !typeSelected ? styles.selected_type_conatiner : {},
-                    ]}
-                  >
-                    <Text style={styles.type_text}>Ready To Eat</Text>
-                    {!typeSelected && (
-                      <View style={[styles.done_container]}>
-                        <MaterialIcons name='done' size={16} color='#fff' />
-                      </View>
-                    )}
+                    <Feather size={14} name='info' />
                   </TouchableOpacity>
                 </View>
+                <Text style={styles.item_chef}>
+                  {simpleRecipeProduct.simpleRecipe.author}
+                </Text>
+                <Text style={styles.item_category}>vegeterian</Text>
               </View>
-              <Text style={styles.item_chef}>Avaliable Servings:</Text>
-              {[1, 2, 3, 4, 5, 6].map((item_data, key) => {
-                return (
-                  <ServingSelect
-                    key={key}
-                    index={key + 1}
-                    isSelected={servingIndex == key ? true : false}
-                    setServingIndex={(index) => setServingIndex(index)}
-                  />
-                );
-              })}
-            </View>
-          )}
-        </>
-      ))}
+              <View style={styles.item_container_three}>
+                <View style={styles.item_three_upper}>
+                  {isSelected == _key && (
+                    <View style={styles.done_container}>
+                      <MaterialIcons name='done' size={16} color='#fff' />
+                    </View>
+                  )}
+                </View>
+                <View style={styles.item_three_lower}>
+                  <Text style={styles.item_details}>
+                    ${' '}
+                    {simpleRecipeProduct.simpleRecipeProductOptions[0]
+                      ? simpleRecipeProduct.simpleRecipeProductOptions[0]
+                          .price[0].value
+                      : 'bad data'}
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+            {isSelected == _key && (
+              <View style={{ paddingHorizontal: 20 }}>
+                <View style={styles.type_container}>
+                  <View style={{ flex: 1 }}></View>
+                  <View style={styles.type_container_right}>
+                    <TouchableOpacity
+                      style={[
+                        styles.type_button,
+                        typeSelected ? styles.selected_type_conatiner : {},
+                      ]}
+                      onPress={() => setTypeSelected(!typeSelected)}
+                    >
+                      <Text style={styles.type_text}>Meal Kit</Text>
+                      {typeSelected && (
+                        <View style={styles.done_container}>
+                          <MaterialIcons name='done' size={16} color='#fff' />
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => setTypeSelected(!typeSelected)}
+                      style={[
+                        styles.type_button,
+                        !typeSelected ? styles.selected_type_conatiner : {},
+                      ]}
+                    >
+                      <Text style={styles.type_text}>Ready To Eat</Text>
+                      {!typeSelected && (
+                        <View style={[styles.done_container]}>
+                          <MaterialIcons name='done' size={16} color='#fff' />
+                        </View>
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <Text style={styles.item_chef}>Avaliable Servings:</Text>
+                {[1, 2, 3, 4, 5, 6].map((item_data, key) => {
+                  return (
+                    <ServingSelect
+                      key={key}
+                      index={key + 1}
+                      isSelected={servingIndex == key ? true : false}
+                      setServingIndex={(index) => setServingIndex(index)}
+                    />
+                  );
+                })}
+              </View>
+            )}
+          </>
+        );
+      })}
     </View>
   );
 };

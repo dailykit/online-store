@@ -31,6 +31,7 @@ export default class ComboProduct extends Component {
             name
             comboProductComponents {
               customizableProductId
+              label
               customizableProduct {
                 customizableProductOptions {
                   simpleRecipeProduct {
@@ -38,9 +39,23 @@ export default class ComboProduct extends Component {
                     default
                     simpleRecipeProductOptions {
                       price
-                      recipeYieldId
+                      simpleRecipeYieldId
+                    }
+                    simpleRecipe {
+                      author
+                      cookingTime
+                      assets
+                      cuisine
+                      description
+                      id
+                      image
+                      name
+                      procedures
+                      show
+                      utensilsRequired
                     }
                   }
+                 
                 }
                 name
                 id

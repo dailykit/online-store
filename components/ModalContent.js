@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Text,
   StyleSheet,
@@ -7,24 +7,25 @@ import {
   Image,
   Dimensions,
   TouchableOpacity,
-} from "react-native";
-import { Feather, AntDesign } from "@expo/vector-icons";
-import cooking from "../assets/imgs/cooking.png";
+} from 'react-native';
+import { Feather, AntDesign } from '@expo/vector-icons';
+import cooking from '../assets/imgs/cooking.png';
 
-import TabsNew from "./Tabs";
+import TabsNew from './Tabs';
 
-import { Tabs, Tab } from "native-base";
+import { Tabs, Tab } from 'native-base';
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get('window');
 
 export default class ModalContent extends Component {
   render() {
+    let { data, name, author } = this.props.route.params;
     return (
       <ScrollView style={styles.container}>
         <View style={styles.title_container}>
           <View style={styles.details}>
-            <Text style={styles.item_title}>Dal Makhani</Text>
-            <Text style={styles.item_chef}>Gordon Ramsay</Text>
+            <Text style={styles.item_title}>{name}</Text>
+            <Text style={styles.item_chef}>{author}</Text>
             <Text style={styles.item_category}>vegeterian</Text>
           </View>
           <View style={styles.close_container}>
@@ -33,7 +34,7 @@ export default class ModalContent extends Component {
                 this.props.navigation.goBack();
               }}
             >
-              <AntDesign size={30} name="close" />
+              <AntDesign size={30} name='close' />
             </TouchableOpacity>
           </View>
         </View>
@@ -41,20 +42,17 @@ export default class ModalContent extends Component {
           <Image
             source={{
               uri:
-                "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+                'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
             }}
             style={styles.image_cover}
           />
         </View>
         <TabsNew />
         <View style={styles.desc}>
-          <Text style={styles.desc_content}>
-            Classic Caesar Salad with crisp homemade croutons and a light caesar
-            dressing – for when you want to impress your dinner guests.
-          </Text>
+          <Text style={styles.desc_content}>{data.description}.</Text>
           <View style={styles.cooking_container}>
             <Image source={cooking} style={styles.cooking_img} />
-            <Text style={styles.desc_time}> 20 minutes</Text>
+            <Text style={styles.desc_time}> {data.cookingTime}</Text>
           </View>
           <Text style={styles.desc_equipments}>
             Equipments needed: Pan, more pans
@@ -65,18 +63,18 @@ export default class ModalContent extends Component {
         </View>
         <Tabs
           tabBarUnderlineStyle={{
-            backgroundColor: "white",
-            borderColor: "black",
+            backgroundColor: 'white',
+            borderColor: 'black',
           }}
-          tabBarBackgroundColor="#fff"
+          tabBarBackgroundColor='#fff'
         >
-          <Tab tabBarBackgroundColor="#fff" heading="Ingredients">
+          <Tab tabBarBackgroundColor='#fff' heading='Ingredients'>
             {[1, 2, 3].map((item, key) => (
               <View style={styles.ing_container} key={key}>
                 <Image
                   source={{
                     uri:
-                      "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+                      'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
                   }}
                   style={styles.ing_img}
                 />
@@ -84,7 +82,7 @@ export default class ModalContent extends Component {
               </View>
             ))}
           </Tab>
-          <Tab heading="Procedure">
+          <Tab heading='Procedure'>
             <Text style={styles.procedure}>` 1. Lorem ipsum `</Text>
             <Text style={styles.procedure}>
               ` 2. Lorem ipsum dnbfkj dfiusabdfks dfsudfb skdfsiu dfisgbdf`
@@ -94,7 +92,7 @@ export default class ModalContent extends Component {
             <Text style={styles.procedure}>` 5. Lorem ipsum `</Text>
             <Text style={styles.procedure}>` 6. Lorem ipsum `</Text>
           </Tab>
-          <Tab heading="Nuritional Values">
+          <Tab heading='Nuritional Values'>
             <Text style={styles.procedure}>` 1. Lorem ipsum `</Text>
             <Text style={styles.procedure}>
               ` 2. Lorem ipsum dnbfkj dfiusabdfks dfsudfb skdfsiu dfisgbdf`
@@ -116,14 +114,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   item_chef: {
-    color: "gray",
+    color: 'gray',
     fontSize: 12,
   },
   item_category: {
-    backgroundColor: "#56b783",
-    color: "white",
+    backgroundColor: '#56b783',
+    color: 'white',
     width: 70,
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: 5,
     paddingVertical: 2,
     borderRadius: 2,
@@ -131,14 +129,14 @@ const styles = StyleSheet.create({
   },
   title_container: {
     height: 100,
-    flexDirection: "row",
+    flexDirection: 'row',
     padding: 20,
   },
   close_container: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   details: {
     flex: 1,
@@ -156,13 +154,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   cooking_container: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 20,
   },
   cooking_img: {
     height: 20,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   desc_content: {
     marginBottom: 20,
@@ -175,8 +173,8 @@ const styles = StyleSheet.create({
     width: 80,
   },
   ing_container: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     margin: 10,
   },
   ing_text: {

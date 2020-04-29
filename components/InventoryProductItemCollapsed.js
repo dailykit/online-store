@@ -20,10 +20,7 @@ const CustomizableProductItemCollapsed = ({
   openModal,
   navigation,
   setExpanded,
-  data,
-  label,
 }) => {
-  let simpleRecipeProduct = data.simpleRecipeProduct;
   return (
     <TouchableOpacity
       onPress={() => {
@@ -45,7 +42,7 @@ const CustomizableProductItemCollapsed = ({
           { display: isSelected ? 'flex' : 'none' },
         ]}
       >
-        <Text style={styles.item_image_title}>{label}</Text>
+        <Text style={styles.item_image_title}>Dal</Text>
         <Image
           source={{
             uri:
@@ -64,44 +61,20 @@ const CustomizableProductItemCollapsed = ({
         ]}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text
-            style={styles.item_title}
-          >{`${simpleRecipeProduct.name} `}</Text>
+          <Text style={styles.item_title}>Dal Makhani </Text>
 
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('Modal', {
-                data: simpleRecipeProduct.simpleRecipe,
-                author: simpleRecipeProduct.simpleRecipe.author,
-                name: simpleRecipeProduct.name,
-              })
-            }
-          >
+          <TouchableOpacity onPress={() => navigation.navigate('Modal')}>
             <Feather size={14} name='info' />
           </TouchableOpacity>
         </View>
-        <Text
-          style={styles.item_chef}
-        >{`${simpleRecipeProduct.simpleRecipe.author} `}</Text>
+        <Text style={styles.item_chef}>Gordon Ramsay</Text>
         <Text style={styles.item_category}>vegeterian</Text>
       </View>
       <View style={styles.item_container_three}>
-        <View style={styles.item_three_upper}>
-          <TouchableOpacity
-            onPress={() => {
-              setSelected(_id);
-              setExpanded(true);
-            }}
-          >
-            <Text style={styles.options_text}>
-              3 options <Ionicons name='ios-arrow-down' />
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.item_three_upper}></View>
         <View style={styles.item_three_lower}>
           <Text style={styles.item_details}>
-            Mealkit | <Feather name='user' />{' '}
-            <Text style={{ fontWeight: 'bold' }}>1</Text>
+            Quantity :<Text style={{ fontWeight: 'bold' }}>1 bottle</Text>
           </Text>
         </View>
       </View>
