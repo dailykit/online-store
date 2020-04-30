@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 import ComboProduct from './ComboProduct';
+import CustomizableProductItem from './CustomizableProductItem';
 import * as uuid from 'uuid';
 
 const { width, height } = Dimensions.get('window');
@@ -26,6 +27,13 @@ export default class Card extends Component {
           <View style={styles.item_parent_container}>
             {this.props.type == 'comboProducts' && (
               <ComboProduct id={this.props.id} {...this.props} />
+            )}
+            {this.props.type == 'customizableProducts' && (
+              <CustomizableProductItem
+                independantItem
+                id={this.props.id}
+                {...this.props}
+              />
             )}
           </View>
 

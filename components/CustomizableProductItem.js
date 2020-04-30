@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text } from 'react-native';
+import axios from 'axios';
 
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed';
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded';
@@ -12,32 +13,94 @@ const CustomizableProductItem = ({
   openModal,
   navigation,
   data,
+  id,
+  independantItem,
 }) => {
   const [expanded, setExpanded] = useState(false);
-
+  const [loading, setLoading] = useState(true);
   const [isSelectedInside, setisSelectedInside] = useState(0);
+  const [customizableProduct, set_customizableProduct] = useState(null);
+
+  useEffect(() => {
+    if (independantItem) {
+      fetchData();
+    } else {
+      set_customizableProduct(data);
+      setLoading(false);
+    }
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      let res = await axios({
+        url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
+        method: 'POST',
+        data: JSON.stringify({
+          query: `
+          {
+            customizableProduct(id: ${id}) {
+                          customizableProductOptions {
+                            simpleRecipeProduct {
+                              name
+                              default
+                              simpleRecipeProductOptions {
+                                price
+                                simpleRecipeYieldId
+                              }
+                              simpleRecipe {
+                                author
+                                cookingTime
+                                assets
+                                cuisine
+                                description
+                                id
+                                image
+                                name
+                                procedures
+                                show
+                                utensilsRequired
+                              }
+                            }
+                          }
+            }
+          }
+        `,
+        }),
+      });
+      set_customizableProduct(res.data.data);
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  if (loading || !customizableProduct) {
+    return <Text>Loading...</Text>;
+  }
   let default_first_product =
-    data.customizableProduct !== null
-      ? data.customizableProduct.customizableProductOptions[0]
+    customizableProduct.customizableProduct !== null
+      ? customizableProduct.customizableProduct.customizableProductOptions[0]
       : null;
   if (
-    data.customizableProduct == null ||
-    data.customizableProduct.customizableProductOptions == null
+    customizableProduct.customizableProduct == null ||
+    customizableProduct.customizableProduct.customizableProductOptions == null
   ) {
     return <Text>Bad data</Text>;
   }
-  if (expanded && isSelected) {
+  if ((expanded && isSelected) || (expanded && independantItem)) {
     return (
       <CustomizableProductItemExpanded
         isSelected={isSelected}
         _id={_id}
-        data={data.customizableProduct.customizableProductOptions}
+        data={
+          customizableProduct.customizableProduct.customizableProductOptions
+        }
         setSelected={setSelected}
         isLast={isLast}
         openModal={openModal}
         navigation={navigation}
         setExpanded={setExpanded}
-        label={data.label}
+        label={independantItem ? '' : customizableProduct.label}
+        independantItem={independantItem ? true : false}
       />
     );
   }
@@ -51,7 +114,8 @@ const CustomizableProductItem = ({
       openModal={openModal}
       navigation={navigation}
       setExpanded={setExpanded}
-      label={data.label}
+      label={independantItem ? '' : data.label}
+      independantItem={independantItem ? true : false}
     />
   );
 };

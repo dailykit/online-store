@@ -22,19 +22,24 @@ const CustomizableProductItemCollapsed = ({
   setExpanded,
   data,
   label,
+  independantItem,
 }) => {
   let simpleRecipeProduct = data.simpleRecipeProduct;
   return (
     <TouchableOpacity
       onPress={() => {
-        setSelected(_id);
-        setExpanded(false);
+        if (!independantItem) {
+          setSelected(_id);
+          setExpanded(false);
+        } else {
+          setExpanded(false);
+        }
       }}
       style={[
         styles.item_container,
         {
           borderBottomWidth: isLast ? 0 : 1,
-          flex: isSelected ? 8 : 7,
+          flex: isSelected || independantItem ? 8 : 7,
           height: 'auto',
         },
       ]}
@@ -42,7 +47,7 @@ const CustomizableProductItemCollapsed = ({
       <View
         style={[
           styles.item_container_one,
-          { display: isSelected ? 'flex' : 'none' },
+          { display: isSelected || independantItem ? 'flex' : 'none' },
         ]}
       >
         <Text style={styles.item_image_title}>{label}</Text>
@@ -58,8 +63,8 @@ const CustomizableProductItemCollapsed = ({
         style={[
           styles.item_container_two,
           {
-            paddingTop: isSelected ? 15 : 0,
-            paddingLeft: isSelected ? 10 : 0,
+            paddingTop: isSelected || independantItem ? 15 : 0,
+            paddingLeft: isSelected || independantItem ? 10 : 0,
           },
         ]}
       >
@@ -89,8 +94,12 @@ const CustomizableProductItemCollapsed = ({
         <View style={styles.item_three_upper}>
           <TouchableOpacity
             onPress={() => {
-              setSelected(_id);
-              setExpanded(true);
+              if (!independantItem) {
+                setSelected(_id);
+                setExpanded(true);
+              } else {
+                setExpanded(true);
+              }
             }}
           >
             <Text style={styles.options_text}>

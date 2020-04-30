@@ -22,6 +22,7 @@ const Item = ({
   setExpanded,
   setSelected,
   data,
+  independantItem,
 }) => {
   const [typeSelected, setTypeSelected] = useState(true);
   const [servingIndex, setServingIndex] = useState(0);
@@ -32,8 +33,12 @@ const Item = ({
       <View style={styles.item_three_upper}>
         <TouchableOpacity
           onPress={() => {
-            setSelected(_id);
-            setExpanded(false);
+            if (!independantItem) {
+              setSelected(_id);
+              setExpanded(false);
+            } else {
+              setExpanded(false);
+            }
           }}
         >
           <Text style={styles.options_text}>
