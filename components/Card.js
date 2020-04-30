@@ -10,16 +10,22 @@ import { Feather } from '@expo/vector-icons';
 import ComboProduct from './ComboProduct';
 import CustomizableProductItem from './CustomizableProductItem';
 import * as uuid from 'uuid';
+import SimpleProductItem from './SimpleProductItem';
+import InventoryProductItem from './InventoryProductItem';
 
 const { width, height } = Dimensions.get('window');
 
 export default class Card extends Component {
   state = {
     modalVisible: false,
+    price: 2.5,
   };
   componentDidMount() {
     console.log(this.props.id, this.props.type);
   }
+  setPrice = (price) => {
+    this.setState({ price });
+  };
   render() {
     return (
       <>
@@ -33,13 +39,30 @@ export default class Card extends Component {
                 independantItem
                 id={this.props.id}
                 {...this.props}
+                setPrice={this.setPrice}
+              />
+            )}
+            {this.props.type == 'simpleRecipeProducts' && (
+              <SimpleProductItem
+                independantItem
+                id={this.props.id}
+                {...this.props}
+                setPrice={this.setPrice}
+              />
+            )}
+            {this.props.type == 'inventoryProducts' && (
+              <InventoryProductItem
+                independantItem
+                id={this.props.id}
+                {...this.props}
+                setPrice={this.setPrice}
               />
             )}
           </View>
 
           <View style={styles.bottom_container}>
             <View style={styles.price}>
-              <Text style={styles.price_text}>$ 2.50</Text>
+              <Text style={styles.price_text}>$ {this.state.price}</Text>
             </View>
             <View style={styles.add_to_cart_container}>
               <TouchableOpacity

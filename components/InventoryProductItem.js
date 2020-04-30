@@ -1,47 +1,75 @@
-import React, { useState } from 'react';
-import { View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ActivityIndicator } from 'react-native';
+import axios from 'axios';
 
-import InventoryProductItemCollapsed from './InventoryProductItemCollapsed';
-import InventoryProductItemExpanded from './InventoryProductItemExpanded';
+import InventoryProductCollapsed from './InventoryProductItemCollapsed';
 
-const CustomizableProductItem = ({
-  isSelected,
-  _id,
-  setSelected,
-  isLast,
-  openModal,
-  navigation,
-  data,
-}) => {
-  const [expanded, setExpanded] = useState(false);
+const InventoryProductItem = ({ _id, openModal, navigation, id, setPrice }) => {
+  const [loading, setLoading] = useState(true);
+  const [inventoryProduct, set_inventoryProduct] = useState(null);
 
-  const [isSelectedInside, setisSelectedInside] = useState(0);
-  if (expanded && isSelected) {
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      let res = await axios({
+        url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
+        method: 'POST',
+        data: JSON.stringify({
+          query: `
+          {
+            inventoryProduct(id: ${id}) {
+              assets
+              default
+              description
+              id
+              name
+              tags
+              inventoryProductOptions {
+                price
+                quantity
+                label
+                inventoryProductId
+              }
+            }
+          }   
+        `,
+        }),
+      });
+      set_inventoryProduct(res.data.data);
+      setPrice(
+        res.data.data.inventoryProduct.inventoryProductOptions[0].price[0].value
+      );
+      setLoading(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  if (loading || !inventoryProduct) {
     return (
-      <InventoryProductItemExpanded
-        isSelected={isSelected}
-        _id={_id}
-        data={data}
-        setSelected={setSelected}
-        isLast={isLast}
-        openModal={openModal}
-        navigation={navigation}
-        setExpanded={setExpanded}
-      />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ActivityIndicator />
+      </View>
     );
   }
+
   return (
-    <InventoryProductItemCollapsed
-      isSelected={isSelected}
+    <InventoryProductCollapsed
       _id={_id}
-      data={data}
-      setSelected={setSelected}
-      isLast={isLast}
+      data={inventoryProduct}
       openModal={openModal}
       navigation={navigation}
-      setExpanded={setExpanded}
+      label={'dinner'}
     />
   );
 };
 
-export default CustomizableProductItem;
+export default InventoryProductItem;

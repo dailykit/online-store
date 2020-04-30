@@ -9,6 +9,7 @@ import {
 import axios from 'axios';
 
 import CustomizableProductItem from './CustomizableProductItem';
+import SimpleProductItem from './SimpleProductItem';
 
 const { width, height } = Dimensions.get('window');
 
@@ -61,6 +62,9 @@ export default class ComboProduct extends Component {
                 id
                 default
               }
+              inventoryProductId
+              simpleRecipeProductId
+              
             }
           }
         }
@@ -98,18 +102,50 @@ export default class ComboProduct extends Component {
             if (_id == 2) {
               last = true;
             }
-            return (
-              <CustomizableProductItem
-                isSelected={isSelected}
-                _id={_id}
-                data={data}
-                setSelected={(index) => this.setState({ selected: index })}
-                isLast={last}
-                key={_id}
-                openModal={() => this.setState({ modalVisible: true })}
-                navigation={this.props.navigation}
-              />
-            );
+            if (data.customizableProductId) {
+              return (
+                <CustomizableProductItem
+                  isSelected={isSelected}
+                  _id={_id}
+                  data={data}
+                  setSelected={(index) => this.setState({ selected: index })}
+                  isLast={last}
+                  key={_id}
+                  openModal={() => this.setState({ modalVisible: true })}
+                  navigation={this.props.navigation}
+                />
+              );
+            }
+            if (data.simpleRecipeProductId) {
+              return (
+                <SimpleProductItem
+                  isSelected={isSelected}
+                  _id={_id}
+                  data={data}
+                  setSelected={(index) => this.setState({ selected: index })}
+                  isLast={last}
+                  key={_id}
+                  openModal={() => this.setState({ modalVisible: true })}
+                  navigation={this.props.navigation}
+                  id={data.simpleRecipeProductId}
+                />
+              );
+            }
+            if (data.inventoryProductId) {
+              return (
+                <SimpleProductItem
+                  isSelected={isSelected}
+                  _id={_id}
+                  data={data}
+                  setSelected={(index) => this.setState({ selected: index })}
+                  isLast={last}
+                  key={_id}
+                  openModal={() => this.setState({ modalVisible: true })}
+                  navigation={this.props.navigation}
+                  id={data.inventoryProductId}
+                />
+              );
+            }
           })}
         </View>
       </View>

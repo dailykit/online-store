@@ -11,8 +11,8 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 
 const { height, width } = Dimensions.get('window');
 
-const InventoryProductCollapsed = ({ _id, navigation, data, label }) => {
-  let inventoryProduct = data.inventoryProduct;
+const SimpleProductItemCollapsed = ({ _id, navigation, data, label }) => {
+  let simpleRecipeProduct = data.simpleRecipeProduct;
   return (
     <TouchableOpacity
       onPress={() => {}}
@@ -45,29 +45,34 @@ const InventoryProductCollapsed = ({ _id, navigation, data, label }) => {
         ]}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={styles.item_title}>{`${inventoryProduct.name} `}</Text>
+          <Text
+            style={styles.item_title}
+          >{`${simpleRecipeProduct.name} `}</Text>
 
           <TouchableOpacity
-            onPress={() => {
-              // navigation.navigate('Modal', {
-              //   data: inventoryProduct.simpleRecipe,
-              //   author: inventoryProduct.simpleRecipe.author,
-              //   name: inventoryProduct.name,
-              // });
-            }}
+            onPress={() =>
+              navigation.navigate('Modal', {
+                data: simpleRecipeProduct.simpleRecipe,
+                author: simpleRecipeProduct.simpleRecipe.author,
+                name: simpleRecipeProduct.name,
+              })
+            }
           >
             <Feather size={14} name='info' />
           </TouchableOpacity>
         </View>
-        <Text style={styles.item_category}></Text>
         <Text
           style={styles.item_chef}
-        >{`Unit size: ${inventoryProduct.inventoryProductOptions[0].label} `}</Text>
+        >{`${simpleRecipeProduct.simpleRecipe.author} `}</Text>
+        <Text style={styles.item_category}>vegeterian</Text>
       </View>
       <View style={styles.item_container_three}>
         <View style={styles.item_three_upper}></View>
         <View style={styles.item_three_lower}>
-          <Text style={styles.item_details}>{`Size: 1*1 `}</Text>
+          <Text style={styles.item_details}>
+            Mealkit | <Feather name='user' />{' '}
+            <Text style={{ fontWeight: 'bold' }}>1</Text>
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -125,10 +130,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   item_chef: {
-    fontSize: 14,
-    fontWeight: 'bold',
+    color: 'gray',
+    fontSize: 10,
   },
   item_category: {
+    backgroundColor: '#56b783',
     color: 'white',
     width: 70,
     textAlign: 'center',
@@ -144,7 +150,6 @@ const styles = StyleSheet.create({
   },
   item_details: {
     textAlign: 'right',
-    fontWeight: 'bold',
   },
   price: {
     flex: 1,
@@ -212,4 +217,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default InventoryProductCollapsed;
+export default SimpleProductItemCollapsed;

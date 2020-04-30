@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed';
@@ -20,12 +20,23 @@ const CustomizableProductItem = ({
   const [loading, setLoading] = useState(true);
   const [isSelectedInside, setisSelectedInside] = useState(0);
   const [customizableProduct, set_customizableProduct] = useState(null);
+  const [numberOfOptions, setnumberOfOptions] = useState(0);
 
   useEffect(() => {
     if (independantItem) {
       fetchData();
     } else {
       set_customizableProduct(data);
+      if (
+        data &&
+        data.customizableProduct &&
+        data.customizableProduct.customizableProductOptions
+      ) {
+        setnumberOfOptions(
+          data.customizableProduct.customizableProductOptions.length
+        );
+      }
+
       setLoading(false);
     }
   }, []);
@@ -68,13 +79,33 @@ const CustomizableProductItem = ({
         }),
       });
       set_customizableProduct(res.data.data);
+      if (
+        res.data.data &&
+        res.data.data.customizableProduct &&
+        res.data.data.customizableProduct.customizableProductOptions
+      ) {
+        setnumberOfOptions(
+          res.data.data.customizableProduct.customizableProductOptions.length
+        );
+      }
+
       setLoading(false);
     } catch (e) {
       console.log(e);
     }
   };
   if (loading || !customizableProduct) {
-    return <Text>Loading...</Text>;
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ActivityIndicator />
+      </View>
+    );
   }
   let default_first_product =
     customizableProduct.customizableProduct !== null
@@ -101,6 +132,7 @@ const CustomizableProductItem = ({
         setExpanded={setExpanded}
         label={independantItem ? '' : customizableProduct.label}
         independantItem={independantItem ? true : false}
+        numberOfOptions={numberOfOptions}
       />
     );
   }
@@ -116,6 +148,7 @@ const CustomizableProductItem = ({
       setExpanded={setExpanded}
       label={independantItem ? '' : data.label}
       independantItem={independantItem ? true : false}
+      numberOfOptions={numberOfOptions}
     />
   );
 };

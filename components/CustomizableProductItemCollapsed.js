@@ -23,6 +23,7 @@ const CustomizableProductItemCollapsed = ({
   data,
   label,
   independantItem,
+  numberOfOptions,
 }) => {
   let simpleRecipeProduct = data.simpleRecipeProduct;
   return (
@@ -63,7 +64,7 @@ const CustomizableProductItemCollapsed = ({
         style={[
           styles.item_container_two,
           {
-            paddingTop: isSelected || independantItem ? 15 : 0,
+            paddingTop: 15,
             paddingLeft: isSelected || independantItem ? 10 : 0,
           },
         ]}
@@ -103,7 +104,7 @@ const CustomizableProductItemCollapsed = ({
             }}
           >
             <Text style={styles.options_text}>
-              3 options <Ionicons name='ios-arrow-down' />
+              {numberOfOptions} options <Ionicons name='ios-arrow-down' />
             </Text>
           </TouchableOpacity>
         </View>
@@ -245,9 +246,10 @@ const styles = StyleSheet.create({
     width: 20,
   },
   item_three_upper: {
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
     flex: 1,
+    flexDirection: 'row',
   },
   item_three_lower: {
     flex: 1,

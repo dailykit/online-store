@@ -23,6 +23,7 @@ const Item = ({
   setSelected,
   data,
   independantItem,
+  numberOfOptions,
 }) => {
   const [typeSelected, setTypeSelected] = useState(true);
   const [servingIndex, setServingIndex] = useState(0);
@@ -42,7 +43,7 @@ const Item = ({
           }}
         >
           <Text style={styles.options_text}>
-            3 options <Ionicons name='ios-arrow-up' />
+            {numberOfOptions} options <Ionicons name='ios-arrow-up' />
           </Text>
         </TouchableOpacity>
       </View>
@@ -78,7 +79,7 @@ const Item = ({
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text
                     style={styles.item_title}
-                  >{`${simpleRecipeProduct.name}`}</Text>
+                  >{`${simpleRecipeProduct.name} `}</Text>
 
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Modal')}
