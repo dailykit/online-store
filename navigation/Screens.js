@@ -14,6 +14,9 @@ import AddToCart from '../screens/AddToCart';
 import OrderSummary from '../screens/OrderSummary';
 import ModalContect from '../components/ModalContent';
 import OrderPlaced from '../screens/OrderPlaced';
+import WelcomeScreen from '../screens/WelcomeScreen';
+import LoginScreen from '../screens/LoginScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 // drawer
 import CustomDrawerContent from './Menu';
 
@@ -63,6 +66,40 @@ function ProfileStack(props) {
             />
           ),
           headerTransparent: true,
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function AuthStack(props) {
+  return (
+    <Stack.Navigator mode='card' headerMode='screen'>
+      <Stack.Screen
+        name='Welcome'
+        component={WelcomeScreen}
+        options={{
+          headerMode: false,
+          header: null,
+          headerShown: false,
+          cardStyle: { backgroundColor: '#F8F9FE' },
+        }}
+      />
+      <Stack.Screen
+        name='Login'
+        component={LoginScreen}
+        options={{
+          headerMode: false,
+          header: null,
+          headerShown: false,
+          stackPresentation: 'modal',
+        }}
+      />
+      <Stack.Screen
+        name='SignUp'
+        component={SignUpScreen}
+        options={{
+          headerShown: false,
         }}
       />
     </Stack.Navigator>
@@ -132,9 +169,16 @@ function HomeStack(props) {
 
 export default function OnboardingStack(props) {
   return (
-    <Stack.Navigator mode='card' headerMode='none'>
-      <Stack.Screen name='App' component={AppStack} />
-    </Stack.Navigator>
+    <>
+      <Stack.Navigator
+        initialRouteName={props.loggedIn ? 'App' : 'Auth'}
+        mode='card'
+        headerMode='none'
+      >
+        <Stack.Screen name='App' component={AppStack} />
+        <Stack.Screen name='Auth' component={AuthStack} />
+      </Stack.Navigator>
+    </>
   );
 }
 

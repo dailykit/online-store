@@ -20,6 +20,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { enableScreens } from 'react-native-screens';
 enableScreens();
 
+//auth
+
 import Screens from './navigation/Screens';
 import { Images, articles, argonTheme } from './constants';
 
@@ -74,7 +76,9 @@ export default class App extends React.Component {
               <Provider store={store}>
                 {Platform.OS == 'ios' && <StatusBar barStyle='dark-content' />}
                 <ApplicationProvider {...eva} theme={eva.light}>
-                  <Screens />
+                  {/* <AuthProvider> */}
+                  <Screens loggedIn={true} />
+                  {/* </AuthProvider> */}
                 </ApplicationProvider>
               </Provider>
             </Block>
