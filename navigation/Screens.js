@@ -1,5 +1,5 @@
-import React from 'react';
-import { Easing, Animated, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Easing, Animated, Dimensions, AsyncStorage } from 'react-native';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -19,6 +19,9 @@ import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 // drawer
 import CustomDrawerContent from './Menu';
+
+// Auth Context
+import { useAuth } from '../context/auth';
 
 // header for screens
 import { Icon, Header } from '../components';
@@ -88,6 +91,7 @@ function AuthStack(props) {
       <Stack.Screen
         name='Login'
         component={LoginScreen}
+        setLoggedin={props.setLoggedin}
         options={{
           headerMode: false,
           header: null,
@@ -168,15 +172,33 @@ function HomeStack(props) {
 }
 
 export default function OnboardingStack(props) {
+  const [loggedin, setLoggedin] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      let token = await AsyncStorage.getItem('token');
+
+      if (token) {
+        setLoggedin(true);
+      }
+    })();
+  }, []);
+
+  const { isAuthenticated } = useAuth();
+  console.log(isAuthenticated);
+
   return (
     <>
-      <Stack.Navigator
-        initialRouteName={props.loggedIn ? 'App' : 'Auth'}
-        mode='card'
-        headerMode='none'
-      >
-        <Stack.Screen name='App' component={AppStack} />
-        <Stack.Screen name='Auth' component={AuthStack} />
+      <Stack.Navigator mode='card' headerMode='none'>
+        {loggedin ? (
+          <Stack.Screen name='App' component={AppStack} />
+        ) : (
+          <Stack.Screen
+            name='Auth'
+            setLoggedin={setLoggedin}
+            component={AuthStack}
+          />
+        )}
       </Stack.Navigator>
     </>
   );

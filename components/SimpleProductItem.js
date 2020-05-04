@@ -4,7 +4,14 @@ import axios from 'axios';
 
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed';
 
-const SimpleProductItem = ({ _id, openModal, navigation, id, setPrice }) => {
+const SimpleProductItem = ({
+  _id,
+  openModal,
+  navigation,
+  id,
+  setPrice,
+  independantItem,
+}) => {
   const [loading, setLoading] = useState(true);
   const [simpleProduct, set_simpleProduct] = useState(null);
 
@@ -46,7 +53,10 @@ const SimpleProductItem = ({ _id, openModal, navigation, id, setPrice }) => {
         }),
       });
       set_simpleProduct(res.data.data);
-      if (res.data.data.simpleRecipeProduct.simpleRecipeProductOptions[0]) {
+      if (
+        res.data.data.simpleRecipeProduct.simpleRecipeProductOptions[0] &&
+        independantItem
+      ) {
         setPrice(
           res.data.data.simpleRecipeProduct.simpleRecipeProductOptions[0]
             .price[0].value

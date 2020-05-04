@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -7,79 +7,78 @@ import {
   Dimensions,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+
 import ComboProduct from './ComboProduct';
 import CustomizableProductItem from './CustomizableProductItem';
-import * as uuid from 'uuid';
 import SimpleProductItem from './SimpleProductItem';
 import InventoryProductItem from './InventoryProductItem';
 
+import { useCartContext } from '../context/cart';
+
 const { width, height } = Dimensions.get('window');
 
-export default class Card extends Component {
-  state = {
-    modalVisible: false,
-    price: 2.5,
-  };
-  componentDidMount() {
-    console.log(this.props.id, this.props.type);
-  }
-  setPrice = (price) => {
-    this.setState({ price });
-  };
-  render() {
-    return (
-      <>
-        <View style={styles.card_container}>
-          <View style={styles.item_parent_container}>
-            {this.props.type == 'comboProducts' && (
-              <ComboProduct id={this.props.id} {...this.props} />
-            )}
-            {this.props.type == 'customizableProducts' && (
-              <CustomizableProductItem
-                independantItem
-                id={this.props.id}
-                {...this.props}
-                setPrice={this.setPrice}
-              />
-            )}
-            {this.props.type == 'simpleRecipeProducts' && (
-              <SimpleProductItem
-                independantItem
-                id={this.props.id}
-                {...this.props}
-                setPrice={this.setPrice}
-              />
-            )}
-            {this.props.type == 'inventoryProducts' && (
-              <InventoryProductItem
-                independantItem
-                id={this.props.id}
-                {...this.props}
-                setPrice={this.setPrice}
-              />
-            )}
-          </View>
+export default Card = ({ id, type, navigation, ...restProps }) => {
+  const [price, setPrice] = useState(2.5);
 
-          <View style={styles.bottom_container}>
-            <View style={styles.price}>
-              <Text style={styles.price_text}>$ {this.state.price}</Text>
-            </View>
-            <View style={styles.add_to_cart_container}>
-              <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('AddToCart')}
-                style={styles.button}
-              >
-                <Text style={styles.add_to_card_text}>
-                  <Feather size={14} name='plus' /> ADD TO CART
-                </Text>
-              </TouchableOpacity>
-            </View>
+  useEffect(() => {
+    console.log(id, type);
+  }, []);
+
+  const { addToCart } = useCartContext();
+
+  return (
+    <>
+      <View style={styles.card_container}>
+        <View style={styles.item_parent_container}>
+          {type == 'comboProducts' && <ComboProduct id={id} {...restProps} />}
+          {type == 'customizableProducts' && (
+            <CustomizableProductItem
+              independantItem
+              id={id}
+              {...restProps}
+              setPrice={(price) => setPrice(price)}
+            />
+          )}
+          {type == 'simpleRecipeProducts' && (
+            <SimpleProductItem
+              independantItem
+              id={id}
+              {...restProps}
+              setPrice={(price) => setPrice(price)}
+            />
+          )}
+          {type == 'inventoryProducts' && (
+            <InventoryProductItem
+              independantItem
+              id={id}
+              {...restProps}
+              setPrice={(price) => setPrice(price)}
+            />
+          )}
+        </View>
+
+        <View style={styles.bottom_container}>
+          <View style={styles.price}>
+            <Text style={styles.price_text}>$ {price}</Text>
+          </View>
+          <View style={styles.add_to_cart_container}>
+            <TouchableOpacity
+              onPress={() => {
+                addToCart('Hello');
+                navigation.navigate('AddToCart');
+              }}
+              style={styles.button}
+            >
+              <Text style={styles.add_to_card_text}>
+                <Feather size={14} name='plus' /> ADD TO CART
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </>
-    );
-  }
-}
+      </View>
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   card_container: {

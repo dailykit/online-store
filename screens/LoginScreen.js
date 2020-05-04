@@ -11,6 +11,8 @@ import {
   ScrollView,
 } from 'react-native';
 
+import { useAuth } from '../context/auth';
+
 import { ButtonAuth, BlockAuth, InputAuth, TextAuth } from '../components';
 import { theme } from '../constants';
 
@@ -27,6 +29,10 @@ export default class LoginScreen extends Component {
     loading: false,
   };
 
+  componentDidMount() {
+    console.log(this.props);
+  }
+
   async handleLogin() {
     const { navigation } = this.props;
     const { email, password } = this.state;
@@ -38,6 +44,8 @@ export default class LoginScreen extends Component {
     // check with backend API or with some static data
     try {
       await AsyncStorage.setItem('token', 'logged in');
+      //POST
+
       this.setState({
         loading: false,
       });

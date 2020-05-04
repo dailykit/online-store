@@ -1,7 +1,7 @@
-import { ADD_TO_CART, REMOVE_FROM_CART } from "../actions/types";
+import { ADD_TO_CART, REMOVE_FROM_CART } from '../actions/types';
 
 const initialState = {
-  cartItems: {},
+  cartItems: [],
 };
 
 export default function (state = initialState, action) {
@@ -9,12 +9,12 @@ export default function (state = initialState, action) {
     case ADD_TO_CART:
       return {
         ...state,
-        theme: action.payload,
+        cartItems: [...state.cartItems, action.payload],
       };
     case REMOVE_FROM_CART:
       return {
         ...state,
-        theme: action.payload,
+        cartItems: [...state.cartItems, action.payload],
       };
     default:
       return state;

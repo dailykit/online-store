@@ -16,6 +16,10 @@ import store from './store';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 
+// Context Providers
+import { AuthProvider } from './context/auth';
+import { CartContextProvider } from './context/cart';
+
 // Before rendering any navigation stack
 import { enableScreens } from 'react-native-screens';
 enableScreens();
@@ -76,9 +80,11 @@ export default class App extends React.Component {
               <Provider store={store}>
                 {Platform.OS == 'ios' && <StatusBar barStyle='dark-content' />}
                 <ApplicationProvider {...eva} theme={eva.light}>
-                  {/* <AuthProvider> */}
-                  <Screens loggedIn={true} />
-                  {/* </AuthProvider> */}
+                  <AuthProvider>
+                    <CartContextProvider>
+                      <Screens />
+                    </CartContextProvider>
+                  </AuthProvider>
                 </ApplicationProvider>
               </Provider>
             </Block>

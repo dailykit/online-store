@@ -30,15 +30,21 @@ export default class ComboProduct extends Component {
         {
           comboProduct(id: ${this.props.id}) {
             name
+            id
             comboProductComponents {
+              id
               customizableProductId
               label
               customizableProduct {
+                id
                 customizableProductOptions {
+                  id
                   simpleRecipeProduct {
+                    id
                     name
                     default
                     simpleRecipeProductOptions {
+                      id
                       price
                       simpleRecipeYieldId
                     }

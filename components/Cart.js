@@ -7,67 +7,66 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useCartContext } from '../context/cart';
 
 const { width, height } = Dimensions.get('window');
 
-export default class Cart extends Component {
-  render() {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          this.props.navigation.navigate('OrderSummary');
-        }}
-        style={styles.container}
-      >
-        <View style={styles.container_left}>
-          <Text style={styles.text}>$ 2.50</Text>
-        </View>
-        <View style={styles.container_right}>
-          <Text style={styles.text}>
-            {this.props.text}
-            {'    '}
-          </Text>
-          <Ionicons
-            name='ios-arrow-forward'
-            color='#fff'
-            size={20}
-            style={{ marginTop: 2 }}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  }
-}
+export default Cart = ({ navigation, text }) => {
+  const { cartItems } = useCartContext();
+  let numberOfProducts = cartItems.length;
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('OrderSummary');
+      }}
+      style={styles.container}
+    >
+      <View style={styles.container_left}>
+        <Text style={styles.text}>$ 2.50 | {numberOfProducts} Products</Text>
+      </View>
+      <View style={styles.container_right}>
+        <Text style={styles.text}>
+          {text}
+          {'    '}
+        </Text>
+        <Ionicons
+          name='ios-arrow-forward'
+          color='#fff'
+          size={20}
+          style={{ marginTop: 2 }}
+        />
+      </View>
+    </TouchableOpacity>
+  );
+};
 
-export class CartSummary extends Component {
-  render() {
-    return (
-      <TouchableOpacity
-        onPress={() => this.props.navigation.navigate('OrderPlaced')}
-        style={styles.container}
-      >
-        <View style={[styles.container_left, { flex: 3 }]}>
-          <Text style={[styles.text, { fontSize: 18 }]}>2 items | $ 2.50</Text>
-          <Text style={[styles.text, { fontSize: 10 }]}>
-            *extra charges may apply
-          </Text>
-        </View>
-        <View style={styles.container_right}>
-          <Text style={styles.text}>
-            {this.props.text}
-            {'    '}
-          </Text>
-          <Ionicons
-            name='ios-arrow-forward'
-            color='#fff'
-            size={20}
-            style={{ marginTop: 2 }}
-          />
-        </View>
-      </TouchableOpacity>
-    );
-  }
-}
+export const CartSummary = ({ navigation, text }) => {
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('OrderPlaced')}
+      style={styles.container}
+    >
+      <View style={[styles.container_left, { flex: 3 }]}>
+        <Text style={[styles.text, { fontSize: 18 }]}>2 items | $ 2.50</Text>
+        <Text style={[styles.text, { fontSize: 10 }]}>
+          *extra charges may apply
+        </Text>
+      </View>
+      <View style={styles.container_right}>
+        <Text style={styles.text}>
+          {text}
+          {'    '}
+        </Text>
+        <Ionicons
+          name='ios-arrow-forward'
+          color='#fff'
+          size={20}
+          style={{ marginTop: 2 }}
+        />
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -85,7 +84,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   container_left: {
-    flex: 2,
+    flex: 3,
     paddingHorizontal: 20,
     alignItems: 'flex-start',
     justifyContent: 'center',
