@@ -10,7 +10,15 @@ import { Feather, MaterialIcons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
-const ServingSelect = ({ index, isSelected, setServingIndex }) => {
+const ServingSelect = ({
+  index,
+  isSelected,
+  setServingIndex,
+  size,
+  price,
+  display,
+  type,
+}) => {
   return (
     <TouchableOpacity
       onPress={() => setServingIndex(index - 1)}
@@ -19,6 +27,7 @@ const ServingSelect = ({ index, isSelected, setServingIndex }) => {
         {
           borderColor: isSelected ? '#3fa4ff' : '#ececec',
           backgroundColor: '#fff',
+          display: display == type ? 'flex' : 'none',
         },
       ]}
     >
@@ -26,11 +35,11 @@ const ServingSelect = ({ index, isSelected, setServingIndex }) => {
         <Feather size={14} name='user' />
         <Text style={{ fontWeight: 'bold' }}>
           {'    '}
-          {index}
+          {size}
         </Text>
       </View>
       <View style={styles.servingSelectContainer_two}>
-        <Text style={styles.price_text}>$ 2.50</Text>
+        <Text style={styles.price_text}>$ {price}</Text>
       </View>
       <View style={styles.servingSelectContainer_three}>
         {isSelected && (

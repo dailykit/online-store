@@ -19,20 +19,31 @@ const { width, height } = Dimensions.get('window');
 
 export default Card = ({ id, type, navigation, ...restProps }) => {
   const [price, setPrice] = useState(2.5);
+  const [cardItem, setcardItem] = useState(null); // obj to push to jaguar
+  const [cardData, setcardData] = useState(null); // obj to pass to add to cart modal
 
   useEffect(() => {
     console.log(id, type);
   }, []);
 
-  const { addToCart } = useCartContext();
-
   return (
     <>
       <View style={styles.card_container}>
         <View style={styles.item_parent_container}>
-          {type == 'comboProducts' && <ComboProduct id={id} {...restProps} />}
+          {type == 'comboProducts' && (
+            <ComboProduct
+              setcardItem={(item) => setcardItem(item)}
+              setcardData={(item) => setcardData(item)}
+              id={id}
+              navigation={navigation}
+              {...restProps}
+            />
+          )}
           {type == 'customizableProducts' && (
             <CustomizableProductItem
+              setcardItem={(item) => setcardItem(item)}
+              navigation={navigation}
+              setcardData={(item) => setcardData(item)}
               independantItem
               id={id}
               {...restProps}
@@ -41,6 +52,9 @@ export default Card = ({ id, type, navigation, ...restProps }) => {
           )}
           {type == 'simpleRecipeProducts' && (
             <SimpleProductItem
+              setcardItem={(item) => setcardItem(item)}
+              setcardData={(item) => setcardData(item)}
+              navigation={navigation}
               independantItem
               id={id}
               {...restProps}
@@ -49,6 +63,9 @@ export default Card = ({ id, type, navigation, ...restProps }) => {
           )}
           {type == 'inventoryProducts' && (
             <InventoryProductItem
+              setcardItem={(item) => setcardItem(item)}
+              setcardData={(item) => setcardData(item)}
+              navigation={navigation}
               independantItem
               id={id}
               {...restProps}
@@ -64,8 +81,7 @@ export default Card = ({ id, type, navigation, ...restProps }) => {
           <View style={styles.add_to_cart_container}>
             <TouchableOpacity
               onPress={() => {
-                addToCart('Hello');
-                navigation.navigate('AddToCart');
+                navigation.navigate('AddToCart', { data: cardData, type, id });
               }}
               style={styles.button}
             >

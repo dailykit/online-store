@@ -46,6 +46,10 @@ export default class ComboProduct extends Component {
                     simpleRecipeProductOptions {
                       id
                       price
+                      type
+                      simpleRecipeYield {
+                      yield
+                      }
                       simpleRecipeYieldId
                     }
                     simpleRecipe {
@@ -119,6 +123,7 @@ export default class ComboProduct extends Component {
                   key={_id}
                   openModal={() => this.setState({ modalVisible: true })}
                   navigation={this.props.navigation}
+                  tunnelItem={this.props.tunnelItem}
                 />
               );
             }

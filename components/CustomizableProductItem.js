@@ -15,6 +15,7 @@ const CustomizableProductItem = ({
   data,
   id,
   independantItem,
+  tunnelItem,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -56,8 +57,13 @@ const CustomizableProductItem = ({
                               default
                               simpleRecipeProductOptions {
                                 price
+                                type
+                                simpleRecipeYield {
+                                yield
+                                }
                                 simpleRecipeYieldId
                               }
+
                               simpleRecipe {
                                 author
                                 cookingTime
@@ -133,6 +139,7 @@ const CustomizableProductItem = ({
         label={independantItem ? '' : customizableProduct.label}
         independantItem={independantItem ? true : false}
         numberOfOptions={numberOfOptions}
+        tunnelItem={tunnelItem}
       />
     );
   }

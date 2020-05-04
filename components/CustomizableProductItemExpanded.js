@@ -24,12 +24,14 @@ const Item = ({
   data,
   independantItem,
   numberOfOptions,
+  tunnelItem,
 }) => {
   const [typeSelected, setTypeSelected] = useState(true);
   const [servingIndex, setServingIndex] = useState(0);
   const [isSelected, setisSelected] = useState(0);
+  console.log(tunnelItem);
   return (
-    <View style={styles.container}>
+    <View key={_id} style={styles.container}>
       <Text style={styles.item_image_title}>Dal</Text>
       <View style={styles.item_three_upper}>
         <TouchableOpacity
@@ -111,7 +113,7 @@ const Item = ({
                 </View>
               </View>
             </TouchableOpacity>
-            {isSelected == _key && (
+            {isSelected == _key && tunnelItem && (
               <View style={{ paddingHorizontal: 20 }}>
                 <View style={styles.type_container}>
                   <View style={{ flex: 1 }}></View>
@@ -147,16 +149,22 @@ const Item = ({
                   </View>
                 </View>
                 <Text style={styles.item_chef}>Avaliable Servings:</Text>
-                {[1, 2, 3, 4, 5, 6].map((item_data, key) => {
-                  return (
-                    <ServingSelect
-                      key={key}
-                      index={key + 1}
-                      isSelected={servingIndex == key ? true : false}
-                      setServingIndex={(index) => setServingIndex(index)}
-                    />
-                  );
-                })}
+                {simpleRecipeProduct.simpleRecipeProductOptions.map(
+                  (item_data, key) => {
+                    return (
+                      <ServingSelect
+                        key={key}
+                        index={key + 1}
+                        isSelected={servingIndex == key ? true : false}
+                        setServingIndex={(index) => setServingIndex(index)}
+                        size={item_data.simpleRecipeYield.yield.serving}
+                        price={item_data.price[0].value}
+                        display={typeSelected ? 'Meal Kit' : 'Ready To Eat'}
+                        type={item_data.type}
+                      />
+                    );
+                  }
+                )}
               </View>
             )}
           </>

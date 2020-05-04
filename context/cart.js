@@ -6,8 +6,8 @@ export const CartContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
   const addToCart = (item) => {
-    console.log(cartItems);
     setCartItems([...cartItems, item]);
+    console.log(cartItems);
   };
 
   const removeFromCart = (item) => {

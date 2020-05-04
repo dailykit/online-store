@@ -11,6 +11,9 @@ const SimpleProductItem = ({
   id,
   setPrice,
   independantItem,
+  setcartItem,
+  setcardData,
+  tunnelItem,
 }) => {
   const [loading, setLoading] = useState(true);
   const [simpleProduct, set_simpleProduct] = useState(null);
@@ -26,41 +29,66 @@ const SimpleProductItem = ({
         method: 'POST',
         data: JSON.stringify({
           query: `
-          query MyQuery {
+           {
             simpleRecipeProduct(id: ${id}) {
+              name
+              default
+              id
+              simpleRecipeProductOptions {
+                id
+                price
+                type
+                simpleRecipeYield {
+                  yield
+                }
+                simpleRecipeYieldId
+              }
+              simpleRecipe {
+                author
+                cookingTime
+                assets
+                cuisine
+                description
+                id
+                image
                 name
-                default
-                simpleRecipeProductOptions {
-                    price
-                    simpleRecipeYieldId
-                }
-                simpleRecipe {
-                    author
-                    cookingTime
-                    assets
-                    cuisine
-                    description
-                    id
-                    image
-                    name
-                    procedures
-                    show
-                    utensilsRequired
-                }
+                procedures
+                show
+                utensilsRequired
+              }
             }
           }          
         `,
         }),
       });
-      set_simpleProduct(res.data.data);
+      let item = res.data.data;
+      set_simpleProduct(item);
       if (
-        res.data.data.simpleRecipeProduct.simpleRecipeProductOptions[0] &&
+        item.simpleRecipeProduct.simpleRecipeProductOptions[0] &&
         independantItem
       ) {
-        setPrice(
-          res.data.data.simpleRecipeProduct.simpleRecipeProductOptions[0]
-            .price[0].value
-        );
+        let objToAddToCart = {
+          product: {
+            id: item.simpleRecipeProduct.id,
+            option: {
+              id: item.simpleRecipeProduct.simpleRecipeProductOptions[0].id, // product option id
+              type: 'Meal Kit',
+            },
+            type: 'Simple Recipe',
+          },
+        };
+        if (!tunnelItem) {
+          setPrice(
+            item.simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
+              .value
+          );
+        }
+        if (tunnelItem) {
+          setcartItem(objToAddToCart);
+        }
+        if (independantItem && !tunnelItem) {
+          setcardData(item);
+        }
       }
       setLoading(false);
     } catch (e) {
@@ -88,6 +116,7 @@ const SimpleProductItem = ({
       openModal={openModal}
       navigation={navigation}
       label={'dinner'}
+      tunnelItem={tunnelItem}
     />
   );
 };

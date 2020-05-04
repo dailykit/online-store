@@ -11,13 +11,14 @@ import { useCartContext } from '../context/cart';
 
 const { width, height } = Dimensions.get('window');
 
-export default Cart = ({ navigation, text }) => {
-  const { cartItems } = useCartContext();
+export default Cart = ({ navigation, text, cartItem, to }) => {
+  const { cartItems, addToCart } = useCartContext();
   let numberOfProducts = cartItems.length;
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('OrderSummary');
+        addToCart(cartItem);
+        navigation.navigate(to);
       }}
       style={styles.container}
     >

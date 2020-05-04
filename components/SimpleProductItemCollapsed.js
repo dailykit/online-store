@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,75 +7,142 @@ import {
   Dimensions,
   Image,
 } from 'react-native';
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
+
+import ServingSelect from './ServingSelect';
 
 const { height, width } = Dimensions.get('window');
 
-const SimpleProductItemCollapsed = ({ _id, navigation, data, label }) => {
+const SimpleProductItemCollapsed = ({
+  _id,
+  navigation,
+  data,
+  label,
+  tunnelItem,
+}) => {
   let simpleRecipeProduct = data.simpleRecipeProduct;
+  const [typeSelected, setTypeSelected] = useState(true);
+  const [servingIndex, setServingIndex] = useState(0);
+  const [isSelected, setisSelected] = useState(0);
   return (
-    <TouchableOpacity
-      onPress={() => {}}
-      style={[
-        styles.item_container,
-        {
-          borderBottomWidth: 1,
-          flex: 8,
-          height: 'auto',
-        },
-      ]}
-    >
-      <View style={[styles.item_container_one, { display: 'flex' }]}>
-        <Text style={styles.item_image_title}>{label}</Text>
-        <Image
-          source={{
-            uri:
-              'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
-          }}
-          style={styles.item_image}
-        />
-      </View>
-      <View
+    <>
+      <TouchableOpacity
+        onPress={() => {}}
         style={[
-          styles.item_container_two,
+          styles.item_container,
           {
-            paddingTop: 15,
-            paddingLeft: 10,
+            borderBottomWidth: 1,
+            flex: 8,
+            height: 'auto',
           },
         ]}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text
-            style={styles.item_title}
-          >{`${simpleRecipeProduct.name} `}</Text>
+        <View style={[styles.item_container_one, { display: 'flex' }]}>
+          <Text style={styles.item_image_title}>{label}</Text>
+          <Image
+            source={{
+              uri:
+                'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+            }}
+            style={styles.item_image}
+          />
+        </View>
+        <View
+          style={[
+            styles.item_container_two,
+            {
+              paddingTop: 15,
+              paddingLeft: 10,
+            },
+          ]}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text
+              style={styles.item_title}
+            >{`${simpleRecipeProduct.name} `}</Text>
 
-          <TouchableOpacity
-            onPress={() =>
-              navigation.navigate('Modal', {
-                data: simpleRecipeProduct.simpleRecipe,
-                author: simpleRecipeProduct.simpleRecipe.author,
-                name: simpleRecipeProduct.name,
-              })
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('Modal', {
+                  data: simpleRecipeProduct.simpleRecipe,
+                  author: simpleRecipeProduct.simpleRecipe.author,
+                  name: simpleRecipeProduct.name,
+                })
+              }
+            >
+              <Feather size={14} name='info' />
+            </TouchableOpacity>
+          </View>
+          <Text
+            style={styles.item_chef}
+          >{`${simpleRecipeProduct.simpleRecipe.author} `}</Text>
+          <Text style={styles.item_category}>vegeterian</Text>
+        </View>
+        <View style={styles.item_container_three}>
+          <View style={styles.item_three_upper}></View>
+          <View style={styles.item_three_lower}>
+            <Text style={styles.item_details}>
+              Mealkit | <Feather name='user' />{' '}
+              <Text style={{ fontWeight: 'bold' }}>1</Text>
+            </Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+      {tunnelItem && (
+        <View style={{ paddingHorizontal: 20 }}>
+          <View style={styles.type_container}>
+            <View style={{ flex: 1 }}></View>
+            <View style={styles.type_container_right}>
+              <TouchableOpacity
+                style={[
+                  styles.type_button,
+                  typeSelected ? styles.selected_type_conatiner : {},
+                ]}
+                onPress={() => setTypeSelected(!typeSelected)}
+              >
+                <Text style={styles.type_text}>Meal Kit</Text>
+                {typeSelected && (
+                  <View style={styles.done_container}>
+                    <MaterialIcons name='done' size={16} color='#fff' />
+                  </View>
+                )}
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setTypeSelected(!typeSelected)}
+                style={[
+                  styles.type_button,
+                  !typeSelected ? styles.selected_type_conatiner : {},
+                ]}
+              >
+                <Text style={styles.type_text}>Ready To Eat</Text>
+                {!typeSelected && (
+                  <View style={[styles.done_container]}>
+                    <MaterialIcons name='done' size={16} color='#fff' />
+                  </View>
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
+          <Text style={styles.item_chef}>Avaliable Servings:</Text>
+          {simpleRecipeProduct.simpleRecipeProductOptions.map(
+            (item_data, key) => {
+              return (
+                <ServingSelect
+                  key={key}
+                  index={key + 1}
+                  isSelected={servingIndex == key ? true : false}
+                  setServingIndex={(index) => setServingIndex(index)}
+                  size={item_data.simpleRecipeYield.yield.serving}
+                  price={item_data.price[0].value}
+                  display={typeSelected ? 'Meal Kit' : 'Ready To Eat'}
+                  type={item_data.type}
+                />
+              );
             }
-          >
-            <Feather size={14} name='info' />
-          </TouchableOpacity>
+          )}
         </View>
-        <Text
-          style={styles.item_chef}
-        >{`${simpleRecipeProduct.simpleRecipe.author} `}</Text>
-        <Text style={styles.item_category}>vegeterian</Text>
-      </View>
-      <View style={styles.item_container_three}>
-        <View style={styles.item_three_upper}></View>
-        <View style={styles.item_three_lower}>
-          <Text style={styles.item_details}>
-            Mealkit | <Feather name='user' />{' '}
-            <Text style={{ fontWeight: 'bold' }}>1</Text>
-          </Text>
-        </View>
-      </View>
-    </TouchableOpacity>
+      )}
+    </>
   );
 };
 
