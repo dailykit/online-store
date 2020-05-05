@@ -82,6 +82,9 @@ export default class ComboProduct extends Component {
         }),
       });
       this.setState({ data: res.data.data.comboProduct });
+      if (!this.props.tunnelItem) {
+        this.props.setcardData(res.data.data.comboProduct);
+      }
       this.setState({ isLoading: false });
     } catch (e) {
       console.log(e);

@@ -16,6 +16,9 @@ const CustomizableProductItem = ({
   id,
   independantItem,
   tunnelItem,
+  setcardData,
+  setcartItem,
+  setPrice,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -51,34 +54,35 @@ const CustomizableProductItem = ({
           query: `
           {
             customizableProduct(id: ${id}) {
-                          customizableProductOptions {
-                            simpleRecipeProduct {
-                              name
-                              default
-                              simpleRecipeProductOptions {
-                                price
-                                type
-                                simpleRecipeYield {
-                                yield
-                                }
-                                simpleRecipeYieldId
-                              }
+              name
+              customizableProductOptions {
+                simpleRecipeProduct {
+                  name
+                  default
+                  simpleRecipeProductOptions {
+                    price
+                    type
+                    simpleRecipeYield {
+                    yield
+                    }
+                    simpleRecipeYieldId
+                  }
 
-                              simpleRecipe {
-                                author
-                                cookingTime
-                                assets
-                                cuisine
-                                description
-                                id
-                                image
-                                name
-                                procedures
-                                show
-                                utensilsRequired
-                              }
-                            }
-                          }
+                  simpleRecipe {
+                    author
+                    cookingTime
+                    assets
+                    cuisine
+                    description
+                    id
+                    image
+                    name
+                    procedures
+                    show
+                    utensilsRequired
+                  }
+                }
+              }
             }
           }
         `,
@@ -93,6 +97,22 @@ const CustomizableProductItem = ({
         setnumberOfOptions(
           res.data.data.customizableProduct.customizableProductOptions.length
         );
+      }
+      let item = res.data.data.customizableProduct;
+      if (item.customizableProductOptions[0] && independantItem) {
+        let objToAddToCart = {};
+        if (!tunnelItem) {
+          setPrice(
+            item.customizableProductOptions[0].simpleRecipeProduct
+              .simpleRecipeProductOptions[0].price[0].value
+          );
+        }
+        if (tunnelItem) {
+          setcartItem(objToAddToCart);
+        }
+        if (independantItem && !tunnelItem) {
+          setcardData(item);
+        }
       }
 
       setLoading(false);

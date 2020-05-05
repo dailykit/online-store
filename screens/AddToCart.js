@@ -30,9 +30,17 @@ export default ModalContent = ({ route, navigation, ...restProps }) => {
 
   let name = '';
   if (type == 'simpleRecipeProducts') {
+    console.log(data);
     name = data.simpleRecipeProduct.name;
-  } else {
-    name = 'Title';
+  }
+  if (type == 'comboProducts') {
+    name = data.name;
+  }
+  if (type == 'inventoryProducts') {
+    name = data.inventoryProduct.name;
+  }
+  if (type == 'customizableProducts') {
+    name = data.name;
   }
 
   return (
@@ -128,6 +136,7 @@ const styles = StyleSheet.create({
     height: 100,
     flexDirection: 'row',
     padding: 20,
+    paddingHorizontal: 10,
   },
   close_container: {
     flex: 1,
@@ -160,6 +169,7 @@ const styles = StyleSheet.create({
   },
   item_parent_container: {
     flex: 5,
+    paddingHorizontal: 10,
   },
   item_container: {
     flex: 1,

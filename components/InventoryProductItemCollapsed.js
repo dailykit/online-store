@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,69 +8,97 @@ import {
   Image,
 } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
+import ServingSelect from './ServingSelect';
 
 const { height, width } = Dimensions.get('window');
 
-const InventoryProductCollapsed = ({ _id, navigation, data, label }) => {
+const InventoryProductCollapsed = ({
+  _id,
+  navigation,
+  data,
+  label,
+  tunnelItem,
+}) => {
   let inventoryProduct = data.inventoryProduct;
+  const [servingIndex, setServingIndex] = useState(0);
+
   return (
-    <TouchableOpacity
-      onPress={() => {}}
-      style={[
-        styles.item_container,
-        {
-          borderBottomWidth: 1,
-          flex: 8,
-          height: 'auto',
-        },
-      ]}
-    >
-      <View style={[styles.item_container_one, { display: 'flex' }]}>
-        <Text style={styles.item_image_title}>{label}</Text>
-        <Image
-          source={{
-            uri:
-              'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
-          }}
-          style={styles.item_image}
-        />
-      </View>
-      <View
+    <>
+      <TouchableOpacity
+        onPress={() => {}}
         style={[
-          styles.item_container_two,
+          styles.item_container,
           {
-            paddingTop: 15,
-            paddingLeft: 10,
+            borderBottomWidth: 1,
+            flex: 8,
+            height: 'auto',
           },
         ]}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Text style={styles.item_title}>{`${inventoryProduct.name} `}</Text>
-
-          <TouchableOpacity
-            onPress={() => {
-              // navigation.navigate('Modal', {
-              //   data: inventoryProduct.simpleRecipe,
-              //   author: inventoryProduct.simpleRecipe.author,
-              //   name: inventoryProduct.name,
-              // });
+        <View style={[styles.item_container_one, { display: 'flex' }]}>
+          <Text style={styles.item_image_title}>{label}</Text>
+          <Image
+            source={{
+              uri:
+                'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
             }}
-          >
-            <Feather size={14} name='info' />
-          </TouchableOpacity>
+            style={styles.item_image}
+          />
         </View>
-        <Text style={styles.item_category}></Text>
-        <Text
-          style={styles.item_chef}
-        >{`Unit size: ${inventoryProduct.inventoryProductOptions[0].label} `}</Text>
-      </View>
-      <View style={styles.item_container_three}>
-        <View style={styles.item_three_upper}></View>
-        <View style={styles.item_three_lower}>
-          <Text style={styles.item_details}>{`Size: 1*1 `}</Text>
+        <View
+          style={[
+            styles.item_container_two,
+            {
+              paddingTop: 15,
+              paddingLeft: 10,
+            },
+          ]}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={styles.item_title}>{`${inventoryProduct.name} `}</Text>
+
+            <TouchableOpacity
+              onPress={() => {
+                // navigation.navigate('Modal', {
+                //   data: inventoryProduct.simpleRecipe,
+                //   author: inventoryProduct.simpleRecipe.author,
+                //   name: inventoryProduct.name,
+                // });
+              }}
+            >
+              <Feather size={14} name='info' />
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.item_category}></Text>
+          <Text
+            style={styles.item_chef}
+          >{`Unit size: ${inventoryProduct.inventoryProductOptions[0].label} `}</Text>
         </View>
-      </View>
-    </TouchableOpacity>
+        <View style={styles.item_container_three}>
+          <View style={styles.item_three_upper}></View>
+          <View style={styles.item_three_lower}>
+            <Text style={styles.item_details}>{`Size: 1*1 `}</Text>
+          </View>
+        </View>
+      </TouchableOpacity>
+      {tunnelItem && (
+        <View style={{ paddingHorizontal: 20 }}>
+          <Text style={styles.item_chef}>Avaliable Servings:</Text>
+          {inventoryProduct.inventoryProductOptions.map((item_data, key) => {
+            return (
+              <ServingSelect
+                key={key}
+                index={key + 1}
+                isSelected={servingIndex == key ? true : false}
+                setServingIndex={(index) => setServingIndex(index)}
+                size={item_data.label}
+                price={item_data.price[0].value}
+              />
+            );
+          })}
+        </View>
+      )}
+    </>
   );
 };
 

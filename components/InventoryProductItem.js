@@ -4,7 +4,17 @@ import axios from 'axios';
 
 import InventoryProductCollapsed from './InventoryProductItemCollapsed';
 
-const InventoryProductItem = ({ _id, openModal, navigation, id, setPrice }) => {
+const InventoryProductItem = ({
+  _id,
+  openModal,
+  navigation,
+  id,
+  setPrice,
+  tunnelItem,
+  independantItem,
+  setcartItem,
+  setcardData,
+}) => {
   const [loading, setLoading] = useState(true);
   const [inventoryProduct, set_inventoryProduct] = useState(null);
 
@@ -39,9 +49,25 @@ const InventoryProductItem = ({ _id, openModal, navigation, id, setPrice }) => {
         }),
       });
       set_inventoryProduct(res.data.data);
-      setPrice(
-        res.data.data.inventoryProduct.inventoryProductOptions[0].price[0].value
-      );
+      let item = res.data.data;
+      if (
+        res.data.data.inventoryProduct.inventoryProductOptions[0] &&
+        independantItem
+      ) {
+        let objToAddToCart = {};
+        if (!tunnelItem) {
+          setPrice(
+            res.data.data.inventoryProduct.inventoryProductOptions[0].price[0]
+              .value
+          );
+        }
+        if (tunnelItem) {
+          setcartItem(objToAddToCart);
+        }
+        if (independantItem && !tunnelItem) {
+          setcardData(item);
+        }
+      }
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -68,6 +94,7 @@ const InventoryProductItem = ({ _id, openModal, navigation, id, setPrice }) => {
       openModal={openModal}
       navigation={navigation}
       label={'dinner'}
+      tunnelItem={tunnelItem}
     />
   );
 };
