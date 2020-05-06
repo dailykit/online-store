@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
 import InventoryProductCollapsed from './InventoryProductItemCollapsed';
+import { INVENTORY_PRODUCT } from '../../gql/Queries';
 
 const InventoryProductItem = ({
   _id,
@@ -27,26 +28,7 @@ const InventoryProductItem = ({
       let res = await axios({
         url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
         method: 'POST',
-        data: JSON.stringify({
-          query: `
-          {
-            inventoryProduct(id: ${id}) {
-              assets
-              default
-              description
-              id
-              name
-              tags
-              inventoryProductOptions {
-                price
-                quantity
-                label
-                inventoryProductId
-              }
-            }
-          }   
-        `,
-        }),
+        data: INVENTORY_PRODUCT(id),
       });
       set_inventoryProduct(res.data.data);
       let item = res.data.data;

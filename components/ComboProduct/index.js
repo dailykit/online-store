@@ -25,9 +25,7 @@ export default ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
         let res = await axios({
           url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
           method: 'POST',
-          data: JSON.stringify({
-            query: COMBO_PRODUCT(id),
-          }),
+          data: COMBO_PRODUCT(id),
         });
         setData(res.data.data.comboProduct);
         if (!tunnelItem) {

@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed';
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded';
+import { CUSTOMIZABLE_PRODUCT } from '../../gql/Queries';
 
 const CustomizableProductItem = ({
   isSelected,
@@ -50,43 +51,7 @@ const CustomizableProductItem = ({
       let res = await axios({
         url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
         method: 'POST',
-        data: JSON.stringify({
-          query: `
-          {
-            customizableProduct(id: ${id}) {
-              name
-              customizableProductOptions {
-                simpleRecipeProduct {
-                  name
-                  default
-                  simpleRecipeProductOptions {
-                    price
-                    type
-                    simpleRecipeYield {
-                    yield
-                    }
-                    simpleRecipeYieldId
-                  }
-
-                  simpleRecipe {
-                    author
-                    cookingTime
-                    assets
-                    cuisine
-                    description
-                    id
-                    image
-                    name
-                    procedures
-                    show
-                    utensilsRequired
-                  }
-                }
-              }
-            }
-          }
-        `,
-        }),
+        data: CUSTOMIZABLE_PRODUCT(id),
       });
       set_customizableProduct(res.data.data);
       if (

@@ -1,4 +1,6 @@
-export const GET_MENU = `
+export const GET_MENU = () =>
+  JSON.stringify({
+    query: `
 {
     getMenu(year: 2020, month: 3, day: 27) {
       name
@@ -8,10 +10,12 @@ export const GET_MENU = `
       simpleRecipeProducts
     }
   }
-`;
+`,
+  });
 
 export const COMBO_PRODUCT = (id) =>
-  `
+  JSON.stringify({
+    query: `
   {
     comboProduct(id: ${id}) {
       name
@@ -63,4 +67,101 @@ export const COMBO_PRODUCT = (id) =>
       }
     }
   }
-  `;
+  `,
+  });
+
+export const CUSTOMIZABLE_PRODUCT = (id) =>
+  JSON.stringify({
+    query: `
+    {
+      customizableProduct(id: ${id}) {
+        name
+        customizableProductOptions {
+          simpleRecipeProduct {
+            name
+            default
+            simpleRecipeProductOptions {
+              price
+              type
+              simpleRecipeYield {
+              yield
+              }
+              simpleRecipeYieldId
+            }
+
+            simpleRecipe {
+              author
+              cookingTime
+              assets
+              cuisine
+              description
+              id
+              image
+              name
+              procedures
+              show
+              utensilsRequired
+            }
+          }
+        }
+      }
+    }
+  `,
+  });
+
+export const INVENTORY_PRODUCT = (id) =>
+  JSON.stringify({
+    query: `
+  {
+    inventoryProduct(id: ${id}) {
+      assets
+      default
+      description
+      id
+      name
+      tags
+      inventoryProductOptions {
+        price
+        quantity
+        label
+        inventoryProductId
+      }
+    }
+  }
+  `,
+  });
+
+export const SIMPLE_PRODUCT = (id) =>
+  JSON.stringify({
+    query: `
+    {
+      simpleRecipeProduct(id: ${id}) {
+        name
+        default
+        id
+        simpleRecipeProductOptions {
+          id
+          price
+          type
+          simpleRecipeYield {
+            yield
+          }
+          simpleRecipeYieldId
+        }
+        simpleRecipe {
+          author
+          cookingTime
+          assets
+          cuisine
+          description
+          id
+          image
+          name
+          procedures
+          show
+          utensilsRequired
+        }
+      }
+    }
+    `,
+  });

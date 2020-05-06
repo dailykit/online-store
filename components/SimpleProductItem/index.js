@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed';
+import { SIMPLE_PRODUCT } from '../../gql/Queries';
 
 const SimpleProductItem = ({
   _id,
@@ -27,39 +28,7 @@ const SimpleProductItem = ({
       let res = await axios({
         url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
         method: 'POST',
-        data: JSON.stringify({
-          query: `
-           {
-            simpleRecipeProduct(id: ${id}) {
-              name
-              default
-              id
-              simpleRecipeProductOptions {
-                id
-                price
-                type
-                simpleRecipeYield {
-                  yield
-                }
-                simpleRecipeYieldId
-              }
-              simpleRecipe {
-                author
-                cookingTime
-                assets
-                cuisine
-                description
-                id
-                image
-                name
-                procedures
-                show
-                utensilsRequired
-              }
-            }
-          }          
-        `,
-        }),
+        data: SIMPLE_PRODUCT(id),
       });
       let item = res.data.data;
       set_simpleProduct(item);
