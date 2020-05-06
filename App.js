@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Image, SafeAreaView, StatusBar, Platform } from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
@@ -10,8 +10,6 @@ import { ApplicationProvider } from '@ui-kitten/components';
 
 import Block from './components/Block';
 import { NavigationContainer } from '@react-navigation/native';
-import { Provider } from 'react-redux';
-import store from './store';
 
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
@@ -22,12 +20,16 @@ import { CartContextProvider } from './context/cart';
 
 // Before rendering any navigation stack
 import { enableScreens } from 'react-native-screens';
+
+import ErrorBoundary from './components/ErrorBoundary';
+
 enableScreens();
 
 //auth
 
 import Screens from './navigation/Screens';
 import { Images, articles, argonTheme } from './constants';
+import FallBack from './components/FallBack';
 
 // cache app images
 const assetImages = [
@@ -68,28 +70,32 @@ export default class App extends React.Component {
       );
     } else {
       return (
-        <NavigationContainer>
-          <SafeAreaView style={{ flex: 1 }}>
-            <Block
-              style={{
-                marginTop:
-                  Platform.OS == 'android' ? Constants.statusBarHeight : 0,
-              }}
-              flex
-            >
-              <Provider store={store}>
-                {Platform.OS == 'ios' && <StatusBar barStyle='dark-content' />}
-                <ApplicationProvider {...eva} theme={eva.light}>
-                  <AuthProvider>
-                    <CartContextProvider>
-                      <Screens />
-                    </CartContextProvider>
-                  </AuthProvider>
-                </ApplicationProvider>
-              </Provider>
-            </Block>
-          </SafeAreaView>
-        </NavigationContainer>
+        <Suspense fallback={FallBack}>
+          <ErrorBoundary>
+            <NavigationContainer>
+              <SafeAreaView style={{ flex: 1 }}>
+                <Block
+                  style={{
+                    marginTop:
+                      Platform.OS == 'android' ? Constants.statusBarHeight : 0,
+                  }}
+                  flex
+                >
+                  {Platform.OS == 'ios' && (
+                    <StatusBar barStyle='dark-content' />
+                  )}
+                  <ApplicationProvider {...eva} theme={eva.light}>
+                    <AuthProvider>
+                      <CartContextProvider>
+                        <Screens />
+                      </CartContextProvider>
+                    </AuthProvider>
+                  </ApplicationProvider>
+                </Block>
+              </SafeAreaView>
+            </NavigationContainer>
+          </ErrorBoundary>
+        </Suspense>
       );
     }
   }
