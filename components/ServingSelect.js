@@ -25,7 +25,7 @@ const ServingSelect = ({
     <TouchableOpacity
       onPress={() => {
         setServingIndex(index - 1);
-        setproductOptionId(id);
+        setproductOptionId(id, price);
       }}
       style={[
         styles.servingSelectContainer,

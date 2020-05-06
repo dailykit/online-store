@@ -19,6 +19,9 @@ export default ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
   const [isLoading, setisLoading] = useState(false);
   const [data, setData] = useState(null);
   const [selected, setSelected] = useState(0);
+
+  const [comboProductsArray, setcomboProductsArray] = useState([]);
+
   useEffect(() => {
     (async () => {
       try {
@@ -28,8 +31,11 @@ export default ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
           data: COMBO_PRODUCT(id),
         });
         setData(res.data.data.comboProduct);
+        let items = res.data.data;
         if (!tunnelItem) {
           setcardData(res.data.data.comboProduct);
+        }
+        if (tunnelItem) {
         }
         setisLoading(false);
       } catch (e) {
@@ -61,7 +67,7 @@ export default ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
           if (_id == 2) {
             last = true;
           }
-          if (data.customizableProductId) {
+          if (data.customizableProductId !== null) {
             return (
               <CustomizableProductItem
                 isSelected={isSelected}
@@ -72,10 +78,14 @@ export default ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
                 key={_id}
                 navigation={navigation}
                 tunnelItem={tunnelItem}
+                id={data.customizableProductId}
+                setDefault={(item) =>
+                  setcomboProductsArray([...comboProductsArray, item])
+                }
               />
             );
           }
-          if (data.simpleRecipeProductId) {
+          if (data.simpleRecipeProductId !== null) {
             return (
               <SimpleProductItem
                 isSelected={isSelected}
@@ -90,7 +100,7 @@ export default ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
               />
             );
           }
-          if (data.inventoryProductId) {
+          if (data.inventoryProductId !== null) {
             return (
               <InventoryProductItem
                 isSelected={isSelected}

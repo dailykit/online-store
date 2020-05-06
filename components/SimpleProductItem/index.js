@@ -24,9 +24,10 @@ const SimpleProductItem = ({
     fetchData();
   }, []);
 
-  const setProductOptionId = (id) => {
+  const setProductOptionId = (id, price) => {
     let newItem = objToAdd;
     newItem.product.option.id = id;
+    newItem.product.price = price;
     setobjToAdd(newItem);
     setcartItem(newItem);
   };
@@ -47,6 +48,10 @@ const SimpleProductItem = ({
         setobjToAdd({
           product: {
             id: item.simpleRecipeProduct.id,
+            name: item.simpleRecipeProduct.name,
+            price:
+              item.simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
+                .value,
             option: {
               id: item.simpleRecipeProduct.simpleRecipeProductOptions[0].id, // product option id
               type: item.simpleRecipeProduct.simpleRecipeProductOptions[0].type,
@@ -64,6 +69,10 @@ const SimpleProductItem = ({
           setcartItem({
             product: {
               id: item.simpleRecipeProduct.id,
+              name: item.simpleRecipeProduct.name,
+              price:
+                item.simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
+                  .value,
               option: {
                 id: item.simpleRecipeProduct.simpleRecipeProductOptions[0].id, // product option id
                 type:
@@ -104,7 +113,7 @@ const SimpleProductItem = ({
       navigation={navigation}
       label={'dinner'}
       tunnelItem={tunnelItem}
-      setProductOptionId={(id) => setProductOptionId(id)}
+      setProductOptionId={(id, price) => setProductOptionId(id, price)}
     />
   );
 };

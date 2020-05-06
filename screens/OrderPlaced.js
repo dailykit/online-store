@@ -15,84 +15,79 @@ import Summary from '../components/Summary';
 import { CartSummary } from '../components/Cart';
 import BillingDetails from '../components/BillingDetails';
 import HeaderBack from '../components/HeaderBack';
+import { useCartContext } from '../context/cart';
 
 const { width, height } = Dimensions.get('window');
 
-export default class OrderSummary extends Component {
-  render() {
-    let { navigation } = this.props;
-    return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <HeaderBack title='Go Back' navigation={navigation} />
-        <ScrollView style={styles.conatiner}>
-          <View style={styles.image_container}>
-            <Image
-              style={styles.image}
-              source={require('../assets/imgs/check-circle.png')}
-            />
+export default OrderPlaced = ({ navigation }) => {
+  const { cartItems } = useCartContext();
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <HeaderBack title='Go Back' navigation={navigation} />
+      <ScrollView style={styles.conatiner}>
+        <View style={styles.image_container}>
+          <Image
+            style={styles.image}
+            source={require('../assets/imgs/check-circle.png')}
+          />
+        </View>
+        <Text style={styles.order_placed_title}>Order Placed!</Text>
+        <Text
+          style={[styles.time_text, { textAlign: 'center', marginBottom: 10 }]}
+        >
+          Your order has been place. Your receipt will shortly be emailed to
+          you.
+        </Text>
+        <View style={styles.title_container}>
+          <View style={styles.title_container_left}>
+            <Text style={styles.deliver_on_text}>Deliver on</Text>
+            <Text style={styles.time_text}>Monday, Dec 9</Text>
           </View>
-          <Text style={styles.order_placed_title}>Order Placed!</Text>
-          <Text
-            style={[
-              styles.time_text,
-              { textAlign: 'center', marginBottom: 10 },
-            ]}
-          >
-            Your order has been place. Your receipt will shortly be emailed to
-            you.
-          </Text>
-          <View style={styles.title_container}>
-            <View style={styles.title_container_left}>
-              <Text style={styles.deliver_on_text}>Deliver on</Text>
-              <Text style={styles.time_text}>Monday, Dec 9</Text>
-            </View>
-            <View style={styles.title_container_middle}>
-              <Text
-                style={[styles.time_text, { textAlign: 'center', flex: 1 }]}
-              >
-                9am - 10am
-              </Text>
-            </View>
-            <View style={styles.title_container_right}>
-              <View style={styles.edit}></View>
-            </View>
-          </View>
-          <View style={[styles.title_container, { paddingLeft: 20 }]}>
-            <Text style={styles.time_text}>
-              123, some address, somewhere, california - 90922
+          <View style={styles.title_container_middle}>
+            <Text style={[styles.time_text, { textAlign: 'center', flex: 1 }]}>
+              9am - 10am
             </Text>
           </View>
-          <View style={styles.summary_title_conatiner}>
-            <View style={styles.summary_title_conatiner_left}>
-              <Text style={styles.summary_title_text}>Order Summary</Text>
-            </View>
-            <View style={styles.summary_title_conatiner_right}>
-              <Text style={[styles.summary_title_text, { textAlign: 'right' }]}>
-                3 products
-              </Text>
-            </View>
+          <View style={styles.title_container_right}>
+            <View style={styles.edit}></View>
           </View>
-          {[1, 2, 3].map((item, index) => {
-            return <Summary useQuantity item={item} key={index} />;
-          })}
-          <BillingDetails />
-          <View style={styles.send_details_container}>
-            <TouchableOpacity style={styles.send_email_container}>
-              <Text style={styles.send_email_container_text}>
-                EMAIL RECIPE CARD
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.download_recpie_card}>
-              <Text style={styles.download_recpie_card_text}>
-                DOWNLOAD RECIPE CARD
-              </Text>
-            </TouchableOpacity>
+        </View>
+        <View style={[styles.title_container, { paddingLeft: 20 }]}>
+          <Text style={styles.time_text}>
+            123, some address, somewhere, california - 90922
+          </Text>
+        </View>
+        <View style={styles.summary_title_conatiner}>
+          <View style={styles.summary_title_conatiner_left}>
+            <Text style={styles.summary_title_text}>Order Summary</Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
-    );
-  }
-}
+          <View style={styles.summary_title_conatiner_right}>
+            <Text style={[styles.summary_title_text, { textAlign: 'right' }]}>
+              3 products
+            </Text>
+          </View>
+        </View>
+        {cartItems.map((item, index) => {
+          return <Summary useQuantity item={item} key={index} />;
+        })}
+        <BillingDetails />
+        <View style={styles.send_details_container}>
+          <TouchableOpacity style={styles.send_email_container}>
+            <Text style={styles.send_email_container_text}>
+              EMAIL RECIPE CARD
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.download_recpie_card}>
+            <Text style={styles.download_recpie_card_text}>
+              DOWNLOAD RECIPE CARD
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   conatiner: {

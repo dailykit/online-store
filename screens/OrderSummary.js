@@ -9,7 +9,8 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
-import { Picker } from 'native-base';
+
+import { useCartContext } from '../context/cart';
 
 import Summary from '../components/Summary';
 import { CartSummary } from '../components/Cart';
@@ -18,57 +19,59 @@ import HeaderBack from '../components/HeaderBack';
 
 const { width, height } = Dimensions.get('window');
 
-export default class OrderSummary extends Component {
-  render() {
-    let { navigation } = this.props;
-    return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <HeaderBack title='Go Back' navigation={navigation} />
-        <ScrollView style={styles.conatiner}>
-          <View style={styles.title_container}>
-            <View style={styles.title_container_left}>
-              <Text style={styles.deliver_on_text}>Deliver on</Text>
-              <Text style={styles.time_text}>Monday, Dec 9</Text>
-            </View>
-            <View style={styles.title_container_middle}>
-              <Text
-                style={[styles.time_text, { textAlign: 'center', flex: 1 }]}
-              >
-                9am - 10am
-              </Text>
-            </View>
-            <View style={styles.title_container_right}>
-              <View style={styles.edit}>
-                <Text style={styles.edit_text}>edit{'  '}</Text>
-                <Ionicons
-                  style={{ paddingTop: 2 }}
-                  size={16}
-                  name='ios-arrow-forward'
-                />
-              </View>
+export default OrderSummary = ({ navigation, ...restProps }) => {
+  const { cartItems } = useCartContext();
+
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <HeaderBack title='Go Back' navigation={navigation} />
+      <ScrollView style={styles.conatiner}>
+        <View style={styles.title_container}>
+          <View style={styles.title_container_left}>
+            <Text style={styles.deliver_on_text}>Deliver on</Text>
+            <Text style={styles.time_text}>Monday, Dec 9</Text>
+          </View>
+          <View style={styles.title_container_middle}>
+            <Text style={[styles.time_text, { textAlign: 'center', flex: 1 }]}>
+              9am - 10am
+            </Text>
+          </View>
+          <View style={styles.title_container_right}>
+            <View style={styles.edit}>
+              <Text style={styles.edit_text}>edit{'  '}</Text>
+              <Ionicons
+                style={{ paddingTop: 2 }}
+                size={16}
+                name='ios-arrow-forward'
+              />
             </View>
           </View>
-          <View style={styles.summary_title_conatiner}>
-            <View style={styles.summary_title_conatiner_left}>
-              <Text style={styles.summary_title_text}>Order Summary</Text>
-            </View>
-            <View style={styles.summary_title_conatiner_right}>
-              <Text style={[styles.summary_title_text, { textAlign: 'right' }]}>
-                3 products
-              </Text>
-            </View>
+        </View>
+        <View style={styles.summary_title_conatiner}>
+          <View style={styles.summary_title_conatiner_left}>
+            <Text style={styles.summary_title_text}>Order Summary</Text>
           </View>
-          {[1, 2, 3].map((item, index) => {
-            return <Summary item={item} key={index} />;
-          })}
-          <BillingDetails />
-          <View style={{ height: height * 0.08 }} />
-        </ScrollView>
-        <CartSummary {...this.props} text='CONFIRM AND PAY' pay />
-      </SafeAreaView>
-    );
-  }
-}
+          <View style={styles.summary_title_conatiner_right}>
+            <Text style={[styles.summary_title_text, { textAlign: 'right' }]}>
+              {cartItems.length} products
+            </Text>
+          </View>
+        </View>
+        {cartItems.map((item, index) => {
+          return <Summary item={item} key={index} />;
+        })}
+        <BillingDetails />
+        <View style={{ height: height * 0.08 }} />
+      </ScrollView>
+      <CartSummary
+        {...restProps}
+        navigation={navigation}
+        text='CONFIRM AND PAY'
+        pay
+      />
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   conatiner: {

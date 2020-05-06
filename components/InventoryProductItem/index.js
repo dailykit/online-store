@@ -23,9 +23,10 @@ const InventoryProductItem = ({
     fetchData();
   }, []);
 
-  const setProductOptionId = (id) => {
+  const setProductOptionId = (id, price) => {
     let newItem = objToAdd;
     newItem.product.option.id = id;
+    newItem.product.price = price;
     setobjToAdd(newItem);
     setcartItem(newItem);
   };
@@ -46,6 +47,9 @@ const InventoryProductItem = ({
         setobjToAdd({
           product: {
             id: item.inventoryProduct.id,
+            name: item.inventoryProduct.name,
+            price:
+              item.inventoryProduct.inventoryProductOptions[0].price[0].value,
             option: {
               id: item.inventoryProduct.inventoryProductOptions[0].id, // product option id
             },
@@ -62,6 +66,9 @@ const InventoryProductItem = ({
           setcartItem({
             product: {
               id: item.inventoryProduct.id,
+              name: item.inventoryProduct.name,
+              price:
+                item.inventoryProduct.inventoryProductOptions[0].price[0].value,
               option: {
                 id: item.inventoryProduct.inventoryProductOptions[0].id, // product option id
               },
@@ -100,7 +107,7 @@ const InventoryProductItem = ({
       navigation={navigation}
       label={'dinner'}
       tunnelItem={tunnelItem}
-      setProductOptionId={(id) => setProductOptionId(id)}
+      setProductOptionId={(id, price) => setProductOptionId(id, price)}
     />
   );
 };

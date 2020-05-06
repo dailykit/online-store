@@ -20,6 +20,7 @@ const CustomizableProductItem = ({
   setcardData,
   setcartItem,
   setPrice,
+  setcartItemToDisplay,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -28,22 +29,7 @@ const CustomizableProductItem = ({
   const [numberOfOptions, setnumberOfOptions] = useState(0);
 
   useEffect(() => {
-    if (independantItem) {
-      fetchData();
-    } else {
-      set_customizableProduct(data);
-      if (
-        data &&
-        data.customizableProduct &&
-        data.customizableProduct.customizableProductOptions
-      ) {
-        setnumberOfOptions(
-          data.customizableProduct.customizableProductOptions.length
-        );
-      }
-
-      setLoading(false);
-    }
+    fetchData();
   }, []);
 
   const fetchData = async () => {
@@ -54,33 +40,35 @@ const CustomizableProductItem = ({
         data: CUSTOMIZABLE_PRODUCT(id),
       });
       set_customizableProduct(res.data.data);
-      if (
-        res.data.data &&
-        res.data.data.customizableProduct &&
-        res.data.data.customizableProduct.customizableProductOptions
-      ) {
-        setnumberOfOptions(
-          res.data.data.customizableProduct.customizableProductOptions.length
-        );
-      }
-      let item = res.data.data.customizableProduct;
-      if (item.customizableProductOptions[0] && independantItem) {
-        let objToAddToCart = {};
-        if (!tunnelItem) {
-          setPrice(
-            item.customizableProductOptions[0].simpleRecipeProduct
-              .simpleRecipeProductOptions[0].price[0].value
+      if (res.data.data !== undefined) {
+        if (
+          res.data.data &&
+          res.data.data.customizableProduct &&
+          res.data.data.customizableProduct.customizableProductOptions
+        ) {
+          setnumberOfOptions(
+            res.data.data.customizableProduct.customizableProductOptions.length
           );
         }
-        if (tunnelItem) {
-          setcartItem(objToAddToCart);
+        let item = res.data.data.customizableProduct;
+        if (item.customizableProductOptions[0] && independantItem) {
+          let objToAddToCart = {};
+          if (!tunnelItem) {
+            setPrice(
+              item.customizableProductOptions[0].simpleRecipeProduct
+                .simpleRecipeProductOptions[0].price[0].value
+            );
+          }
+          if (tunnelItem) {
+            setcartItem(objToAddToCart);
+            setcartItemToDisplay({});
+          }
+          if (independantItem && !tunnelItem) {
+            setcardData(item);
+          }
         }
-        if (independantItem && !tunnelItem) {
-          setcardData(item);
-        }
+        setLoading(false);
       }
-
-      setLoading(false);
     } catch (e) {
       console.log(e);
     }

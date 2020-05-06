@@ -11,7 +11,7 @@ import { Picker } from 'native-base';
 
 const { width, height } = Dimensions.get('window');
 
-const Summary = ({ useQuantity }) => {
+const Summary = ({ useQuantity, item }) => {
   const [quantity, setquantity] = useState(1);
   if (quantity < 0) {
     setquantity(0);
@@ -19,26 +19,11 @@ const Summary = ({ useQuantity }) => {
   return (
     <View style={styles.summary_container}>
       <View style={styles.picker_container}>
-        <Picker
-          mode='dropdown'
-          iosHeader='Category'
-          iosIcon={<Feather name='arrow-down' />}
-          style={styles.picker_placeholder}
-          selectedValue={'key1'}
-          onValueChange={(value) => console.log(value)}
-          placeholderStyle={{ fontWeight: 'bold' }}
-          textStyle={{ fontWeight: 'bold' }}
-        >
-          <Picker.Item label='Wallet' value='key0' />
-          <Picker.Item label='Dal makhani with brown rice' value='key1' />
-          <Picker.Item label='Debit Card' value='key2' />
-          <Picker.Item label='Credit Card' value='key3' />
-          <Picker.Item label='Net Banking' value='key4' />
-        </Picker>
+        <Text style={styles.summary_title_text}>{item.product.name}</Text>
       </View>
       <View style={styles.summary_bottom_conatiner}>
         <View style={styles.summary_bottom_conatiner_left}>
-          <Text style={styles.price_text}>$ 2.50</Text>
+          <Text style={styles.price_text}>$ {item.product.price}</Text>
         </View>
         <View style={styles.summary_bottom_conatiner_right}>
           {!useQuantity && (
@@ -93,7 +78,9 @@ const styles = StyleSheet.create({
   },
   picker_container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingLeft: 30,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
   },
   summary_bottom_conatiner: {
     flex: 1,

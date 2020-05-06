@@ -1,7 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
+import { useCartContext } from '../context/cart';
+
 const BillingDetails = () => {
+  const { totalPrice } = useCartContext();
   return (
     <View style={styles.billing_details}>
       <View style={styles.bill_child_container}>
@@ -12,7 +15,7 @@ const BillingDetails = () => {
           <Text style={styles.billing_details_left_text}>Item Total</Text>
         </View>
         <View style={styles.bill_child_container_right}>
-          <Text style={styles.billing_details_right_text}>$ 4.50</Text>
+          <Text style={styles.billing_details_right_text}>$ {totalPrice}</Text>
         </View>
       </View>
       <View style={styles.bill_child_container}>

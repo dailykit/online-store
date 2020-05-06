@@ -107,7 +107,7 @@ class Home extends React.Component {
           )}
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
-        <Cart to='' {...this.props} text='Checkout' />
+        <Cart to='OrderSummary' {...this.props} text='Checkout' />
       </View>
     );
   }

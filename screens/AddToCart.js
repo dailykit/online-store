@@ -22,11 +22,10 @@ import { useCartContext } from '../context/cart';
 const { width, height } = Dimensions.get('window');
 
 export default ModalContent = ({ route, navigation, ...restProps }) => {
-  const { addToCart } = useCartContext();
-
   const { data, type, id } = route.params;
   const [selected, setSelected] = useState(0);
   const [cartItem, setcartItem] = useState(null); // obj to push to jaguar
+  const [cartItemToDisplay, setcartItemToDisplay] = useState(null); // obj to push to jaguar
 
   let name = '';
   if (type == 'simpleRecipeProducts') {
@@ -59,6 +58,7 @@ export default ModalContent = ({ route, navigation, ...restProps }) => {
           {type == 'comboProducts' && (
             <ComboProduct
               setcartItem={(item) => setcartItem(item)}
+              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               tunnelItem
               id={id}
@@ -68,6 +68,7 @@ export default ModalContent = ({ route, navigation, ...restProps }) => {
           {type == 'customizableProducts' && (
             <CustomizableProductItem
               setcartItem={(item) => setcartItem(item)}
+              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               independantItem
               tunnelItem
@@ -78,6 +79,7 @@ export default ModalContent = ({ route, navigation, ...restProps }) => {
           {type == 'simpleRecipeProducts' && (
             <SimpleProductItem
               setcartItem={(item) => setcartItem(item)}
+              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               independantItem
               tunnelItem
@@ -88,6 +90,7 @@ export default ModalContent = ({ route, navigation, ...restProps }) => {
           {type == 'inventoryProducts' && (
             <InventoryProductItem
               setcartItem={(item) => setcartItem(item)}
+              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               independantItem
               tunnelItem
@@ -104,6 +107,8 @@ export default ModalContent = ({ route, navigation, ...restProps }) => {
         to={'Home'}
         {...restProps}
         text='Proceed'
+        cartItemToDisplay={cartItemToDisplay}
+        tunnelItem
       />
     </View>
   );

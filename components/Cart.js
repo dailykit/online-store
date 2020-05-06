@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -11,19 +11,25 @@ import { useCartContext } from '../context/cart';
 
 const { width, height } = Dimensions.get('window');
 
-export default Cart = ({ navigation, text, cartItem, to }) => {
-  const { cartItems, addToCart } = useCartContext();
+export default Cart = ({ navigation, text, cartItem, to, tunnelItem }) => {
+  const { cartItems, addToCart, totalPrice } = useCartContext();
+
   let numberOfProducts = cartItems.length;
+
   return (
     <TouchableOpacity
       onPress={() => {
-        addToCart(cartItem);
+        if (tunnelItem) {
+          addToCart(cartItem);
+        }
         navigation.navigate(to);
       }}
       style={styles.container}
     >
       <View style={styles.container_left}>
-        <Text style={styles.text}>$ 2.50 | {numberOfProducts} Products</Text>
+        <Text style={styles.text}>
+          $ {totalPrice} | {numberOfProducts} Products
+        </Text>
       </View>
       <View style={styles.container_right}>
         <Text style={styles.text}>
@@ -42,13 +48,16 @@ export default Cart = ({ navigation, text, cartItem, to }) => {
 };
 
 export const CartSummary = ({ navigation, text }) => {
+  const { cartItems, totalPrice } = useCartContext();
   return (
     <TouchableOpacity
       onPress={() => navigation.navigate('OrderPlaced')}
       style={styles.container}
     >
       <View style={[styles.container_left, { flex: 3 }]}>
-        <Text style={[styles.text, { fontSize: 18 }]}>2 items | $ 2.50</Text>
+        <Text style={[styles.text, { fontSize: 18 }]}>
+          {cartItems.length} items | $ {totalPrice}
+        </Text>
         <Text style={[styles.text, { fontSize: 10 }]}>
           *extra charges may apply
         </Text>
