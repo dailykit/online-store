@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Feather, MaterialIcons, Ionicons } from '@expo/vector-icons';
 
-import ServingSelect from './ServingSelect';
+import ServingSelect from '../ServingSelect';
 
 const { width, height } = Dimensions.get('window');
 

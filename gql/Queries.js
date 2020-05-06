@@ -9,3 +9,58 @@ export const GET_MENU = `
     }
   }
 `;
+
+export const COMBO_PRODUCT = (id) =>
+  `
+  {
+    comboProduct(id: ${id}) {
+      name
+      id
+      comboProductComponents {
+        id
+        customizableProductId
+        label
+        customizableProduct {
+          id
+          customizableProductOptions {
+            id
+            simpleRecipeProduct {
+              id
+              name
+              default
+              simpleRecipeProductOptions {
+                id
+                price
+                type
+                simpleRecipeYield {
+                yield
+                }
+                simpleRecipeYieldId
+              }
+              simpleRecipe {
+                author
+                cookingTime
+                assets
+                cuisine
+                description
+                id
+                image
+                name
+                procedures
+                show
+                utensilsRequired
+              }
+            }
+           
+          }
+          name
+          id
+          default
+        }
+        inventoryProductId
+        simpleRecipeProductId
+        
+      }
+    }
+  }
+  `;
