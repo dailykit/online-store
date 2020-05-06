@@ -30,7 +30,6 @@ export default ModalContent = ({ route, navigation, ...restProps }) => {
 
   let name = '';
   if (type == 'simpleRecipeProducts') {
-    console.log(data);
     name = data.simpleRecipeProduct.name;
   }
   if (type == 'comboProducts') {

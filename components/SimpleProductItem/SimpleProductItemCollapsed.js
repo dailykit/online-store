@@ -19,6 +19,7 @@ const SimpleProductItemCollapsed = ({
   data,
   label,
   tunnelItem,
+  setProductOptionId,
 }) => {
   let simpleRecipeProduct = data.simpleRecipeProduct;
   const [typeSelected, setTypeSelected] = useState(true);
@@ -136,6 +137,8 @@ const SimpleProductItemCollapsed = ({
                   price={item_data.price[0].value}
                   display={typeSelected ? 'Meal Kit' : 'Ready To Eat'}
                   type={item_data.type}
+                  setproductOptionId={(id) => setProductOptionId(id)}
+                  id={item_data.id}
                 />
               );
             }

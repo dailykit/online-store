@@ -18,10 +18,18 @@ const SimpleProductItem = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [simpleProduct, set_simpleProduct] = useState(null);
+  const [objToAdd, setobjToAdd] = useState({});
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  const setProductOptionId = (id) => {
+    let newItem = objToAdd;
+    newItem.product.option.id = id;
+    setobjToAdd(newItem);
+    setcartItem(newItem);
+  };
 
   const fetchData = async () => {
     try {
@@ -36,16 +44,16 @@ const SimpleProductItem = ({
         item.simpleRecipeProduct.simpleRecipeProductOptions[0] &&
         independantItem
       ) {
-        let objToAddToCart = {
+        setobjToAdd({
           product: {
             id: item.simpleRecipeProduct.id,
             option: {
               id: item.simpleRecipeProduct.simpleRecipeProductOptions[0].id, // product option id
-              type: 'Meal Kit',
+              type: item.simpleRecipeProduct.simpleRecipeProductOptions[0].type,
             },
             type: 'Simple Recipe',
           },
-        };
+        });
         if (!tunnelItem) {
           setPrice(
             item.simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
@@ -53,7 +61,17 @@ const SimpleProductItem = ({
           );
         }
         if (tunnelItem) {
-          setcartItem(objToAddToCart);
+          setcartItem({
+            product: {
+              id: item.simpleRecipeProduct.id,
+              option: {
+                id: item.simpleRecipeProduct.simpleRecipeProductOptions[0].id, // product option id
+                type:
+                  item.simpleRecipeProduct.simpleRecipeProductOptions[0].type,
+              },
+              type: 'Simple Recipe',
+            },
+          });
         }
         if (independantItem && !tunnelItem) {
           setcardData(item);
@@ -86,6 +104,7 @@ const SimpleProductItem = ({
       navigation={navigation}
       label={'dinner'}
       tunnelItem={tunnelItem}
+      setProductOptionId={(id) => setProductOptionId(id)}
     />
   );
 };

@@ -1,16 +1,16 @@
 export const GET_MENU = () =>
   JSON.stringify({
     query: `
-{
-    getMenu(year: 2020, month: 3, day: 27) {
-      name
-      comboProducts 
-      customizableProducts 
-      inventoryProducts
-      simpleRecipeProducts
-    }
-  }
-`,
+    {
+        getMenu(year: 2020, month: 4, day: 29) {
+          name
+          comboProducts 
+          customizableProducts 
+          inventoryProducts
+          simpleRecipeProducts
+        }
+      }
+    `,
   });
 
 export const COMBO_PRODUCT = (id) =>
@@ -76,10 +76,13 @@ export const CUSTOMIZABLE_PRODUCT = (id) =>
     {
       customizableProduct(id: ${id}) {
         name
+        id
         customizableProductOptions {
+          id
           simpleRecipeProduct {
             name
             default
+            id
             simpleRecipeProductOptions {
               price
               type
@@ -88,7 +91,6 @@ export const CUSTOMIZABLE_PRODUCT = (id) =>
               }
               simpleRecipeYieldId
             }
-
             simpleRecipe {
               author
               cookingTime
@@ -121,6 +123,7 @@ export const INVENTORY_PRODUCT = (id) =>
       name
       tags
       inventoryProductOptions {
+        id
         price
         quantity
         label

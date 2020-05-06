@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, ScrollView } from 'react-native';
+import { Text, StyleSheet, ScrollView, View } from 'react-native';
 
 export default class index extends Component {
   constructor(props) {
@@ -26,9 +26,11 @@ export default class index extends Component {
     if (this.state.hasError) {
       // You can render any custom fallback UI
       return (
-        <ScrollView style={styles.flexContainer}>
-          <Text>{JSON.stringify(this.state.error)}</Text>
-          <Text>{JSON.stringify(this.state.errorInfo)}</Text>
+        <ScrollView style={styles.flex}>
+          <View style={styles.flexContainer}>
+            <Text>{JSON.stringify(this.state.error)}</Text>
+            <Text>{JSON.stringify(this.state.errorInfo)}</Text>
+          </View>
         </ScrollView>
       );
     }
@@ -42,5 +44,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  flex: {
+    flex: 1,
+    padding: 20,
+    paddingTop: 80,
   },
 });

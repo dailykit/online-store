@@ -18,10 +18,10 @@ const InventoryProductCollapsed = ({
   data,
   label,
   tunnelItem,
+  setProductOptionId,
 }) => {
   let inventoryProduct = data.inventoryProduct;
   const [servingIndex, setServingIndex] = useState(0);
-
   return (
     <>
       <TouchableOpacity
@@ -93,6 +93,8 @@ const InventoryProductCollapsed = ({
                 setServingIndex={(index) => setServingIndex(index)}
                 size={item_data.label}
                 price={item_data.price[0].value}
+                setproductOptionId={(id) => setProductOptionId(id)}
+                id={item_data.id}
               />
             );
           })}

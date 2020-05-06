@@ -7,7 +7,7 @@ export const CartContextProvider = ({ children }) => {
 
   const addToCart = (item) => {
     setCartItems([...cartItems, item]);
-    console.log(cartItems);
+    console.log(item);
   };
 
   const removeFromCart = (item) => {
