@@ -31,6 +31,18 @@ import Screens from './navigation/Screens';
 import { Images, articles, argonTheme } from './constants';
 import FallBack from './components/FallBack';
 
+//enable axios auth (btoa)
+
+import { decode, encode } from 'base-64';
+
+if (!global.btoa) {
+  global.btoa = encode;
+}
+
+if (!global.atob) {
+  global.atob = decode;
+}
+
 // cache app images
 const assetImages = [
   Images.Onboarding,

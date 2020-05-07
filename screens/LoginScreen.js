@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Keyboard,
@@ -21,103 +21,86 @@ const VALID_PASSWORD = '';
 
 const isAndroid = Platform.OS == 'android' ? true : false;
 
-export default class LoginScreen extends Component {
-  state = {
-    email: VALID_EMAIL,
-    password: VALID_PASSWORD,
-    errors: [],
-    loading: false,
-  };
+export default LoginScreen = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState([]);
 
-  componentDidMount() {
-    console.log(this.props);
-  }
+  const { login } = useAuth();
 
-  async handleLogin() {
-    const { navigation } = this.props;
-    const { email, password } = this.state;
+  const handleLogin = async () => {
     const errors = [];
 
     Keyboard.dismiss();
-    this.setState({ loading: true });
-
+    setLoading(true);
     // check with backend API or with some static data
     try {
-      await AsyncStorage.setItem('token', 'logged in');
-      //POST
+      let res = await login(email, password);
+      console.log(res);
+      // await AsyncStorage.setItem('token', 'logged in');
+      // //POST
 
-      this.setState({
-        loading: false,
-      });
+      setLoading(false);
     } catch (error) {
       errors.push('username');
       errors.push('password');
-      this.setState({
-        errors,
-        loading: false,
-      });
+      setErrors(error);
+      setLoading(false);
       console.log(error);
     }
 
     if (!errors.length) {
-      navigation.navigate('App');
+      // navigation.navigate('App');
     }
-  }
+  };
 
-  render() {
-    const { navigation } = this.props;
-    const { loading, errors } = this.state;
-    const hasErrors = (key) => (errors.includes(key) ? styles.hasErrors : null);
+  const hasErrors = (key) => (errors.includes(key) ? styles.hasErrors : null);
 
-    return (
-      <ScrollView style={{ flex: 1 }}>
-        <View style={styles.login}>
-          <BlockAuth padding={[0, theme.sizes.base * 2]}>
-            <TextAuth h1 bold>
-              Login
-            </TextAuth>
-            <BlockAuth middle>
-              <InputAuth
-                label='Email'
-                error={hasErrors('email')}
-                style={[styles.InputAuth, hasErrors('email')]}
-                defaultValue={this.state.email}
-                onChangeTextAuth={(TextAuth) =>
-                  this.setState({ email: TextAuth })
-                }
-              />
-              <InputAuth
-                secure
-                label='Password'
-                error={hasErrors('password')}
-                style={[styles.InputAuth, hasErrors('password')]}
-                defaultValue={this.state.password}
-                onChangeTextAuth={(TextAuth) =>
-                  this.setState({ password: TextAuth })
-                }
-              />
-              <ButtonAuth gradient onPress={() => this.handleLogin()}>
-                {loading ? (
-                  <ActivityIndicator size='small' color='white' />
-                ) : (
-                  <TextAuth bold white center>
-                    Login
-                  </TextAuth>
-                )}
-              </ButtonAuth>
-
-              <ButtonAuth onPress={() => navigation.navigate('Forgot')}>
-                <TextAuth gray caption center>
-                  Forgot your password?
+  return (
+    <ScrollView style={{ flex: 1 }}>
+      <View style={styles.login}>
+        <BlockAuth padding={[0, theme.sizes.base * 2]}>
+          <TextAuth h1 bold>
+            Login
+          </TextAuth>
+          <BlockAuth middle>
+            <InputAuth
+              label='Email'
+              error={hasErrors('email')}
+              style={[styles.InputAuth, hasErrors('email')]}
+              defaultValue={email}
+              onChangeText={(email) => setEmail(email)}
+            />
+            <InputAuth
+              secure
+              label='Password'
+              error={hasErrors('password')}
+              style={[styles.InputAuth, hasErrors('password')]}
+              defaultValue={password}
+              onChangeText={(password) => setPassword(password)}
+            />
+            <ButtonAuth gradient onPress={() => handleLogin()}>
+              {loading ? (
+                <ActivityIndicator size='small' color='white' />
+              ) : (
+                <TextAuth bold white center>
+                  Login
                 </TextAuth>
-              </ButtonAuth>
-            </BlockAuth>
+              )}
+            </ButtonAuth>
+
+            <ButtonAuth onPress={() => navigation.navigate('Forgot')}>
+              <TextAuth gray caption center>
+                Forgot your password?
+              </TextAuth>
+            </ButtonAuth>
           </BlockAuth>
-        </View>
-      </ScrollView>
-    );
-  }
-}
+        </BlockAuth>
+      </View>
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
   login: {

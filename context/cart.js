@@ -10,6 +10,7 @@ export const CartContextProvider = ({ children }) => {
   const addToCart = (item) => {
     setCartItems([...cartItems, item]);
     settotalPrice(totalPrice + parseFloat(item.product.price));
+    console.log(cartItems);
   };
 
   const removeFromCart = (item) => {

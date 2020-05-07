@@ -170,32 +170,15 @@ function HomeStack(props) {
 }
 
 export default function OnboardingStack(props) {
-  const [loggedin, setLoggedin] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      let token = await AsyncStorage.getItem('token');
-
-      if (token) {
-        setLoggedin(true);
-      }
-    })();
-  }, []);
-
   const { isAuthenticated } = useAuth();
-  console.log(isAuthenticated);
 
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>
-        {loggedin ? (
+        {isAuthenticated ? (
           <Stack.Screen name='App' component={AppStack} />
         ) : (
-          <Stack.Screen
-            name='Auth'
-            setLoggedin={setLoggedin}
-            component={AuthStack}
-          />
+          <Stack.Screen name='Auth' component={AuthStack} />
         )}
       </Stack.Navigator>
     </>

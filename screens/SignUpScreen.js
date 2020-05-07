@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   ActivityIndicator,
@@ -19,40 +19,30 @@ import {
 } from '../components';
 import { theme } from '../constants';
 
-export default class SignUp extends Component {
-  state = {
-    email: null,
-    username: null,
-    password: null,
-    errors: [],
-    loading: false,
-    number: '9958470889',
-    expoPushToken: '',
-    notification: {},
-    coords: {},
-    address: {},
-  };
+import { useAuth } from '../context/auth';
 
-  handleSignUp = async () => {
-    const { navigation } = this.props;
-    const { email, username, password, number } = this.state;
+export default SignUp = ({ navigation }) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [username, setusername] = useState('');
+  const [firstName, setfirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState([]);
+  const { signup } = useAuth();
+
+  const handleSignUp = async () => {
     const errors = [];
-
     Keyboard.dismiss();
-    this.setState({ loading: true });
+    setLoading(true);
 
     // check with backend API or with some static data
 
     try {
-      // catch((error) => {
-      //   this.setState({ errors, loading: false });
-      //   errors.push("password");
-      //   alert(JSON.stringify(error));
-      // });
-
+      await signup(email, password, firstName, lastName, username);
       Alert.alert(
         'Success!',
-        'Your account has been created',
+        'Please Login to continue',
         [
           {
             text: 'Continue',
@@ -64,79 +54,83 @@ export default class SignUp extends Component {
         { cancelable: false }
       );
     } catch (error) {
-      this.setState({ errors, loading: false });
+      setErrors(error);
+      setLoading(false);
       errors.push('email');
       console.log(error);
     }
   };
 
-  render() {
-    const { navigation } = this.props;
-    const { loading, errors } = this.state;
-    const hasErrors = (key) => (errors.includes(key) ? styles.hasErrors : null);
+  const hasErrors = (key) => (errors.includes(key) ? styles.hasErrors : null);
 
-    return (
-      <ScrollView style={{ marginTop: 50 }}>
-        <BlockAuth padding={[0, theme.sizes.base * 2]}>
-          <TextAuth h1 bold style={{ marginBottom: 20 }}>
-            Sign Up
-          </TextAuth>
-          <BlockAuth middle>
-            <InputAuth
-              email
-              label='Email'
-              error={hasErrors('email')}
-              style={[styles.input, hasErrors('email')]}
-              defaultValue={this.state.email}
-              onChangeText={(text) => this.setState({ email: text })}
-            />
-            <InputAuth
-              label='Username'
-              error={hasErrors('username')}
-              style={[styles.input, hasErrors('username')]}
-              defaultValue={this.state.username}
-              onChangeText={(text) => this.setState({ username: text })}
-            />
-            <InputAuth
-              secure
-              label='Password'
-              error={hasErrors('password')}
-              style={[styles.input, hasErrors('password')]}
-              defaultValue={this.state.password}
-              onChangeText={(text) => this.setState({ password: text })}
-            />
-            <InputAuth
-              label='Phone Number'
-              error={hasErrors('number')}
-              style={[styles.input, hasErrors('number')]}
-              onChangeText={(text) => this.setState({ number: text })}
-            />
-            <ButtonAuth gradient onPress={() => this.handleSignUp()}>
-              {loading ? (
-                <ActivityIndicator size='small' color='white' />
-              ) : (
-                <TextAuth bold white center>
-                  Sign Up
-                </TextAuth>
-              )}
-            </ButtonAuth>
+  return (
+    <ScrollView style={{ marginTop: 50 }}>
+      <BlockAuth padding={[0, theme.sizes.base * 2]}>
+        <TextAuth h1 bold style={{ marginBottom: 20 }}>
+          Sign Up
+        </TextAuth>
+        <BlockAuth middle>
+          <InputAuth
+            label='First Name'
+            error={hasErrors('number')}
+            style={[styles.input, hasErrors('number')]}
+            onChangeText={(firstName) => setfirstName(firstName)}
+          />
+          <InputAuth
+            label='Last Name'
+            error={hasErrors('number')}
+            style={[styles.input, hasErrors('number')]}
+            onChangeText={(lastName) => setLastName(lastName)}
+          />
+          <InputAuth
+            email
+            label='Email'
+            error={hasErrors('email')}
+            style={[styles.input, hasErrors('email')]}
+            defaultValue={email}
+            onChangeText={(email) => setEmail(email)}
+          />
+          <InputAuth
+            label='Username'
+            error={hasErrors('username')}
+            style={[styles.input, hasErrors('username')]}
+            defaultValue={username}
+            onChangeText={(username) => setusername(username)}
+          />
+          <InputAuth
+            secure
+            label='Password'
+            error={hasErrors('password')}
+            style={[styles.input, hasErrors('password')]}
+            defaultValue={password}
+            onChangeText={(password) => setPassword(password)}
+          />
 
-            <ButtonAuth onPress={() => navigation.navigate('Login')}>
-              <TextAuth
-                gray
-                caption
-                center
-                style={{ textDecorationLine: 'underline' }}
-              >
-                Back to Login
+          <ButtonAuth gradient onPress={() => handleSignUp()}>
+            {loading ? (
+              <ActivityIndicator size='small' color='white' />
+            ) : (
+              <TextAuth bold white center>
+                Sign Up
               </TextAuth>
-            </ButtonAuth>
-          </BlockAuth>
+            )}
+          </ButtonAuth>
+
+          <ButtonAuth onPress={() => navigation.navigate('Login')}>
+            <TextAuth
+              gray
+              caption
+              center
+              style={{ textDecorationLine: 'underline' }}
+            >
+              Back to Login
+            </TextAuth>
+          </ButtonAuth>
         </BlockAuth>
-      </ScrollView>
-    );
-  }
-}
+      </BlockAuth>
+    </ScrollView>
+  );
+};
 
 const styles = StyleSheet.create({
   signup: {
