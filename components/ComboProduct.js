@@ -8,14 +8,14 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-import CustomizableProductItem from '../CustomizableProductItem';
-import SimpleProductItem from '../SimpleProductItem';
-import InventoryProductItem from '../InventoryProductItem';
-import { COMBO_PRODUCT } from '../../gql/Queries';
+import CustomizableProductItem from './CustomizableProductItem';
+import SimpleProductItem from './SimpleProductItem';
+import InventoryProductItem from './InventoryProductItem';
+import { COMBO_PRODUCT } from '../gql/Queries';
 
 const { width, height } = Dimensions.get('window');
 
-export default ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
+const ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
   const [isLoading, setisLoading] = useState(false);
   const [data, setData] = useState(null);
   const [selected, setSelected] = useState(0);
@@ -119,6 +119,8 @@ export default ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
     </View>
   );
 };
+
+export default ComboProduct;
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },

@@ -3,25 +3,18 @@ import {
   Alert,
   ActivityIndicator,
   Keyboard,
-  KeyboardAvoidingView,
   StyleSheet,
   ScrollView,
-  View,
 } from 'react-native';
 import Constants from 'expo-constants';
 
-import {
-  ButtonAuth,
-  BlockAuth,
-  Text,
-  InputAuth,
-  TextAuth,
-} from '../components';
+import { ButtonAuth, BlockAuth, TextAuth } from '../components';
 import { theme } from '../constants';
+import { Input } from '@ui-kitten/components';
 
 import { useAuth } from '../context/auth';
 
-export default SignUp = ({ navigation }) => {
+const SignUp = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [username, setusername] = useState('');
@@ -70,39 +63,39 @@ export default SignUp = ({ navigation }) => {
           Sign Up
         </TextAuth>
         <BlockAuth middle>
-          <InputAuth
+          <Input
             label='First Name'
             error={hasErrors('number')}
             style={[styles.input, hasErrors('number')]}
             onChangeText={(firstName) => setfirstName(firstName)}
           />
-          <InputAuth
+          <Input
             label='Last Name'
             error={hasErrors('number')}
             style={[styles.input, hasErrors('number')]}
             onChangeText={(lastName) => setLastName(lastName)}
           />
-          <InputAuth
+          <Input
             email
             label='Email'
             error={hasErrors('email')}
             style={[styles.input, hasErrors('email')]}
-            defaultValue={email}
+            value={email}
             onChangeText={(email) => setEmail(email)}
           />
-          <InputAuth
+          <Input
             label='Username'
             error={hasErrors('username')}
             style={[styles.input, hasErrors('username')]}
-            defaultValue={username}
+            value={username}
             onChangeText={(username) => setusername(username)}
           />
-          <InputAuth
-            secure
+          <Input
+            secureTextEntry
             label='Password'
             error={hasErrors('password')}
             style={[styles.input, hasErrors('password')]}
-            defaultValue={password}
+            value={password}
             onChangeText={(password) => setPassword(password)}
           />
 
@@ -148,3 +141,5 @@ const styles = StyleSheet.create({
     borderBottomColor: theme.colors.accent,
   },
 });
+
+export default SignUp;

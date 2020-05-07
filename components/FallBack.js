@@ -1,6 +1,6 @@
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
-export default fallBackComponent = () => {
+const fallBackComponent = () => {
   return (
     <View style={styles.containerFlex}>
       <ActivityIndicator size='large' />
@@ -15,3 +15,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default fallBackComponent;

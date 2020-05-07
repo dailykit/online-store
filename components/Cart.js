@@ -11,7 +11,7 @@ import { useCartContext } from '../context/cart';
 
 const { width, height } = Dimensions.get('window');
 
-export default Cart = ({ navigation, text, cartItem, to, tunnelItem }) => {
+const Cart = ({ navigation, text, cartItem, to, tunnelItem }) => {
   const { cartItems, addToCart, totalPrice } = useCartContext();
 
   let numberOfProducts = cartItems.length;
@@ -107,3 +107,5 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
 });
+
+export default Cart;

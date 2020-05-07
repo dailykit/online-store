@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Keyboard,
-  KeyboardAvoidingView,
   StyleSheet,
-  SafeAreaView,
   Platform,
   AsyncStorage,
   View,
   ScrollView,
+  Alert,
 } from 'react-native';
 
 import { useAuth } from '../context/auth';
+import { Input } from '@ui-kitten/components';
 
 import { ButtonAuth, BlockAuth, InputAuth, TextAuth } from '../components';
 import { theme } from '../constants';
@@ -21,11 +21,11 @@ const VALID_PASSWORD = '';
 
 const isAndroid = Platform.OS == 'android' ? true : false;
 
-export default LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState([]);
+  const [errors, setErrors] = useState(false);
 
   const { login, setIsAuthenticated } = useAuth();
 
@@ -36,26 +36,22 @@ export default LoginScreen = ({ navigation }) => {
     setLoading(true);
     // check with backend API or with some static data
     try {
-      let res = await login(email, password);
-      console.log(res);
-      // await AsyncStorage.setItem('token', 'logged in');
-      // //POST
-      setIsAuthenticated(true);
+      await login(email, password);
+      let user = await AsyncStorage.getItem('user');
+      user = JSON.parse(user);
+      if (user && user.token && user.token !== undefined) {
+        setIsAuthenticated(true);
+      } else {
+        console.log('error');
+        setErrors(true);
+      }
+
       setLoading(false);
     } catch (error) {
-      errors.push('username');
-      errors.push('password');
-      setErrors(error);
       setLoading(false);
       console.log(error);
     }
-
-    if (!errors.length) {
-      // navigation.navigate('App');
-    }
   };
-
-  const hasErrors = (key) => (errors.includes(key) ? styles.hasErrors : null);
 
   return (
     <ScrollView style={{ flex: 1 }}>
@@ -64,20 +60,18 @@ export default LoginScreen = ({ navigation }) => {
           <TextAuth h1 bold>
             Login
           </TextAuth>
-          <BlockAuth middle>
-            <InputAuth
+          <BlockAuth style={{ marginTop: 40 }} middle>
+            <Input
               label='Email'
-              error={hasErrors('email')}
-              style={[styles.InputAuth, hasErrors('email')]}
               defaultValue={email}
               onChangeText={(email) => setEmail(email)}
+              status={errors ? 'Danger' : 'Basic'}
             />
-            <InputAuth
-              secure
+            <Input
+              secureTextEntry
               label='Password'
-              error={hasErrors('password')}
-              style={[styles.InputAuth, hasErrors('password')]}
-              defaultValue={password}
+              value={password}
+              status={errors ? 'Danger' : 'Basic'}
               onChangeText={(password) => setPassword(password)}
             />
             <ButtonAuth gradient onPress={() => handleLogin()}>
@@ -111,10 +105,10 @@ const styles = StyleSheet.create({
   InputAuth: {
     borderRadius: 0,
     borderWidth: 0,
-    borderBottomColor: theme.colors.gray2,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   hasErrors: {
     borderBottomColor: theme.colors.accent,
   },
 });
+
+export default LoginScreen;

@@ -21,7 +21,7 @@ import { useCartContext } from '../context/cart';
 
 const { width, height } = Dimensions.get('window');
 
-export default ModalContent = ({ route, navigation, ...restProps }) => {
+const ModalContent = ({ route, navigation, ...restProps }) => {
   const { data, type, id } = route.params;
   const [selected, setSelected] = useState(0);
   const [cartItem, setcartItem] = useState(null); // obj to push to jaguar
@@ -324,3 +324,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+
+export default ModalContent;

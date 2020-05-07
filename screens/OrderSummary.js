@@ -19,7 +19,7 @@ import HeaderBack from '../components/HeaderBack';
 
 const { width, height } = Dimensions.get('window');
 
-export default OrderSummary = ({ navigation, ...restProps }) => {
+const OrderSummary = ({ navigation, ...restProps }) => {
   const { cartItems } = useCartContext();
 
   return (
@@ -151,3 +151,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+export default OrderSummary;

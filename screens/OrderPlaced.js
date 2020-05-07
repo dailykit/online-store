@@ -19,7 +19,7 @@ import { useCartContext } from '../context/cart';
 
 const { width, height } = Dimensions.get('window');
 
-export default OrderPlaced = ({ navigation }) => {
+const OrderPlaced = ({ navigation }) => {
   const { cartItems } = useCartContext();
 
   return (
@@ -215,3 +215,5 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 });
+
+export default OrderPlaced;
