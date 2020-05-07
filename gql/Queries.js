@@ -65,7 +65,7 @@ export const CUSTOMIZABLE_PRODUCT = (id) =>
               name
               procedures
               show
-              utensilsRequired
+              utensils
             }
           }
         }
@@ -125,7 +125,7 @@ export const SIMPLE_PRODUCT = (id) =>
           name
           procedures
           show
-          utensilsRequired
+          utensils
         }
       }
     }

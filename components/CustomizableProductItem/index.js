@@ -27,10 +27,19 @@ const CustomizableProductItem = ({
   const [isSelectedInside, setisSelectedInside] = useState(0);
   const [customizableProduct, set_customizableProduct] = useState(null);
   const [numberOfOptions, setnumberOfOptions] = useState(0);
+  const [objToAdd, setobjToAdd] = useState({});
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  const setProductOptionId = (id, price) => {
+    let newItem = objToAdd;
+    newItem.product.option.id = id;
+    newItem.product.price = price;
+    setobjToAdd(newItem);
+    setcartItem(newItem);
+  };
 
   const fetchData = async () => {
     try {
@@ -52,7 +61,28 @@ const CustomizableProductItem = ({
         }
         let item = res.data.data.customizableProduct;
         if (item.customizableProductOptions[0] && independantItem) {
-          let objToAddToCart = {};
+          let default_product = item.customizableProductOptions[0];
+          let objToAddToCart = {
+            customizableProductId: item.id,
+            customizableProductOptionId: default_product.id,
+            product: {
+              id: default_product.simpleRecipeProduct.id,
+              name: default_product.simpleRecipeProduct.name,
+              price:
+                default_product.simpleRecipeProduct
+                  .simpleRecipeProductOptions[0].price[0].value,
+              option: {
+                id:
+                  default_product.simpleRecipeProduct
+                    .simpleRecipeProductOptions[0].id, // product option id
+                type:
+                  default_product.simpleRecipeProduct
+                    .simpleRecipeProductOptions[0].type,
+              },
+              type: 'Simple Recipe',
+            },
+          };
+          setobjToAdd(objToAddToCart);
           if (!tunnelItem) {
             setPrice(
               item.customizableProductOptions[0].simpleRecipeProduct
@@ -61,7 +91,6 @@ const CustomizableProductItem = ({
           }
           if (tunnelItem) {
             setcartItem(objToAddToCart);
-            setcartItemToDisplay({});
           }
           if (independantItem && !tunnelItem) {
             setcardData(item);
