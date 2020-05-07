@@ -1,6 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import jwt from 'jsonwebtoken';
+import jwt_decode from 'jwt-decode';
+import { AsyncStorage } from 'react-native';
+
 const BASE_URL = 'secure.dailykit.org';
 const AuthContext = React.createContext();
 
@@ -34,8 +36,17 @@ export const AuthProvider = ({ children }) => {
         data: searchParams,
       });
       const data = response.data;
-      let user = jwt.decode(data.access_token);
-      console.log(user);
+      let user = jwt_decode(data.access_token);
+      user = {
+        firstName: user.given_name,
+        lastName: user.family_name,
+        email: user.email,
+        password: password,
+        username: user.preferred_username,
+        name: user.name,
+        token: data.access_token,
+      };
+      await AsyncStorage.setItem('user', JSON.stringify(user));
       return {
         success: true,
         message: 'Logged in',
@@ -126,6 +137,7 @@ export const AuthProvider = ({ children }) => {
         login,
         isAuthenticated,
         signup,
+        setIsAuthenticated,
       }}
     >
       {children}

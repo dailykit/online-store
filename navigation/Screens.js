@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Easing, Animated, Dimensions, AsyncStorage } from 'react-native';
+import {
+  Easing,
+  Animated,
+  View,
+  Dimensions,
+  AsyncStorage,
+  ActivityIndicator,
+} from 'react-native';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -170,8 +177,34 @@ function HomeStack(props) {
 }
 
 export default function OnboardingStack(props) {
-  const { isAuthenticated } = useAuth();
-
+  const { isAuthenticated, setIsAuthenticated } = useAuth();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    (async () => {
+      let user = await AsyncStorage.getItem('user');
+      user = JSON.parse(user);
+      if (user && user.token && user.token !== undefined) {
+        setIsAuthenticated(true);
+        setLoading(false);
+      } else {
+        setIsAuthenticated(false);
+        setLoading(false);
+      }
+    })();
+  }, []);
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ActivityIndicator size='large' />
+      </View>
+    );
+  }
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>

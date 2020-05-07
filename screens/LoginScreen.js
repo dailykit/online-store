@@ -27,7 +27,7 @@ export default LoginScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState([]);
 
-  const { login } = useAuth();
+  const { login, setIsAuthenticated } = useAuth();
 
   const handleLogin = async () => {
     const errors = [];
@@ -40,7 +40,7 @@ export default LoginScreen = ({ navigation }) => {
       console.log(res);
       // await AsyncStorage.setItem('token', 'logged in');
       // //POST
-
+      setIsAuthenticated(true);
       setLoading(false);
     } catch (error) {
       errors.push('username');
