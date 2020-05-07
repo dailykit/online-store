@@ -33,10 +33,12 @@ const CustomizableProductItem = ({
     fetchData();
   }, []);
 
-  const setProductOptionId = (id, price) => {
+  const setProductOptionId = (id, price, simpleRecipeProductId, name) => {
     let newItem = objToAdd;
     newItem.product.option.id = id;
     newItem.product.price = price;
+    newItem.product.id = simpleRecipeProductId;
+    newItem.product.name = name;
     setobjToAdd(newItem);
     setcartItem(newItem);
   };
@@ -142,6 +144,9 @@ const CustomizableProductItem = ({
         independantItem={independantItem ? true : false}
         numberOfOptions={numberOfOptions}
         tunnelItem={tunnelItem}
+        setProductOptionId={(id, price, simpleRecipeProductId, name) =>
+          setProductOptionId(id, price, simpleRecipeProductId, name)
+        }
       />
     );
   }

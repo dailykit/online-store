@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -25,11 +25,12 @@ const Item = ({
   independantItem,
   numberOfOptions,
   tunnelItem,
+  setProductOptionId,
 }) => {
   const [typeSelected, setTypeSelected] = useState(true);
   const [servingIndex, setServingIndex] = useState(0);
   const [isSelected, setisSelected] = useState(0);
-  console.log(tunnelItem);
+
   return (
     <View key={_id} style={styles.container}>
       <Text style={styles.item_image_title}>Dal</Text>
@@ -58,6 +59,13 @@ const Item = ({
               key={_key}
               onPress={() => {
                 setisSelected(_key);
+                setProductOptionId(
+                  simpleRecipeProduct.simpleRecipeProductOptions[0].id,
+                  simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
+                    .value,
+                  simpleRecipeProduct.id,
+                  simpleRecipeProduct.name
+                );
               }}
               style={[
                 styles.item_container,
@@ -161,6 +169,23 @@ const Item = ({
                         price={item_data.price[0].value}
                         display={typeSelected ? 'Meal Kit' : 'Ready To Eat'}
                         type={item_data.type}
+                        customizableProduct
+                        name={simpleRecipeProduct.name}
+                        simpleRecipeProductId={simpleRecipeProduct.id}
+                        setProductOptionId={(
+                          id,
+                          price,
+                          simpleRecipeProductId,
+                          name
+                        ) =>
+                          setProductOptionId(
+                            id,
+                            price,
+                            simpleRecipeProductId,
+                            name
+                          )
+                        }
+                        id={simpleRecipeProduct.id}
                       />
                     );
                   }

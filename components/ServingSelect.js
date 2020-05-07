@@ -19,13 +19,20 @@ const ServingSelect = ({
   display,
   type,
   id,
-  setproductOptionId,
+  setProductOptionId,
+  customizableProduct,
+  simpleRecipeProductId,
+  name,
 }) => {
   return (
     <TouchableOpacity
       onPress={() => {
         setServingIndex(index - 1);
-        setproductOptionId(id, price);
+        if (customizableProduct) {
+          setProductOptionId(id, price, simpleRecipeProductId, name);
+        } else {
+          setProductOptionId(id, price);
+        }
       }}
       style={[
         styles.servingSelectContainer,
