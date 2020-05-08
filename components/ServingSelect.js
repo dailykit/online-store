@@ -8,8 +8,6 @@ import {
 } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 
-const { width, height } = Dimensions.get('window');
-
 const ServingSelect = ({
   index,
   isSelected,
@@ -19,7 +17,7 @@ const ServingSelect = ({
   display,
   type,
   id,
-  setProductOptionId,
+  setproductOptionId,
   customizableProduct,
   simpleRecipeProductId,
   name,
@@ -29,9 +27,9 @@ const ServingSelect = ({
       onPress={() => {
         setServingIndex(index - 1);
         if (customizableProduct) {
-          setProductOptionId(id, price, simpleRecipeProductId, name);
+          setproductOptionId(id, price, simpleRecipeProductId, name);
         } else {
-          setProductOptionId(id, price);
+          setproductOptionId(id, price);
         }
       }}
       style={[

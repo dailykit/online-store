@@ -10,7 +10,15 @@ export const CartContextProvider = ({ children }) => {
   const addToCart = (item) => {
     setCartItems([...cartItems, item]);
     settotalPrice(totalPrice + parseFloat(item.product.price));
-    console.log(cartItems);
+  };
+
+  const addComboToCart = (items) => {
+    let combinedPrice = 0;
+    items.forEach((element) => {
+      combinedPrice = combinedPrice + parseFloat(element.product.price);
+    });
+    setCartItems([...cartItems, ...items]);
+    settotalPrice(totalPrice + combinedPrice);
   };
 
   const removeFromCart = (item) => {
@@ -37,6 +45,7 @@ export const CartContextProvider = ({ children }) => {
         removeFromCartProductsDisplay,
         cartProductsToDisplay,
         totalPrice,
+        addComboToCart,
       }}
     >
       {children}

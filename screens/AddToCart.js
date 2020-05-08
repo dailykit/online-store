@@ -25,6 +25,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
   const { data, type, id } = route.params;
   const [selected, setSelected] = useState(0);
   const [cartItem, setcartItem] = useState(null); // obj to push to jaguar
+  const [comboProductItems, setcomboProductItems] = useState([]);
   const [cartItemToDisplay, setcartItemToDisplay] = useState(null); // obj to push to jaguar
 
   let name = '';
@@ -57,7 +58,13 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
         <View style={styles.item_parent_container}>
           {type == 'comboProducts' && (
             <ComboProduct
-              setcartItem={(item) => setcartItem(item)}
+              setcartItem={(item) => {
+                let auxArray = comboProductItems;
+                if (!Array.isArray(item)) {
+                  auxArray.push(item);
+                  setcomboProductItems(auxArray);
+                }
+              }}
               setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               tunnelItem
@@ -102,13 +109,15 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
       <Cart
-        cartItem={cartItem}
+        cartItem={comboProductItems}
         navigation={navigation}
         to={'Home'}
         {...restProps}
         text='Proceed'
         cartItemToDisplay={cartItemToDisplay}
+        comboProductItems={comboProductItems}
         tunnelItem
+        type={type}
       />
     </View>
   );

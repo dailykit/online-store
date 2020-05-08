@@ -93,9 +93,7 @@ const InventoryProductCollapsed = ({
                 setServingIndex={(index) => setServingIndex(index)}
                 size={item_data.label}
                 price={item_data.price[0].value}
-                setproductOptionId={(id, price) =>
-                  setProductOptionId(id, price)
-                }
+                setproductOptionId={setProductOptionId}
                 id={item_data.id}
               />
             );

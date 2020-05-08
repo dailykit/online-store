@@ -62,7 +62,7 @@ const CustomizableProductItem = ({
           );
         }
         let item = res.data.data.customizableProduct;
-        if (item.customizableProductOptions[0] && independantItem) {
+        if (item.customizableProductOptions[0]) {
           let default_product = item.customizableProductOptions[0];
           let objToAddToCart = {
             customizableProductId: item.id,
@@ -85,17 +85,15 @@ const CustomizableProductItem = ({
             },
           };
           setobjToAdd(objToAddToCart);
-          if (!tunnelItem) {
+          if (!tunnelItem && independantItem) {
             setPrice(
               item.customizableProductOptions[0].simpleRecipeProduct
                 .simpleRecipeProductOptions[0].price[0].value
             );
+            setcardData(item);
           }
           if (tunnelItem) {
             setcartItem(objToAddToCart);
-          }
-          if (independantItem && !tunnelItem) {
-            setcardData(item);
           }
         }
         setLoading(false);

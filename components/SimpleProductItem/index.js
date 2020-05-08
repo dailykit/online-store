@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import axios from 'axios';
-
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed';
 import { SIMPLE_PRODUCT } from '../../gql/Queries';
 
@@ -41,11 +40,8 @@ const SimpleProductItem = ({
       });
       let item = res.data.data;
       set_simpleProduct(item);
-      if (
-        item.simpleRecipeProduct.simpleRecipeProductOptions[0] &&
-        independantItem
-      ) {
-        setobjToAdd({
+      if (item.simpleRecipeProduct.simpleRecipeProductOptions[0]) {
+        let objToPush = {
           product: {
             id: item.simpleRecipeProduct.id,
             name: item.simpleRecipeProduct.name,
@@ -58,32 +54,17 @@ const SimpleProductItem = ({
             },
             type: 'Simple Recipe',
           },
-        });
-        if (!tunnelItem) {
+        };
+        setobjToAdd(objToPush);
+        if (!tunnelItem && independantItem) {
           setPrice(
             item.simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
               .value
           );
+          setcardData(item);
         }
         if (tunnelItem) {
-          setcartItem({
-            product: {
-              id: item.simpleRecipeProduct.id,
-              name: item.simpleRecipeProduct.name,
-              price:
-                item.simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
-                  .value,
-              option: {
-                id: item.simpleRecipeProduct.simpleRecipeProductOptions[0].id, // product option id
-                type:
-                  item.simpleRecipeProduct.simpleRecipeProductOptions[0].type,
-              },
-              type: 'Simple Recipe',
-            },
-          });
-        }
-        if (independantItem && !tunnelItem) {
-          setcardData(item);
+          setcartItem(objToPush);
         }
       }
       setLoading(false);
@@ -113,7 +94,7 @@ const SimpleProductItem = ({
       navigation={navigation}
       label={'dinner'}
       tunnelItem={tunnelItem}
-      setProductOptionId={(id, price) => setProductOptionId(id, price)}
+      setProductOptionId={setProductOptionId}
     />
   );
 };

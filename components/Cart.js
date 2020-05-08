@@ -11,8 +11,16 @@ import { useCartContext } from '../context/cart';
 
 const { width, height } = Dimensions.get('window');
 
-const Cart = ({ navigation, text, cartItem, to, tunnelItem }) => {
-  const { cartItems, addToCart, totalPrice } = useCartContext();
+const Cart = ({
+  navigation,
+  text,
+  cartItem,
+  to,
+  tunnelItem,
+  type,
+  comboProductItems,
+}) => {
+  const { cartItems, addToCart, totalPrice, addComboToCart } = useCartContext();
 
   let numberOfProducts = cartItems.length;
 
@@ -20,7 +28,11 @@ const Cart = ({ navigation, text, cartItem, to, tunnelItem }) => {
     <TouchableOpacity
       onPress={() => {
         if (tunnelItem) {
-          addToCart(cartItem);
+          if (type == 'comboProducts') {
+            addComboToCart(comboProductItems);
+          } else {
+            addToCart(cartItem);
+          }
         }
         navigation.navigate(to);
       }}

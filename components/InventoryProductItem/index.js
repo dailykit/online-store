@@ -40,11 +40,8 @@ const InventoryProductItem = ({
       });
       set_inventoryProduct(res.data.data);
       let item = res.data.data;
-      if (
-        res.data.data.inventoryProduct.inventoryProductOptions[0] &&
-        independantItem
-      ) {
-        setobjToAdd({
+      if (res.data.data.inventoryProduct.inventoryProductOptions[0]) {
+        let objToPush = {
           product: {
             id: item.inventoryProduct.id,
             name: item.inventoryProduct.name,
@@ -55,29 +52,17 @@ const InventoryProductItem = ({
             },
             type: 'Inventory',
           },
-        });
-        if (!tunnelItem) {
+        };
+        setobjToAdd(objToPush);
+        if (!tunnelItem && independantItem) {
           setPrice(
             res.data.data.inventoryProduct.inventoryProductOptions[0].price[0]
               .value
           );
+          setcardData(item);
         }
         if (tunnelItem) {
-          setcartItem({
-            product: {
-              id: item.inventoryProduct.id,
-              name: item.inventoryProduct.name,
-              price:
-                item.inventoryProduct.inventoryProductOptions[0].price[0].value,
-              option: {
-                id: item.inventoryProduct.inventoryProductOptions[0].id, // product option id
-              },
-              type: 'Inventory',
-            },
-          });
-        }
-        if (independantItem && !tunnelItem) {
-          setcardData(item);
+          setcartItem(objToPush);
         }
       }
       setLoading(false);
@@ -107,7 +92,7 @@ const InventoryProductItem = ({
       navigation={navigation}
       label={'dinner'}
       tunnelItem={tunnelItem}
-      setProductOptionId={(id, price) => setProductOptionId(id, price)}
+      setProductOptionId={setProductOptionId}
     />
   );
 };

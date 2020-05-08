@@ -15,7 +15,13 @@ import { COMBO_PRODUCT } from '../gql/Queries';
 
 const { width, height } = Dimensions.get('window');
 
-const ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
+const ComboProduct = ({
+  tunnelItem,
+  navigation,
+  setcardData,
+  id,
+  setcartItem,
+}) => {
   const [isLoading, setisLoading] = useState(false);
   const [data, setData] = useState(null);
   const [selected, setSelected] = useState(0);
@@ -36,6 +42,7 @@ const ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
           setcardData(res.data.data.comboProduct);
         }
         if (tunnelItem) {
+          setcartItem(comboProductsArray);
         }
         setisLoading(false);
       } catch (e) {
@@ -79,9 +86,10 @@ const ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
                 navigation={navigation}
                 tunnelItem={tunnelItem}
                 id={data.customizableProductId}
-                setDefault={(item) =>
-                  setcomboProductsArray([...comboProductsArray, item])
-                }
+                setcartItem={(item) => {
+                  setcartItem(item);
+                }}
+                setDefault={(item) => setcomboProductsArray(item)}
               />
             );
           }
@@ -97,6 +105,9 @@ const ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
                 navigation={navigation}
                 id={data.simpleRecipeProductId}
                 tunnelItem={tunnelItem}
+                setcartItem={(item) => {
+                  setcartItem(item);
+                }}
               />
             );
           }
@@ -111,6 +122,8 @@ const ComboProduct = ({ tunnelItem, navigation, setcardData, id }) => {
                 key={_id}
                 navigation={navigation}
                 id={data.inventoryProductId}
+                tunnelItem={tunnelItem}
+                setcartItem={(item) => setcomboProductsArray(item)}
               />
             );
           }
