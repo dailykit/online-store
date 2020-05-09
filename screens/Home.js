@@ -28,6 +28,7 @@ class Home extends React.Component {
     data: null,
     selectedPickerItem: null,
     date: new Date(),
+    noData: true,
   };
   async componentDidMount() {
     this.fetchMenu();
@@ -47,17 +48,24 @@ class Home extends React.Component {
       });
       let picker = [];
       let data = {};
-      res.data.data.getMenu.forEach((category, _id) => {
-        picker.push(category.name);
-        data[category.name] = {};
-        Object.keys(category).forEach((key) => {
-          if (key != 'name') {
-            data[category.name][key] = category[key];
-          }
+      if (!res.data.data.getMenu.length == 0) {
+        res.data.data.getMenu.forEach((category, _id) => {
+          picker.push(category.name);
+          data[category.name] = {};
+          Object.keys(category).forEach((key) => {
+            if (key != 'name') {
+              data[category.name][key] = category[key];
+            }
+          });
         });
-      });
-      this.setState({ picker, data, selectedPickerItem: 0 });
-      this.setState({ loading: false });
+        this.setState({ picker, data, selectedPickerItem: 0, noData: false });
+        this.setState({ loading: false });
+      } else {
+        this.setState({
+          noData: true,
+          loading: false,
+        });
+      }
     } catch (e) {
       console.log(e);
     }
@@ -71,11 +79,65 @@ class Home extends React.Component {
       data,
       selectedPickerItem,
       date,
+      noData,
     } = this.state;
     if (loading) {
       return (
         <View style={styles.flexContainer}>
           <ActivityIndicator />
+        </View>
+      );
+    }
+    if (noData) {
+      return (
+        <View style={styles.home}>
+          {/* <Tabs /> */}
+          <ScrollView style={{ flex: 1, marginTop: 20 }}>
+            <View style={styles.img_container}>
+              <Image
+                source={{
+                  uri:
+                    'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+                }}
+                style={styles.cover_image}
+              />
+            </View>
+            <View style={styles.picker_container}>
+              <View style={styles.picker_placeholder}>
+                <Datepicker
+                  date={date}
+                  onSelect={(date) => {
+                    let day = moment(date).date();
+                    let month = moment(date).month();
+                    let year = moment(date).year();
+                    this.fetchMenu(day, month, year);
+                    this.setState({ date });
+                  }}
+                />
+              </View>
+              <View style={styles.picker_placeholder}>
+                <Select
+                  selectedIndex={selectedIndex}
+                  value={picker[selectedIndex.row]}
+                  onSelect={(selectedIndex) => {
+                    this.setState({
+                      selectedIndex,
+                      selectedPickerItem: selectedIndex.row,
+                    });
+                  }}
+                >
+                  <SelectItem title={''} />
+                </Select>
+              </View>
+            </View>
+            <View style={{ padding: 20 }}>
+              <Text style={{ textAlign: 'center' }}>
+                Nothing is available on the selected dates
+              </Text>
+            </View>
+            <View style={{ height: height * 0.08 }} />
+          </ScrollView>
+          <Cart to='OrderSummary' {...this.props} text='Checkout' />
         </View>
       );
     }
