@@ -100,6 +100,9 @@ const CustomizableProductItem = ({
           if (tunnelItem && isSelected) {
             setcartItem(objToAddToCart);
           }
+          if (tunnelItem && independantItem) {
+            setcartItem(objToPush);
+          }
         }
         setLoading(false);
       }

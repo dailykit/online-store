@@ -94,6 +94,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
               navigation={navigation}
               independantItem
               tunnelItem
+              isSelected
               id={id}
               {...restProps}
             />
@@ -105,6 +106,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
               navigation={navigation}
               independantItem
               tunnelItem
+              isSelected
               id={id}
               {...restProps}
             />
@@ -116,6 +118,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
               navigation={navigation}
               independantItem
               tunnelItem
+              isSelected
               id={id}
               {...restProps}
             />

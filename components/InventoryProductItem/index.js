@@ -69,7 +69,10 @@ const InventoryProductItem = ({
           );
           setcardData(item);
         }
-        if (tunnelItem) {
+        if (tunnelItem && isSelected) {
+          setcartItem(objToPush);
+        }
+        if (tunnelItem && independantItem) {
           setcartItem(objToPush);
         }
       }

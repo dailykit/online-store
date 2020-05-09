@@ -74,6 +74,9 @@ const SimpleProductItem = ({
         if (tunnelItem && isSelected) {
           setcartItem(objToPush);
         }
+        if (tunnelItem && independantItem) {
+          setcartItem(objToPush);
+        }
       }
       setLoading(false);
     } catch (e) {
