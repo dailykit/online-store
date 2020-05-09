@@ -31,6 +31,7 @@ const Cart = ({
           if (type == 'comboProducts') {
             addComboToCart(comboProductItems);
           } else {
+            console.log(cartItem);
             addToCart(cartItem);
           }
         }

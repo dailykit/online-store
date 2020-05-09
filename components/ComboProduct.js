@@ -123,7 +123,9 @@ const ComboProduct = ({
                 navigation={navigation}
                 id={data.inventoryProductId}
                 tunnelItem={tunnelItem}
-                setcartItem={(item) => setcomboProductsArray(item)}
+                setcartItem={(item) => {
+                  setcartItem(item);
+                }}
               />
             );
           }

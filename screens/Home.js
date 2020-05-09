@@ -22,9 +22,10 @@ import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 class Home extends React.Component {
   state = {
     loading: true,
-    selectedIndex: new IndexPath(1),
+    selectedIndex: new IndexPath(0),
     picker: null,
     data: null,
+    selectedPickerItem: null,
   };
   async componentDidMount() {
     try {
@@ -44,7 +45,7 @@ class Home extends React.Component {
           }
         });
       });
-      this.setState({ picker, data });
+      this.setState({ picker, data, selectedPickerItem: 0 });
       this.setState({ loading: false });
     } catch (e) {
       console.log(e);
@@ -52,8 +53,14 @@ class Home extends React.Component {
   }
 
   render() {
-    const data = ['Breakfast', 'Lunch', 'Dinner'];
-    if (this.state.loading) {
+    const {
+      loading,
+      selectedIndex,
+      picker,
+      data,
+      selectedPickerItem,
+    } = this.state;
+    if (loading) {
       return (
         <View style={styles.flexContainer}>
           <ActivityIndicator />
@@ -82,29 +89,29 @@ class Home extends React.Component {
             </View>
             <View style={styles.picker_placeholder}>
               <Select
-                selectedIndex={this.state.selectedIndex}
-                value={this.state.picker[this.state.selectedIndex.row]}
+                selectedIndex={selectedIndex}
+                value={picker[selectedIndex.row]}
                 onSelect={(selectedIndex) => {
-                  this.setState({ selectedIndex });
-                  console.log(selectedIndex.equals());
+                  this.setState({
+                    selectedIndex,
+                    selectedPickerItem: selectedIndex.row,
+                  });
                 }}
               >
-                {this.state.picker.map((title, key) => (
+                {picker.map((title, key) => (
                   <SelectItem key={key} title={title} />
                 ))}
               </Select>
             </View>
           </View>
-          {Object.keys(this.state.data[this.state.picker[0]]).map(
-            (type, _id) => {
-              // this data var is like comboprod : [1,2,3], inventory prod, etc..
-              // now loop on this data
+          {Object.keys(data[picker[0]]).map((type, _id) => {
+            // this data var is like comboprod : [1,2,3], inventory prod, etc..
+            // now loop on this data
 
-              return this.state.data[this.state.picker[0]][type].map((id) => (
-                <Card {...this.props} type={type} key={id} id={id} />
-              ));
-            }
-          )}
+            return data[picker[selectedPickerItem]][type].map((id) => (
+              <Card {...this.props} type={type} key={id} id={id} />
+            ));
+          })}
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
         <Cart to='OrderSummary' {...this.props} text='Checkout' />

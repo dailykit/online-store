@@ -25,7 +25,7 @@ const Item = ({
   independantItem,
   numberOfOptions,
   tunnelItem,
-  setProductOptionId,
+  setproductOptionId,
 }) => {
   const [typeSelected, setTypeSelected] = useState(true);
   const [servingIndex, setServingIndex] = useState(0);
@@ -59,7 +59,7 @@ const Item = ({
               key={_key}
               onPress={() => {
                 setisSelected(_key);
-                setProductOptionId(
+                setproductOptionId(
                   simpleRecipeProduct.simpleRecipeProductOptions[0].id,
                   simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
                     .value,
@@ -172,13 +172,13 @@ const Item = ({
                         customizableProduct
                         name={simpleRecipeProduct.name}
                         simpleRecipeProductId={simpleRecipeProduct.id}
-                        setProductOptionId={(
+                        setproductOptionId={(
                           id,
                           price,
                           simpleRecipeProductId,
                           name
                         ) =>
-                          setProductOptionId(
+                          setproductOptionId(
                             id,
                             price,
                             simpleRecipeProductId,

@@ -61,7 +61,28 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
               setcartItem={(item) => {
                 let auxArray = comboProductItems;
                 if (!Array.isArray(item)) {
+                  console.log('-----------New item----------');
+                  console.log(item);
+                  if (item.customizableProductOptionId) {
+                    console.log('---Combo filtered---');
+
+                    auxArray = auxArray.filter(
+                      (el) =>
+                        item.customizableProductOptionId !==
+                        el.customizableProductOptionId
+                    );
+                    console.log('Array after filter --->', auxArray);
+                  } else if (item.product.id) {
+                    console.log('---Simple or Inv filtered---');
+                    auxArray = auxArray.filter((el) => {
+                      console.log('filtering');
+                      return item.product.id !== el.product.id;
+                    });
+                    console.log('Array after filter --->', auxArray);
+                  }
+
                   auxArray.push(item);
+                  console.log('Final  Array----->', auxArray);
                   setcomboProductItems(auxArray);
                 }
               }}
@@ -74,7 +95,9 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
           )}
           {type == 'customizableProducts' && (
             <CustomizableProductItem
-              setcartItem={(item) => setcartItem(item)}
+              setcartItem={(item) => {
+                setcartItem(item);
+              }}
               setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               independantItem
@@ -109,7 +132,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
       <Cart
-        cartItem={comboProductItems}
+        cartItem={cartItem}
         navigation={navigation}
         to={'Home'}
         {...restProps}
