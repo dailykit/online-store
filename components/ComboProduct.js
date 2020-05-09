@@ -21,6 +21,7 @@ const ComboProduct = ({
   setcardData,
   id,
   setcartItem,
+  setIsLastComboItem,
 }) => {
   const [isLoading, setisLoading] = useState(false);
   const [data, setData] = useState(null);
@@ -59,6 +60,7 @@ const ComboProduct = ({
       </View>
     );
   }
+  let selectedArr = data.comboProductComponents.map((el, _id) => false);
   return (
     <View style={styles.container}>
       <View style={styles.card_title}>
@@ -68,24 +70,30 @@ const ComboProduct = ({
         <Text style={styles.is_customizable}>Customizeable</Text>
       </View>
       <View style={styles.item_parent_container}>
-        {data.comboProductComponents.map((data, _id) => {
+        {data.comboProductComponents.map((el, _id) => {
           let last = false;
-          let isSelected = selected == _id ? true : false;
-          if (_id == 2) {
+          let isSelected = selected == _id;
+          if (_id == data.comboProductComponents.length - 1) {
             last = true;
           }
-          if (data.customizableProductId !== null) {
+          if (el.customizableProductId !== null) {
             return (
               <CustomizableProductItem
                 isSelected={isSelected}
                 _id={_id}
-                data={data}
-                setSelected={(index) => setSelected(index)}
+                data={el}
+                setSelected={(index) => {
+                  selectedArr[index] = true;
+                  setSelected(index);
+                  if (selectedArr.every((item) => item == true)) {
+                    setIsLastComboItem(true);
+                  }
+                }}
                 isLast={last}
                 key={_id}
                 navigation={navigation}
                 tunnelItem={tunnelItem}
-                id={data.customizableProductId}
+                id={el.customizableProductId}
                 setcartItem={(item) => {
                   setcartItem(item);
                 }}
@@ -93,17 +101,23 @@ const ComboProduct = ({
               />
             );
           }
-          if (data.simpleRecipeProductId !== null) {
+          if (el.simpleRecipeProductId !== null) {
             return (
               <SimpleProductItem
                 isSelected={isSelected}
                 _id={_id}
-                data={data}
-                setSelected={(index) => setSelected(index)}
+                data={el}
+                setSelected={(index) => {
+                  selectedArr[index] = true;
+                  setSelected(index);
+                  if (selectedArr.every((item) => item == true)) {
+                    setIsLastComboItem(true);
+                  }
+                }}
                 isLast={last}
                 key={_id}
                 navigation={navigation}
-                id={data.simpleRecipeProductId}
+                id={el.simpleRecipeProductId}
                 tunnelItem={tunnelItem}
                 setcartItem={(item) => {
                   setcartItem(item);
@@ -111,17 +125,24 @@ const ComboProduct = ({
               />
             );
           }
-          if (data.inventoryProductId !== null) {
+          if (el.inventoryProductId !== null) {
             return (
               <InventoryProductItem
                 isSelected={isSelected}
                 _id={_id}
-                data={data}
-                setSelected={(index) => setSelected(index)}
+                data={el}
+                setSelected={(index) => {
+                  selectedArr[index] = true;
+                  setSelected(index);
+                  console.log(selectedArr);
+                  if (selectedArr.every((item) => item == true)) {
+                    setIsLastComboItem(true);
+                  }
+                }}
                 isLast={last}
                 key={_id}
                 navigation={navigation}
-                id={data.inventoryProductId}
+                id={el.inventoryProductId}
                 tunnelItem={tunnelItem}
                 setcartItem={(item) => {
                   setcartItem(item);

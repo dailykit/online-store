@@ -14,6 +14,8 @@ const SimpleProductItem = ({
   setcartItem,
   setcardData,
   tunnelItem,
+  setSelected,
+  isSelected,
 }) => {
   const [loading, setLoading] = useState(true);
   const [simpleProduct, set_simpleProduct] = useState(null);
@@ -30,6 +32,12 @@ const SimpleProductItem = ({
     setobjToAdd(newItem);
     setcartItem(newItem);
   };
+
+  useEffect(() => {
+    if (tunnelItem && isSelected && !loading) {
+      setcartItem(objToAdd);
+    }
+  }, [isSelected]);
 
   const fetchData = async () => {
     try {
@@ -63,7 +71,7 @@ const SimpleProductItem = ({
           );
           setcardData(item);
         }
-        if (tunnelItem) {
+        if (tunnelItem && isSelected) {
           setcartItem(objToPush);
         }
       }
@@ -95,6 +103,8 @@ const SimpleProductItem = ({
       label={'dinner'}
       tunnelItem={tunnelItem}
       setProductOptionId={setProductOptionId}
+      setSelected={setSelected}
+      isSelected={isSelected}
     />
   );
 };

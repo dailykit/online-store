@@ -1,8 +1,8 @@
-export const GET_MENU = () =>
+export const GET_MENU = (date, month, year) =>
   JSON.stringify({
     query: `
     {
-        getMenu(year: 2020, month: 4, day: 29) {
+        getMenu(year: ${year}, month: ${month}, day: ${date}) {
           name
           comboProducts 
           customizableProducts 

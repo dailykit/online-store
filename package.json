@@ -29,6 +29,7 @@
     "expo-linear-gradient": "^8.1.0",
     "jwt-decode": "^2.2.0",
     "modal-react-native-web": "^0.2.0",
+    "moment": "^2.25.3",
     "native-base": "2.13.8",
     "react": "16.13.1",
     "react-dom": "^16.13.1",

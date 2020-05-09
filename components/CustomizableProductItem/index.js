@@ -20,7 +20,6 @@ const CustomizableProductItem = ({
   setcardData,
   setcartItem,
   setPrice,
-  setcartItemToDisplay,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -42,6 +41,12 @@ const CustomizableProductItem = ({
     setobjToAdd(newItem);
     setcartItem(newItem);
   };
+
+  useEffect(() => {
+    if (tunnelItem && isSelected && !loading) {
+      setcartItem(objToAdd);
+    }
+  }, [isSelected]);
 
   const fetchData = async () => {
     try {
@@ -92,7 +97,7 @@ const CustomizableProductItem = ({
             );
             setcardData(item);
           }
-          if (tunnelItem) {
+          if (tunnelItem && isSelected) {
             setcartItem(objToAddToCart);
           }
         }
@@ -125,7 +130,8 @@ const CustomizableProductItem = ({
   ) {
     return <Text>Bad data</Text>;
   }
-  if ((expanded && isSelected) || (expanded && independantItem)) {
+
+  if ((isSelected && expanded) || (tunnelItem && isSelected)) {
     return (
       <CustomizableProductItemExpanded
         isSelected={isSelected}
@@ -141,7 +147,7 @@ const CustomizableProductItem = ({
         label={independantItem ? '' : customizableProduct.label}
         independantItem={independantItem ? true : false}
         numberOfOptions={numberOfOptions}
-        tunnelItem={tunnelItem}
+        tunnelItem={tunnelItem && isSelected}
         setproductOptionId={setproductOptionId}
       />
     );

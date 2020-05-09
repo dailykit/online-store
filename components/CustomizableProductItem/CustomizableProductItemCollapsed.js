@@ -29,12 +29,8 @@ const CustomizableProductItemCollapsed = ({
   return (
     <TouchableOpacity
       onPress={() => {
-        if (!independantItem) {
-          setSelected(_id);
-          setExpanded(false);
-        } else {
-          setExpanded(false);
-        }
+        setSelected(_id);
+        setExpanded(false);
       }}
       style={[
         styles.item_container,
@@ -99,6 +95,7 @@ const CustomizableProductItemCollapsed = ({
                 setSelected(_id);
                 setExpanded(true);
               } else {
+                setSelected(_id);
                 setExpanded(true);
               }
             }}

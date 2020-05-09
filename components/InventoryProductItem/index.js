@@ -15,6 +15,8 @@ const InventoryProductItem = ({
   independantItem,
   setcartItem,
   setcardData,
+  setSelected,
+  isSelected,
 }) => {
   const [loading, setLoading] = useState(true);
   const [inventoryProduct, set_inventoryProduct] = useState(null);
@@ -30,6 +32,12 @@ const InventoryProductItem = ({
     setobjToAdd(newItem);
     setcartItem(newItem);
   };
+
+  useEffect(() => {
+    if (tunnelItem && isSelected && !loading) {
+      setcartItem(objToAdd);
+    }
+  }, [isSelected]);
 
   const fetchData = async () => {
     try {
@@ -93,6 +101,7 @@ const InventoryProductItem = ({
       label={'dinner'}
       tunnelItem={tunnelItem}
       setProductOptionId={setProductOptionId}
+      setSelected={setSelected}
     />
   );
 };

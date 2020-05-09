@@ -18,6 +18,7 @@ import axios from 'axios';
 import { Datepicker } from '@ui-kitten/components';
 import Cart from '../components/Cart';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
+import moment from 'moment';
 
 class Home extends React.Component {
   state = {
@@ -26,13 +27,23 @@ class Home extends React.Component {
     picker: null,
     data: null,
     selectedPickerItem: null,
+    date: new Date(),
   };
   async componentDidMount() {
+    this.fetchMenu();
+  }
+
+  fetchMenu = async (
+    day = moment().date(),
+    month = moment().month(),
+    year = moment().year()
+  ) => {
     try {
+      this.setState({ loading: true });
       let res = await axios({
         url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
         method: 'POST',
-        data: GET_MENU(),
+        data: GET_MENU(day, month, year),
       });
       let picker = [];
       let data = {};
@@ -50,7 +61,7 @@ class Home extends React.Component {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   render() {
     const {
@@ -59,6 +70,7 @@ class Home extends React.Component {
       picker,
       data,
       selectedPickerItem,
+      date,
     } = this.state;
     if (loading) {
       return (
@@ -83,8 +95,14 @@ class Home extends React.Component {
           <View style={styles.picker_container}>
             <View style={styles.picker_placeholder}>
               <Datepicker
-                date={new Date()}
-                onSelect={(date) => console.log(date)}
+                date={date}
+                onSelect={(date) => {
+                  let day = moment(date).date();
+                  let month = moment(date).month();
+                  let year = moment(date).year();
+                  this.fetchMenu(day, month, year);
+                  this.setState({ date });
+                }}
               />
             </View>
             <View style={styles.picker_placeholder}>

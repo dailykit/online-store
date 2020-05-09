@@ -23,7 +23,7 @@ const { width, height } = Dimensions.get('window');
 
 const ModalContent = ({ route, navigation, ...restProps }) => {
   const { data, type, id } = route.params;
-  const [selected, setSelected] = useState(0);
+  const [isLastComboItem, setIsLastComboItem] = useState(false);
   const [cartItem, setcartItem] = useState(null); // obj to push to jaguar
   const [comboProductItems, setcomboProductItems] = useState([]);
   const [cartItemToDisplay, setcartItemToDisplay] = useState(null); // obj to push to jaguar
@@ -61,34 +61,26 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
               setcartItem={(item) => {
                 let auxArray = comboProductItems;
                 if (!Array.isArray(item)) {
-                  console.log('-----------New item----------');
-                  console.log(item);
                   if (item.customizableProductOptionId) {
-                    console.log('---Combo filtered---');
-
                     auxArray = auxArray.filter(
                       (el) =>
                         item.customizableProductOptionId !==
                         el.customizableProductOptionId
                     );
-                    console.log('Array after filter --->', auxArray);
                   } else if (item.product.id) {
-                    console.log('---Simple or Inv filtered---');
                     auxArray = auxArray.filter((el) => {
-                      console.log('filtering');
                       return item.product.id !== el.product.id;
                     });
-                    console.log('Array after filter --->', auxArray);
                   }
-
                   auxArray.push(item);
-                  console.log('Final  Array----->', auxArray);
+                  console.log(auxArray);
                   setcomboProductItems(auxArray);
                 }
               }}
               setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               tunnelItem
+              setIsLastComboItem={setIsLastComboItem}
               id={id}
               {...restProps}
             />
@@ -131,6 +123,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
         </View>
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
+      {/* {isLastComboItem && ( */}
       <Cart
         cartItem={cartItem}
         navigation={navigation}
@@ -142,6 +135,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
         tunnelItem
         type={type}
       />
+      {/* )} */}
     </View>
   );
 };

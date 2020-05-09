@@ -19,13 +19,16 @@ const InventoryProductCollapsed = ({
   label,
   tunnelItem,
   setProductOptionId,
+  setSelected,
 }) => {
   let inventoryProduct = data.inventoryProduct;
   const [servingIndex, setServingIndex] = useState(0);
   return (
     <>
       <TouchableOpacity
-        onPress={() => {}}
+        onPress={() => {
+          setSelected(_id);
+        }}
         style={[
           styles.item_container,
           {

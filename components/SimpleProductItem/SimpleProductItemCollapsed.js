@@ -20,15 +20,19 @@ const SimpleProductItemCollapsed = ({
   label,
   tunnelItem,
   setProductOptionId,
+  setSelected,
+  isSelected,
 }) => {
   let simpleRecipeProduct = data.simpleRecipeProduct;
   const [typeSelected, setTypeSelected] = useState(true);
   const [servingIndex, setServingIndex] = useState(0);
-  const [isSelected, setisSelected] = useState(0);
+  const [isSelectedIndex, setisSelectedIndex] = useState(0);
   return (
     <>
       <TouchableOpacity
-        onPress={() => {}}
+        onPress={() => {
+          setSelected(_id);
+        }}
         style={[
           styles.item_container,
           {
@@ -89,7 +93,7 @@ const SimpleProductItemCollapsed = ({
           </View>
         </View>
       </TouchableOpacity>
-      {tunnelItem && (
+      {tunnelItem && isSelected && (
         <View style={{ paddingHorizontal: 20 }}>
           <View style={styles.type_container}>
             <View style={{ flex: 1 }}></View>
