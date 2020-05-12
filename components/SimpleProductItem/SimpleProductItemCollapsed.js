@@ -31,7 +31,8 @@ const SimpleProductItemCollapsed = ({
     <>
       <TouchableOpacity
         onPress={() => {
-          setSelected(_id);
+          if (!tunnelItem) {
+          }
         }}
         style={[
           styles.item_container,

@@ -22,6 +22,9 @@ const ComboProduct = ({
   id,
   setcartItem,
   setIsLastComboItem,
+  setCurrentComboProductIndex,
+  setnumberOfComboProductItem,
+  currentComboProductIndex,
 }) => {
   const [isLoading, setisLoading] = useState(false);
   const [data, setData] = useState(null);
@@ -44,6 +47,9 @@ const ComboProduct = ({
         }
         if (tunnelItem) {
           setcartItem(comboProductsArray);
+          setnumberOfComboProductItem(
+            items.comboProduct.comboProductComponents.length
+          );
         }
         setisLoading(false);
       } catch (e) {
@@ -72,9 +78,18 @@ const ComboProduct = ({
       <View style={styles.item_parent_container}>
         {data.comboProductComponents.map((el, _id) => {
           let last = false;
-          let isSelected = selected == _id;
-          if (_id == data.comboProductComponents.length - 1) {
-            last = true;
+          let isSelected = false;
+          if (!tunnelItem) {
+            isSelected = selected == _id;
+            if (_id == data.comboProductComponents.length - 1) {
+              last = true;
+            }
+          } else {
+            last = false;
+            isSelected = currentComboProductIndex == _id;
+            if (_id == data.comboProductComponents.length - 1) {
+              last = true;
+            }
           }
           if (el.customizableProductId !== null) {
             return (

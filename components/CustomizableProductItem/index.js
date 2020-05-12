@@ -101,7 +101,7 @@ const CustomizableProductItem = ({
             setcartItem(objToAddToCart);
           }
           if (tunnelItem && independantItem) {
-            setcartItem(objToPush);
+            setcartItem(objToAddToCart);
           }
         }
         setLoading(false);
@@ -168,6 +168,7 @@ const CustomizableProductItem = ({
       label={independantItem ? '' : data.label}
       independantItem={independantItem ? true : false}
       numberOfOptions={numberOfOptions}
+      tunnelItem={tunnelItem}
     />
   );
 };

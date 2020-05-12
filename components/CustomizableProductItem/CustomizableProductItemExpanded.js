@@ -37,11 +37,12 @@ const Item = ({
       <View style={styles.item_three_upper}>
         <TouchableOpacity
           onPress={() => {
-            if (!independantItem) {
-              setSelected(_id);
-              setExpanded(false);
-            } else {
-              setExpanded(false);
+            if (!tunnelItem) {
+              if (!independantItem) {
+                setExpanded(false);
+              } else {
+                setExpanded(false);
+              }
             }
           }}
         >

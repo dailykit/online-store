@@ -9,16 +9,15 @@ export const CartContextProvider = ({ children }) => {
 
   const addToCart = (item) => {
     setCartItems([...cartItems, item]);
-    settotalPrice(totalPrice + parseFloat(item.product.price));
-  };
-
-  const addComboToCart = (items) => {
-    let combinedPrice = 0;
-    items.forEach((element) => {
-      combinedPrice = combinedPrice + parseFloat(element.product.price);
-    });
-    setCartItems([...cartItems, ...items]);
-    settotalPrice(totalPrice + combinedPrice);
+    if (item.type == 'comboProducts') {
+      let comboItemPrice = 0;
+      item.products.forEach((product) => {
+        comboItemPrice = comboItemPrice + parseFloat(product.product.price);
+      });
+      settotalPrice(totalPrice + parseFloat(comboItemPrice));
+    } else {
+      settotalPrice(totalPrice + parseFloat(item.product.price));
+    }
   };
 
   const removeFromCart = (item) => {
@@ -45,7 +44,6 @@ export const CartContextProvider = ({ children }) => {
         removeFromCartProductsDisplay,
         cartProductsToDisplay,
         totalPrice,
-        addComboToCart,
       }}
     >
       {children}

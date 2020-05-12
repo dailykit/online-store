@@ -83,8 +83,47 @@ class Home extends React.Component {
     } = this.state;
     if (loading) {
       return (
-        <View style={styles.flexContainer}>
-          <ActivityIndicator />
+        <View style={styles.home}>
+          {/* <Tabs /> */}
+          <ScrollView style={{ flex: 1, marginTop: 20 }}>
+            <View style={styles.img_container}>
+              <Image
+                source={{
+                  uri:
+                    'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+                }}
+                style={styles.cover_image}
+              />
+            </View>
+            <View style={styles.picker_container}>
+              <View style={styles.picker_placeholder}>
+                <Datepicker
+                  date={date}
+                  onSelect={(date) => {
+                    let day = moment(date).date();
+                    let month = moment(date).month();
+                    let year = moment(date).year();
+                    this.fetchMenu(day, month, year);
+                    this.setState({ date });
+                  }}
+                />
+              </View>
+              <View style={styles.picker_placeholder}>
+                <Select
+                  selectedIndex={selectedIndex}
+                  value={0}
+                  onSelect={() => {}}
+                >
+                  <SelectItem title={''} />
+                </Select>
+              </View>
+            </View>
+            <View style={styles.flexContainer}>
+              <ActivityIndicator />
+            </View>
+            <View style={{ height: height * 0.08 }} />
+          </ScrollView>
+          <Cart to='OrderSummary' {...this.props} text='Checkout' />
         </View>
       );
     }

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Feather, AntDesign, MaterialIcons } from '@expo/vector-icons';
 
-import Cart from '../components/Cart';
+import Cart, { CombpProductItemProceed } from '../components/Cart';
 
 import ComboProduct from '../components/ComboProduct';
 import CustomizableProductItem from '../components/CustomizableProductItem';
@@ -27,7 +27,10 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
   const [cartItem, setcartItem] = useState(null); // obj to push to jaguar
   const [comboProductItems, setcomboProductItems] = useState([]);
   const [cartItemToDisplay, setcartItemToDisplay] = useState(null); // obj to push to jaguar
-
+  const [numberOfComboProductItem, setnumberOfComboProductItem] = useState(
+    1000
+  );
+  const [currentComboProductIndex, setCurrentComboProductIndex] = useState(0);
   let name = '';
   if (type == 'simpleRecipeProducts') {
     name = data.simpleRecipeProduct.name;
@@ -81,6 +84,9 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
               navigation={navigation}
               tunnelItem
               setIsLastComboItem={setIsLastComboItem}
+              setCurrentComboProductIndex={setCurrentComboProductIndex}
+              setnumberOfComboProductItem={setnumberOfComboProductItem}
+              currentComboProductIndex={currentComboProductIndex}
               id={id}
               {...restProps}
             />
@@ -127,17 +133,40 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
       {/* {isLastComboItem && ( */}
-      <Cart
-        cartItem={cartItem}
-        navigation={navigation}
-        to={'Home'}
-        {...restProps}
-        text='Proceed'
-        cartItemToDisplay={cartItemToDisplay}
-        comboProductItems={comboProductItems}
-        tunnelItem
-        type={type}
-      />
+      {type !== 'comboProducts' && (
+        <Cart
+          cartItem={cartItem}
+          navigation={navigation}
+          to={'Home'}
+          {...restProps}
+          text='Proceed'
+          cartItemToDisplay={cartItemToDisplay}
+          comboProductItems={comboProductItems}
+          tunnelItem
+          type={type}
+        />
+      )}
+      {type == 'comboProducts' &&
+        numberOfComboProductItem - 1 == currentComboProductIndex && (
+          <Cart
+            cartItem={cartItem}
+            navigation={navigation}
+            to={'Home'}
+            {...restProps}
+            text='Proceed'
+            cartItemToDisplay={cartItemToDisplay}
+            comboProductItems={comboProductItems}
+            tunnelItem
+            type={type}
+          />
+        )}
+      {type == 'comboProducts' &&
+        numberOfComboProductItem - 1 != currentComboProductIndex && (
+          <CombpProductItemProceed
+            setCurrentComboProductIndex={setCurrentComboProductIndex}
+            currentComboProductIndex={currentComboProductIndex}
+          />
+        )}
       {/* )} */}
     </View>
   );

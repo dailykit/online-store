@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
+import { uuid } from '../utils';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,10 +30,17 @@ const Cart = ({
       onPress={() => {
         if (tunnelItem) {
           if (type == 'comboProducts') {
-            addComboToCart(comboProductItems);
+            addToCart({
+              cartItemId: uuid(),
+              products: comboProductItems,
+              type,
+            });
           } else {
-            console.log(cartItem);
-            addToCart(cartItem);
+            addToCart({
+              cartItemId: uuid(),
+              ...cartItem,
+              type,
+            });
           }
         }
         navigation.navigate(to);
@@ -73,6 +81,38 @@ export const CartSummary = ({ navigation, text }) => {
         </Text>
         <Text style={[styles.text, { fontSize: 10 }]}>
           *extra charges may apply
+        </Text>
+      </View>
+      <View style={styles.container_right}>
+        <Text style={styles.text}>
+          {text}
+          {'    '}
+        </Text>
+        <Ionicons
+          name='ios-arrow-forward'
+          color='#fff'
+          size={20}
+          style={{ marginTop: 2 }}
+        />
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+export const CombpProductItemProceed = ({
+  navigation,
+  text,
+  setCurrentComboProductIndex,
+  currentComboProductIndex,
+}) => {
+  return (
+    <TouchableOpacity
+      onPress={() => setCurrentComboProductIndex(currentComboProductIndex + 1)}
+      style={styles.container}
+    >
+      <View style={[styles.container_left, { flex: 4 }]}>
+        <Text style={[styles.text, { fontSize: 14 }]}>
+          Click to select next item
         </Text>
       </View>
       <View style={styles.container_right}>

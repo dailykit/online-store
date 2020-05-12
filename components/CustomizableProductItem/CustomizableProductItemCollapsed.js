@@ -24,29 +24,26 @@ const CustomizableProductItemCollapsed = ({
   label,
   independantItem,
   numberOfOptions,
+  tunnelItem,
 }) => {
   let simpleRecipeProduct = data.simpleRecipeProduct;
   return (
     <TouchableOpacity
       onPress={() => {
-        setSelected(_id);
-        setExpanded(false);
+        if (!tunnelItem) {
+          setExpanded(false);
+        }
       }}
       style={[
         styles.item_container,
         {
           borderBottomWidth: isLast ? 0 : 1,
-          flex: isSelected || independantItem ? 8 : 7,
+          flex: 8,
           height: 'auto',
         },
       ]}
     >
-      <View
-        style={[
-          styles.item_container_one,
-          { display: isSelected || independantItem ? 'flex' : 'none' },
-        ]}
-      >
+      <View style={[styles.item_container_one, { display: 'flex' }]}>
         <Text style={styles.item_image_title}>{label}</Text>
         <Image
           source={{
@@ -61,7 +58,7 @@ const CustomizableProductItemCollapsed = ({
           styles.item_container_two,
           {
             paddingTop: 15,
-            paddingLeft: isSelected || independantItem ? 10 : 0,
+            paddingLeft: 10,
           },
         ]}
       >
