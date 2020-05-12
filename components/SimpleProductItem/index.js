@@ -16,6 +16,7 @@ const SimpleProductItem = ({
   tunnelItem,
   setSelected,
   isSelected,
+  name,
 }) => {
   const [loading, setLoading] = useState(true);
   const [simpleProduct, set_simpleProduct] = useState(null);
@@ -63,6 +64,9 @@ const SimpleProductItem = ({
             type: 'Simple Recipe',
           },
         };
+        if (!independantItem) {
+          objToPush['name'] = name;
+        }
         setobjToAdd(objToPush);
         if (!tunnelItem && independantItem) {
           setPrice(

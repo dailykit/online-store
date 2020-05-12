@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 30,
     justifyContent: 'center',
+    marginBottom: 10,
   },
   picker_container: {
     flex: 1,

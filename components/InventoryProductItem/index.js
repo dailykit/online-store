@@ -17,6 +17,7 @@ const InventoryProductItem = ({
   setcardData,
   setSelected,
   isSelected,
+  name,
 }) => {
   const [loading, setLoading] = useState(true);
   const [inventoryProduct, set_inventoryProduct] = useState(null);
@@ -61,6 +62,9 @@ const InventoryProductItem = ({
             type: 'Inventory',
           },
         };
+        if (!independantItem) {
+          objToPush['name'] = name;
+        }
         setobjToAdd(objToPush);
         if (!tunnelItem && independantItem) {
           setPrice(

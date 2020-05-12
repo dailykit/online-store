@@ -25,6 +25,7 @@ const ComboProduct = ({
   setCurrentComboProductIndex,
   setnumberOfComboProductItem,
   currentComboProductIndex,
+  name,
 }) => {
   const [isLoading, setisLoading] = useState(false);
   const [data, setData] = useState(null);
@@ -109,10 +110,9 @@ const ComboProduct = ({
                 navigation={navigation}
                 tunnelItem={tunnelItem}
                 id={el.customizableProductId}
-                setcartItem={(item) => {
-                  setcartItem(item);
-                }}
+                setcartItem={setcartItem}
                 setDefault={(item) => setcomboProductsArray(item)}
+                name={name}
               />
             );
           }
@@ -134,9 +134,8 @@ const ComboProduct = ({
                 navigation={navigation}
                 id={el.simpleRecipeProductId}
                 tunnelItem={tunnelItem}
-                setcartItem={(item) => {
-                  setcartItem(item);
-                }}
+                setcartItem={setcartItem}
+                name={name}
               />
             );
           }
@@ -159,9 +158,8 @@ const ComboProduct = ({
                 navigation={navigation}
                 id={el.inventoryProductId}
                 tunnelItem={tunnelItem}
-                setcartItem={(item) => {
-                  setcartItem(item);
-                }}
+                setcartItem={setcartItem}
+                name={name}
               />
             );
           }

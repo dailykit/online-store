@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
+import { useCartContext } from '../context/cart';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { Picker } from 'native-base';
 
@@ -13,20 +14,35 @@ const { width, height } = Dimensions.get('window');
 
 const Summary = ({ useQuantity, item }) => {
   const [quantity, setquantity] = useState(1);
+
+  const { removeFromCart } = useCartContext();
   if (quantity < 0) {
     setquantity(0);
   }
-  return (
-    <View style={styles.summary_container}>
-      <View style={styles.picker_container}>
-        <Text style={styles.summary_title_text}>{item.product.name}</Text>
-      </View>
-      <View style={styles.summary_bottom_conatiner}>
-        <View style={styles.summary_bottom_conatiner_left}>
-          <Text style={styles.price_text}>$ {item.product.price}</Text>
+  if (item.type == 'comboProducts') {
+    console.log(item);
+    return (
+      <View style={styles.summary_container}>
+        <View style={styles.picker_container}>
+          <Text style={styles.summary_title_text}>{item.products[0].name}</Text>
         </View>
-        <View style={styles.summary_bottom_conatiner_right}>
-          {!useQuantity && (
+        {item.products.map((el) => (
+          <View style={styles.picker_container}>
+            <Text
+              style={{
+                paddingLeft: 10,
+              }}
+            >
+              {el.product.name}
+            </Text>
+          </View>
+        ))}
+        <View style={styles.summary_bottom_conatiner}>
+          <View style={styles.summary_bottom_conatiner_left}>
+            <Text style={styles.price_text}>$ {item.price}</Text>
+          </View>
+          <View style={styles.summary_bottom_conatiner_right}>
+            {/* {!useQuantity && (
             <View style={styles.button_container}>
               <TouchableOpacity
                 onPress={() => setquantity(quantity - 1)}
@@ -44,6 +60,69 @@ const Summary = ({ useQuantity, item }) => {
                 <Feather color='#fff' size={16} name='plus' />
               </TouchableOpacity>
             </View>
+          )} */}
+            {!useQuantity && (
+              <View style={styles.button_container}>
+                <TouchableOpacity
+                  onPress={() => {
+                    removeFromCart(item);
+                  }}
+                  style={styles.button_container_left}
+                >
+                  <Text style={{ color: 'white' }}>Remove Item</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            {useQuantity && (
+              <Text style={{ fontSize: 18 }}>
+                Qty: <Text style={{ fontWeight: 'bold' }}>1</Text>
+              </Text>
+            )}
+          </View>
+        </View>
+      </View>
+    );
+  }
+  return (
+    <View style={styles.summary_container}>
+      <View style={styles.picker_container}>
+        <Text style={styles.summary_title_text}>{item.product.name}</Text>
+      </View>
+      <View style={styles.summary_bottom_conatiner}>
+        <View style={styles.summary_bottom_conatiner_left}>
+          <Text style={styles.price_text}>$ {item.product.price}</Text>
+        </View>
+        <View style={styles.summary_bottom_conatiner_right}>
+          {/* {!useQuantity && (
+            <View style={styles.button_container}>
+              <TouchableOpacity
+                onPress={() => setquantity(quantity - 1)}
+                style={styles.button_container_left}
+              >
+                <Feather color='#fff' size={16} name='minus' />
+              </TouchableOpacity>
+              <View style={styles.button_container_middle}>
+                <Text style={styles.quantity_text}>{quantity}</Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setquantity(quantity + 1)}
+                style={styles.button_container_right}
+              >
+                <Feather color='#fff' size={16} name='plus' />
+              </TouchableOpacity>
+            </View>
+          )} */}
+          {!useQuantity && (
+            <View style={styles.button_container}>
+              <TouchableOpacity
+                onPress={() => {
+                  removeFromCart(item);
+                }}
+                style={styles.button_container_left}
+              >
+                <Text style={{ color: 'white' }}>Remove Item</Text>
+              </TouchableOpacity>
+            </View>
           )}
           {useQuantity && (
             <Text style={{ fontSize: 18 }}>
@@ -58,7 +137,7 @@ const Summary = ({ useQuantity, item }) => {
 
 const styles = StyleSheet.create({
   summary_container: {
-    height: height * 0.2,
+    height: height * 0.22,
     marginBottom: 20,
     // shadowColor: "#000",
     // shadowOffset: { width: 1, height: 1 },
@@ -69,6 +148,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderTopWidth: 0,
     borderTopColor: '#fff',
+    backgroundColor: '#f1f1f1',
+    width: width - 20,
+    marginLeft: 10,
+    paddingBottom: 20,
   },
   summary_title_conatiner: {
     flex: 1,

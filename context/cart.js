@@ -8,20 +8,29 @@ export const CartContextProvider = ({ children }) => {
   const [totalPrice, settotalPrice] = useState(0);
 
   const addToCart = (item) => {
-    setCartItems([...cartItems, item]);
     if (item.type == 'comboProducts') {
       let comboItemPrice = 0;
       item.products.forEach((product) => {
         comboItemPrice = comboItemPrice + parseFloat(product.product.price);
       });
+      item['price'] = comboItemPrice;
       settotalPrice(totalPrice + parseFloat(comboItemPrice));
     } else {
       settotalPrice(totalPrice + parseFloat(item.product.price));
     }
+    setCartItems([...cartItems, item]);
   };
 
-  const removeFromCart = (item) => {
-    console.log('item removed');
+  const removeFromCart = (product) => {
+    let new_price = totalPrice - parseFloat(product.price);
+    if (isNaN(new_price) || new_price < 0) {
+      new_price = 0;
+    }
+    settotalPrice(new_price);
+    let newCartItems = cartItems.filter(
+      (item) => item.cartItemId !== product.cartItemId
+    );
+    setCartItems(newCartItems);
   };
 
   const addToCartProductsDisplay = (item) => {

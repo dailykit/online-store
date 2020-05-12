@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Feather, AntDesign, MaterialIcons } from '@expo/vector-icons';
 
-import Cart, { CombpProductItemProceed } from '../components/Cart';
+import Cart, { ComboProductItemProceed } from '../components/Cart';
 
 import ComboProduct from '../components/ComboProduct';
 import CustomizableProductItem from '../components/CustomizableProductItem';
@@ -87,6 +87,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
               setCurrentComboProductIndex={setCurrentComboProductIndex}
               setnumberOfComboProductItem={setnumberOfComboProductItem}
               currentComboProductIndex={currentComboProductIndex}
+              name={data.name}
               id={id}
               {...restProps}
             />
@@ -162,7 +163,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
         )}
       {type == 'comboProducts' &&
         numberOfComboProductItem - 1 != currentComboProductIndex && (
-          <CombpProductItemProceed
+          <ComboProductItemProceed
             setCurrentComboProductIndex={setCurrentComboProductIndex}
             currentComboProductIndex={currentComboProductIndex}
           />

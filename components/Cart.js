@@ -99,7 +99,7 @@ export const CartSummary = ({ navigation, text }) => {
   );
 };
 
-export const CombpProductItemProceed = ({
+export const ComboProductItemProceed = ({
   navigation,
   text,
   setCurrentComboProductIndex,

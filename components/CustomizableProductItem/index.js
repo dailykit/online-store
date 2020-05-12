@@ -20,6 +20,7 @@ const CustomizableProductItem = ({
   setcardData,
   setcartItem,
   setPrice,
+  name,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -89,6 +90,9 @@ const CustomizableProductItem = ({
               type: 'Simple Recipe',
             },
           };
+          if (!independantItem) {
+            objToAddToCart['name'] = name;
+          }
           setobjToAdd(objToAddToCart);
           if (!tunnelItem && independantItem) {
             setPrice(
