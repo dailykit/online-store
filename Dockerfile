@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 COPY package.json ./
 RUN npm install
 COPY . .
-ADD .env .
+ADD /usr/src/app/.env
 RUN echo "BASE_URL=${BASE_URL} \n HASURA_URL=${HASURA_URL} \n HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}" >> /usr/scr/app/.env 
 
 ENV PATH /app/node_modules/.bin:$PATH
