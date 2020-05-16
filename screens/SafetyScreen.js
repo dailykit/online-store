@@ -10,6 +10,7 @@ import {
 import HeaderBack from '../components/HeaderBack';
 import { Badge } from '../assets/imgs/Badge';
 import { StaffSafetyContainer } from '../components/StaffSafetyContainer';
+import Cart from '../components/Cart';
 
 import thermometer from '../assets/imgs/thermometer.png';
 import patient from '../assets/imgs/patient.png';
@@ -23,7 +24,9 @@ export const SafetyScreen = ({ navigation }) => {
     <>
       <HeaderBack title='Go Back' navigation={navigation} />
       <ScrollView style={styles.container}>
-        <View style={{ flex: 1, alignItems: 'center' }}>
+        <View
+          style={{ flex: 1, alignItems: 'center', backgroundColor: '#fff' }}
+        >
           <View style={styles.badgeConatiner}>
             <Badge style={{ width: 80, height: 80 }} />
           </View>
@@ -68,8 +71,9 @@ export const SafetyScreen = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <View style={{ padding: 10 }} />
+        <View style={{ padding: 40 }} />
       </ScrollView>
+      <Cart to='OrderSummary' navigation={navigation} text='Checkout' />
     </>
   );
 };
@@ -96,6 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2e2d4d',
     padding: 20,
     borderRadius: 20,
+    marginTop: 40,
   },
   title: {
     fontSize: 24,
