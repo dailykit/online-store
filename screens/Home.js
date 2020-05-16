@@ -9,17 +9,18 @@ import {
   Modal,
   ActivityIndicator,
 } from 'react-native';
-
-import { GET_MENU } from '../gql/Queries';
-
-const { width, height } = Dimensions.get('screen');
-import Card from '../components/Card';
 import axios from 'axios';
 import { Datepicker } from '@ui-kitten/components';
-import Cart from '../components/Cart';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import moment from 'moment';
+
+import { GET_MENU } from '../gql/Queries';
+const { width, height } = Dimensions.get('screen');
+import Card from '../components/Card';
+import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
+
+import { HASURA_URL } from 'react-native-dotenv';
 
 class Home extends React.Component {
   state = {
@@ -42,8 +43,9 @@ class Home extends React.Component {
   ) => {
     try {
       this.setState({ loading: true });
+      console.log(HASURA_URL);
       let res = await axios({
-        url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
+        url: HASURA_URL,
         method: 'POST',
         data: GET_MENU(day, month, year),
       });

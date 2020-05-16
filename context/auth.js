@@ -2,8 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { AsyncStorage } from 'react-native';
+import { BASE_URL } from 'react-native-dotenv';
 
-const BASE_URL = 'secure.dailykit.org';
 const AuthContext = React.createContext();
 
 export const AuthProvider = ({ children }) => {

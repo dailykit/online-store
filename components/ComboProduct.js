@@ -12,6 +12,7 @@ import CustomizableProductItem from './CustomizableProductItem';
 import SimpleProductItem from './SimpleProductItem';
 import InventoryProductItem from './InventoryProductItem';
 import { COMBO_PRODUCT } from '../gql/Queries';
+import { HASURA_URL } from 'react-native-dotenv';
 
 const { width, height } = Dimensions.get('window');
 
@@ -37,7 +38,7 @@ const ComboProduct = ({
     (async () => {
       try {
         let res = await axios({
-          url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
+          url: HASURA_URL,
           method: 'POST',
           data: COMBO_PRODUCT(id),
         });

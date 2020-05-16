@@ -3,6 +3,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed';
 import { SIMPLE_PRODUCT } from '../../gql/Queries';
+import { HASURA_URL } from 'react-native-dotenv';
 
 const SimpleProductItem = ({
   _id,
@@ -43,7 +44,7 @@ const SimpleProductItem = ({
   const fetchData = async () => {
     try {
       let res = await axios({
-        url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
+        url: HASURA_URL,
         method: 'POST',
         data: SIMPLE_PRODUCT(id),
       });

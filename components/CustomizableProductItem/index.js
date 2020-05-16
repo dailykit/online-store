@@ -5,6 +5,7 @@ import axios from 'axios';
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed';
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded';
 import { CUSTOMIZABLE_PRODUCT } from '../../gql/Queries';
+import { HASURA_URL } from 'react-native-dotenv';
 
 const CustomizableProductItem = ({
   isSelected,
@@ -52,7 +53,7 @@ const CustomizableProductItem = ({
   const fetchData = async () => {
     try {
       let res = await axios({
-        url: 'https://dailykitdatahub.herokuapp.com/v1/graphql',
+        url: HASURA_URL,
         method: 'POST',
         data: CUSTOMIZABLE_PRODUCT(id),
       });

@@ -7,3 +7,5 @@ yarn.lock
 *.p12
 *.key
 *.mobileprovision
+.env
+web-build
