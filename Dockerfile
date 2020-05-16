@@ -1,11 +1,11 @@
-FROM mhart/alpine-node:11 as build
+FROM mhart/alpine-node:14.0.0 as build
 ARG BASE_URL
 ARG HASURA_URL
 ARG HASURA_GRAPHQL_ADMIN_SECRET
 
 WORKDIR /usr/src/app
 COPY package.json ./
-RUN yarn
+RUN npm install
 COPY . .
 ADD .env .
 RUN echo "BASE_URL=${BASE_URL} \n HASURA_URL=${HASURA_URL} \n HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}" >> /usr/scr/app/.env 
