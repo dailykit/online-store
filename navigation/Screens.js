@@ -22,6 +22,7 @@ import OrderPlaced from '../screens/OrderPlaced';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
+import { SafetyScreen } from '../screens/SafetyScreen';
 // drawer
 import CustomDrawerContent from './Menu';
 
@@ -168,6 +169,13 @@ function HomeStack(props) {
       <Stack.Screen
         name='OrderPlaced'
         component={OrderPlaced}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='SafetyScreen'
+        component={SafetyScreen}
         options={{
           headerShown: false,
         }}

@@ -19,6 +19,7 @@ import { Datepicker } from '@ui-kitten/components';
 import Cart from '../components/Cart';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import moment from 'moment';
+import { SafetyBanner } from '../components/SafetyBanner';
 
 class Home extends React.Component {
   state = {
@@ -193,6 +194,8 @@ class Home extends React.Component {
               style={styles.cover_image}
             />
           </View>
+          <Text style={styles.title}>Vegan Adda</Text>
+          <SafetyBanner {...this.props} />
           <View style={styles.picker_container}>
             <View style={styles.picker_placeholder}>
               <Datepicker
@@ -267,6 +270,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    padding: 20,
+    fontWeight: 'bold',
   },
 });
 
