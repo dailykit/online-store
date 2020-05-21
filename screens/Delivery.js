@@ -6,8 +6,11 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import HeaderBack from '../components/HeaderBack';
+
+const { height, width } = Dimensions.get('window');
 
 import orderpreparing from '../assets/imgs/orderpreparing.png';
 import orderpickup from '../assets/imgs/orderpickup.png';
@@ -18,7 +21,7 @@ export const Delivery = ({ navigation }) => {
     <ScrollView style={styles.container}>
       <HeaderBack title='Go Back' navigation={navigation} />
       <View style={styles.orderDetailsContainer}>
-        <Text style={styles.orderDetailsText}>Order ID </Text>
+        <Text style={styles.orderDetailsText}>Order ID 663785267378</Text>
         <TouchableOpacity>
           <Text style={styles.helpText}>Help</Text>
         </TouchableOpacity>
@@ -26,21 +29,22 @@ export const Delivery = ({ navigation }) => {
       <View style={styles.mapContainer}>
         <Text>MAP</Text>
         <View style={styles.orderTimeContainer}>
+          <Text style={styles.orderTimeHeader}>ARRIVING IN</Text>
           <Text style={styles.orderTime}>20</Text>
           <Text style={styles.orderTime}>min</Text>
         </View>
       </View>
       <View style={styles.orderTimeline}>
         <View style={styles.timelineItem}>
-          <Image source={orderpreparing} />
+          <Image style={styles.timelineItemImage} source={orderpreparing} />
         </View>
         <View style={styles.orderTimelineSepratorContainer} />
         <View style={styles.timelineItem}>
-          <Image source={orderpickup} />
+          <Image style={styles.timelineItemImage} source={orderpickup} />
         </View>
         <View style={styles.orderTimelineSepratorContainer} />
         <View style={styles.timelineItem}>
-          <Image source={orderdelivered} />
+          <Image style={styles.timelineItemImage} source={orderdelivered} />
         </View>
       </View>
       <View style={styles.orderInfoConatiner}>
@@ -76,22 +80,109 @@ export const Delivery = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
-  orderDetailsContainer: {},
-  orderDetailsText: {},
-  helpText: {},
-  mapContainer: {},
-  orderTimeContainer: {},
-  orderTime: {},
-  orderTimeline: {},
-  timelineItem: {},
-  orderTimelineSepratorContainer: {},
-  orderInfoConatiner: {},
-  orderInfoText: {},
-  orderInfoTextDescription: {},
-  riderContainer: {},
-  avatar: {},
-  riderText: {},
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  orderDetailsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    height: height * 0.1,
+    alignItems: 'center',
+  },
+  orderDetailsText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  helpText: {
+    color: '#3fa4ff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  mapContainer: {
+    height: height * 0.4,
+    width,
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f9f9f9',
+  },
+  orderTimeContainer: {
+    position: 'absolute',
+    bottom: width * 0.05,
+    right: width * 0.05,
+    backgroundColor: '#44496b',
+    padding: 20,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  orderTimeHeader: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  orderTime: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  orderTimeline: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  timelineItem: {
+    borderRadius: (width * 0.1 + 20) / 2,
+    padding: 10,
+    backgroundColor: '#ddefff',
+  },
+  timelineItemImage: {
+    height: width * 0.1,
+    width: width * 0.1,
+    resizeMode: 'contain',
+  },
+  orderTimelineSepratorContainer: {
+    height: 1,
+    flex: 1,
+    borderTopColor: 'gray',
+    borderTopWidth: 2,
+    borderStyle: 'dashed',
+    borderRadius: 1,
+  },
+  orderInfoConatiner: {
+    height: height * 0.15,
+    justifyContent: 'center',
+  },
+  orderInfoText: {
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 22,
+  },
+  orderInfoTextDescription: {
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  riderContainer: {
+    height: height * 0.15,
+    backgroundColor: '#f3f3f3',
+    flexDirection: 'row',
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  avatar: {
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    resizeMode: 'cover',
+    marginRight: 10,
+  },
+  riderText: {
+    width: width * 0.8,
+  },
   send_details_container: {
     width: '100%',
     flexDirection: 'row',
