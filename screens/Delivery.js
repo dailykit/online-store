@@ -8,6 +8,8 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
+import MapView from 'react-native-maps';
+
 import HeaderBack from '../components/HeaderBack';
 
 const { height, width } = Dimensions.get('window');
@@ -27,7 +29,15 @@ export const Delivery = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View style={styles.mapContainer}>
-        <Text>MAP</Text>
+        <MapView
+          initialRegion={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+          style={styles.mapStyle}
+        />
         <View style={styles.orderTimeContainer}>
           <Text style={styles.orderTimeHeader}>ARRIVING IN</Text>
           <Text style={styles.orderTime}>20</Text>
@@ -107,6 +117,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#f9f9f9',
+  },
+  mapStyle: {
+    width: width,
+    height: height * 0.4,
   },
   orderTimeContainer: {
     position: 'absolute',
