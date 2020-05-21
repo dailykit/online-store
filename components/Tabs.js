@@ -74,7 +74,6 @@ export default class Tabs extends React.Component {
     const containerStyles = [
       styles.titleContainer,
       !isActive && { backgroundColor: argonTheme.COLORS.SECONDARY },
-      isActive && styles.containerShadow,
     ];
 
     return (
@@ -119,13 +118,7 @@ const styles = StyleSheet.create({
     backgroundColor: argonTheme.COLORS.WHITE,
     zIndex: 2,
   },
-  shadow: {
-    shadowColor: argonTheme.COLORS.BLACK,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    shadowOpacity: 0.2,
-    elevation: 4,
-  },
+
   menu: {
     paddingHorizontal: 16 * 2.5,
     paddingTop: 30,
@@ -137,13 +130,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginRight: 9,
   },
-  containerShadow: {
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    shadowOpacity: 0.1,
-    elevation: 1,
-  },
+
   menuTitle: {
     fontWeight: '600',
     fontSize: 14,

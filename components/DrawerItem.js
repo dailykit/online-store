@@ -32,7 +32,6 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
         return null;
     }
   };
-
   const containerStyles = [
     styles.defaultStyle,
     focused ? [styles.activeStyle, styles.shadow] : null,
@@ -86,15 +85,6 @@ const styles = StyleSheet.create({
   activeStyle: {
     backgroundColor: argonTheme.COLORS.ACTIVE,
     borderRadius: 4,
-  },
-  shadow: {
-    shadowColor: argonTheme.COLORS.BLACK,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowRadius: 8,
-    shadowOpacity: 0.1,
   },
 });
 

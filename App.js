@@ -89,6 +89,7 @@ export default class App extends React.Component {
                   style={{
                     marginTop:
                       Platform.OS == 'android' ? Constants.statusBarHeight : 0,
+                    flex: 1,
                   }}
                 >
                   {Platform.OS == 'ios' && (

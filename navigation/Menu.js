@@ -22,7 +22,13 @@ function CustomDrawerContent({
       <View style={styles.header}>
         <Image style={styles.logo} source={Images.Logo} />
       </View>
-      <View style={{ paddingLeft: 8, paddingRight: 14 }}>
+      <View
+        style={{
+          paddingLeft: 8,
+          paddingRight: 14,
+          flex: 1,
+        }}
+      >
         <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
           {screens.map((item, index) => {
             return (

@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Constants from 'expo-constants';
 
-import { GradientButton } from '../components/GradientButton';
+import { GradientButton } from '../components';
 import { theme } from '../constants';
 import { Input } from '@ui-kitten/components';
 

@@ -56,15 +56,7 @@ class Header extends React.Component {
       ...props
     } = this.props;
 
-    const noShadow = [
-      'Search',
-      'Categories',
-      'Deals',
-      'Placeholder',
-      'Profile',
-    ].includes(title);
     const headerStyles = [
-      !noShadow ? styles.shadow : null,
       transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null,
       { height: 40 },
     ];
@@ -123,14 +115,7 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     zIndex: 5,
   },
-  shadow: {
-    backgroundColor: argonTheme.COLORS.WHITE,
-    shadowColor: 'black',
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    shadowOpacity: 0.2,
-    elevation: 3,
-  },
+
   notify: {
     backgroundColor: argonTheme.COLORS.LABEL,
     borderRadius: 4,

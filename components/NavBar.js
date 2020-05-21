@@ -72,11 +72,7 @@ export default function NavBar({
     const hasIcons = React.Children.count(right) > 1;
     const rightStyles = [styles.right, rightStyle];
     if (!hideRight) {
-      return (
-        <View right row={hasIcons} style={rightStyles}>
-          {right}
-        </View>
-      );
+      return <View style={rightStyles}>{right}</View>;
     }
     return <View style={styles.right} />;
   }
