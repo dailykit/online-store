@@ -5,10 +5,12 @@ import {
   Keyboard,
   StyleSheet,
   ScrollView,
+  View,
+  Text,
 } from 'react-native';
 import Constants from 'expo-constants';
 
-import { ButtonAuth, BlockAuth, TextAuth } from '../components';
+import { GradientButton } from '../components/GradientButton';
 import { theme } from '../constants';
 import { Input } from '@ui-kitten/components';
 
@@ -57,12 +59,10 @@ const SignUp = ({ navigation }) => {
   const hasErrors = (key) => (errors.includes(key) ? styles.hasErrors : null);
 
   return (
-    <ScrollView style={{ marginTop: 50 }}>
-      <BlockAuth padding={[0, theme.sizes.base * 2]}>
-        <TextAuth h1 bold style={{ marginBottom: 20 }}>
-          Sign Up
-        </TextAuth>
-        <BlockAuth middle>
+    <ScrollView style={styles.constainer}>
+      <View style={styles.content}>
+        <Text style={styles.heading}>Sign Up</Text>
+        <View>
           <Input
             label='First Name'
             error={hasErrors('number')}
@@ -94,28 +94,19 @@ const SignUp = ({ navigation }) => {
             onChangeText={(password) => setPassword(password)}
           />
 
-          <ButtonAuth gradient onPress={() => handleSignUp()}>
+          <GradientButton gradient onPress={() => handleSignUp()}>
             {loading ? (
               <ActivityIndicator size='small' color='white' />
             ) : (
-              <TextAuth bold white center>
-                Sign Up
-              </TextAuth>
+              <Text style={styles.text}>Sign Up</Text>
             )}
-          </ButtonAuth>
+          </GradientButton>
 
-          <ButtonAuth onPress={() => navigation.navigate('Login')}>
-            <TextAuth
-              gray
-              caption
-              center
-              style={{ textDecorationLine: 'underline' }}
-            >
-              Back to Login
-            </TextAuth>
-          </ButtonAuth>
-        </BlockAuth>
-      </BlockAuth>
+          <GradientButton onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.backtext}>Back to Login</Text>
+          </GradientButton>
+        </View>
+      </View>
     </ScrollView>
   );
 };
@@ -134,6 +125,18 @@ const styles = StyleSheet.create({
   },
   hasErrors: {
     borderBottomColor: theme.colors.accent,
+  },
+  constainer: { marginTop: 50 },
+  content: { paddingHorizontal: theme.sizes.base * 2 },
+  heading: { marginBottom: 20, fontSize: 24, fontWeight: 'bold' },
+  text: {
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  backtext: {
+    color: 'gray',
+    textAlign: 'center',
   },
 });
 

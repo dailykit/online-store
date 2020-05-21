@@ -1,10 +1,9 @@
 import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
 import NavBar from './NavBar';
 
 import Icon from './Icon';
-import Block from './Block';
 import argonTheme from '../constants/Theme';
 
 const { width } = Dimensions.get('window');
@@ -76,7 +75,7 @@ class Header extends React.Component {
     ];
 
     return (
-      <Block style={headerStyles}>
+      <View style={headerStyles}>
         <NavBar
           back={false}
           title={title}
@@ -105,7 +104,7 @@ class Header extends React.Component {
           ]}
           {...props}
         />
-      </Block>
+      </View>
     );
   }
 }

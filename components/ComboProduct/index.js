@@ -8,10 +8,10 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-import CustomizableProductItem from './CustomizableProductItem';
-import SimpleProductItem from './SimpleProductItem';
-import InventoryProductItem from './InventoryProductItem';
-import { COMBO_PRODUCT } from '../gql/Queries';
+import CustomizableProductItem from '../CustomizableProductItem';
+import SimpleProductItem from '../SimpleProductItem';
+import InventoryProductItem from '../InventoryProductItem';
+import { COMBO_PRODUCT } from '../../gql/Queries';
 import { HASURA_URL } from 'react-native-dotenv';
 
 const { width, height } = Dimensions.get('window');

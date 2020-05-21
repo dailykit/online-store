@@ -4,11 +4,8 @@ import DrawerItem from './DrawerItem';
 import Icon from './Icon';
 import Header from './Header';
 import Input from './Input';
-import ButtonAuth from './ButtonAuth';
-import BlockAuth from './BlockAuth';
-import TextAuth from './TextAuth';
+import GradientButton from './GradientButton';
 import Switch from './Switch';
-import InputAuth from './InputAuth';
 
 export {
   Button,
@@ -18,8 +15,5 @@ export {
   Input,
   Header,
   Switch,
-  ButtonAuth,
-  BlockAuth,
-  TextAuth,
-  InputAuth,
+  GradientButton,
 };

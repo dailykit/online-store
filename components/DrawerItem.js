@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, AsyncStorage } from 'react-native';
-import Block from './Block';
+import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import { useAuth } from '../context/auth';
 import Icon from './Icon';
 import argonTheme from '../constants/Theme';
@@ -37,6 +36,7 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
   const containerStyles = [
     styles.defaultStyle,
     focused ? [styles.activeStyle, styles.shadow] : null,
+    { flexDirection: 'row' },
   ];
 
   const { logout } = useAuth();
@@ -52,23 +52,28 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
         }
       }}
     >
-      <Block flex row style={containerStyles}>
-        <Block middle flex={0.1} style={{ marginRight: 5 }}>
+      <View style={containerStyles}>
+        <View style={{ marginRight: 5, flex: 0.1, justifyContent: 'center' }}>
           {renderIcon()}
-        </Block>
-        <Block row center flex={0.9}>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            flex: 0.9,
+          }}
+        >
           <Text
-            size={15}
-            bold={focused ? true : false}
             style={{
-              color: focused ? 'white' : 'rgba(0,0,0,0.5)',
+              fontSize: 15,
               fontWeight: focused ? 'bold' : 'normal',
+              color: focused ? 'white' : 'rgba(0,0,0,0.5)',
             }}
           >
             {title}
           </Text>
-        </Block>
-      </Block>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 };

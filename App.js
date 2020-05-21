@@ -1,6 +1,6 @@
 import 'react-native-get-random-values';
 import React, { Suspense } from 'react';
-import { Image, SafeAreaView, StatusBar, Platform } from 'react-native';
+import { Image, SafeAreaView, StatusBar, Platform, View } from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import Constants from 'expo-constants';
@@ -8,7 +8,6 @@ import Constants from 'expo-constants';
 import * as eva from '@eva-design/eva';
 import { ApplicationProvider } from '@ui-kitten/components';
 
-import Block from './components/Block';
 import { NavigationContainer } from '@react-navigation/native';
 
 import * as Font from 'expo-font';
@@ -86,12 +85,11 @@ export default class App extends React.Component {
           <ErrorBoundary>
             <NavigationContainer>
               <SafeAreaView style={{ flex: 1 }}>
-                <Block
+                <View
                   style={{
                     marginTop:
                       Platform.OS == 'android' ? Constants.statusBarHeight : 0,
                   }}
-                  flex
                 >
                   {Platform.OS == 'ios' && (
                     <StatusBar barStyle='dark-content' />
@@ -103,7 +101,7 @@ export default class App extends React.Component {
                       </CartContextProvider>
                     </AuthProvider>
                   </ApplicationProvider>
-                </Block>
+                </View>
               </SafeAreaView>
             </NavigationContainer>
           </ErrorBoundary>

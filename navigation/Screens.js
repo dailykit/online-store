@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Easing,
-  Animated,
   View,
   Dimensions,
   AsyncStorage,
@@ -10,12 +8,9 @@ import {
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 // screens
 import Home from '../screens/Home';
-import Placeholder from '../screens/Placeholder';
-import Profile from '../screens/Profile';
 import AddToCart from '../screens/AddToCart';
 import OrderSummary from '../screens/OrderSummary';
 import OrderPlaced from '../screens/OrderPlaced';
@@ -31,8 +26,7 @@ import CustomDrawerContent from './Menu';
 import { useAuth } from '../context/auth';
 
 // header for screens
-import { Icon, Header } from '../components';
-import { argonTheme, tabs } from '../constants';
+import { Header } from '../components';
 import ModalContent from '../components/ModalContent';
 import { Delivery } from '../screens/Delivery';
 
@@ -40,48 +34,6 @@ const { width } = Dimensions.get('screen');
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-const Tab = createBottomTabNavigator();
-
-function ProfileStack(props) {
-  return (
-    <Stack.Navigator initialRouteName='Profile' mode='card' headerMode='screen'>
-      <Stack.Screen
-        name='Profile'
-        component={Profile}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              transparent
-              white
-              title='Profile'
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          cardStyle: { backgroundColor: '#FFFFFF' },
-          headerTransparent: true,
-        }}
-      />
-      <Stack.Screen
-        name='Placeholder'
-        component={Placeholder}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title=''
-              back
-              white
-              transparent
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          headerTransparent: true,
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
 
 function AuthStack(props) {
   return (
@@ -137,16 +89,7 @@ function HomeStack(props) {
           cardStyle: { backgroundColor: '#F8F9FE' },
         }}
       />
-      <Stack.Screen
-        name='Placeholder'
-        component={Placeholder}
-        options={{
-          headerMode: false,
-          header: null,
-          headerShown: false,
-          stackPresentation: 'modal',
-        }}
-      />
+
       <Stack.Screen
         name='Modal'
         component={ModalContent}
@@ -267,9 +210,6 @@ function AppStack(props) {
       initialRouteName='Home'
     >
       <Drawer.Screen name='Home' component={HomeStack} />
-      {/* <Drawer.Screen name="Profile" component={ProfileStack} /> */}
-      {/* <Drawer.Screen name="Account" component={Register} /> */}
-      {/* <Drawer.Screen name="Articles" component={ArticlesStack} /> */}
     </Drawer.Navigator>
   );
 }

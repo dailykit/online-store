@@ -1,15 +1,14 @@
-import React from "react";
-import { StyleSheet, Dimensions, FlatList, Animated } from "react-native";
-import Block from "./Block";
+import React from 'react';
+import { StyleSheet, Dimensions, FlatList, Animated, View } from 'react-native';
 
-const { width } = Dimensions.get("screen");
-import argonTheme from "../constants/Theme";
+const { width } = Dimensions.get('screen');
+import argonTheme from '../constants/Theme';
 
 const defaultMenu = [
-  { id: "popular", title: "Popular" },
-  { id: "new", title: "New" },
-  { id: "more", title: "More" },
-  { id: "lorem", title: "Lorem" },
+  { id: 'popular', title: 'Popular' },
+  { id: 'new', title: 'New' },
+  { id: 'more', title: 'More' },
+  { id: 'lorem', title: 'Lorem' },
 ];
 
 export default class Tabs extends React.Component {
@@ -69,7 +68,7 @@ export default class Tabs extends React.Component {
         argonTheme.COLORS.BLACK,
         isActive ? argonTheme.COLORS.WHITE : argonTheme.COLORS.BLACK,
       ],
-      extrapolate: "clamp",
+      extrapolate: 'clamp',
     });
 
     const containerStyles = [
@@ -79,14 +78,14 @@ export default class Tabs extends React.Component {
     ];
 
     return (
-      <Block style={containerStyles}>
+      <View style={containerStyles}>
         <Animated.Text
           style={[styles.menuTitle, { color: textColor }]}
           onPress={() => this.selectMenu(item.id)}
         >
           {item.title}
         </Animated.Text>
-      </Block>
+      </View>
     );
   };
 
@@ -110,7 +109,7 @@ export default class Tabs extends React.Component {
   };
 
   render() {
-    return <Block style={styles.container}>{this.renderMenu()}</Block>;
+    return <View style={styles.container}>{this.renderMenu()}</View>;
   }
 }
 
@@ -133,20 +132,20 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   titleContainer: {
-    alignItems: "center",
+    alignItems: 'center',
     backgroundColor: argonTheme.COLORS.ACTIVE,
     borderRadius: 4,
     marginRight: 9,
   },
   containerShadow: {
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     shadowOpacity: 0.1,
     elevation: 1,
   },
   menuTitle: {
-    fontWeight: "600",
+    fontWeight: '600',
     fontSize: 14,
     // lineHeight: 28,
     paddingVertical: 10,

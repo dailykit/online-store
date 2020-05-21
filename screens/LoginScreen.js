@@ -8,16 +8,14 @@ import {
   View,
   ScrollView,
   Alert,
+  Text,
 } from 'react-native';
 
 import { useAuth } from '../context/auth';
 import { Input } from '@ui-kitten/components';
 
-import { ButtonAuth, BlockAuth, InputAuth, TextAuth } from '../components';
+import { GradientButton } from '../components';
 import { theme } from '../constants';
-
-const VALID_EMAIL = '';
-const VALID_PASSWORD = '';
 
 const isAndroid = Platform.OS == 'android' ? true : false;
 
@@ -56,15 +54,20 @@ const LoginScreen = ({ navigation }) => {
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.login}>
-        <BlockAuth padding={[0, theme.sizes.base * 2]}>
-          <TextAuth h1 bold>
+        <View style={styles.content}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+            }}
+          >
             Login
-          </TextAuth>
-          <BlockAuth style={{ marginTop: 40 }} middle>
+          </Text>
+          <View style={{ marginTop: 40 }}>
             {errors && (
-              <TextAuth h6 bold style={{ color: 'red' }}>
+              <Text style={{ color: 'red', fontWeight: 'bold' }}>
                 username/password incorrect
-              </TextAuth>
+              </Text>
             )}
             <Input
               label='Email'
@@ -77,23 +80,19 @@ const LoginScreen = ({ navigation }) => {
               value={password}
               onChangeText={(password) => setPassword(password)}
             />
-            <ButtonAuth gradient onPress={() => handleLogin()}>
+            <GradientButton gradient onPress={() => handleLogin()}>
               {loading ? (
                 <ActivityIndicator size='small' color='white' />
               ) : (
-                <TextAuth bold white center>
-                  Login
-                </TextAuth>
+                <Text style={styles.text}>Login</Text>
               )}
-            </ButtonAuth>
+            </GradientButton>
 
-            <ButtonAuth onPress={() => navigation.navigate('Forgot')}>
-              <TextAuth gray caption center>
-                Forgot your password?
-              </TextAuth>
-            </ButtonAuth>
-          </BlockAuth>
-        </BlockAuth>
+            <GradientButton onPress={() => navigation.navigate('Forgot')}>
+              <Text style={styles.backtext}>Forgot your password?</Text>
+            </GradientButton>
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
@@ -111,6 +110,18 @@ const styles = StyleSheet.create({
   },
   hasErrors: {
     borderBottomColor: theme.colors.accent,
+  },
+  constainer: { marginTop: 50 },
+  content: { paddingHorizontal: theme.sizes.base * 2 },
+  heading: { marginBottom: 20, fontSize: 24, fontWeight: 'bold' },
+  text: {
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+  },
+  backtext: {
+    color: 'gray',
+    textAlign: 'center',
   },
 });
 
