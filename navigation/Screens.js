@@ -126,6 +126,13 @@ function HomeStack(props) {
       headerMode='screen'
     >
       <Stack.Screen
+        name='DeliveryScreen'
+        component={Delivery}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name='Home'
         component={Home}
         options={{
@@ -182,13 +189,6 @@ function HomeStack(props) {
       <Stack.Screen
         name='SafetyScreen'
         component={SafetyScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name='DeliveryScreen'
-        component={Delivery}
         options={{
           headerShown: false,
         }}
