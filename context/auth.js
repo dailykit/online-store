@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { AsyncStorage } from 'react-native';
-import { BASE_URL } from 'react-native-dotenv';
+import { BASE_URL, CLIENTID } from 'react-native-dotenv';
 
 const AuthContext = React.createContext();
 
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
         username: email,
         password: password,
         grant_type: 'password',
-        client_id: 'client1',
+        client_id: CLIENTID,
         scope: 'openid',
       };
       const searchParams = Object.keys(params)
@@ -70,7 +70,7 @@ export const AuthProvider = ({ children }) => {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
-        data: `grant_type=refresh_token&client_id=restaurantmealkit&refresh_token=${token}`,
+        data: `grant_type=refresh_token&client_id=${CLIENTID}&refresh_token=${token}`,
       });
       return {
         success: true,
