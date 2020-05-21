@@ -120,18 +120,7 @@ function AuthStack(props) {
 
 function HomeStack(props) {
   return (
-    <Stack.Navigator
-      initialRouteName='DeliveryScreen' // for dev testing and building
-      mode='card'
-      headerMode='screen'
-    >
-      <Stack.Screen
-        name='DeliveryScreen'
-        component={Delivery}
-        options={{
-          headerShown: false,
-        }}
-      />
+    <Stack.Navigator mode='card' headerMode='screen'>
       <Stack.Screen
         name='Home'
         component={Home}
@@ -189,6 +178,13 @@ function HomeStack(props) {
       <Stack.Screen
         name='SafetyScreen'
         component={SafetyScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='DeliveryScreen'
+        component={Delivery}
         options={{
           headerShown: false,
         }}

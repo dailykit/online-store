@@ -61,17 +61,20 @@ const LoginScreen = ({ navigation }) => {
             Login
           </TextAuth>
           <BlockAuth style={{ marginTop: 40 }} middle>
+            {errors && (
+              <TextAuth h6 bold style={{ color: 'red' }}>
+                username/password incorrect
+              </TextAuth>
+            )}
             <Input
               label='Email'
               defaultValue={email}
               onChangeText={(email) => setEmail(email)}
-              status={errors ? 'Danger' : 'Basic'}
             />
             <Input
               secureTextEntry
               label='Password'
               value={password}
-              status={errors ? 'Danger' : 'Basic'}
               onChangeText={(password) => setPassword(password)}
             />
             <ButtonAuth gradient onPress={() => handleLogin()}>

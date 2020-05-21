@@ -130,6 +130,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = async () => {
+    await AsyncStorage.clear();
+    setIsAuthenticated(false);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -138,6 +143,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         signup,
         setIsAuthenticated,
+        logout,
       }}
     >
       {children}

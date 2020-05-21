@@ -66,27 +66,23 @@ const SignUp = ({ navigation }) => {
           <Input
             label='First Name'
             error={hasErrors('number')}
-            style={[styles.input, hasErrors('number')]}
             onChangeText={(firstName) => setfirstName(firstName)}
           />
           <Input
             label='Last Name'
             error={hasErrors('number')}
-            style={[styles.input, hasErrors('number')]}
             onChangeText={(lastName) => setLastName(lastName)}
           />
           <Input
             email
             label='Email'
             error={hasErrors('email')}
-            style={[styles.input, hasErrors('email')]}
             value={email}
             onChangeText={(email) => setEmail(email)}
           />
           <Input
             label='Username'
             error={hasErrors('username')}
-            style={[styles.input, hasErrors('username')]}
             value={username}
             onChangeText={(username) => setusername(username)}
           />
@@ -94,7 +90,6 @@ const SignUp = ({ navigation }) => {
             secureTextEntry
             label='Password'
             error={hasErrors('password')}
-            style={[styles.input, hasErrors('password')]}
             value={password}
             onChangeText={(password) => setPassword(password)}
           />

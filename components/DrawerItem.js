@@ -1,95 +1,77 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
-import Block from "./Block";
+import React from 'react';
+import { StyleSheet, TouchableOpacity, Text, AsyncStorage } from 'react-native';
+import Block from './Block';
+import { useAuth } from '../context/auth';
+import Icon from './Icon';
+import argonTheme from '../constants/Theme';
 
-import Icon from "./Icon";
-import argonTheme from "../constants/Theme";
-
-class DrawerItem extends React.Component {
-  renderIcon = () => {
-    const { title, focused } = this.props;
-
+const DrawerItem = ({ focused, title, navigation, screen }) => {
+  const renderIcon = () => {
     switch (title) {
-      case "Home":
+      case 'Home':
         return (
           <Icon
-            name="home"
+            name='home'
             size={14}
-            color={focused ? "white" : argonTheme.COLORS.PRIMARY}
+            color={focused ? 'white' : argonTheme.COLORS.PRIMARY}
           />
         );
-      // case "Articles":
-      //   return (
-      //     <Icon
-      //       name="spaceship"
-      //       family="ArgonExtra"
-      //       size={14}
-      //       color={focused ? "white" : argonTheme.COLORS.PRIMARY}
-      //     />
-      //   );
-      case "Profile":
+      case 'Orders':
         return (
           <Icon
-            name="user"
+            name='package'
             size={14}
-            color={focused ? "white" : argonTheme.COLORS.WARNING}
+            color={focused ? 'white' : argonTheme.COLORS.PRIMARY}
           />
         );
-      // case "Account":
-      //   return (
-      //     <Icon
-      //       name="calendar-date"
-      //       family="ArgonExtra"
-      //       size={14}
-      //       color={focused ? "white" : argonTheme.COLORS.INFO}
-      //     />
-      //   );
 
-      case "Log out":
-        return <Icon />;
+      case 'Log out':
+        return (
+          <Icon name='log-out' size={14} color={argonTheme.COLORS.WARNING} />
+        );
       default:
         return null;
     }
   };
 
-  render() {
-    const { focused, title, navigation } = this.props;
+  const containerStyles = [
+    styles.defaultStyle,
+    focused ? [styles.activeStyle, styles.shadow] : null,
+  ];
 
-    const containerStyles = [
-      styles.defaultStyle,
-      focused ? [styles.activeStyle, styles.shadow] : null,
-    ];
+  const { logout } = useAuth();
 
-    return (
-      <TouchableOpacity
-        style={{ height: 60 }}
-        onPress={() =>
-          title == "Profile"
-            ? navigation.navigate("Placeholder")
-            : navigation.navigate(title)
+  return (
+    <TouchableOpacity
+      style={{ height: 60 }}
+      onPress={async () => {
+        if (title == 'Log out') {
+          logout();
+        } else {
+          navigation.navigate(screen);
         }
-      >
-        <Block flex row style={containerStyles}>
-          <Block middle flex={0.1} style={{ marginRight: 5 }}>
-            {this.renderIcon()}
-          </Block>
-          <Block row center flex={0.9}>
-            <Text
-              size={15}
-              bold={focused ? true : false}
-              style={{
-                color: focused ? "white" : "rgba(0,0,0,0.5)",
-                fontWeight: focused ? "bold" : "normal",
-              }}
-            >
-              {title}
-            </Text>
-          </Block>
+      }}
+    >
+      <Block flex row style={containerStyles}>
+        <Block middle flex={0.1} style={{ marginRight: 5 }}>
+          {renderIcon()}
         </Block>
-      </TouchableOpacity>
-    );
-  }
-}
+        <Block row center flex={0.9}>
+          <Text
+            size={15}
+            bold={focused ? true : false}
+            style={{
+              color: focused ? 'white' : 'rgba(0,0,0,0.5)',
+              fontWeight: focused ? 'bold' : 'normal',
+            }}
+          >
+            {title}
+          </Text>
+        </Block>
+      </Block>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   defaultStyle: {

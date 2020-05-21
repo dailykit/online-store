@@ -1,56 +1,23 @@
-import React from "react";
-import { withNavigation } from "@react-navigation/compat";
-import {
-  TouchableOpacity,
-  StyleSheet,
-  Platform,
-  Dimensions,
-} from "react-native";
-import NavBar from "./NavBar";
+import React from 'react';
+import { withNavigation } from '@react-navigation/compat';
+import { TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import NavBar from './NavBar';
 
-import Icon from "./Icon";
-import Block from "./Block";
-import Input from "./Input";
-import argonTheme from "../constants/Theme";
+import Icon from './Icon';
+import Block from './Block';
+import argonTheme from '../constants/Theme';
 
-const { height, width } = Dimensions.get("window");
-
-const BellButton = ({ isWhite, style, navigation }) => (
-  <TouchableOpacity
-    style={[styles.button, style]}
-    onPress={() => navigation.navigate("Placeholder")}
-  >
-    <Icon
-      size={16}
-      name="bell"
-      color={argonTheme.COLORS[isWhite ? "WHITE" : "ICON"]}
-    />
-    <Block middle style={styles.notify} />
-  </TouchableOpacity>
-);
+const { width } = Dimensions.get('window');
 
 const BasketButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity
     style={[styles.button, style]}
-    onPress={() => navigation.navigate("Placeholder")}
+    onPress={() => navigation.navigate('OrderSummary')}
   >
     <Icon
       size={16}
-      name="shopping-cart"
-      color={argonTheme.COLORS[isWhite ? "WHITE" : "ICON"]}
-    />
-  </TouchableOpacity>
-);
-
-const SearchButton = ({ isWhite, style, navigation }) => (
-  <TouchableOpacity
-    style={[styles.button, style]}
-    onPress={() => navigation.navigate("Placeholder")}
-  >
-    <Icon
-      size={16}
-      name="search"
-      color={argonTheme.COLORS[isWhite ? "WHITE" : "ICON"]}
+      name='shopping-cart'
+      color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
     />
   </TouchableOpacity>
 );
@@ -63,110 +30,11 @@ class Header extends React.Component {
   renderRight = () => {
     const { white, title, navigation } = this.props;
 
-    if (title === "Title") {
-      return [
-        <BellButton key="chat-title" navigation={navigation} isWhite={white} />,
-        <BasketButton
-          key="basket-title"
-          navigation={navigation}
-          isWhite={white}
-        />,
-      ];
-    }
-
     switch (title) {
-      case "Home":
+      case 'Home':
         return [
-          <BellButton
-            key="chat-home"
-            navigation={navigation}
-            isWhite={white}
-          />,
           <BasketButton
-            key="basket-home"
-            navigation={navigation}
-            isWhite={white}
-          />,
-        ];
-      case "Deals":
-        return [
-          <BellButton key="chat-categories" navigation={navigation} />,
-          <BasketButton key="basket-categories" navigation={navigation} />,
-        ];
-      case "Categories":
-        return [
-          <BellButton
-            key="chat-categories"
-            navigation={navigation}
-            isWhite={white}
-          />,
-          <BasketButton
-            key="basket-categories"
-            navigation={navigation}
-            isWhite={white}
-          />,
-        ];
-      case "Category":
-        return [
-          <BellButton
-            key="chat-deals"
-            navigation={navigation}
-            isWhite={white}
-          />,
-          <BasketButton
-            key="basket-deals"
-            navigation={navigation}
-            isWhite={white}
-          />,
-        ];
-      case "Profile":
-        return [
-          <BellButton
-            key="chat-profile"
-            navigation={navigation}
-            isWhite={white}
-          />,
-          <BasketButton
-            key="basket-deals"
-            navigation={navigation}
-            isWhite={white}
-          />,
-        ];
-      case "Product":
-        return [
-          <SearchButton
-            key="search-product"
-            navigation={navigation}
-            isWhite={white}
-          />,
-          <BasketButton
-            key="basket-product"
-            navigation={navigation}
-            isWhite={white}
-          />,
-        ];
-      case "Search":
-        return [
-          <BellButton
-            key="chat-search"
-            navigation={navigation}
-            isWhite={white}
-          />,
-          <BasketButton
-            key="basket-search"
-            navigation={navigation}
-            isWhite={white}
-          />,
-        ];
-      case "Settings":
-        return [
-          <BellButton
-            key="chat-search"
-            navigation={navigation}
-            isWhite={white}
-          />,
-          <BasketButton
-            key="basket-search"
+            key='basket-home'
             navigation={navigation}
             isWhite={white}
           />,
@@ -190,15 +58,15 @@ class Header extends React.Component {
     } = this.props;
 
     const noShadow = [
-      "Search",
-      "Categories",
-      "Deals",
-      "Placeholder",
-      "Profile",
+      'Search',
+      'Categories',
+      'Deals',
+      'Placeholder',
+      'Profile',
     ].includes(title);
     const headerStyles = [
       !noShadow ? styles.shadow : null,
-      transparent ? { backgroundColor: "rgba(0,0,0,0)" } : null,
+      transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null,
       { height: 40 },
     ];
 
@@ -215,11 +83,11 @@ class Header extends React.Component {
           style={navbarStyles}
           transparent={transparent}
           right={this.renderRight()}
-          rightStyle={{ alignItems: "center" }}
+          rightStyle={{ alignItems: 'center' }}
           left={
             <Icon
-              name={back ? "chevron-left" : "menu"}
-              family="entypo"
+              name={back ? 'chevron-left' : 'menu'}
+              family='entypo'
               size={20}
               onPress={this.handleLeftPress}
               color={
@@ -232,7 +100,7 @@ class Header extends React.Component {
           leftStyle={{ paddingVertical: 12, flex: 0.2 }}
           titleStyle={[
             styles.title,
-            { color: argonTheme.COLORS[white ? "WHITE" : "HEADER"] },
+            { color: argonTheme.COLORS[white ? 'WHITE' : 'HEADER'] },
             titleColor && { color: titleColor },
           ]}
           {...props}
@@ -245,12 +113,12 @@ class Header extends React.Component {
 const styles = StyleSheet.create({
   button: {
     padding: 12,
-    position: "relative",
+    position: 'relative',
   },
   title: {
-    width: "100%",
+    width: '100%',
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   navbar: {
     paddingVertical: 0,
@@ -258,7 +126,7 @@ const styles = StyleSheet.create({
   },
   shadow: {
     backgroundColor: argonTheme.COLORS.WHITE,
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
     shadowOpacity: 0.2,
@@ -269,7 +137,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     height: 16 / 2,
     width: 16 / 2,
-    position: "absolute",
+    position: 'absolute',
     top: 9,
     right: 12,
   },
@@ -303,7 +171,7 @@ const styles = StyleSheet.create({
   },
   tabTitle: {
     lineHeight: 19,
-    fontWeight: "400",
+    fontWeight: '400',
     color: argonTheme.COLORS.HEADER,
   },
 });
