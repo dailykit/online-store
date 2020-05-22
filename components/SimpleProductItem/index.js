@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed';
-import { SIMPLE_PRODUCT } from '../../gql/Queries';
+import { SIMPLE_PRODUCT } from '../../graphql';
 import { HASURA_URL } from 'react-native-dotenv';
 
 const SimpleProductItem = ({

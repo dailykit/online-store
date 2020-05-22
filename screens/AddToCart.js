@@ -17,8 +17,6 @@ import CustomizableProductItem from '../components/CustomizableProductItem';
 import SimpleProductItem from '../components/SimpleProductItem';
 import InventoryProductItem from '../components/InventoryProductItem';
 
-import { useCartContext } from '../context/cart';
-
 const { width, height } = Dimensions.get('window');
 
 const ModalContent = ({ route, navigation, ...restProps }) => {

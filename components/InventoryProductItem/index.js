@@ -3,7 +3,7 @@ import { View, Text, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
 import InventoryProductCollapsed from './InventoryProductItemCollapsed';
-import { INVENTORY_PRODUCT } from '../../gql/Queries';
+import { INVENTORY_PRODUCT } from '../../graphql';
 import { HASURA_URL } from 'react-native-dotenv';
 
 const InventoryProductItem = ({

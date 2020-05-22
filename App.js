@@ -22,6 +22,14 @@ import { enableScreens } from 'react-native-screens';
 
 import ErrorBoundary from './components/ErrorBoundary';
 
+// set up apollo client
+import { HASURA_URL } from 'react-native-dotenv';
+import ApolloClient from 'apollo-boost';
+const client = new ApolloClient({
+  uri: HASURA_URL,
+});
+import { ApolloProvider } from '@apollo/react-hooks';
+
 enableScreens();
 
 //auth
@@ -96,11 +104,13 @@ export default class App extends React.Component {
                     <StatusBar barStyle='dark-content' />
                   )}
                   <ApplicationProvider {...eva} theme={eva.light}>
-                    <AuthProvider>
-                      <CartContextProvider>
-                        <Screens />
-                      </CartContextProvider>
-                    </AuthProvider>
+                    <ApolloProvider client={client}>
+                      <AuthProvider>
+                        <CartContextProvider>
+                          <Screens />
+                        </CartContextProvider>
+                      </AuthProvider>
+                    </ApolloProvider>
                   </ApplicationProvider>
                 </View>
               </SafeAreaView>

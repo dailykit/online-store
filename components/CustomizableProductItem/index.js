@@ -4,7 +4,7 @@ import axios from 'axios';
 
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed';
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded';
-import { CUSTOMIZABLE_PRODUCT } from '../../gql/Queries';
+import { CUSTOMIZABLE_PRODUCT } from '../../graphql';
 import { HASURA_URL } from 'react-native-dotenv';
 
 const CustomizableProductItem = ({
