@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
-import axios from 'axios';
-
 import InventoryProductCollapsed from './InventoryProductItemCollapsed';
 import { INVENTORY_PRODUCT } from '../../graphql';
-import { HASURA_URL } from 'react-native-dotenv';
+import { useQuery } from '@apollo/react-hooks';
 
 const InventoryProductItem = ({
   _id,
@@ -20,12 +18,7 @@ const InventoryProductItem = ({
   isSelected,
   name,
 }) => {
-  const [loading, setLoading] = useState(true);
-  const [inventoryProduct, set_inventoryProduct] = useState(null);
   const [objToAdd, setobjToAdd] = useState({});
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const setProductOptionId = (id, price) => {
     let newItem = objToAdd;
@@ -41,16 +34,11 @@ const InventoryProductItem = ({
     }
   }, [isSelected]);
 
-  const fetchData = async () => {
-    try {
-      let res = await axios({
-        url: HASURA_URL,
-        method: 'POST',
-        data: INVENTORY_PRODUCT(id),
-      });
-      set_inventoryProduct(res.data.data);
-      let item = res.data.data;
-      if (res.data.data.inventoryProduct.inventoryProductOptions[0]) {
+  const { data, loading, error } = useQuery(INVENTORY_PRODUCT, {
+    variables: { id },
+    onCompleted: (_data) => {
+      let item = _data;
+      if (_data.inventoryProduct.inventoryProductOptions[0]) {
         let objToPush = {
           product: {
             id: item.inventoryProduct.id,
@@ -69,8 +57,7 @@ const InventoryProductItem = ({
         setobjToAdd(objToPush);
         if (!tunnelItem && independantItem) {
           setPrice(
-            res.data.data.inventoryProduct.inventoryProductOptions[0].price[0]
-              .value
+            _data.inventoryProduct.inventoryProductOptions[0].price[0].value
           );
           setcardData(item);
         }
@@ -81,12 +68,23 @@ const InventoryProductItem = ({
           setcartItem(objToPush);
         }
       }
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  if (loading || !inventoryProduct) {
+    },
+  });
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ActivityIndicator />
+      </View>
+    );
+  }
+  if (!data.inventoryProduct) {
     return (
       <View
         style={{
@@ -100,6 +98,7 @@ const InventoryProductItem = ({
     );
   }
 
+  let { inventoryProduct } = data;
   return (
     <InventoryProductCollapsed
       _id={_id}

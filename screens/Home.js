@@ -19,7 +19,6 @@ import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
 
-import { HASURA_URL } from 'react-native-dotenv';
 import { useQuery } from '@apollo/react-hooks';
 
 const Home = (props) => {

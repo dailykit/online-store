@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
-import axios from 'axios';
 
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed';
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded';
 import { CUSTOMIZABLE_PRODUCT } from '../../graphql';
-import { HASURA_URL } from 'react-native-dotenv';
+import { useQuery } from '@apollo/react-hooks';
 
 const CustomizableProductItem = ({
   isSelected,
@@ -14,7 +13,6 @@ const CustomizableProductItem = ({
   isLast,
   openModal,
   navigation,
-  data,
   id,
   independantItem,
   tunnelItem,
@@ -24,15 +22,8 @@ const CustomizableProductItem = ({
   name,
 }) => {
   const [expanded, setExpanded] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [isSelectedInside, setisSelectedInside] = useState(0);
-  const [customizableProduct, set_customizableProduct] = useState(null);
   const [numberOfOptions, setnumberOfOptions] = useState(0);
   const [objToAdd, setobjToAdd] = useState({});
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const setproductOptionId = (id, price, simpleRecipeProductId, name) => {
     let newItem = objToAdd;
@@ -50,25 +41,20 @@ const CustomizableProductItem = ({
     }
   }, [isSelected]);
 
-  const fetchData = async () => {
-    try {
-      let res = await axios({
-        url: HASURA_URL,
-        method: 'POST',
-        data: CUSTOMIZABLE_PRODUCT(id),
-      });
-      set_customizableProduct(res.data.data);
-      if (res.data.data !== undefined) {
+  const { data, loading, error } = useQuery(CUSTOMIZABLE_PRODUCT, {
+    variables: { id },
+    onCompleted: (_data) => {
+      if (_data !== undefined) {
         if (
-          res.data.data &&
-          res.data.data.customizableProduct &&
-          res.data.data.customizableProduct.customizableProductOptions
+          _data &&
+          _data.customizableProduct &&
+          _data.customizableProduct.customizableProductOptions
         ) {
           setnumberOfOptions(
-            res.data.data.customizableProduct.customizableProductOptions.length
+            _data.customizableProduct.customizableProductOptions.length
           );
         }
-        let item = res.data.data.customizableProduct;
+        let item = _data.customizableProduct;
         if (item.customizableProductOptions[0]) {
           let default_product = item.customizableProductOptions[0];
           let objToAddToCart = {
@@ -109,13 +95,11 @@ const CustomizableProductItem = ({
             setcartItem(objToAddToCart);
           }
         }
-        setLoading(false);
       }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  if (loading || !customizableProduct) {
+    },
+  });
+
+  if (loading || !data.customizableProduct) {
     return (
       <View
         style={{
@@ -128,13 +112,14 @@ const CustomizableProductItem = ({
       </View>
     );
   }
+  const { customizableProduct } = data;
   let default_first_product =
-    customizableProduct.customizableProduct !== null
-      ? customizableProduct.customizableProduct.customizableProductOptions[0]
+    customizableProduct !== null
+      ? customizableProduct.customizableProductOptions[0]
       : null;
   if (
-    customizableProduct.customizableProduct == null ||
-    customizableProduct.customizableProduct.customizableProductOptions == null
+    customizableProduct == null ||
+    customizableProduct.customizableProductOptions == null
   ) {
     return <Text>Bad data</Text>;
   }
@@ -144,9 +129,7 @@ const CustomizableProductItem = ({
       <CustomizableProductItemExpanded
         isSelected={isSelected}
         _id={_id}
-        data={
-          customizableProduct.customizableProduct.customizableProductOptions
-        }
+        data={customizableProduct.customizableProductOptions}
         setSelected={setSelected}
         isLast={isLast}
         openModal={openModal}

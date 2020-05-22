@@ -92,7 +92,6 @@ const CustomizableProductItemCollapsed = ({
                 setSelected(_id);
                 setExpanded(true);
               } else {
-                setSelected(_id);
                 setExpanded(true);
               }
             }}
