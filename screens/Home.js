@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -8,19 +8,22 @@ import {
   Text,
   Modal,
   ActivityIndicator,
-} from 'react-native';
-import axios from 'axios';
-import { Datepicker } from '@ui-kitten/components';
-import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
-import moment from 'moment';
+  AsyncStorage,
+} from "react-native";
+import axios from "axios";
+import { print } from "graphql";
+import { Datepicker } from "@ui-kitten/components";
+import { IndexPath, Select, SelectItem } from "@ui-kitten/components";
+import moment from "moment";
 
-import { GET_MENU } from '../gql/Queries';
-const { width, height } = Dimensions.get('screen');
-import Card from '../components/Card';
-import Cart from '../components/Cart';
-import { SafetyBanner } from '../components/SafetyBanner';
+import { GET_MENU, CUSTOMERS } from "../gql/Queries";
+const { width, height } = Dimensions.get("screen");
+import Card from "../components/Card";
+import Cart from "../components/Cart";
+import { SafetyBanner } from "../components/SafetyBanner";
 
-import { HASURA_URL } from 'react-native-dotenv';
+import { HASURA_URL } from "react-native-dotenv";
+import { CREATE_CUSTOMER } from "../gql/mutations";
 
 class Home extends React.Component {
   state = {
@@ -34,7 +37,49 @@ class Home extends React.Component {
   };
   async componentDidMount() {
     this.fetchMenu();
+    this.fetchCustomerDetails();
   }
+
+  fetchCustomerDetails = async () => {
+    try {
+      const email = await AsyncStorage.getItem("email");
+      const userid = await AsyncStorage.getItem("userid");
+      const response = await axios.post(HASURA_URL, {
+        query: print(CUSTOMERS),
+        variables: {
+          dailyKeyID: userid,
+          email,
+        },
+      });
+      const customers = response.data.data;
+      if (customers.length) {
+        await AsyncStorage.setItem("customerId", customers[0].id);
+      } else {
+        this.createCustomer(email, userid);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  createCustomer = async (email, userid) => {
+    try {
+      const response = await axios.post(HASURA_URL, {
+        query: print(CREATE_CUSTOMER),
+        variables: {
+          object: {
+            dailyKeyUserId: userid,
+            email,
+            source: "RMK",
+          },
+        },
+      });
+      const customer = response.data.data.createCustomer;
+      await AsyncStorage.setItem("customerId", customer.id);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   fetchMenu = async (
     day = moment().date(),
@@ -46,7 +91,7 @@ class Home extends React.Component {
       console.log(HASURA_URL);
       let res = await axios({
         url: HASURA_URL,
-        method: 'POST',
+        method: "POST",
         data: GET_MENU(day, month, year),
       });
       let picker = [];
@@ -56,7 +101,7 @@ class Home extends React.Component {
           picker.push(category.name);
           data[category.name] = {};
           Object.keys(category).forEach((key) => {
-            if (key != 'name') {
+            if (key != "name") {
               data[category.name][key] = category[key];
             }
           });
@@ -93,7 +138,7 @@ class Home extends React.Component {
               <Image
                 source={{
                   uri:
-                    'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+                    "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
                 }}
                 style={styles.cover_image}
               />
@@ -117,7 +162,7 @@ class Home extends React.Component {
                   value={0}
                   onSelect={() => {}}
                 >
-                  <SelectItem title={''} />
+                  <SelectItem title={""} />
                 </Select>
               </View>
             </View>
@@ -126,7 +171,7 @@ class Home extends React.Component {
             </View>
             <View style={{ height: height * 0.08 }} />
           </ScrollView>
-          <Cart to='OrderSummary' {...this.props} text='Checkout' />
+          <Cart to="OrderSummary" {...this.props} text="Checkout" />
         </View>
       );
     }
@@ -139,7 +184,7 @@ class Home extends React.Component {
               <Image
                 source={{
                   uri:
-                    'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+                    "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
                 }}
                 style={styles.cover_image}
               />
@@ -168,18 +213,18 @@ class Home extends React.Component {
                     });
                   }}
                 >
-                  <SelectItem title={''} />
+                  <SelectItem title={""} />
                 </Select>
               </View>
             </View>
             <View style={{ padding: 20 }}>
-              <Text style={{ textAlign: 'center' }}>
+              <Text style={{ textAlign: "center" }}>
                 Nothing is available on the selected dates
               </Text>
             </View>
             <View style={{ height: height * 0.08 }} />
           </ScrollView>
-          <Cart to='OrderSummary' {...this.props} text='Checkout' />
+          <Cart to="OrderSummary" {...this.props} text="Checkout" />
         </View>
       );
     }
@@ -191,7 +236,7 @@ class Home extends React.Component {
             <Image
               source={{
                 uri:
-                  'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+                  "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
               }}
               style={styles.cover_image}
             />
@@ -238,7 +283,7 @@ class Home extends React.Component {
           })}
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
-        <Cart to='OrderSummary' {...this.props} text='Checkout' />
+        <Cart to="OrderSummary" {...this.props} text="Checkout" />
       </View>
     );
   }
@@ -254,29 +299,29 @@ const styles = StyleSheet.create({
   },
   cover_image: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     height: null,
     width: null,
   },
   picker_container: {
     height: height * 0.06,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f3f3f3',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f3f3f3",
   },
   picker_placeholder: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   flexContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
     padding: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 

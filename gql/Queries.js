@@ -1,3 +1,15 @@
+import gql from "graphql-tag";
+
+export const CUSTOMERS = gql`
+  query Customers($dailyKeyID: String!, $email: String!) {
+    customers(
+      where: { dailyKeyUserId: { _eq: $dailyKeyID }, email: { _eq: $email } }
+    ) {
+      id
+    }
+  }
+`;
+
 export const GET_MENU = (date, month, year) =>
   JSON.stringify({
     query: `
