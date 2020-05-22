@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const CartContext = React.createContext();
 
@@ -6,14 +6,36 @@ export const CartContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartProductsToDisplay, setcartProductsToDisplay] = useState([]);
   const [totalPrice, settotalPrice] = useState(0);
+  const [orderCart, setOrderCart] = useState({
+    cartInfo: undefined, // available
+    customerId: undefined, // available
+    paymentMethodId: 1,
+    stripeCustomerId: 1,
+    addressId: 1,
+    fulFillmentInfo: {
+      time: {
+        from: "",
+        to: "",
+      },
+      date: "",
+      type: "DELIVERY",
+    },
+    pricing: {
+      itemTotal: 0,
+      discount: 0,
+      tip: 0,
+      tax: 0,
+      totalPrice: 0,
+    },
+  });
 
   const addToCart = (item) => {
-    if (item.type == 'comboProducts') {
+    if (item.type == "comboProducts") {
       let comboItemPrice = 0;
       item.products.forEach((product) => {
         comboItemPrice = comboItemPrice + parseFloat(product.product.price);
       });
-      item['price'] = comboItemPrice;
+      item["price"] = comboItemPrice;
       settotalPrice(totalPrice + parseFloat(comboItemPrice));
     } else {
       settotalPrice(totalPrice + parseFloat(item.product.price));
@@ -39,7 +61,7 @@ export const CartContextProvider = ({ children }) => {
   };
 
   const removeFromCartProductsDisplay = (item) => {
-    console.log('item removed');
+    console.log("item removed");
   };
 
   return (
