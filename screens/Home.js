@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -10,224 +10,91 @@ import {
   ActivityIndicator,
   AsyncStorage,
 } from "react-native";
-import axios from "axios";
-import { print } from "graphql";
 import { Datepicker } from "@ui-kitten/components";
 import { IndexPath, Select, SelectItem } from "@ui-kitten/components";
 import moment from "moment";
 
-import { GET_MENU, CUSTOMERS } from "../gql/Queries";
+import { GET_MENU, CUSTOMERS, CREATE_CUSTOMER } from "../graphql";
 const { width, height } = Dimensions.get("screen");
 import Card from "../components/Card";
 import Cart from "../components/Cart";
 import { SafetyBanner } from "../components/SafetyBanner";
 
-import { HASURA_URL } from "react-native-dotenv";
-import { CREATE_CUSTOMER } from "../gql/mutations";
+import { useQuery, useLazyQuery, useMutation } from "@apollo/react-hooks";
 
-class Home extends React.Component {
-  state = {
-    loading: true,
-    selectedIndex: new IndexPath(0),
-    picker: null,
-    data: null,
-    selectedPickerItem: null,
-    date: new Date(),
-    noData: true,
-  };
-  async componentDidMount() {
-    this.fetchMenu();
-    this.fetchCustomerDetails();
-  }
+const Home = (props) => {
+  const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
+  const [selectedPickerItem, setselectedPickerItem] = useState(0);
+  const [calendarDate, setcalendarDate] = useState(new Date());
+  const [user, setUser] = useState({ email: undefined, userid: undefined });
 
-  fetchCustomerDetails = async () => {
-    try {
+  const [date, setdate] = useState({
+    day: moment().date(),
+    month: moment().month(),
+    year: moment().year(),
+  });
+
+  // Mutations
+  const [createCustomer] = useMutation(CREATE_CUSTOMER, {
+    onCompleted: async (data) => {
+      await AsyncStorage.setItem(
+        "customerId",
+        data.createCustomer.id.toString()
+      );
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  // Queries
+  const [customers] = useLazyQuery(CUSTOMERS, {
+    onCompleted: async (data) => {
+      if (data.customers.length) {
+        await AsyncStorage.setItem(
+          "customerId",
+          data.customers[0].id.toString()
+        );
+      } else {
+        createCustomer({
+          variables: {
+            object: {
+              dailyKeyUserId: user.userid,
+              email: user.email,
+              source: "RMK",
+            },
+          },
+        });
+      }
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const { loading, data, error } = useQuery(GET_MENU, {
+    variables: { year: date.year, month: date.month, day: date.year },
+  });
+
+  // Effects
+  useEffect(() => {
+    (async () => {
       const email = await AsyncStorage.getItem("email");
       const userid = await AsyncStorage.getItem("userid");
-      const response = await axios.post(HASURA_URL, {
-        query: print(CUSTOMERS),
+      setUser({
+        email,
+        userid,
+      });
+      customers({
         variables: {
           dailyKeyID: userid,
           email,
         },
       });
-      const customers = response.data.data;
-      if (customers.length) {
-        await AsyncStorage.setItem("customerId", customers[0].id);
-      } else {
-        this.createCustomer(email, userid);
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
+    })();
+  }, []);
 
-  createCustomer = async (email, userid) => {
-    try {
-      const response = await axios.post(HASURA_URL, {
-        query: print(CREATE_CUSTOMER),
-        variables: {
-          object: {
-            dailyKeyUserId: userid,
-            email,
-            source: "RMK",
-          },
-        },
-      });
-      const customer = response.data.data.createCustomer;
-      await AsyncStorage.setItem("customerId", customer.id);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  fetchMenu = async (
-    day = moment().date(),
-    month = moment().month(),
-    year = moment().year()
-  ) => {
-    try {
-      this.setState({ loading: true });
-      console.log(HASURA_URL);
-      let res = await axios({
-        url: HASURA_URL,
-        method: "POST",
-        data: GET_MENU(day, month, year),
-      });
-      let picker = [];
-      let data = {};
-      if (!res.data.data.getMenu.length == 0) {
-        res.data.data.getMenu.forEach((category, _id) => {
-          picker.push(category.name);
-          data[category.name] = {};
-          Object.keys(category).forEach((key) => {
-            if (key != "name") {
-              data[category.name][key] = category[key];
-            }
-          });
-        });
-        this.setState({ picker, data, selectedPickerItem: 0, noData: false });
-        this.setState({ loading: false });
-      } else {
-        this.setState({
-          noData: true,
-          loading: false,
-        });
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  render() {
-    const {
-      loading,
-      selectedIndex,
-      picker,
-      data,
-      selectedPickerItem,
-      date,
-      noData,
-    } = this.state;
-    if (loading) {
-      return (
-        <View style={styles.home}>
-          {/* <Tabs /> */}
-          <ScrollView style={{ flex: 1, marginTop: 20 }}>
-            <View style={styles.img_container}>
-              <Image
-                source={{
-                  uri:
-                    "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-                }}
-                style={styles.cover_image}
-              />
-            </View>
-            <View style={styles.picker_container}>
-              <View style={styles.picker_placeholder}>
-                <Datepicker
-                  date={date}
-                  onSelect={(date) => {
-                    let day = moment(date).date();
-                    let month = moment(date).month();
-                    let year = moment(date).year();
-                    this.fetchMenu(day, month, year);
-                    this.setState({ date });
-                  }}
-                />
-              </View>
-              <View style={styles.picker_placeholder}>
-                <Select
-                  selectedIndex={selectedIndex}
-                  value={0}
-                  onSelect={() => {}}
-                >
-                  <SelectItem title={""} />
-                </Select>
-              </View>
-            </View>
-            <View style={styles.flexContainer}>
-              <ActivityIndicator />
-            </View>
-            <View style={{ height: height * 0.08 }} />
-          </ScrollView>
-          <Cart to="OrderSummary" {...this.props} text="Checkout" />
-        </View>
-      );
-    }
-    if (noData) {
-      return (
-        <View style={styles.home}>
-          {/* <Tabs /> */}
-          <ScrollView style={{ flex: 1, marginTop: 20 }}>
-            <View style={styles.img_container}>
-              <Image
-                source={{
-                  uri:
-                    "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
-                }}
-                style={styles.cover_image}
-              />
-            </View>
-            <View style={styles.picker_container}>
-              <View style={styles.picker_placeholder}>
-                <Datepicker
-                  date={date}
-                  onSelect={(date) => {
-                    let day = moment(date).date();
-                    let month = moment(date).month();
-                    let year = moment(date).year();
-                    this.fetchMenu(day, month, year);
-                    this.setState({ date });
-                  }}
-                />
-              </View>
-              <View style={styles.picker_placeholder}>
-                <Select
-                  selectedIndex={selectedIndex}
-                  value={picker[selectedIndex.row]}
-                  onSelect={(selectedIndex) => {
-                    this.setState({
-                      selectedIndex,
-                      selectedPickerItem: selectedIndex.row,
-                    });
-                  }}
-                >
-                  <SelectItem title={""} />
-                </Select>
-              </View>
-            </View>
-            <View style={{ padding: 20 }}>
-              <Text style={{ textAlign: "center" }}>
-                Nothing is available on the selected dates
-              </Text>
-            </View>
-            <View style={{ height: height * 0.08 }} />
-          </ScrollView>
-          <Cart to="OrderSummary" {...this.props} text="Checkout" />
-        </View>
-      );
-    }
+  if (loading) {
     return (
       <View style={styles.home}>
         {/* <Tabs /> */}
@@ -241,53 +108,107 @@ class Home extends React.Component {
               style={styles.cover_image}
             />
           </View>
-          <Text style={styles.title}>Vegan Adda</Text>
-          <SafetyBanner {...this.props} />
           <View style={styles.picker_container}>
             <View style={styles.picker_placeholder}>
               <Datepicker
-                date={date}
-                onSelect={(date) => {
-                  let day = moment(date).date();
-                  let month = moment(date).month();
-                  let year = moment(date).year();
-                  this.fetchMenu(day, month, year);
-                  this.setState({ date });
+                date={calendarDate}
+                onSelect={(_date) => {
+                  setcalendarDate(_date);
+                  setdate({
+                    day: moment(_date).date(),
+                    month: moment(_date).month(),
+                    year: moment(_date).year(),
+                  });
                 }}
               />
             </View>
             <View style={styles.picker_placeholder}>
               <Select
                 selectedIndex={selectedIndex}
-                value={picker[selectedIndex.row]}
-                onSelect={(selectedIndex) => {
-                  this.setState({
-                    selectedIndex,
-                    selectedPickerItem: selectedIndex.row,
-                  });
-                }}
+                value={0}
+                onSelect={() => {}}
               >
-                {picker.map((title, key) => (
-                  <SelectItem key={key} title={title} />
-                ))}
+                <SelectItem title={""} />
               </Select>
             </View>
           </View>
-          {Object.keys(data[picker[0]]).map((type, _id) => {
-            // this data var is like comboprod : [1,2,3], inventory prod, etc..
-            // now loop on this data
-
-            return data[picker[selectedPickerItem]][type].map((id) => (
-              <Card {...this.props} type={type} key={id} id={id} />
-            ));
-          })}
+          <View style={styles.flexContainer}>
+            <ActivityIndicator />
+          </View>
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
-        <Cart to="OrderSummary" {...this.props} text="Checkout" />
+        <Cart to="OrderSummary" {...props} text="Checkout" />
       </View>
     );
   }
-}
+  let pickerData = [];
+  let menuItems = [];
+
+  data.getMenu.forEach((category, _id) => {
+    pickerData.push(category.name);
+    menuItems[category.name] = {};
+    Object.keys(category).forEach((key) => {
+      if (key != "name" && key != "__typename") {
+        menuItems[category.name][key] = category[key];
+      }
+    });
+  });
+
+  return (
+    <View style={styles.home}>
+      {/* <Tabs /> */}
+      <ScrollView style={{ flex: 1, marginTop: 20 }}>
+        <View style={styles.img_container}>
+          <Image
+            source={{
+              uri:
+                "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+            }}
+            style={styles.cover_image}
+          />
+        </View>
+        <Text style={styles.title}>Vegan Adda</Text>
+        <SafetyBanner {...props} />
+        <View style={styles.picker_container}>
+          <View style={styles.picker_placeholder}>
+            <Datepicker
+              date={calendarDate}
+              onSelect={(_date) => {
+                setcalendarDate(_date);
+                setdate({
+                  day: moment(_date).date(),
+                  month: moment(_date).month(),
+                  year: moment(_date).year(),
+                });
+              }}
+            />
+          </View>
+          <View style={styles.picker_placeholder}>
+            <Select
+              selectedIndex={selectedIndex}
+              value={pickerData[selectedIndex.row]}
+              onSelect={(_selectedIndex) => {
+                setselectedPickerItem(selectedIndex.row);
+                setSelectedIndex(_selectedIndex);
+              }}
+            >
+              {pickerData.map((title, key) => (
+                <SelectItem key={key} title={title} />
+              ))}
+            </Select>
+          </View>
+        </View>
+        {Object.keys(menuItems[pickerData[0]]).map((type, _id) =>
+          menuItems[pickerData[selectedPickerItem]][type].map((id) => (
+            <Card {...props} type={type} key={id} id={id} />
+          ))
+        )}
+        <View style={{ height: height * 0.08 }} />
+      </ScrollView>
+      <Cart to="OrderSummary" {...props} text="Checkout" />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   home: {

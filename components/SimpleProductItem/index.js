@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
-import axios from 'axios';
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed';
-import { SIMPLE_PRODUCT } from '../../gql/Queries';
-import { HASURA_URL } from 'react-native-dotenv';
+import { SIMPLE_PRODUCT } from '../../graphql';
+import { useQuery } from '@apollo/react-hooks';
 
 const SimpleProductItem = ({
   _id,
@@ -19,13 +18,7 @@ const SimpleProductItem = ({
   isSelected,
   name,
 }) => {
-  const [loading, setLoading] = useState(true);
-  const [simpleProduct, set_simpleProduct] = useState(null);
   const [objToAdd, setobjToAdd] = useState({});
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const setProductOptionId = (id, price) => {
     let newItem = objToAdd;
@@ -41,15 +34,10 @@ const SimpleProductItem = ({
     }
   }, [isSelected]);
 
-  const fetchData = async () => {
-    try {
-      let res = await axios({
-        url: HASURA_URL,
-        method: 'POST',
-        data: SIMPLE_PRODUCT(id),
-      });
-      let item = res.data.data;
-      set_simpleProduct(item);
+  const { data, loading, error } = useQuery(SIMPLE_PRODUCT, {
+    variables: { id },
+    onCompleted: (_data) => {
+      let item = _data;
       if (item.simpleRecipeProduct.simpleRecipeProductOptions[0]) {
         let objToPush = {
           product: {
@@ -83,12 +71,10 @@ const SimpleProductItem = ({
           setcartItem(objToPush);
         }
       }
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  if (loading || !simpleProduct) {
+    },
+  });
+
+  if (loading) {
     return (
       <View
         style={{
@@ -101,11 +87,10 @@ const SimpleProductItem = ({
       </View>
     );
   }
-
   return (
     <SimpleProductItemCollapsed
       _id={_id}
-      data={simpleProduct}
+      data={data}
       openModal={openModal}
       navigation={navigation}
       label={'dinner'}

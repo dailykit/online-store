@@ -11,8 +11,8 @@ import axios from 'axios';
 import CustomizableProductItem from '../CustomizableProductItem';
 import SimpleProductItem from '../SimpleProductItem';
 import InventoryProductItem from '../InventoryProductItem';
-import { COMBO_PRODUCT } from '../../gql/Queries';
-import { HASURA_URL } from 'react-native-dotenv';
+import { COMBO_PRODUCT } from '../../graphql';
+import { useQuery } from '@apollo/react-hooks';
 
 const { width, height } = Dimensions.get('window');
 
@@ -28,68 +28,67 @@ const ComboProduct = ({
   currentComboProductIndex,
   name,
 }) => {
-  const [isLoading, setisLoading] = useState(false);
-  const [data, setData] = useState(null);
   const [selected, setSelected] = useState(0);
 
   const [comboProductsArray, setcomboProductsArray] = useState([]);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        let res = await axios({
-          url: HASURA_URL,
-          method: 'POST',
-          data: COMBO_PRODUCT(id),
-        });
-        setData(res.data.data.comboProduct);
-        let items = res.data.data;
-        if (!tunnelItem) {
-          setcardData(res.data.data.comboProduct);
-        }
-        if (tunnelItem) {
-          setcartItem(comboProductsArray);
-          setnumberOfComboProductItem(
-            items.comboProduct.comboProductComponents.length
-          );
-        }
-        setisLoading(false);
-      } catch (e) {
-        console.log(e);
+  const { data, loading, error } = useQuery(COMBO_PRODUCT, {
+    variables: { id },
+    onCompleted: (_data) => {
+      let items = _data;
+      if (!tunnelItem) {
+        setcardData(_data.comboProduct);
       }
-    })();
-    return () => {};
-  }, []);
+      if (tunnelItem) {
+        setcartItem(comboProductsArray);
+        setnumberOfComboProductItem(
+          items.comboProduct.comboProductComponents.length
+        );
+      }
+    },
+  });
 
-  if (isLoading || data == null || data == undefined) {
+  if (loading) {
     return (
       <View style={styles.flexContainer}>
         <ActivityIndicator />
       </View>
     );
   }
-  let selectedArr = data.comboProductComponents.map((el, _id) => false);
+  if (data == null || data == undefined) {
+    return (
+      <View style={styles.flexContainer}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  let { comboProduct } = data;
+  let { comboProductComponents } = comboProduct;
+  let selectedArr = data.comboProduct.comboProductComponents.map(
+    (el, _id) => false
+  );
   return (
     <View style={styles.container}>
       <View style={styles.card_title}>
         <Text style={styles.card_title_text}>
-          {data.name ? data.name : 'Resturant Name'}
+          {name ? name : 'Resturant Name'}
         </Text>
         <Text style={styles.is_customizable}>Customizeable</Text>
       </View>
       <View style={styles.item_parent_container}>
-        {data.comboProductComponents.map((el, _id) => {
+        {comboProductComponents.map((el, _id) => {
           let last = false;
           let isSelected = false;
           if (!tunnelItem) {
             isSelected = selected == _id;
-            if (_id == data.comboProductComponents.length - 1) {
+            if (_id == comboProductComponents.length - 1) {
               last = true;
             }
           } else {
             last = false;
             isSelected = currentComboProductIndex == _id;
-            if (_id == data.comboProductComponents.length - 1) {
+            if (_id == comboProductComponents.length - 1) {
               last = true;
             }
           }

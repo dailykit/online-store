@@ -21,7 +21,7 @@ const InventoryProductCollapsed = ({
   setProductOptionId,
   setSelected,
 }) => {
-  let inventoryProduct = data.inventoryProduct;
+  let inventoryProduct = data;
   const [servingIndex, setServingIndex] = useState(0);
   return (
     <>
