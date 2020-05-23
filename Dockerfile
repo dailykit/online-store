@@ -1,6 +1,7 @@
 FROM mhart/alpine-node:14.0.0 as build
 ARG BASE_URL
 ARG HASURA_URL
+ARG HASURA_WS
 ARG HASURA_GRAPHQL_ADMIN_SECRET
 ARG CLIENTID
 
@@ -10,6 +11,7 @@ RUN npm install
 COPY . .
 RUN echo "BASE_URL=${BASE_URL}" >> .env 
 RUN echo "HASURA_URL=${HASURA_URL}" >> .env 
+RUN echo "HASURA_WS=${HASURA_WS}" >> .env 
 RUN echo "HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}" >> .env 
 RUN echo "CLIENTID=${CLIENTID}" >> .env
 
