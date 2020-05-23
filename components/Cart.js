@@ -11,8 +11,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
 import { uuid } from '../utils';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { useSubscription } from '@apollo/react-hooks';
-import { CART } from '../graphql';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,9 +23,10 @@ const Cart = ({
   type,
   comboProductItems,
 }) => {
-  const { cart, cartItems, totalPrice } = useCartContext();
+  const { cart, customerDetails, cartItems, totalPrice } = useCartContext();
 
   console.log('cart', cart);
+  console.log('customer details', customerDetails);
 
   // cart.cartInfo = products
   let numberOfProducts = cartItems.length;

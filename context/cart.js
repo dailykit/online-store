@@ -7,9 +7,13 @@ export const CartContextProvider = ({ children }) => {
   const [cartProductsToDisplay, setcartProductsToDisplay] = useState([]);
   const [totalPrice, settotalPrice] = useState(0);
 
+  // From keycloak
   const [user, setUser] = useState({ email: '', keycloakId: '' });
+  // From Hasura
   const [customer, setCustomer] = useState(undefined);
   const [cart, setCart] = useState(undefined);
+  // From platform
+  const [customerDetails, setCustomerDetails] = useState(undefined);
 
   // Effects
   React.useEffect(() => {
@@ -63,6 +67,9 @@ export const CartContextProvider = ({ children }) => {
         setCustomer,
         cart,
         setCart,
+        customerDetails,
+        setCustomerDetails,
+        // Remove stuff below
         cartItems,
         setCartItems,
         addToCart,

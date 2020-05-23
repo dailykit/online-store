@@ -1,4 +1,5 @@
 import {
+  CUSTOMER_DETAILS,
   GET_MENU,
   COMBO_PRODUCT,
   CUSTOMIZABLE_PRODUCT,
@@ -12,6 +13,7 @@ import { CUSTOMER } from './subscriptions';
 
 export {
   CUSTOMER,
+  CUSTOMER_DETAILS,
   GET_MENU,
   COMBO_PRODUCT,
   CUSTOMIZABLE_PRODUCT,

@@ -1,11 +1,31 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
 
-export const CUSTOMERS = gql`
-  query Customers($dailyKeyID: String!, $email: String!) {
-    customers(
-      where: { dailyKeyUserId: { _eq: $dailyKeyID }, email: { _eq: $email } }
-    ) {
-      id
+export const CUSTOMER_DETAILS = gql`
+  query CustomerDetails($keycloakId: String!) {
+    platform_CustomerByClient(where: { keycloakId: { _eq: $keycloakId } }) {
+      customer {
+        firstName
+        lastName
+        phoneNumber
+        customerAddresses {
+          city
+          country
+          id
+          line1
+          line2
+          state
+          zipcode
+        }
+        defaultCustomerAddress {
+          id
+        }
+        defaultPaymentMethod {
+          stripePaymentMethodId
+        }
+        stripePaymentMethods {
+          stripePaymentMethodId
+        }
+      }
     }
   }
 `;

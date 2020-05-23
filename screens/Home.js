@@ -15,7 +15,12 @@ import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import moment from 'moment';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { GET_MENU, CREATE_CUSTOMER, CUSTOMER } from '../graphql';
+import {
+  GET_MENU,
+  CREATE_CUSTOMER,
+  CUSTOMER,
+  CUSTOMER_DETAILS,
+} from '../graphql';
 const { width, height } = Dimensions.get('screen');
 import Card from '../components/Card';
 import Cart from '../components/Cart';
@@ -70,6 +75,19 @@ const Home = (props) => {
             },
           },
         });
+      }
+    },
+  });
+
+  // Query
+  useQuery(CUSTOMER_DETAILS, {
+    variables: {
+      keycloakId: user.keycloakId,
+    },
+    onCompleted: (data) => {
+      if (data.platform_CustomerByClient.length) {
+      } else {
+        console.log('No customer data found!');
       }
     },
   });
