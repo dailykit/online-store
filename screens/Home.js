@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   StyleSheet,
   Dimensions,
@@ -9,19 +9,19 @@ import {
   Modal,
   ActivityIndicator,
   AsyncStorage,
-} from "react-native";
-import { Datepicker } from "@ui-kitten/components";
-import { IndexPath, Select, SelectItem } from "@ui-kitten/components";
-import moment from "moment";
-import EStyleSheet from "react-native-extended-stylesheet";
+} from 'react-native';
+import { Datepicker } from '@ui-kitten/components';
+import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
+import moment from 'moment';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { GET_MENU, CREATE_CUSTOMER, CUSTOMERS } from "../graphql";
-const { width, height } = Dimensions.get("screen");
-import Card from "../components/Card";
-import Cart from "../components/Cart";
-import { SafetyBanner } from "../components/SafetyBanner";
+import { GET_MENU, CREATE_CUSTOMER, CUSTOMERS } from '../graphql';
+const { width, height } = Dimensions.get('screen');
+import Card from '../components/Card';
+import Cart from '../components/Cart';
+import { SafetyBanner } from '../components/SafetyBanner';
 
-import { useQuery, useMutation, useLazyQuery } from "@apollo/react-hooks";
+import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
@@ -41,7 +41,7 @@ const Home = (props) => {
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
     onCompleted: async (data) => {
       await AsyncStorage.setItem(
-        "customerId",
+        'customerId',
         data.createCustomer.id.toString()
       );
     },
@@ -54,8 +54,9 @@ const Home = (props) => {
   const [customers] = useLazyQuery(CUSTOMERS, {
     onCompleted: async (data) => {
       if (data.customers.length) {
+        console.log(data);
         await AsyncStorage.setItem(
-          "customerId",
+          'customerId',
           data.customers[0].id.toString()
         );
       } else {
@@ -64,7 +65,7 @@ const Home = (props) => {
             object: {
               dailyKeyUserId: user.userid,
               email: user.email,
-              source: "RMK",
+              source: 'RMK',
             },
           },
         });
@@ -78,8 +79,10 @@ const Home = (props) => {
   // Effects
   useEffect(() => {
     (async () => {
-      const email = await AsyncStorage.getItem("email");
-      const userid = await AsyncStorage.getItem("userid");
+      const email = await AsyncStorage.getItem('email');
+      const userid = await AsyncStorage.getItem('userid');
+      console.log(email);
+      console.log(userid);
       setUser({
         email,
         userid,
@@ -102,7 +105,7 @@ const Home = (props) => {
             <Image
               source={{
                 uri:
-                  "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+                  'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
               }}
               style={styles.cover_image}
             />
@@ -113,7 +116,7 @@ const Home = (props) => {
           </View>
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
-        <Cart to="OrderSummary" {...props} text="Checkout" />
+        <Cart to='OrderSummary' {...props} text='Checkout' />
       </View>
     );
   }
@@ -124,7 +127,7 @@ const Home = (props) => {
     pickerData.push(category.name);
     menuItems[category.name] = {};
     Object.keys(category).forEach((key) => {
-      if (key != "name" && key != "__typename") {
+      if (key != 'name' && key != '__typename') {
         menuItems[category.name][key] = category[key];
       }
     });
@@ -140,7 +143,7 @@ const Home = (props) => {
           <Image
             source={{
               uri:
-                "https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80",
+                'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
             }}
             style={styles.cover_image}
           />
@@ -185,7 +188,7 @@ const Home = (props) => {
         )}
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
-      <Cart to="OrderSummary" {...props} text="Checkout" />
+      <Cart to='OrderSummary' {...props} text='Checkout' />
     </View>
   );
 };
@@ -200,29 +203,29 @@ const styles = EStyleSheet.create({
   },
   cover_image: {
     flex: 1,
-    resizeMode: "cover",
+    resizeMode: 'cover',
     height: null,
     width: null,
   },
   picker_container: {
     height: height * 0.06,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#f3f3f3",
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f3f3f3',
   },
   picker_placeholder: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   flexContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
-    fontSize: "1.2rem",
+    fontSize: '1.2rem',
     padding: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
 });
 

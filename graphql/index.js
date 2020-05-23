@@ -5,9 +5,11 @@ import {
   CUSTOMIZABLE_PRODUCT,
   INVENTORY_PRODUCT,
   SIMPLE_PRODUCT,
-} from "./queries";
+} from './queries';
 
-import { CREATE_CUSTOMER } from "./mutations";
+import { CREATE_CUSTOMER } from './mutations';
+
+import { CART } from './subscriptions';
 
 export {
   CUSTOMERS,
@@ -17,4 +19,5 @@ export {
   INVENTORY_PRODUCT,
   SIMPLE_PRODUCT,
   CREATE_CUSTOMER,
+  CART,
 };

@@ -1,8 +1,8 @@
-import React from 'react';
-import axios from 'axios';
-import jwt_decode from 'jwt-decode';
-import { AsyncStorage } from 'react-native';
-import { BASE_URL, CLIENTID } from 'react-native-dotenv';
+import React from "react";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import { AsyncStorage } from "react-native";
+import { BASE_URL, CLIENTID } from "react-native-dotenv";
 
 const AuthContext = React.createContext();
 
@@ -15,23 +15,23 @@ export const AuthProvider = ({ children }) => {
       let params = {
         username: email,
         password: password,
-        grant_type: 'password',
+        grant_type: "password",
         client_id: CLIENTID,
-        scope: 'openid',
+        scope: "openid",
       };
       const searchParams = Object.keys(params)
         .map((key) => {
           return (
-            encodeURIComponent(key) + '=' + encodeURIComponent(params[key])
+            encodeURIComponent(key) + "=" + encodeURIComponent(params[key])
           );
         })
-        .join('&');
+        .join("&");
       let url = `https://${BASE_URL}/auth/realms/consumers/protocol/openid-connect/token`;
       const response = await axios({
         url,
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded",
         },
         data: searchParams,
       });
@@ -46,10 +46,10 @@ export const AuthProvider = ({ children }) => {
         name: user.name,
         token: data.access_token,
       };
-      await AsyncStorage.setItem('user', JSON.stringify(user));
+      await AsyncStorage.setItem("user", JSON.stringify(user));
       return {
         success: true,
-        message: 'Logged in',
+        message: "Logged in",
         data,
       };
     } catch (err) {
@@ -66,15 +66,15 @@ export const AuthProvider = ({ children }) => {
       let url = `https://${BASE_URL}/auth/realms/consumers/protocol/openid-connect/token`;
       const response = await axios({
         url,
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded",
         },
         data: `grant_type=refresh_token&client_id=${CLIENTID}&refresh_token=${token}`,
       });
       return {
         success: true,
-        message: 'Token refreshed',
+        message: "Token refreshed",
         data: response.data,
       };
     } catch (err) {
@@ -91,23 +91,23 @@ export const AuthProvider = ({ children }) => {
       let url = `https://${BASE_URL}/auth/realms/consumers/protocol/openid-connect/token`;
       const response = await axios({
         url,
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded",
         },
         auth: {
-          username: 'user-manager',
-          password: '1f92d238-bde1-4fc3-bef9-941bb229ac81',
+          username: "user-manager",
+          password: "1f92d238-bde1-4fc3-bef9-941bb229ac81",
         },
-        data: 'grant_type=client_credentials',
+        data: "grant_type=client_credentials",
       });
       const token = response.data.access_token;
       url = `https://${BASE_URL}/auth/admin/realms/consumers/users`;
       const res = await axios({
         url,
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         data: JSON.stringify({
@@ -118,7 +118,7 @@ export const AuthProvider = ({ children }) => {
           email,
           credentials: [
             {
-              type: 'password',
+              type: "password",
               value: password,
             },
           ],

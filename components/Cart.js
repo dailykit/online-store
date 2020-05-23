@@ -10,6 +10,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
 import { uuid } from '../utils';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { useSubscription } from '@apollo/react-hooks';
+import { CART } from '../graphql';
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,6 +25,16 @@ const Cart = ({
   comboProductItems,
 }) => {
   const { cartItems, addToCart, totalPrice, addComboToCart } = useCartContext();
+
+  // Subscrption
+  useSubscription(CART, {
+    variables: {
+      customerId: 34,
+    },
+    onSubscriptionData: (data) => {
+      console.log(data.subscriptionData.data);
+    },
+  });
 
   let numberOfProducts = cartItems.length;
 
