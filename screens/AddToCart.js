@@ -48,7 +48,8 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
             <ComboProduct
               setcartItem={(item) => {
                 let auxArray = comboProductItems;
-                if (!Array.isArray(item) && Object.keys(item) >= 1) {
+                console.log(item);
+                if (!Array.isArray(item) && Object.keys(item).length >= 1) {
                   if (item.customizableProductOptionId) {
                     auxArray = auxArray.filter(
                       (el) =>
@@ -61,7 +62,6 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
                     });
                   }
                   auxArray.push(item);
-                  console.log(auxArray);
                   setcomboProductItems(auxArray);
                 }
               }}

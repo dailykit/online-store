@@ -59,8 +59,7 @@ const InventoryProductItem = ({
           setPrice(
             _data.inventoryProduct.inventoryProductOptions[0].price[0].value
           );
-          console.log(_data.inventoryProduct);
-          setcardData(_data.inventoryProduct);
+          setcardData(item);
         }
         if (tunnelItem && isSelected) {
           setcartItem(objToPush);
