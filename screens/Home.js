@@ -21,12 +21,7 @@ import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
 
-import {
-  useQuery,
-  useMutation,
-  useLazyQuery,
-  useSubscription,
-} from '@apollo/react-hooks';
+import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
 import { useCartContext } from '../context/cart';
 
 const Home = (props) => {
@@ -46,7 +41,7 @@ const Home = (props) => {
 
   // Mutations
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
-    onCompleted: (data) => {
+    onCompleted: () => {
       console.log('Customer created');
     },
     onError: (error) => {
@@ -62,6 +57,7 @@ const Home = (props) => {
     },
     onSubscriptionData: (data) => {
       const customers = data.subscriptionData.data.customers;
+      console.log(customers);
       if (customers.length) {
         setCustomer(customers[0]);
       } else {
