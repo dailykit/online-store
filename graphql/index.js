@@ -1,20 +1,15 @@
 import {
-  CUSTOMERS,
   GET_MENU,
   COMBO_PRODUCT,
   CUSTOMIZABLE_PRODUCT,
   INVENTORY_PRODUCT,
   SIMPLE_PRODUCT,
-} from "./queries";
-
-import { CREATE_CUSTOMER } from "./mutations";
+} from './queries';
 
 export {
-  CUSTOMERS,
   GET_MENU,
   COMBO_PRODUCT,
   CUSTOMIZABLE_PRODUCT,
   INVENTORY_PRODUCT,
   SIMPLE_PRODUCT,
-  CREATE_CUSTOMER,
 };
