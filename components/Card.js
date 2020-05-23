@@ -32,16 +32,17 @@ const Card = ({ id, type, navigation, ...restProps }) => {
         <View style={styles.item_parent_container}>
           {type == 'comboProducts' && (
             <ComboProduct
-              setcardItem={(item) => setcardItem(item)}
+              setcardItem={setcardItem}
               setcardData={(item) => setcardData(item)}
               id={id}
               navigation={navigation}
+              setPrice={setPrice}
               {...restProps}
             />
           )}
           {type == 'customizableProducts' && (
             <CustomizableProductItem
-              setcardItem={(item) => setcardItem(item)}
+              setcardItem={setcardItem}
               navigation={navigation}
               setcardData={(item) => setcardData(item)}
               independantItem
@@ -52,7 +53,7 @@ const Card = ({ id, type, navigation, ...restProps }) => {
           )}
           {type == 'simpleRecipeProducts' && (
             <SimpleProductItem
-              setcardItem={(item) => setcardItem(item)}
+              setcardItem={setcardItem}
               setcardData={(item) => setcardData(item)}
               navigation={navigation}
               independantItem
@@ -63,7 +64,7 @@ const Card = ({ id, type, navigation, ...restProps }) => {
           )}
           {type == 'inventoryProducts' && (
             <InventoryProductItem
-              setcardItem={(item) => setcardItem(item)}
+              setcardItem={setcardItem}
               setcardData={(item) => setcardData(item)}
               navigation={navigation}
               independantItem

@@ -123,8 +123,11 @@ const CustomizableProductItem = ({
   ) {
     return <Text>Bad data</Text>;
   }
-
-  if ((isSelected && expanded) || (tunnelItem && isSelected)) {
+  if (
+    (isSelected && expanded) ||
+    (tunnelItem && isSelected) ||
+    (independantItem && expanded)
+  ) {
     return (
       <CustomizableProductItemExpanded
         isSelected={isSelected}

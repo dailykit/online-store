@@ -92,9 +92,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
           )}
           {type == 'customizableProducts' && (
             <CustomizableProductItem
-              setcartItem={(item) => {
-                setcartItem(item);
-              }}
+              setcartItem={setcartItem}
               setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               independantItem

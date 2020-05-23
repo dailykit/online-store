@@ -18,10 +18,29 @@ export const COMBO_PRODUCT = gql`
       id
       comboProductComponents {
         id
-        customizableProductId
         label
+        customizableProductId
         inventoryProductId
         simpleRecipeProductId
+        customizableProduct {
+          customizableProductOptions {
+            simpleRecipeProduct {
+              simpleRecipeProductOptions {
+                price
+              }
+            }
+          }
+        }
+        inventoryProduct {
+          inventoryProductOptions {
+            price
+          }
+        }
+        simpleRecipeProduct {
+          simpleRecipeProductOptions {
+            price
+          }
+        }
       }
     }
   }

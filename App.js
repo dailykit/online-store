@@ -50,6 +50,13 @@ if (!global.atob) {
   global.atob = decode;
 }
 
+// setup rem
+import EStyleSheet from 'react-native-extended-stylesheet';
+let { height, width } = Dimensions.get('window');
+EStyleSheet.build({
+  $rem: width > 340 ? 18 : 16,
+});
+
 // cache app images
 const assetImages = [
   Images.Onboarding,
