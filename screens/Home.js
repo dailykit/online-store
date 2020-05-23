@@ -13,6 +13,11 @@ import {
 import { Datepicker } from "@ui-kitten/components";
 import { IndexPath, Select, SelectItem } from "@ui-kitten/components";
 import moment from "moment";
+} from 'react-native';
+import { Datepicker } from '@ui-kitten/components';
+import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
+import moment from 'moment';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { GET_MENU, CUSTOMERS, CREATE_CUSTOMER } from "../graphql";
 const { width, height } = Dimensions.get("screen");
@@ -28,10 +33,12 @@ const Home = (props) => {
   const [calendarDate, setcalendarDate] = useState(new Date());
   const [user, setUser] = useState({ email: undefined, userid: undefined });
 
-  const [date, setdate] = useState({
-    day: moment().date(),
-    month: moment().month(),
-    year: moment().year(),
+  const { loading, data, error, refetch } = useQuery(GET_MENU, {
+    variables: {
+      year: moment().year(),
+      month: moment().month(),
+      day: moment().date(),
+    },
   });
 
   // Mutations
@@ -95,6 +102,7 @@ const Home = (props) => {
   }, []);
 
   if (loading) {
+  if (loading || data.getMenu.length == 0) {
     return (
       <View style={styles.home}>
         {/* <Tabs /> */}
@@ -142,7 +150,7 @@ const Home = (props) => {
     );
   }
   let pickerData = [];
-  let menuItems = [];
+  let menuItems = {};
 
   data.getMenu.forEach((category, _id) => {
     pickerData.push(category.name);
@@ -153,6 +161,8 @@ const Home = (props) => {
       }
     });
   });
+  console.log(pickerData[selectedPickerItem]);
+  console.log(selectedPickerItem);
 
   return (
     <View style={styles.home}>
@@ -175,10 +185,10 @@ const Home = (props) => {
               date={calendarDate}
               onSelect={(_date) => {
                 setcalendarDate(_date);
-                setdate({
-                  day: moment(_date).date(),
-                  month: moment(_date).month(),
+                refetch({
                   year: moment(_date).year(),
+                  month: moment(_date).month(),
+                  day: moment(_date).date(),
                 });
               }}
             />
@@ -188,7 +198,7 @@ const Home = (props) => {
               selectedIndex={selectedIndex}
               value={pickerData[selectedIndex.row]}
               onSelect={(_selectedIndex) => {
-                setselectedPickerItem(selectedIndex.row);
+                setselectedPickerItem(_selectedIndex.row);
                 setSelectedIndex(_selectedIndex);
               }}
             >
@@ -198,7 +208,9 @@ const Home = (props) => {
             </Select>
           </View>
         </View>
-        {Object.keys(menuItems[pickerData[0]]).map((type, _id) =>
+        {Object.keys(
+          menuItems[pickerData[selectedPickerItem]]
+        ).map((type, _id) =>
           menuItems[pickerData[selectedPickerItem]][type].map((id) => (
             <Card {...props} type={type} key={id} id={id} />
           ))
@@ -210,7 +222,7 @@ const Home = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   home: {
     flex: 1,
   },
@@ -240,7 +252,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 24,
+    fontSize: '1.2rem',
     padding: 20,
     fontWeight: "bold",
   },

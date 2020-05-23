@@ -1,6 +1,13 @@
 import 'react-native-get-random-values';
 import React, { Suspense } from 'react';
-import { Image, SafeAreaView, StatusBar, Platform, View } from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  StatusBar,
+  Platform,
+  View,
+  Dimensions,
+} from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
 import Constants from 'expo-constants';
@@ -49,6 +56,21 @@ if (!global.btoa) {
 if (!global.atob) {
   global.atob = decode;
 }
+
+// setup rem
+import EStyleSheet from 'react-native-extended-stylesheet';
+let { height, width } = Dimensions.get('window');
+console.log(width);
+EStyleSheet.build({
+  $rem: width > 340 ? 16 : 13,
+  $xl: '1.2rem',
+  $l: '1.15rem',
+  $m: '1.05rem',
+  $s: '0.95rem',
+  $xs: '0.85rem',
+  $xxs: '0.75rem',
+  $xxxs: '0.65rem',
+});
 
 // cache app images
 const assetImages = [

@@ -32,6 +32,7 @@ export const CartContextProvider = ({ children }) => {
   const addToCart = (item) => {
     if (item.type == "comboProducts") {
       let comboItemPrice = 0;
+      console.log(item.products);
       item.products.forEach((product) => {
         comboItemPrice = comboItemPrice + parseFloat(product.product.price);
       });

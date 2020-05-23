@@ -6,6 +6,7 @@ import {
   Dimensions,
   Text,
 } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 // galio components
 import Icon from './Icon';

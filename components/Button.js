@@ -1,8 +1,9 @@
-import React from "react";
-import { StyleSheet } from "react-native";
-import { Button } from "react-native-elements";
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { Button } from 'react-native-elements';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
-import argonTheme from "../constants/Theme";
+import argonTheme from '../constants/Theme';
 
 class ArButton extends React.Component {
   render() {
@@ -21,7 +22,7 @@ class ArButton extends React.Component {
       <Button
         style={buttonStyles}
         shadowless
-        textStyle={{ fontSize: 12, fontWeight: "700" }}
+        textStyle={{ fontSize: 12, fontWeight: '700' }}
         {...props}
       >
         {children}
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
     height: 28,
   },
   shadow: {
-    shadowColor: "black",
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 4 },
     shadowRadius: 4,
     shadowOpacity: 0.1,

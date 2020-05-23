@@ -2,6 +2,7 @@ import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
 import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
 import NavBar from './NavBar';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import Icon from './Icon';
 import argonTheme from '../constants/Theme';

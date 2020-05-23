@@ -48,7 +48,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
       <ScrollView style={styles.container}>
         <View style={styles.title_container}>
           <View style={styles.details}>
-            <Text style={styles.title}>{name}</Text>
+            <Text style={styles.title}>{data.name}</Text>
           </View>
           <View style={styles.close_container}>
             <TouchableOpacity onPress={() => navigation.navigate("Home")}>
@@ -61,7 +61,8 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
             <ComboProduct
               setcartItem={(item) => {
                 let auxArray = comboProductItems;
-                if (!Array.isArray(item) && Object.keys(item) >= 1) {
+                console.log(item);
+                if (!Array.isArray(item) && Object.keys(item).length >= 1) {
                   if (item.customizableProductOptionId) {
                     auxArray = auxArray.filter(
                       (el) =>
@@ -74,7 +75,6 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
                     });
                   }
                   auxArray.push(item);
-                  console.log(auxArray);
                   setcomboProductItems(auxArray);
                 }
               }}
@@ -92,9 +92,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
           )}
           {type == "customizableProducts" && (
             <CustomizableProductItem
-              setcartItem={(item) => {
-                setcartItem(item);
-              }}
+              setcartItem={setcartItem}
               setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               independantItem

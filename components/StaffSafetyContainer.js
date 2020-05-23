@@ -4,6 +4,7 @@ import thermometer from '../assets/imgs/thermometer.png';
 import patient from '../assets/imgs/patient.png';
 import flat from '../assets/imgs/flat.png';
 import liquidSoap from '../assets/imgs/liquid-soap.png';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const { width, height } = Dimensions.get('window');
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 import { useCartContext } from '../context/cart';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const BillingDetails = () => {
   const { totalPrice } = useCartContext();

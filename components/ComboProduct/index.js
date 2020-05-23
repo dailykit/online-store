@@ -6,7 +6,7 @@ import {
   Text,
   ActivityIndicator,
 } from 'react-native';
-import axios from 'axios';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import CustomizableProductItem from '../CustomizableProductItem';
 import SimpleProductItem from '../SimpleProductItem';
@@ -26,7 +26,7 @@ const ComboProduct = ({
   setCurrentComboProductIndex,
   setnumberOfComboProductItem,
   currentComboProductIndex,
-  name,
+  setPrice,
 }) => {
   const [selected, setSelected] = useState(0);
 
@@ -38,6 +38,35 @@ const ComboProduct = ({
       let items = _data;
       if (!tunnelItem) {
         setcardData(_data.comboProduct);
+        let price = 0;
+        _data.comboProduct.comboProductComponents.forEach((product) => {
+          if (product.inventoryProductId !== null) {
+            price =
+              price +
+              parseFloat(
+                product.inventoryProduct.inventoryProductOptions[0].price[0]
+                  .value
+              );
+          }
+          if (product.simpleRecipeProductId !== null) {
+            price =
+              price +
+              parseFloat(
+                product.simpleRecipeProduct.simpleRecipeProductOptions[0]
+                  .price[0].value
+              );
+          }
+          if (product.customizableProductId !== null) {
+            price =
+              price +
+              parseFloat(
+                product.customizableProduct.customizableProductOptions[0]
+                  .simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
+                  .value
+              );
+          }
+        });
+        setPrice(price);
       }
       if (tunnelItem) {
         setcartItem(comboProductsArray);
@@ -70,12 +99,6 @@ const ComboProduct = ({
   );
   return (
     <View style={styles.container}>
-      <View style={styles.card_title}>
-        <Text style={styles.card_title_text}>
-          {name ? name : 'Resturant Name'}
-        </Text>
-        <Text style={styles.is_customizable}>Customizeable</Text>
-      </View>
       <View style={styles.item_parent_container}>
         {comboProductComponents.map((el, _id) => {
           let last = false;
@@ -112,7 +135,7 @@ const ComboProduct = ({
                 id={el.customizableProductId}
                 setcartItem={setcartItem}
                 setDefault={(item) => setcomboProductsArray(item)}
-                name={name}
+                name={data.comboProduct.name}
               />
             );
           }
@@ -135,7 +158,7 @@ const ComboProduct = ({
                 id={el.simpleRecipeProductId}
                 tunnelItem={tunnelItem}
                 setcartItem={setcartItem}
-                name={name}
+                name={data.comboProduct.name}
               />
             );
           }
@@ -159,7 +182,7 @@ const ComboProduct = ({
                 id={el.inventoryProductId}
                 tunnelItem={tunnelItem}
                 setcartItem={setcartItem}
-                name={name}
+                name={data.comboProduct.name}
               />
             );
           }
@@ -171,7 +194,7 @@ const ComboProduct = ({
 
 export default ComboProduct;
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
 
   card_container: {
@@ -190,11 +213,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   card_title_text: {
-    fontSize: 18,
+    fontSize: '$m',
     fontWeight: 'bold',
   },
   is_customizable: {
-    fontSize: 8,
+    fontSize: '$xxxs',
     color: 'gray',
   },
   item_parent_container: {

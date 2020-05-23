@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, StyleSheet, ScrollView, View } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 export default class index extends Component {
   constructor(props) {

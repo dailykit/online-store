@@ -38,6 +38,7 @@ export const Delivery = ({ navigation }) => {
           }}
           style={styles.mapStyle}
         />
+        {/* <Map initialRegion={{ latitude: 48.86, longitude: 2.34 }} /> */}
         <View style={styles.orderTimeContainer}>
           <Text style={styles.orderTimeHeader}>ARRIVING IN</Text>
           <Text style={styles.orderTime}>20</Text>
@@ -217,7 +218,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 15,
     backgroundColor: '#3fa4fd',
-    overflow: 'hidden',
     borderColor: '#3fa4fd',
     borderWidth: 1,
   },

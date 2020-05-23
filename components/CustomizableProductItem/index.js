@@ -5,6 +5,7 @@ import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded';
 import { CUSTOMIZABLE_PRODUCT } from '../../graphql';
 import { useQuery } from '@apollo/react-hooks';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const CustomizableProductItem = ({
   isSelected,
@@ -123,8 +124,11 @@ const CustomizableProductItem = ({
   ) {
     return <Text>Bad data</Text>;
   }
-
-  if ((isSelected && expanded) || (tunnelItem && isSelected)) {
+  if (
+    (isSelected && expanded) ||
+    (tunnelItem && isSelected) ||
+    (independantItem && expanded)
+  ) {
     return (
       <CustomizableProductItemExpanded
         isSelected={isSelected}

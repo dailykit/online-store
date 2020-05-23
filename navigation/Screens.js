@@ -168,7 +168,8 @@ export default function OnboardingStack(props) {
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>
-        {isAuthenticated ? (
+        {/* replace isAuth by true to bypass login */}
+        {true ? (
           <Stack.Screen name='App' component={AppStack} />
         ) : (
           <Stack.Screen name='Auth' component={AuthStack} />

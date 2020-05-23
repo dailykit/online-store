@@ -7,8 +7,8 @@ import {
   Dimensions,
 } from 'react-native';
 import { useCartContext } from '../context/cart';
-import { Feather, Ionicons } from '@expo/vector-icons';
-import { Picker } from 'native-base';
+
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const { width, height } = Dimensions.get('window');
 

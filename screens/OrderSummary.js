@@ -11,6 +11,7 @@ import {
 import { Feather, Ionicons } from '@expo/vector-icons';
 
 import { useCartContext } from '../context/cart';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import Summary from '../components/Summary';
 import { CartSummary } from '../components/Cart';
@@ -21,7 +22,6 @@ const { width, height } = Dimensions.get('window');
 
 const OrderSummary = ({ navigation, ...restProps }) => {
   const { cartItems } = useCartContext();
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <HeaderBack title='Go Back' navigation={navigation} />
@@ -73,7 +73,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   conatiner: {
     flex: 1,
   },
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   summary_title_text: {
-    fontSize: 16,
+    fontSize: '$m',
     fontWeight: 'bold',
   },
   title_container: {
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   },
   deliver_on_text: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: '$xs',
     color: 'rgba(0,0,0,0.6)',
   },
   edit: {
@@ -145,11 +145,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   time_text: {
-    fontSize: 16,
+    fontSize: '$xs',
     color: 'rgba(0,0,0,0.6)',
   },
   edit_text: {
-    fontSize: 16,
+    fontSize: '$xs',
   },
 });
 
