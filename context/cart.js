@@ -6,6 +6,7 @@ export const CartContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartProductsToDisplay, setcartProductsToDisplay] = useState([]);
   const [totalPrice, settotalPrice] = useState(0);
+  const [cart, setCart] = useState(undefined);
 
   const addToCart = (item) => {
     if (item.type == 'comboProducts') {
@@ -46,6 +47,8 @@ export const CartContextProvider = ({ children }) => {
   return (
     <CartContext.Provider
       value={{
+        cart,
+        setCart,
         cartItems,
         setCartItems,
         addToCart,
