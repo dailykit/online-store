@@ -7,7 +7,7 @@ import {
   SIMPLE_PRODUCT,
 } from './queries';
 
-import { CREATE_CUSTOMER } from './mutations';
+import { CREATE_CUSTOMER, UPDATE_CART } from './mutations';
 
 import { CART } from './subscriptions';
 
@@ -20,4 +20,5 @@ export {
   SIMPLE_PRODUCT,
   CREATE_CUSTOMER,
   CART,
+  UPDATE_CART,
 };
