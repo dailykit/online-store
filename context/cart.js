@@ -6,7 +6,17 @@ export const CartContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cartProductsToDisplay, setcartProductsToDisplay] = useState([]);
   const [totalPrice, settotalPrice] = useState(0);
+
+  const [user, setUser] = useState({ email: '', keycloakId: '' });
+  const [customer, setCustomer] = useState(undefined);
   const [cart, setCart] = useState(undefined);
+
+  // Effects
+  React.useEffect(() => {
+    if (customer?.orderCarts?.length) {
+      setCart(customer.orderCarts[0]);
+    }
+  }, [customer]);
 
   const addToCart = (item) => {
     if (item.type == 'comboProducts') {
@@ -47,6 +57,10 @@ export const CartContextProvider = ({ children }) => {
   return (
     <CartContext.Provider
       value={{
+        user,
+        setUser,
+        customer,
+        setCustomer,
         cart,
         setCart,
         cartItems,

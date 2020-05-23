@@ -25,26 +25,11 @@ const Cart = ({
   type,
   comboProductItems,
 }) => {
-  const {
-    cartItems,
-    addToCart,
-    totalPrice,
-    addComboToCart,
-    cart,
-    setCart,
-  } = useCartContext();
+  const { cart, cartItems, totalPrice } = useCartContext();
 
-  // Subscrption
-  useSubscription(CART, {
-    variables: {
-      customerId: 34,
-    },
-    onSubscriptionData: (data) => {
-      setCart(data.subscriptionData.data.cart[0]);
-      console.log(data.subscriptionData.data);
-    },
-  });
+  console.log('cart', cart);
 
+  // cart.cartInfo = products
   let numberOfProducts = cartItems.length;
 
   return (

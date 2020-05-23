@@ -1,5 +1,4 @@
 import {
-  CUSTOMERS,
   GET_MENU,
   COMBO_PRODUCT,
   CUSTOMIZABLE_PRODUCT,
@@ -9,17 +8,16 @@ import {
 
 import { CREATE_CUSTOMER, UPDATE_CART, CREATE_CART } from './mutations';
 
-import { CART } from './subscriptions';
+import { CUSTOMER } from './subscriptions';
 
 export {
-  CUSTOMERS,
+  CUSTOMER,
   GET_MENU,
   COMBO_PRODUCT,
   CUSTOMIZABLE_PRODUCT,
   INVENTORY_PRODUCT,
   SIMPLE_PRODUCT,
   CREATE_CUSTOMER,
-  CART,
   CREATE_CART,
   UPDATE_CART,
 };

@@ -15,19 +15,26 @@ import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import moment from 'moment';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { GET_MENU, CREATE_CUSTOMER, CUSTOMERS } from '../graphql';
+import { GET_MENU, CREATE_CUSTOMER, CUSTOMER } from '../graphql';
 const { width, height } = Dimensions.get('screen');
 import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
 
-import { useQuery, useMutation, useLazyQuery } from '@apollo/react-hooks';
+import {
+  useQuery,
+  useMutation,
+  useLazyQuery,
+  useSubscription,
+} from '@apollo/react-hooks';
+import { useCartContext } from '../context/cart';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
   const [selectedPickerItem, setselectedPickerItem] = useState(0);
   const [calendarDate, setcalendarDate] = useState(new Date());
-  const [user, setUser] = useState({ email: undefined, userid: undefined });
+
+  const { user, setCustomer } = useCartContext();
 
   const { loading, data, error, refetch } = useQuery(GET_MENU, {
     variables: {
@@ -39,31 +46,29 @@ const Home = (props) => {
 
   // Mutations
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
-    onCompleted: async (data) => {
-      await AsyncStorage.setItem(
-        'customerId',
-        data.createCustomer.id.toString()
-      );
+    onCompleted: (data) => {
+      console.log('Customer created');
     },
     onError: (error) => {
       console.log(error);
     },
   });
 
-  // Queries
-  const [customers] = useLazyQuery(CUSTOMERS, {
-    onCompleted: async (data) => {
-      if (data.customers.length) {
-        console.log(data);
-        await AsyncStorage.setItem(
-          'customerId',
-          data.customers[0].id.toString()
-        );
+  // Subscription
+  useSubscription(CUSTOMER, {
+    variables: {
+      keycloakId: user.keycloakId,
+      email: user.email,
+    },
+    onSubscriptionData: (data) => {
+      const customers = data.subscriptionData.data.customers;
+      if (customers.length) {
+        setCustomer(customers[0]);
       } else {
         createCustomer({
           variables: {
             object: {
-              dailyKeyUserId: user.userid,
+              keycloakId: user.keycloakId,
               email: user.email,
               source: 'RMK',
             },
@@ -71,30 +76,7 @@ const Home = (props) => {
         });
       }
     },
-    onError: (error) => {
-      console.log(error);
-    },
   });
-
-  // Effects
-  useEffect(() => {
-    (async () => {
-      const email = await AsyncStorage.getItem('email');
-      const userid = await AsyncStorage.getItem('userid');
-      console.log(email);
-      console.log(userid);
-      setUser({
-        email,
-        userid,
-      });
-      customers({
-        variables: {
-          dailyKeyID: userid,
-          email,
-        },
-      });
-    })();
-  }, []);
 
   if (loading || data.getMenu.length == 0) {
     return (

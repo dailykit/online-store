@@ -1,17 +1,23 @@
 import gql from 'graphql-tag';
 
-export const CART = gql`
-  subscription Cart($customerId: Int!) {
-    cart(
-      where: {
-        customerId: { _eq: $customerId }
-        paymentStatus: { _eq: "PENDING" }
-      }
+export const CUSTOMER = gql`
+  query Customers($keycloakId: String!, $email: String!) {
+    customers(
+      where: { keycloakId: { _eq: $keycloakId }, email: { _eq: $email } }
     ) {
       id
-      isValid
-      cartInfo
-      fulfillmentInfo
+      email
+      keycloakId
+      orderCarts(where: { status: { _eq: "PENDING" } }) {
+        cartInfo
+        customerId
+        id
+        isValid
+        paymentMethodId
+        stripeCustomerId
+        addressId
+        fulfillmentInfo
+      }
     }
   }
 `;
