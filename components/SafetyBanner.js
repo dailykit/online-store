@@ -43,19 +43,19 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     borderRadius: 20,
-    height: height * 0.22,
+    height: height * 0.18,
   },
   textConatiner: {
     paddingHorizontal: 10,
     justifyContent: 'space-between',
   },
   title: {
-    fontSize: 18,
+    fontSize: '1rem',
     fontWeight: 'bold',
     color: 'white',
   },
   text: {
-    fontSize: 12,
+    fontSize: '0.8rem',
     color: 'white',
   },
 });

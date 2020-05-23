@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import ComboProduct from './ComboProduct';
 import CustomizableProductItem from './CustomizableProductItem';
@@ -31,47 +32,87 @@ const Card = ({ id, type, navigation, ...restProps }) => {
       <View style={styles.card_container}>
         <View style={styles.item_parent_container}>
           {type == 'comboProducts' && (
-            <ComboProduct
-              setcardItem={setcardItem}
-              setcardData={(item) => setcardData(item)}
-              id={id}
-              navigation={navigation}
-              setPrice={setPrice}
-              {...restProps}
-            />
+            <>
+              {cardData && (
+                <View style={styles.card_title}>
+                  <Text style={styles.card_title_text}>
+                    {cardData.name ? cardData.name : 'Resturant Name'}
+                  </Text>
+                  <Text style={styles.is_customizable}>Customizeable</Text>
+                </View>
+              )}
+              <ComboProduct
+                setcardItem={setcardItem}
+                setcardData={(item) => setcardData(item)}
+                id={id}
+                navigation={navigation}
+                setPrice={setPrice}
+                {...restProps}
+              />
+            </>
           )}
           {type == 'customizableProducts' && (
-            <CustomizableProductItem
-              setcardItem={setcardItem}
-              navigation={navigation}
-              setcardData={(item) => setcardData(item)}
-              independantItem
-              id={id}
-              {...restProps}
-              setPrice={(price) => setPrice(price)}
-            />
+            <>
+              {cardData && (
+                <View style={styles.card_title}>
+                  <Text style={styles.card_title_text}>
+                    {cardData.name ? cardData.name : 'Resturant Name'}
+                  </Text>
+                  <Text style={styles.is_customizable}>Customizeable</Text>
+                </View>
+              )}
+              <CustomizableProductItem
+                setcardItem={setcardItem}
+                navigation={navigation}
+                setcardData={(item) => setcardData(item)}
+                independantItem
+                id={id}
+                {...restProps}
+                setPrice={(price) => setPrice(price)}
+              />
+            </>
           )}
           {type == 'simpleRecipeProducts' && (
-            <SimpleProductItem
-              setcardItem={setcardItem}
-              setcardData={(item) => setcardData(item)}
-              navigation={navigation}
-              independantItem
-              id={id}
-              {...restProps}
-              setPrice={(price) => setPrice(price)}
-            />
+            <>
+              {cardData && (
+                <View style={styles.card_title}>
+                  <Text style={styles.card_title_text}>
+                    {cardData.name ? cardData.name : 'Resturant Name'}
+                  </Text>
+                  <Text style={styles.is_customizable}>Customizeable</Text>
+                </View>
+              )}
+              <SimpleProductItem
+                setcardItem={setcardItem}
+                setcardData={(item) => setcardData(item)}
+                navigation={navigation}
+                independantItem
+                id={id}
+                {...restProps}
+                setPrice={(price) => setPrice(price)}
+              />
+            </>
           )}
           {type == 'inventoryProducts' && (
-            <InventoryProductItem
-              setcardItem={setcardItem}
-              setcardData={(item) => setcardData(item)}
-              navigation={navigation}
-              independantItem
-              id={id}
-              {...restProps}
-              setPrice={(price) => setPrice(price)}
-            />
+            <>
+              {cardData && (
+                <View style={styles.card_title}>
+                  <Text style={styles.card_title_text}>
+                    {cardData.name ? cardData.name : 'Resturant Name'}
+                  </Text>
+                  <Text style={styles.is_customizable}>Customizeable</Text>
+                </View>
+              )}
+              <InventoryProductItem
+                setcardItem={setcardItem}
+                setcardData={(item) => setcardData(item)}
+                navigation={navigation}
+                independantItem
+                id={id}
+                {...restProps}
+                setPrice={(price) => setPrice(price)}
+              />
+            </>
           )}
         </View>
 
@@ -97,7 +138,7 @@ const Card = ({ id, type, navigation, ...restProps }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   card_container: {
     width,
     paddingHorizontal: 20,
@@ -116,11 +157,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   card_title_text: {
-    fontSize: 18,
+    fontSize: '$s',
     fontWeight: 'bold',
   },
   is_customizable: {
-    fontSize: 8,
+    fontSize: '$xxs',
     color: 'gray',
   },
   item_parent_container: {
@@ -154,10 +195,10 @@ const styles = StyleSheet.create({
   },
   add_to_card_text: {
     color: 'white',
-    fontSize: 14,
+    fontSize: '$s',
   },
   price_text: {
-    fontSize: 20,
+    fontSize: '$l',
     fontWeight: 'bold',
   },
 });

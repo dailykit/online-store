@@ -1,4 +1,5 @@
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const fallBackComponent = () => {
   return (

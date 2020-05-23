@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import ServingSelect from '../ServingSelect';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const { height, width } = Dimensions.get('window');
 
@@ -108,7 +109,7 @@ const InventoryProductCollapsed = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   item_container: {
     flex: 1,
     flexDirection: 'row',
@@ -156,10 +157,10 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   item_title: {
-    fontSize: 14,
+    fontSize: '$xxs',
   },
   item_chef: {
-    fontSize: 14,
+    fontSize: '$xxxs',
     fontWeight: 'bold',
   },
   item_category: {
@@ -169,16 +170,17 @@ const styles = StyleSheet.create({
     marginTop: 5,
     paddingVertical: 2,
     borderRadius: 2,
-    fontSize: 10,
+    fontSize: '$xxs',
   },
   options_text: {
     color: '#3fa4fd',
     textAlign: 'right',
-    fontSize: 12,
+    fontSize: '$xxs',
   },
   item_details: {
     textAlign: 'right',
     fontWeight: 'bold',
+    fontSize: '$xxxs',
   },
   price: {
     flex: 1,

@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const ServingSelect = ({
   index,

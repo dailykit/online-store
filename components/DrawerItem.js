@@ -3,6 +3,7 @@ import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
 import { useAuth } from '../context/auth';
 import Icon from './Icon';
 import argonTheme from '../constants/Theme';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const DrawerItem = ({ focused, title, navigation, screen }) => {
   const renderIcon = () => {

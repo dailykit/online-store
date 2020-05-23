@@ -1,6 +1,7 @@
-import React from "react";
+import React from 'react';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { Feather } from "@expo/vector-icons";
+import { Feather } from '@expo/vector-icons';
 
 class IconExtra extends React.Component {
   state = {

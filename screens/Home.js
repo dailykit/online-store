@@ -12,6 +12,7 @@ import {
 import { Datepicker } from '@ui-kitten/components';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import moment from 'moment';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { GET_MENU } from '../graphql';
 const { width, height } = Dimensions.get('screen');
@@ -152,7 +153,7 @@ const Home = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   home: {
     flex: 1,
   },
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 24,
+    fontSize: '1.2rem',
     padding: 20,
     fontWeight: 'bold',
   },

@@ -62,7 +62,7 @@ const SimpleProductItem = ({
             item.simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
               .value
           );
-          setcardData(item);
+          setcardData(item.simpleRecipeProduct);
         }
         if (tunnelItem && isSelected) {
           setcartItem(objToPush);

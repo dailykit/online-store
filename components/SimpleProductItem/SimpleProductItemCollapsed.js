@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { Feather, Ionicons, MaterialIcons } from '@expo/vector-icons';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import ServingSelect from '../ServingSelect';
 
@@ -154,7 +155,7 @@ const SimpleProductItemCollapsed = ({
   );
 };
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   item_container: {
     flex: 1,
     flexDirection: 'row',
@@ -202,11 +203,11 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   item_title: {
-    fontSize: 14,
+    fontSize: '$xxs',
   },
   item_chef: {
     color: 'gray',
-    fontSize: 10,
+    fontSize: '$xxxs',
   },
   item_category: {
     backgroundColor: '#56b783',
@@ -216,15 +217,16 @@ const styles = StyleSheet.create({
     marginTop: 5,
     paddingVertical: 2,
     borderRadius: 2,
-    fontSize: 10,
+    fontSize: '$xxs',
   },
   options_text: {
     color: '#3fa4fd',
     textAlign: 'right',
-    fontSize: 12,
+    fontSize: '$xxs',
   },
   item_details: {
     textAlign: 'right',
+    fontSize: '$xxs',
   },
   price: {
     flex: 1,

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Feather, AntDesign } from '@expo/vector-icons';
 import cooking from '../assets/imgs/cooking.png';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 import TabsNew from './Tabs';
 
