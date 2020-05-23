@@ -5,6 +5,7 @@ import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded';
 import { CUSTOMIZABLE_PRODUCT } from '../../graphql';
 import { useQuery } from '@apollo/react-hooks';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const CustomizableProductItem = ({
   isSelected,
@@ -113,7 +114,6 @@ const CustomizableProductItem = ({
     );
   }
   const { customizableProduct } = data;
-  if (!customizableProduct) return <Text>Bad Data</Text>;
   let default_first_product =
     customizableProduct !== null
       ? customizableProduct.customizableProductOptions[0]
