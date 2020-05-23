@@ -24,6 +24,9 @@ const InventoryProductCollapsed = ({
 }) => {
   let inventoryProduct = data;
   const [servingIndex, setServingIndex] = useState(0);
+  if (!inventoryProduct) {
+    return <Text>Bad Data</Text>;
+  }
   return (
     <>
       <TouchableOpacity

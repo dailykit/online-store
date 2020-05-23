@@ -36,11 +36,14 @@ const ComboProduct = ({
     variables: { id },
     onCompleted: (_data) => {
       let items = _data;
-      if (!tunnelItem) {
+      if (!tunnelItem && _data.comboProduct !== null) {
         setcardData(_data.comboProduct);
         let price = 0;
         _data.comboProduct.comboProductComponents.forEach((product) => {
-          if (product.inventoryProductId !== null) {
+          if (
+            product.inventoryProductId !== null &&
+            !product.inventoryProduct
+          ) {
             price =
               price +
               parseFloat(
@@ -48,7 +51,10 @@ const ComboProduct = ({
                   .value
               );
           }
-          if (product.simpleRecipeProductId !== null) {
+          if (
+            product.simpleRecipeProductId !== null &&
+            !product.simpleRecipeProduct
+          ) {
             price =
               price +
               parseFloat(
@@ -56,7 +62,10 @@ const ComboProduct = ({
                   .price[0].value
               );
           }
-          if (product.customizableProductId !== null) {
+          if (
+            product.customizableProductId !== null &&
+            !product.customizableProduct
+          ) {
             price =
               price +
               parseFloat(
@@ -84,7 +93,7 @@ const ComboProduct = ({
       </View>
     );
   }
-  if (data == null || data == undefined) {
+  if (data == null || data == undefined || !data.comboProduct) {
     return (
       <View style={styles.flexContainer}>
         <ActivityIndicator />

@@ -28,6 +28,9 @@ const SimpleProductItemCollapsed = ({
   const [typeSelected, setTypeSelected] = useState(true);
   const [servingIndex, setServingIndex] = useState(0);
   const [isSelectedIndex, setisSelectedIndex] = useState(0);
+  if (!simpleRecipeProduct) {
+    return <Text>Bad Data</Text>;
+  }
   return (
     <>
       <TouchableOpacity

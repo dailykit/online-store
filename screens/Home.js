@@ -27,17 +27,15 @@ const Home = (props) => {
   const [selectedPickerItem, setselectedPickerItem] = useState(0);
   const [calendarDate, setcalendarDate] = useState(new Date());
 
-  const [date, setdate] = useState({
-    day: moment().date(),
-    month: moment().month(),
-    year: moment().year(),
+  const { loading, data, error, refetch } = useQuery(GET_MENU, {
+    variables: {
+      year: moment().year(),
+      month: moment().month(),
+      day: moment().date(),
+    },
   });
 
-  const { loading, data, error } = useQuery(GET_MENU, {
-    variables: { year: date.year, month: date.month, day: date.year },
-  });
-
-  if (loading) {
+  if (loading || data.getMenu.length == 0) {
     return (
       <View style={styles.home}>
         {/* <Tabs /> */}
@@ -51,30 +49,7 @@ const Home = (props) => {
               style={styles.cover_image}
             />
           </View>
-          <View style={styles.picker_container}>
-            <View style={styles.picker_placeholder}>
-              <Datepicker
-                date={calendarDate}
-                onSelect={(_date) => {
-                  setcalendarDate(_date);
-                  setdate({
-                    day: moment(_date).date(),
-                    month: moment(_date).month(),
-                    year: moment(_date).year(),
-                  });
-                }}
-              />
-            </View>
-            <View style={styles.picker_placeholder}>
-              <Select
-                selectedIndex={selectedIndex}
-                value={0}
-                onSelect={() => {}}
-              >
-                <SelectItem title={''} />
-              </Select>
-            </View>
-          </View>
+
           <View style={styles.flexContainer}>
             <ActivityIndicator />
           </View>
@@ -85,7 +60,7 @@ const Home = (props) => {
     );
   }
   let pickerData = [];
-  let menuItems = [];
+  let menuItems = {};
 
   data.getMenu.forEach((category, _id) => {
     pickerData.push(category.name);
@@ -96,6 +71,8 @@ const Home = (props) => {
       }
     });
   });
+  console.log(pickerData[selectedPickerItem]);
+  console.log(selectedPickerItem);
 
   return (
     <View style={styles.home}>
@@ -118,10 +95,10 @@ const Home = (props) => {
               date={calendarDate}
               onSelect={(_date) => {
                 setcalendarDate(_date);
-                setdate({
-                  day: moment(_date).date(),
-                  month: moment(_date).month(),
+                refetch({
                   year: moment(_date).year(),
+                  month: moment(_date).month(),
+                  day: moment(_date).date(),
                 });
               }}
             />
@@ -131,7 +108,7 @@ const Home = (props) => {
               selectedIndex={selectedIndex}
               value={pickerData[selectedIndex.row]}
               onSelect={(_selectedIndex) => {
-                setselectedPickerItem(selectedIndex.row);
+                setselectedPickerItem(_selectedIndex.row);
                 setSelectedIndex(_selectedIndex);
               }}
             >
@@ -141,7 +118,9 @@ const Home = (props) => {
             </Select>
           </View>
         </View>
-        {Object.keys(menuItems[pickerData[0]]).map((type, _id) =>
+        {Object.keys(
+          menuItems[pickerData[selectedPickerItem]]
+        ).map((type, _id) =>
           menuItems[pickerData[selectedPickerItem]][type].map((id) => (
             <Card {...props} type={type} key={id} id={id} />
           ))

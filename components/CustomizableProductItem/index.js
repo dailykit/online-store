@@ -113,6 +113,7 @@ const CustomizableProductItem = ({
     );
   }
   const { customizableProduct } = data;
+  if (!customizableProduct) return <Text>Bad Data</Text>;
   let default_first_product =
     customizableProduct !== null
       ? customizableProduct.customizableProductOptions[0]
