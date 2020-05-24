@@ -25,7 +25,7 @@ const { width, height } = Dimensions.get('screen');
 import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
-
+import { CLIENTID } from 'react-native-dotenv';
 import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
 import { useCartContext } from '../context/cart';
 
@@ -55,11 +55,7 @@ const Home = (props) => {
   });
 
   // Subscription
-  const {
-    data: dataSubs,
-    loading: loadingSubs,
-    error: errorSubs,
-  } = useSubscription(CUSTOMER, {
+  useSubscription(CUSTOMER, {
     variables: {
       keycloakId: user.keycloakId,
       email: user.email,
@@ -75,6 +71,7 @@ const Home = (props) => {
               keycloakId: user.keycloakId,
               email: user.email,
               source: 'RMK',
+              clientId: CLIENTID,
             },
           },
         });
