@@ -17,6 +17,7 @@ export const CUSTOMER = gql`
         stripeCustomerId
         addressId
         fulfillmentInfo
+        deliveryPrice
       }
     }
   }
