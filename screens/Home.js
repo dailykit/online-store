@@ -62,7 +62,6 @@ const Home = (props) => {
     },
     onSubscriptionData: (data) => {
       const customers = data.subscriptionData.data.customers;
-      console.log(customers);
       if (customers.length) {
         setCustomer(customers[0]);
       } else {
