@@ -36,6 +36,7 @@ const ComboProduct = ({
     variables: { id },
     onCompleted: (_data) => {
       let items = _data;
+      if (_data?.comboProduct?.comboProductComponents === undefined) return;
       if (!tunnelItem) {
         setcardData(_data.comboProduct);
         let price = 0;
@@ -60,9 +61,9 @@ const ComboProduct = ({
             price =
               price +
               parseFloat(
-                product.customizableProduct.customizableProductOptions[0]
-                  .simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
-                  .value
+                product.customizableProduct?.customizableProductOptions[0]
+                  ?.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.price[0]
+                  ?.value
               );
           }
         });
@@ -93,8 +94,9 @@ const ComboProduct = ({
   }
 
   let { comboProduct } = data;
-  let { comboProductComponents } = comboProduct;
-  let selectedArr = data.comboProduct.comboProductComponents.map(
+  let comboProductComponents = comboProduct?.comboProductComponents;
+  if (comboProductComponents == undefined) return <Text>Bad Data</Text>;
+  let selectedArr = data?.comboProduct?.comboProductComponents?.map(
     (el, _id) => false
   );
   return (
@@ -135,7 +137,7 @@ const ComboProduct = ({
                 id={el.customizableProductId}
                 setcartItem={setcartItem}
                 setDefault={(item) => setcomboProductsArray(item)}
-                name={data.comboProduct.name}
+                name={data.comboProduct?.name}
               />
             );
           }
@@ -158,7 +160,7 @@ const ComboProduct = ({
                 id={el.simpleRecipeProductId}
                 tunnelItem={tunnelItem}
                 setcartItem={setcartItem}
-                name={data.comboProduct.name}
+                name={data.comboProduct?.name}
               />
             );
           }

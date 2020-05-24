@@ -55,7 +55,11 @@ const Home = (props) => {
   });
 
   // Subscription
-  useSubscription(CUSTOMER, {
+  const {
+    data: dataSubs,
+    loading: loadingSubs,
+    error: errorSubs,
+  } = useSubscription(CUSTOMER, {
     variables: {
       keycloakId: user.keycloakId,
       email: user.email,

@@ -19,7 +19,7 @@ export const CartContextProvider = ({ children }) => {
     if (customer?.orderCarts?.length) {
       setCart(customer.orderCarts[0]);
     } else {
-      setCart(undefined)
+      setCart(undefined);
     }
   }, [customer]);
 

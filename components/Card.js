@@ -118,14 +118,17 @@ const Card = ({ id, type, navigation, ...restProps }) => {
 
         <View style={styles.bottom_container}>
           <View style={styles.price}>
-            <Text style={styles.price_text}>$ {price}</Text>
+            <Text style={styles.price_text}>$ {isNaN(price) ? 0 : price}</Text>
           </View>
           <View style={styles.add_to_cart_container}>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('AddToCart', { data: cardData, type, id });
               }}
-              style={styles.button}
+              style={[
+                styles.button,
+                { display: isNaN(price) ? 'none' : 'flex' },
+              ]}
             >
               <Text style={styles.add_to_card_text}>
                 <Feather size={14} name='plus' /> ADD TO CART
