@@ -18,6 +18,8 @@ export const CartContextProvider = ({ children }) => {
   React.useEffect(() => {
     if (customer?.orderCarts?.length) {
       setCart(customer.orderCarts[0]);
+    } else {
+      setCart(undefined);
     }
   }, [customer]);
 

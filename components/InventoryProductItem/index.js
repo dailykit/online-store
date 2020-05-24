@@ -98,7 +98,8 @@ const InventoryProductItem = ({
     );
   }
 
-  let { inventoryProduct } = data;
+  let inventoryProduct = data.inventoryProduct;
+  if (!inventoryProduct) return <Text>Bad Data</Text>;
   return (
     <InventoryProductCollapsed
       _id={_id}

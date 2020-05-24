@@ -55,13 +55,18 @@ const Home = (props) => {
   });
 
   // Subscription
-  useSubscription(CUSTOMER, {
+  const {
+    data: dataSubs,
+    loading: loadingSubs,
+    error: errorSubs,
+  } = useSubscription(CUSTOMER, {
     variables: {
       keycloakId: user.keycloakId,
       email: user.email,
     },
     onSubscriptionData: (data) => {
       const customers = data.subscriptionData.data.customers;
+      console.log('home.js subscription called');
       console.log(customers);
       if (customers.length) {
         setCustomer(customers[0]);
@@ -78,6 +83,9 @@ const Home = (props) => {
       }
     },
   });
+  // console.log('subc : data', dataSubs);
+  // console.log('subc : loading', loadingSubs);
+  // console.log('subc : error', errorSubs);
 
   // Query
   useQuery(CUSTOMER_DETAILS, {

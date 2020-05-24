@@ -80,7 +80,7 @@ const InventoryProductCollapsed = ({
           <Text style={styles.item_category}></Text>
           <Text
             style={styles.item_chef}
-          >{`Unit size: ${inventoryProduct.inventoryProductOptions[0].label} `}</Text>
+          >{`Unit size: ${inventoryProduct?.inventoryProductOptions[0]?.label} `}</Text>
         </View>
         <View style={styles.item_container_three}>
           <View style={styles.item_three_upper}></View>
