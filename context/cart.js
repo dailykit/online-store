@@ -20,18 +20,6 @@ export const CartContextProvider = ({ children }) => {
     }
   }, [customer]);
 
-  const removeFromCart = (product) => {
-    let new_price = totalPrice - parseFloat(product.price);
-    if (isNaN(new_price) || new_price < 0) {
-      new_price = 0;
-    }
-    settotalPrice(new_price);
-    let newCartItems = cartItems.filter(
-      (item) => item.cartItemId !== product.cartItemId
-    );
-    setCartItems(newCartItems);
-  };
-
   return (
     <CartContext.Provider
       value={{

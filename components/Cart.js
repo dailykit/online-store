@@ -71,54 +71,55 @@ const Cart = ({
         console.log(cartItem.product.price);
         console.log(total);
       }
-    }
-    // products and total ready
-    if (cart) {
-      console.log(total, 'to cart');
-      // Update
-      // cartInfo are your products
-      const cartInfo = {
-        products,
-        total,
-      }; // you'll have to generate this every time
-      updateCart({
-        variables: {
-          id: cart.id,
-          set: {
-            cartInfo: cartInfo,
-          },
-        },
-      });
-    } else {
-      // Create
-      // cartInfo are your products
-      const cartInfo = {
-        products,
-        total,
-      }; // you'll have to generate this every time
-      createCart({
-        variables: {
-          object: {
-            cartInfo: cartInfo,
-            customerId: customer.id,
-            fulfillmentInfo: {
-              type: 'DELIVERY',
-              time: {
-                from: '15:00',
-                to: '19:00',
-              },
-              date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
+
+      // products and total ready
+      if (cart) {
+        console.log(total, 'to cart');
+        // Update
+        // cartInfo are your products
+        const cartInfo = {
+          products,
+          total,
+        }; // you'll have to generate this every time
+        updateCart({
+          variables: {
+            id: cart.id,
+            set: {
+              cartInfo: cartInfo,
             },
-            paymentMethodId:
-              customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
-              '1', // remove in prod
-            addressId: customerDetails?.defaultCustomerAddress?.id || '1', // remove in prod,
-            stripeCustomerId:
-              customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
-              '1',
           },
-        },
-      });
+        });
+      } else {
+        // Create
+        // cartInfo are your products
+        const cartInfo = {
+          products,
+          total,
+        }; // you'll have to generate this every time
+        createCart({
+          variables: {
+            object: {
+              cartInfo: cartInfo,
+              customerId: customer.id,
+              fulfillmentInfo: {
+                type: 'DELIVERY',
+                time: {
+                  from: '15:00',
+                  to: '19:00',
+                },
+                date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
+              },
+              paymentMethodId:
+                customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
+                '1', // remove in prod
+              addressId: customerDetails?.defaultCustomerAddress?.id || '1', // remove in prod,
+              stripeCustomerId:
+                customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
+                '1',
+            },
+          },
+        });
+      }
     }
     navigation.navigate(to);
   };
@@ -154,7 +155,7 @@ const Cart = ({
 };
 
 export const CartSummary = ({ navigation, text }) => {
-  const { cartItems, totalPrice, cart, setCart } = useCartContext();
+  const { cart, setCart } = useCartContext();
 
   const pay = () => {
     if (cart.isValid.status) {
@@ -171,7 +172,7 @@ export const CartSummary = ({ navigation, text }) => {
     <TouchableOpacity onPress={pay} style={styles.container}>
       <View style={[styles.container_left, { flex: 3 }]}>
         <Text style={[styles.text, { fontSize: 18 }]}>
-          {cartItems.length} items | $ {totalPrice}
+          {cart?.cartInfo?.products?.length} items | $ {cart?.cartInfo?.total}
         </Text>
         <Text style={[styles.text, { fontSize: 10 }]}>
           *extra charges may apply
