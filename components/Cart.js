@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ToastAndroid,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
@@ -25,17 +26,7 @@ const Cart = ({
   type,
   comboProductItems,
 }) => {
-  const {
-    cart,
-    customerDetails,
-    cartItems,
-    totalPrice,
-    customer,
-  } = useCartContext();
-
-  console.log('cart', cart);
-  console.log('customer id', customerDetails);
-  console.log(customer);
+  const { cart, customerDetails, customer } = useCartContext();
 
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
@@ -55,8 +46,8 @@ const Cart = ({
   });
 
   const handleAddToCart = () => {
-    let products = [];
-    let total = 0;
+    let products = [...cart?.cartInfo?.products];
+    let total = parseFloat(cart?.cartInfo?.total) | 0;
     if (tunnelItem) {
       if (type == 'comboProducts') {
         let comboItemPrice = 0;
@@ -64,7 +55,7 @@ const Cart = ({
           comboItemPrice = comboItemPrice + parseFloat(product.product.price);
         });
         comboProductItems['price'] = comboItemPrice;
-        total = parseFloat(cart?.cartInfo?.total) || 0 + comboItemPrice;
+        total = total + comboItemPrice;
         products.push({
           cartItemId: uuid(),
           products: comboProductItems,
@@ -76,13 +67,14 @@ const Cart = ({
           ...cartItem,
           type,
         });
-        total =
-          parseFloat(cart?.cartInfo?.total) ||
-          parseFloat(cartItem.product.price);
+        total = total + parseFloat(cartItem.product.price);
+        console.log(cartItem.product.price);
+        console.log(total);
       }
     }
     // products and total ready
     if (cart) {
+      console.log(total, 'to cart');
       // Update
       // cartInfo are your products
       const cartInfo = {
@@ -132,8 +124,8 @@ const Cart = ({
   };
 
   // cart.cartInfo = products
-  let numberOfProducts = cartItems.length;
-
+  let numberOfProducts = cart?.cartInfo?.products?.length;
+  let totalPrice = cart?.cartInfo?.total;
   if (!tunnelItem && !numberOfProducts) return <></>;
 
   return (
@@ -170,7 +162,8 @@ export const CartSummary = ({ navigation, text }) => {
       navigation.navigate('OrderPlaced');
     } else {
       console.log(cart);
-      ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
+      if (Platform.OS == 'android')
+        ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
     }
   };
 
