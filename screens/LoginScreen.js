@@ -20,8 +20,6 @@ import { GradientButton } from '../components';
 import { theme } from '../constants';
 import { useCartContext } from '../context/cart';
 
-import * as base64 from 'base-64';
-
 const isAndroid = Platform.OS == 'android' ? true : false;
 
 const LoginScreen = ({ navigation }) => {

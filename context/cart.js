@@ -4,7 +4,6 @@ const CartContext = React.createContext();
 
 export const CartContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-  const [cartProductsToDisplay, setcartProductsToDisplay] = useState([]);
   const [totalPrice, settotalPrice] = useState(0);
 
   // From keycloak
@@ -49,15 +48,6 @@ export const CartContextProvider = ({ children }) => {
     setCartItems(newCartItems);
   };
 
-  const addToCartProductsDisplay = (item) => {
-    setcartProductsToDisplay([...cartProductsToDisplay, item]);
-    settotalPrice(totalPrice + item.price);
-  };
-
-  const removeFromCartProductsDisplay = (item) => {
-    console.log('item removed');
-  };
-
   return (
     <CartContext.Provider
       value={{
@@ -74,9 +64,6 @@ export const CartContextProvider = ({ children }) => {
         setCartItems,
         addToCart,
         removeFromCart,
-        addToCartProductsDisplay,
-        removeFromCartProductsDisplay,
-        cartProductsToDisplay,
         totalPrice,
       }}
     >

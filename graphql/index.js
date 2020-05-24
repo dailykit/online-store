@@ -7,8 +7,6 @@ import {
   SIMPLE_PRODUCT,
 } from './queries';
 
-import { CREATE_CUSTOMER } from './mutations';
-
 import { CREATE_CUSTOMER, UPDATE_CART, CREATE_CART } from './mutations';
 
 import { CUSTOMER } from './subscriptions';
