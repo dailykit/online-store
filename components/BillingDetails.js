@@ -5,7 +5,7 @@ import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 const BillingDetails = () => {
-  const { totalPrice } = useCartContext();
+  const { cart } = useCartContext();
   return (
     <View style={styles.billing_details}>
       <View style={styles.bill_child_container}>
@@ -16,7 +16,9 @@ const BillingDetails = () => {
           <Text style={styles.billing_details_left_text}>Item Total</Text>
         </View>
         <View style={styles.bill_child_container_right}>
-          <Text style={styles.billing_details_right_text}>$ {totalPrice}</Text>
+          <Text style={styles.billing_details_right_text}>
+            $ {cart?.cartInfo?.total}
+          </Text>
         </View>
       </View>
       <View style={styles.bill_child_container}>

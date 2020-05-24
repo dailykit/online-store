@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ToastAndroid,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
@@ -25,17 +26,7 @@ const Cart = ({
   type,
   comboProductItems,
 }) => {
-  const {
-    cart,
-    customerDetails,
-    cartItems,
-    totalPrice,
-    customer,
-  } = useCartContext();
-
-  console.log('cart', cart);
-  console.log('customer id', customerDetails);
-  console.log(customer);
+  const { cart, customerDetails, customer } = useCartContext();
 
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
@@ -55,8 +46,8 @@ const Cart = ({
   });
 
   const handleAddToCart = () => {
-    let products = [];
-    let total = 0;
+    let products = [...cart?.cartInfo?.products];
+    let total = parseFloat(cart?.cartInfo?.total) | 0;
     if (tunnelItem) {
       if (type == 'comboProducts') {
         let comboItemPrice = 0;
@@ -64,7 +55,7 @@ const Cart = ({
           comboItemPrice = comboItemPrice + parseFloat(product.product.price);
         });
         comboProductItems['price'] = comboItemPrice;
-        total = parseFloat(cart?.cartInfo?.total) || 0 + comboItemPrice;
+        total = total + comboItemPrice;
         products.push({
           cartItemId: uuid(),
           products: comboProductItems,
@@ -76,64 +67,66 @@ const Cart = ({
           ...cartItem,
           type,
         });
-        total =
-          parseFloat(cart?.cartInfo?.total) ||
-          parseFloat(cartItem.product.price);
+        total = total + parseFloat(cartItem.product.price);
+        console.log(cartItem.product.price);
+        console.log(total);
       }
-    }
-    // products and total ready
-    if (cart) {
-      // Update
-      // cartInfo are your products
-      const cartInfo = {
-        products,
-        total,
-      }; // you'll have to generate this every time
-      updateCart({
-        variables: {
-          id: cart.id,
-          set: {
-            cartInfo: cartInfo,
-          },
-        },
-      });
-    } else {
-      // Create
-      // cartInfo are your products
-      const cartInfo = {
-        products,
-        total,
-      }; // you'll have to generate this every time
-      createCart({
-        variables: {
-          object: {
-            cartInfo: cartInfo,
-            customerId: customer.id,
-            fulfillmentInfo: {
-              type: 'DELIVERY',
-              time: {
-                from: '15:00',
-                to: '19:00',
-              },
-              date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
+
+      // products and total ready
+      if (cart) {
+        console.log(total, 'to cart');
+        // Update
+        // cartInfo are your products
+        const cartInfo = {
+          products,
+          total,
+        }; // you'll have to generate this every time
+        updateCart({
+          variables: {
+            id: cart.id,
+            set: {
+              cartInfo: cartInfo,
             },
-            paymentMethodId:
-              customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
-              '1', // remove in prod
-            addressId: customerDetails?.defaultCustomerAddress?.id || '1', // remove in prod,
-            stripeCustomerId:
-              customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
-              '1',
           },
-        },
-      });
+        });
+      } else {
+        // Create
+        // cartInfo are your products
+        const cartInfo = {
+          products,
+          total,
+        }; // you'll have to generate this every time
+        createCart({
+          variables: {
+            object: {
+              cartInfo: cartInfo,
+              customerId: customer.id,
+              fulfillmentInfo: {
+                type: 'DELIVERY',
+                time: {
+                  from: '15:00',
+                  to: '19:00',
+                },
+                date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
+              },
+              paymentMethodId:
+                customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
+                '1', // remove in prod
+              addressId: customerDetails?.defaultCustomerAddress?.id || '1', // remove in prod,
+              stripeCustomerId:
+                customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
+                '1',
+            },
+          },
+        });
+      }
     }
     navigation.navigate(to);
   };
 
   // cart.cartInfo = products
-  let numberOfProducts = cartItems.length;
-
+  let numberOfProducts = cart?.cartInfo?.products?.length;
+  let totalPrice = cart?.cartInfo?.total;
   if (!tunnelItem && !numberOfProducts) return <></>;
 
   return (
@@ -162,7 +155,7 @@ const Cart = ({
 };
 
 export const CartSummary = ({ navigation, text }) => {
-  const { cartItems, totalPrice, cart, setCart } = useCartContext();
+  const { cart, setCart } = useCartContext();
 
   const pay = () => {
     if (cart.isValid.status) {
@@ -170,7 +163,8 @@ export const CartSummary = ({ navigation, text }) => {
       navigation.navigate('OrderPlaced');
     } else {
       console.log(cart);
-      ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
+      if (Platform.OS == 'android')
+        ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
     }
   };
 
@@ -178,7 +172,7 @@ export const CartSummary = ({ navigation, text }) => {
     <TouchableOpacity onPress={pay} style={styles.container}>
       <View style={[styles.container_left, { flex: 3 }]}>
         <Text style={[styles.text, { fontSize: 18 }]}>
-          {cartItems.length} items | $ {totalPrice}
+          {cart?.cartInfo?.products?.length} items | $ {cart?.cartInfo?.total}
         </Text>
         <Text style={[styles.text, { fontSize: 10 }]}>
           *extra charges may apply

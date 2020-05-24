@@ -132,8 +132,6 @@ const Home = (props) => {
       }
     });
   });
-  console.log(pickerData[selectedPickerItem]);
-  console.log(selectedPickerItem);
 
   return (
     <View style={styles.home}>

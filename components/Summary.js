@@ -7,7 +7,8 @@ import {
   Dimensions,
 } from 'react-native';
 import { useCartContext } from '../context/cart';
-
+import { UPDATE_CART } from '../graphql/mutations';
+import { useMutation } from '@apollo/react-hooks';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 const { width, height } = Dimensions.get('window');
@@ -15,7 +16,42 @@ const { width, height } = Dimensions.get('window');
 const Summary = ({ useQuantity, item }) => {
   const [quantity, setquantity] = useState(1);
 
-  const { removeFromCart } = useCartContext();
+  const { cart } = useCartContext();
+
+  const [updateCart] = useMutation(UPDATE_CART, {
+    onCompleted: () => {
+      console.log('Product added!');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const removeFromCart = (product) => {
+    let products = cart?.cartInfo?.products;
+    let total = parseInt(cart?.cartInfo?.total);
+    let new_price = total - parseFloat(product.price);
+    if (isNaN(new_price) || new_price < 0) {
+      new_price = 0;
+    }
+    let newCartItems = cart?.cartInfo?.products?.filter(
+      (item) => item.cartItemId !== product.cartItemId
+    );
+    products = newCartItems;
+    const cartInfo = {
+      products,
+      total,
+    }; // you'll have to generate this every time
+    updateCart({
+      variables: {
+        id: cart.id,
+        set: {
+          cartInfo: cartInfo,
+        },
+      },
+    });
+  };
+
   if (quantity < 0) {
     setquantity(0);
   }
