@@ -7,9 +7,25 @@ export const CartContextProvider = ({ children }) => {
   const [cartProductsToDisplay, setcartProductsToDisplay] = useState([]);
   const [totalPrice, settotalPrice] = useState(0);
 
+  // From keycloak
+  const [user, setUser] = useState({ email: '', keycloakId: '' });
+  // From Hasura
+  const [customer, setCustomer] = useState(undefined);
+  const [cart, setCart] = useState(undefined);
+  // From platform
+  const [customerDetails, setCustomerDetails] = useState(undefined);
+
+  // Effects
+  React.useEffect(() => {
+    if (customer?.orderCarts?.length) {
+      setCart(customer.orderCarts[0]);
+    }
+  }, [customer]);
+
   const addToCart = (item) => {
     if (item.type == 'comboProducts') {
       let comboItemPrice = 0;
+      console.log(item.products);
       item.products.forEach((product) => {
         comboItemPrice = comboItemPrice + parseFloat(product.product.price);
       });
@@ -45,6 +61,15 @@ export const CartContextProvider = ({ children }) => {
   return (
     <CartContext.Provider
       value={{
+        user,
+        setUser,
+        customer,
+        setCustomer,
+        cart,
+        setCart,
+        customerDetails,
+        setCustomerDetails,
+        // Remove stuff below
         cartItems,
         setCartItems,
         addToCart,

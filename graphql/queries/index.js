@@ -10,6 +10,36 @@ export const CUSTOMERS = gql`
   }
 `;
 
+export const CUSTOMER_DETAILS = gql`
+  query CustomerDetails($keycloakId: String!) {
+    platform_CustomerByClient(where: { keycloakId: { _eq: $keycloakId } }) {
+      customer {
+        firstName
+        lastName
+        phoneNumber
+        customerAddresses {
+          city
+          country
+          id
+          line1
+          line2
+          state
+          zipcode
+        }
+        defaultCustomerAddress {
+          id
+        }
+        defaultPaymentMethod {
+          stripePaymentMethodId
+        }
+        stripePaymentMethods {
+          stripePaymentMethodId
+        }
+      }
+    }
+  }
+`;
+
 export const GET_MENU = gql`
   query GetMenu($year: Int!, $month: Int!, $day: Int!) {
     getMenu(year: $year, month: $month, day: $day) {

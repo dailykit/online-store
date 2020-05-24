@@ -1,20 +1,27 @@
 import {
-  CUSTOMERS,
+  CUSTOMER_DETAILS,
   GET_MENU,
   COMBO_PRODUCT,
   CUSTOMIZABLE_PRODUCT,
   INVENTORY_PRODUCT,
   SIMPLE_PRODUCT,
-} from "./queries";
+} from './queries';
 
-import { CREATE_CUSTOMER } from "./mutations";
+import { CREATE_CUSTOMER } from './mutations';
+
+import { CREATE_CUSTOMER, UPDATE_CART, CREATE_CART } from './mutations';
+
+import { CUSTOMER } from './subscriptions';
 
 export {
-  CUSTOMERS,
+  CUSTOMER,
+  CUSTOMER_DETAILS,
   GET_MENU,
   COMBO_PRODUCT,
   CUSTOMIZABLE_PRODUCT,
   INVENTORY_PRODUCT,
   SIMPLE_PRODUCT,
   CREATE_CUSTOMER,
+  CREATE_CART,
+  UPDATE_CART,
 };

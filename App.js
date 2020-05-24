@@ -30,12 +30,42 @@ import { enableScreens } from 'react-native-screens';
 import ErrorBoundary from './components/ErrorBoundary';
 
 // set up apollo client
-import { HASURA_URL } from 'react-native-dotenv';
-import ApolloClient from 'apollo-boost';
-const client = new ApolloClient({
+import { HASURA_URL, HASURA_WS } from 'react-native-dotenv';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { split } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
+import { ApolloProvider } from '@apollo/react-hooks';
+
+const httpLink = new HttpLink({
   uri: HASURA_URL,
 });
-import { ApolloProvider } from '@apollo/react-hooks';
+
+const wsLink = new WebSocketLink({
+  uri: HASURA_WS,
+  options: {
+    reconnect: true,
+  },
+});
+
+const link = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink
+);
+
+const client = new ApolloClient({
+  link,
+  cache: new InMemoryCache(),
+});
 
 enableScreens();
 

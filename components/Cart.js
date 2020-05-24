@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
@@ -22,8 +23,12 @@ const Cart = ({
   type,
   comboProductItems,
 }) => {
-  const { cartItems, addToCart, totalPrice, addComboToCart } = useCartContext();
+  const { cart, customerDetails, cartItems, totalPrice } = useCartContext();
 
+  console.log('cart', cart);
+  console.log('customer details', customerDetails);
+
+  // cart.cartInfo = products
   let numberOfProducts = cartItems.length;
 
   return (
@@ -70,12 +75,20 @@ const Cart = ({
 };
 
 export const CartSummary = ({ navigation, text }) => {
-  const { cartItems, totalPrice } = useCartContext();
+  const { cartItems, totalPrice, cart, setCart } = useCartContext();
+
+  const pay = () => {
+    if (cart.isValid.status) {
+      // Payment API call
+      navigation.navigate('OrderPlaced');
+    } else {
+      console.log(cart);
+      ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
+    }
+  };
+
   return (
-    <TouchableOpacity
-      onPress={() => navigation.navigate('OrderPlaced')}
-      style={styles.container}
-    >
+    <TouchableOpacity onPress={pay} style={styles.container}>
       <View style={[styles.container_left, { flex: 3 }]}>
         <Text style={[styles.text, { fontSize: 18 }]}>
           {cartItems.length} items | $ {totalPrice}

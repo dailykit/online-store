@@ -8,30 +8,88 @@ import {
   Text,
   Modal,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import { Datepicker } from '@ui-kitten/components';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import moment from 'moment';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { GET_MENU } from '../graphql';
+import {
+  GET_MENU,
+  CREATE_CUSTOMER,
+  CUSTOMER,
+  CUSTOMER_DETAILS,
+} from '../graphql';
 const { width, height } = Dimensions.get('screen');
 import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
 
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
+import { useCartContext } from '../context/cart';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
   const [selectedPickerItem, setselectedPickerItem] = useState(0);
   const [calendarDate, setcalendarDate] = useState(new Date());
 
+  const { user, setCustomer } = useCartContext();
+
   const { loading, data, error, refetch } = useQuery(GET_MENU, {
     variables: {
       year: moment().year(),
       month: moment().month(),
       day: moment().date(),
+    },
+  });
+
+  // Mutations
+  const [createCustomer] = useMutation(CREATE_CUSTOMER, {
+    onCompleted: () => {
+      console.log('Customer created');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  // Subscription
+  useSubscription(CUSTOMER, {
+    variables: {
+      keycloakId: user.keycloakId,
+      email: user.email,
+    },
+    onSubscriptionData: (data) => {
+      const customers = data.subscriptionData.data.customers;
+      console.log(customers);
+      if (customers.length) {
+        setCustomer(customers[0]);
+      } else {
+        createCustomer({
+          variables: {
+            object: {
+              keycloakId: user.keycloakId,
+              email: user.email,
+              source: 'RMK',
+            },
+          },
+        });
+      }
+    },
+  });
+
+  // Query
+  useQuery(CUSTOMER_DETAILS, {
+    variables: {
+      keycloakId: user.keycloakId,
+    },
+    onCompleted: (data) => {
+      if (data.platform_CustomerByClient.length) {
+        setCustomer(data.platform_CustomerByClient[0].customer);
+      } else {
+        console.log('No customer data found!');
+      }
     },
   });
 
