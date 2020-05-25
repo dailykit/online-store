@@ -12,7 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
 import { uuid } from '../utils';
 import { useMutation } from '@apollo/react-hooks';
-import EStyleSheet from 'react-native-extended-stylesheet';
+import EStyleSheet, { child } from 'react-native-extended-stylesheet';
 import { CREATE_CART, UPDATE_CART } from '../graphql/mutations';
 
 const { width, height } = Dimensions.get('window');
@@ -46,7 +46,7 @@ const Cart = ({
   });
 
   const handleAddToCart = () => {
-    let products = [...cart?.cartInfo?.products];
+    let products = cart?.cartInfo?.products || [];
     let total = parseFloat(cart?.cartInfo?.total) | 0;
     if (tunnelItem) {
       if (type == 'comboProducts') {
@@ -54,12 +54,12 @@ const Cart = ({
         comboProductItems.forEach((product) => {
           comboItemPrice = comboItemPrice + parseFloat(product.product.price);
         });
-        comboProductItems['price'] = comboItemPrice;
         total = total + comboItemPrice;
         products.push({
           cartItemId: uuid(),
           products: comboProductItems,
           type,
+          price: comboItemPrice,
         });
       } else {
         products.push({
@@ -68,13 +68,10 @@ const Cart = ({
           type,
         });
         total = total + parseFloat(cartItem.product.price);
-        console.log(cartItem.product.price);
-        console.log(total);
       }
 
       // products and total ready
       if (cart) {
-        console.log(total, 'to cart');
         // Update
         // cartInfo are your products
         const cartInfo = {
@@ -155,14 +152,12 @@ const Cart = ({
 };
 
 export const CartSummary = ({ navigation, text }) => {
-  const { cart, setCart } = useCartContext();
-
+  const { cart } = useCartContext();
   const pay = () => {
     if (cart.isValid.status) {
       // Payment API call
       navigation.navigate('OrderPlaced');
     } else {
-      console.log(cart);
       if (Platform.OS == 'android')
         ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
     }
@@ -172,7 +167,7 @@ export const CartSummary = ({ navigation, text }) => {
     <TouchableOpacity onPress={pay} style={styles.container}>
       <View style={[styles.container_left, { flex: 3 }]}>
         <Text style={[styles.text, { fontSize: 18 }]}>
-          {cart?.cartInfo?.products?.length} items | $ {cart.totalPrice}
+          {cart?.cartInfo?.products?.length} items | $ {cart.cartInfo.total}
         </Text>
         <Text style={[styles.text, { fontSize: 10 }]}>
           *extra charges may apply
@@ -202,7 +197,9 @@ export const ComboProductItemProceed = ({
 }) => {
   return (
     <TouchableOpacity
-      onPress={() => setCurrentComboProductIndex(currentComboProductIndex + 1)}
+      onPress={() => {
+        setCurrentComboProductIndex(currentComboProductIndex + 1);
+      }}
       style={styles.container}
     >
       <View style={[styles.container_left, { flex: 4 }]}>

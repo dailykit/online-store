@@ -15,7 +15,6 @@ const { width, height } = Dimensions.get('window');
 
 const Summary = ({ useQuantity, item }) => {
   const [quantity, setquantity] = useState(1);
-
   const { cart } = useCartContext();
 
   const [updateCart] = useMutation(UPDATE_CART, {
@@ -40,16 +39,19 @@ const Summary = ({ useQuantity, item }) => {
     let newCartItems = products?.filter(
       (item) => item.cartItemId !== product.cartItemId
     );
-    console.log('removeFromCart -> newCartItems', newCartItems);
+    total = isNaN(total) ? 0 : total;
     const cartInfo = {
       products: newCartItems,
       total,
     }; // you'll have to generate this every time
+
+    console.log('cartInfo --> ', cartInfo);
+
     updateCart({
       variables: {
         id: cart.id,
         set: {
-          cartInfo,
+          cartInfo: cartInfo,
         },
       },
     });
@@ -59,7 +61,6 @@ const Summary = ({ useQuantity, item }) => {
     setquantity(0);
   }
   if (item.type == 'comboProducts') {
-    console.log(item);
     return (
       <View style={styles.summary_container}>
         <View style={styles.picker_container}>

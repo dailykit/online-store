@@ -22,6 +22,7 @@ const { width, height } = Dimensions.get('window');
 
 const OrderSummary = ({ navigation, ...restProps }) => {
   const { cart } = useCartContext();
+
   let cartItems = cart?.cartInfo?.products;
   return (
     <SafeAreaView style={{ flex: 1 }}>
