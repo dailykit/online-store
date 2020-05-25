@@ -55,9 +55,7 @@ const Card = ({ id, type, navigation, ...restProps }) => {
             <>
               {cardData && (
                 <View style={styles.card_title}>
-                  <Text style={styles.card_title_text}>
-                    {cardData.name ? cardData.name : 'Resturant Name'}
-                  </Text>
+                  <Text style={styles.card_title_text}>{cardData?.name}</Text>
                   <Text style={styles.is_customizable}>Customizeable</Text>
                 </View>
               )}
@@ -77,9 +75,8 @@ const Card = ({ id, type, navigation, ...restProps }) => {
               {cardData && (
                 <View style={styles.card_title}>
                   <Text style={styles.card_title_text}>
-                    {cardData.name ? cardData.name : 'Resturant Name'}
+                    {cardData?.simpleRecipeProduct?.name}
                   </Text>
-                  <Text style={styles.is_customizable}>Customizeable</Text>
                 </View>
               )}
               <SimpleProductItem
@@ -98,9 +95,8 @@ const Card = ({ id, type, navigation, ...restProps }) => {
               {cardData && (
                 <View style={styles.card_title}>
                   <Text style={styles.card_title_text}>
-                    {cardData.name ? cardData.name : 'Resturant Name'}
+                    {cardData.inventoryProduct?.name}
                   </Text>
-                  <Text style={styles.is_customizable}>Customizeable</Text>
                 </View>
               )}
               <InventoryProductItem
@@ -118,14 +114,17 @@ const Card = ({ id, type, navigation, ...restProps }) => {
 
         <View style={styles.bottom_container}>
           <View style={styles.price}>
-            <Text style={styles.price_text}>$ {price}</Text>
+            <Text style={styles.price_text}>$ {isNaN(price) ? 0 : price}</Text>
           </View>
           <View style={styles.add_to_cart_container}>
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate('AddToCart', { data: cardData, type, id });
               }}
-              style={styles.button}
+              style={[
+                styles.button,
+                { display: isNaN(price) ? 'none' : 'flex' },
+              ]}
             >
               <Text style={styles.add_to_card_text}>
                 <Feather size={14} name='plus' /> ADD TO CART

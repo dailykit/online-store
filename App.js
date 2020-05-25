@@ -90,7 +90,6 @@ if (!global.atob) {
 // setup rem
 import EStyleSheet from 'react-native-extended-stylesheet';
 let { height, width } = Dimensions.get('window');
-console.log(width);
 EStyleSheet.build({
   $rem: width > 340 ? 16 : 13,
   $xl: '1.2rem',

@@ -21,7 +21,9 @@ import HeaderBack from '../components/HeaderBack';
 const { width, height } = Dimensions.get('window');
 
 const OrderSummary = ({ navigation, ...restProps }) => {
-  const { cartItems } = useCartContext();
+  const { cart } = useCartContext();
+
+  let cartItems = cart?.cartInfo?.products;
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <HeaderBack title='Go Back' navigation={navigation} />

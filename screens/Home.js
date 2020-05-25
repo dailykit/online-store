@@ -15,34 +15,47 @@ import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import moment from 'moment';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import {
-  GET_MENU,
-  CREATE_CUSTOMER,
-  CUSTOMER,
-  CUSTOMER_DETAILS,
-} from '../graphql';
+import { CREATE_CUSTOMER, CUSTOMER, CUSTOMER_DETAILS } from '../graphql';
 const { width, height } = Dimensions.get('screen');
 import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
-
+import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
 import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
 import { useCartContext } from '../context/cart';
+import * as axios from 'axios';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
   const [selectedPickerItem, setselectedPickerItem] = useState(0);
   const [calendarDate, setcalendarDate] = useState(new Date());
 
+  const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+
   const { user, setCustomer } = useCartContext();
 
-  const { loading, data, error, refetch } = useQuery(GET_MENU, {
-    variables: {
+  const fetchData = async (date) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(`${DAILYOS_SERVER_URL}/getMenu`, {
+        input: date,
+      });
+      setData(response.data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchData({
       year: moment().year(),
       month: moment().month(),
       day: moment().date(),
-    },
-  });
+    });
+  }, []);
 
   // Mutations
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
@@ -62,7 +75,6 @@ const Home = (props) => {
     },
     onSubscriptionData: (data) => {
       const customers = data.subscriptionData.data.customers;
-      console.log(customers);
       if (customers.length) {
         setCustomer(customers[0]);
       } else {
@@ -72,6 +84,7 @@ const Home = (props) => {
               keycloakId: user.keycloakId,
               email: user.email,
               source: 'RMK',
+              clientId: CLIENTID,
             },
           },
         });
@@ -93,7 +106,7 @@ const Home = (props) => {
     },
   });
 
-  if (loading || data.getMenu.length == 0) {
+  if (!data.length || loading) {
     return (
       <View style={styles.home}>
         {/* <Tabs /> */}
@@ -107,7 +120,30 @@ const Home = (props) => {
               style={styles.cover_image}
             />
           </View>
-
+          <View style={styles.picker_container}>
+            <View style={styles.picker_placeholder}>
+              <Datepicker
+                date={calendarDate}
+                onSelect={(_date) => {
+                  setcalendarDate(_date);
+                  fetchData({
+                    year: moment(_date).year(),
+                    month: moment(_date).month(),
+                    day: moment(_date).date(),
+                  });
+                }}
+              />
+            </View>
+            <View style={styles.picker_placeholder}>
+              <Select
+                selectedIndex={selectedIndex}
+                value={0}
+                onSelect={() => {}}
+              >
+                <SelectItem title={'Please wait..'} />
+              </Select>
+            </View>
+          </View>
           <View style={styles.flexContainer}>
             <ActivityIndicator />
           </View>
@@ -120,17 +156,17 @@ const Home = (props) => {
   let pickerData = [];
   let menuItems = {};
 
-  data.getMenu.forEach((category, _id) => {
-    pickerData.push(category.name);
-    menuItems[category.name] = {};
-    Object.keys(category).forEach((key) => {
-      if (key != 'name' && key != '__typename') {
-        menuItems[category.name][key] = category[key];
-      }
+  if (data.length) {
+    data.forEach((category, _id) => {
+      pickerData.push(category.name);
+      menuItems[category.name] = {};
+      Object.keys(category).forEach((key) => {
+        if (key != 'name' && key != '__typename') {
+          menuItems[category.name][key] = category[key];
+        }
+      });
     });
-  });
-  console.log(pickerData[selectedPickerItem]);
-  console.log(selectedPickerItem);
+  }
 
   return (
     <View style={styles.home}>
@@ -153,7 +189,7 @@ const Home = (props) => {
               date={calendarDate}
               onSelect={(_date) => {
                 setcalendarDate(_date);
-                refetch({
+                fetchData({
                   year: moment(_date).year(),
                   month: moment(_date).month(),
                   day: moment(_date).date(),

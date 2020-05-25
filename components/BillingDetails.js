@@ -1,11 +1,54 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
+import { Input, Modal } from '@ui-kitten/components';
 
 import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { Button } from 'native-base';
+import { useMutation } from '@apollo/react-hooks';
+import { UPDATE_CART } from '../graphql';
+
+const { width, height } = Dimensions.get('window');
 
 const BillingDetails = () => {
-  const { totalPrice } = useCartContext();
+  const { cart } = useCartContext();
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [tip, setTip] = React.useState(cart.tip);
+
+  // Mutation
+  const [updateCart] = useMutation(UPDATE_CART, {
+    onCompleted: () => {
+      console.log('Tip updated!');
+      setIsVisible(false);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  // Handler
+  const addTip = () => {
+    console.log(tip);
+    if (!isNaN(tip)) {
+      const tipFloat = parseFloat(tip);
+      console.log(tipFloat);
+      updateCart({
+        variables: {
+          id: cart.id,
+          set: {
+            tip: tipFloat,
+          },
+        },
+      });
+    }
+  };
+
   return (
     <View style={styles.billing_details}>
       <View style={styles.bill_child_container}>
@@ -16,7 +59,9 @@ const BillingDetails = () => {
           <Text style={styles.billing_details_left_text}>Item Total</Text>
         </View>
         <View style={styles.bill_child_container_right}>
-          <Text style={styles.billing_details_right_text}>$ {totalPrice}</Text>
+          <Text style={styles.billing_details_right_text}>
+            $ {cart.itemTotal}
+          </Text>
         </View>
       </View>
       <View style={styles.bill_child_container}>
@@ -24,15 +69,9 @@ const BillingDetails = () => {
           <Text style={styles.billing_details_left_text}>Delivery Fee</Text>
         </View>
         <View style={styles.bill_child_container_right}>
-          <Text style={styles.billing_details_right_text}>$ 1.50</Text>
-        </View>
-      </View>
-      <View style={styles.bill_child_container}>
-        <View style={styles.bill_child_container_left}>
-          <Text style={styles.billing_details_left_text}>Tax @2.5%</Text>
-        </View>
-        <View style={styles.bill_child_container_right}>
-          <Text style={styles.billing_details_right_text}>$ 2.50</Text>
+          <Text style={styles.billing_details_right_text}>
+            $ {cart.deliveryPrice}
+          </Text>
         </View>
       </View>
       <View style={styles.bill_child_container}>
@@ -40,17 +79,52 @@ const BillingDetails = () => {
           <Text style={styles.billing_details_left_text}>Tip</Text>
         </View>
         <View style={styles.bill_child_container_right}>
-          <Text
-            style={[
-              styles.billing_details_right_text,
-              {
-                fontWeight: 'bold',
-                color: '#3fa4fd',
-              },
-            ]}
+          <Text style={styles.billing_details_right_text}>$ {cart.tip}</Text>
+          <TouchableOpacity
+            style={{ marginLeft: 8 }}
+            onPress={() => setIsVisible(true)}
           >
-            Add
+            <Text>edit</Text>
+          </TouchableOpacity>
+          <Modal
+            visible={isVisible}
+            onBackdropPress={() => setIsVisible(false)}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <View
+                style={{
+                  padding: 16,
+                  backgroundColor: '#fff',
+                  borderRadius: 6,
+                }}
+              >
+                <Input
+                  placeholder='Add your tip'
+                  value={tip.toString()}
+                  onChangeText={(nextValue) => setTip(nextValue)}
+                />
+                <Button onPress={addTip} style={styles.button_container_left}>
+                  <Text style={{ color: 'white' }}>Add</Text>
+                </Button>
+              </View>
+            </View>
+          </Modal>
+        </View>
+      </View>
+      <View style={styles.bill_child_container}>
+        <View style={styles.bill_child_container_left}>
+          <Text style={styles.billing_details_left_text}>
+            Tax @{cart.taxPercent}%
           </Text>
+        </View>
+        <View style={styles.bill_child_container_right}>
+          <Text style={styles.billing_details_right_text}>$ {cart.tax}</Text>
         </View>
       </View>
       <View style={styles.bill_child_container}>
@@ -65,7 +139,7 @@ const BillingDetails = () => {
           <Text
             style={[styles.billing_details_right_text, { fontWeight: 'bold' }]}
           >
-            $ 7.50
+            $ {cart.totalPrice}
           </Text>
         </View>
       </View>
@@ -100,6 +174,11 @@ const styles = StyleSheet.create({
   },
   billing_details_left_text: {
     fontSize: 16,
+  },
+  button_container_left: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3fa4ff',
   },
 });
 

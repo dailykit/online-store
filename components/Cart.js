@@ -6,11 +6,14 @@ import {
   Dimensions,
   TouchableOpacity,
   ToastAndroid,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
 import { uuid } from '../utils';
-import EStyleSheet from 'react-native-extended-stylesheet';
+import { useMutation } from '@apollo/react-hooks';
+import EStyleSheet, { child } from 'react-native-extended-stylesheet';
+import { CREATE_CART, UPDATE_CART } from '../graphql/mutations';
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,40 +26,114 @@ const Cart = ({
   type,
   comboProductItems,
 }) => {
-  const { cart, customerDetails, cartItems, totalPrice } = useCartContext();
+  const { cart, customerDetails, customer } = useCartContext();
 
-  console.log('cart', cart);
-  console.log('customer details', customerDetails);
+  const [updateCart] = useMutation(UPDATE_CART, {
+    onCompleted: () => {
+      console.log('Product added!');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  const [createCart] = useMutation(CREATE_CART, {
+    onCompleted: () => {
+      console.log('Cart created!');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleAddToCart = () => {
+    let products = cart?.cartInfo?.products || [];
+    let total = parseFloat(cart?.cartInfo?.total) | 0;
+    if (tunnelItem) {
+      if (type == 'comboProducts') {
+        let comboItemPrice = 0;
+        comboProductItems.forEach((product) => {
+          comboItemPrice = comboItemPrice + parseFloat(product.product.price);
+        });
+        total = total + comboItemPrice;
+        products.push({
+          cartItemId: uuid(),
+          products: comboProductItems,
+          type,
+          price: comboItemPrice,
+        });
+      } else {
+        products.push({
+          cartItemId: uuid(),
+          ...cartItem,
+          type,
+        });
+        total = total + parseFloat(cartItem.product.price);
+      }
+
+      // products and total ready
+      if (cart) {
+        // Update
+        // cartInfo are your products
+        const cartInfo = {
+          products,
+          total,
+        }; // you'll have to generate this every time
+        updateCart({
+          variables: {
+            id: cart.id,
+            set: {
+              cartInfo: cartInfo,
+            },
+          },
+        });
+      } else {
+        // Create
+        // cartInfo are your products
+        const cartInfo = {
+          products,
+          total,
+        }; // you'll have to generate this every time
+        createCart({
+          variables: {
+            object: {
+              cartInfo: cartInfo,
+              customerId: customer.id,
+              fulfillmentInfo: {
+                type: 'DELIVERY',
+                time: {
+                  from: '15:00',
+                  to: '19:00',
+                },
+                date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
+              },
+              paymentMethodId:
+                customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
+                '1', // remove in prod
+              addressId: customerDetails?.defaultCustomerAddress?.id || '1', // remove in prod,
+              stripeCustomerId:
+                customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
+                '1',
+            },
+          },
+        });
+      }
+    }
+    navigation.navigate(to);
+  };
 
   // cart.cartInfo = products
-  let numberOfProducts = cartItems.length;
+  let numberOfProducts = cart?.cartInfo?.products?.length;
+  let totalPrice = cart?.cartInfo?.total;
+  if (!tunnelItem && !numberOfProducts) return <></>;
 
   return (
-    <TouchableOpacity
-      onPress={() => {
-        if (tunnelItem) {
-          if (type == 'comboProducts') {
-            addToCart({
-              cartItemId: uuid(),
-              products: comboProductItems,
-              type,
-            });
-          } else {
-            addToCart({
-              cartItemId: uuid(),
-              ...cartItem,
-              type,
-            });
-          }
-        }
-        navigation.navigate(to);
-      }}
-      style={styles.container}
-    >
+    <TouchableOpacity onPress={handleAddToCart} style={styles.container}>
       <View style={styles.container_left}>
-        <Text style={styles.text}>
-          $ {totalPrice} | {numberOfProducts} Products
-        </Text>
+        {!tunnelItem && (
+          <Text style={styles.text}>
+            $ {cart.itemTotal} | {numberOfProducts} Products
+          </Text>
+        )}
       </View>
       <View style={styles.container_right}>
         <Text style={styles.text}>
@@ -75,23 +152,23 @@ const Cart = ({
 };
 
 export const CartSummary = ({ navigation, text }) => {
-  const { cartItems, totalPrice, cart, setCart } = useCartContext();
-
+  const { cart } = useCartContext();
   const pay = () => {
     if (cart.isValid.status) {
       // Payment API call
       navigation.navigate('OrderPlaced');
     } else {
-      console.log(cart);
-      ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
+      if (Platform.OS == 'android')
+        ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
     }
   };
+  if (!cart?.cartInfo?.products?.length) return <></>;
 
   return (
     <TouchableOpacity onPress={pay} style={styles.container}>
       <View style={[styles.container_left, { flex: 3 }]}>
         <Text style={[styles.text, { fontSize: 18 }]}>
-          {cartItems.length} items | $ {totalPrice}
+          {cart?.cartInfo?.products?.length} items | $ {cart.cartInfo.total}
         </Text>
         <Text style={[styles.text, { fontSize: 10 }]}>
           *extra charges may apply
@@ -121,7 +198,9 @@ export const ComboProductItemProceed = ({
 }) => {
   return (
     <TouchableOpacity
-      onPress={() => setCurrentComboProductIndex(currentComboProductIndex + 1)}
+      onPress={() => {
+        setCurrentComboProductIndex(currentComboProductIndex + 1);
+      }}
       style={styles.container}
     >
       <View style={[styles.container_left, { flex: 4 }]}>

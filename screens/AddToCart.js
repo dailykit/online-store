@@ -29,13 +29,26 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
     1000
   );
   const [currentComboProductIndex, setCurrentComboProductIndex] = useState(0);
+  let name = '';
+  if (type == 'simpleRecipeProducts') {
+    name = data.simpleRecipeProduct.name;
+  }
+  if (type == 'comboProducts') {
+    name = data.name;
+  }
+  if (type == 'inventoryProducts') {
+    name = data.inventoryProduct.name;
+  }
+  if (type == 'customizableProducts') {
+    name = data.name;
+  }
 
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <View style={styles.title_container}>
           <View style={styles.details}>
-            <Text style={styles.title}>{data.name}</Text>
+            <Text style={styles.title}>{name}</Text>
           </View>
           <View style={styles.close_container}>
             <TouchableOpacity onPress={() => navigation.navigate('Home')}>

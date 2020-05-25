@@ -66,14 +66,14 @@ const CustomizableProductItemCollapsed = ({
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Text
             style={styles.item_title}
-          >{`${simpleRecipeProduct.name} `}</Text>
+          >{`${simpleRecipeProduct?.name} `}</Text>
 
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('Modal', {
-                data: simpleRecipeProduct.simpleRecipe,
-                author: simpleRecipeProduct.simpleRecipe.author,
-                name: simpleRecipeProduct.name,
+                data: simpleRecipeProduct?.simpleRecipe,
+                author: simpleRecipeProduct?.simpleRecipe?.author,
+                name: simpleRecipeProduct?.name,
               })
             }
           >
@@ -82,7 +82,7 @@ const CustomizableProductItemCollapsed = ({
         </View>
         <Text
           style={styles.item_chef}
-        >{`${simpleRecipeProduct.simpleRecipe.author} `}</Text>
+        >{`${simpleRecipeProduct?.simpleRecipe?.author} `}</Text>
         <Text style={styles.item_category}>vegeterian</Text>
       </View>
       <View style={styles.item_container_three}>

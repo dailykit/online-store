@@ -54,7 +54,7 @@ const Item = ({
       </View>
 
       {data.map((item, _key) => {
-        let simpleRecipeProduct = item.simpleRecipeProduct;
+        let simpleRecipeProduct = item?.simpleRecipeProduct;
         return (
           <>
             <TouchableOpacity
@@ -62,11 +62,11 @@ const Item = ({
               onPress={() => {
                 setisSelected(_key);
                 setproductOptionId(
-                  simpleRecipeProduct.simpleRecipeProductOptions[0].id,
-                  simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
-                    .value,
-                  simpleRecipeProduct.id,
-                  simpleRecipeProduct.name
+                  simpleRecipeProduct?.simpleRecipeProductOptions[0]?.id,
+                  simpleRecipeProduct?.simpleRecipeProductOptions[0]?.price[0]
+                    ?.value,
+                  simpleRecipeProduct?.id,
+                  simpleRecipeProduct?.name
                 );
               }}
               style={[
@@ -91,7 +91,7 @@ const Item = ({
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text
                     style={styles.item_title}
-                  >{`${simpleRecipeProduct.name} `}</Text>
+                  >{`${simpleRecipeProduct?.name} `}</Text>
 
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Modal')}
@@ -100,7 +100,7 @@ const Item = ({
                   </TouchableOpacity>
                 </View>
                 <Text style={styles.item_chef}>
-                  {simpleRecipeProduct.simpleRecipe.author}
+                  {simpleRecipeProduct?.simpleRecipe?.author}
                 </Text>
                 <Text style={styles.item_category}>vegeterian</Text>
               </View>
@@ -115,9 +115,9 @@ const Item = ({
                 <View style={styles.item_three_lower}>
                   <Text style={styles.item_details}>
                     ${' '}
-                    {simpleRecipeProduct.simpleRecipeProductOptions[0]
-                      ? simpleRecipeProduct.simpleRecipeProductOptions[0]
-                          .price[0].value
+                    {simpleRecipeProduct?.simpleRecipeProductOptions[0]
+                      ? simpleRecipeProduct?.simpleRecipeProductOptions[0]
+                          ?.price[0]?.value
                       : 'bad data'}
                   </Text>
                 </View>
@@ -159,7 +159,7 @@ const Item = ({
                   </View>
                 </View>
                 <Text style={styles.item_chef}>Avaliable Servings:</Text>
-                {simpleRecipeProduct.simpleRecipeProductOptions.map(
+                {simpleRecipeProduct?.simpleRecipeProductOptions?.map(
                   (item_data, key) => {
                     return (
                       <ServingSelect
@@ -170,10 +170,10 @@ const Item = ({
                         size={item_data.simpleRecipeYield.yield.serving}
                         price={item_data.price[0].value}
                         display={typeSelected ? 'Meal Kit' : 'Ready To Eat'}
-                        type={item_data.type}
+                        type={item_data?.type}
                         customizableProduct
-                        name={simpleRecipeProduct.name}
-                        simpleRecipeProductId={simpleRecipeProduct.id}
+                        name={simpleRecipeProduct?.name}
+                        simpleRecipeProductId={simpleRecipeProduct?.id}
                         setproductOptionId={(
                           id,
                           price,
@@ -187,7 +187,7 @@ const Item = ({
                             name
                           )
                         }
-                        id={simpleRecipeProduct.id}
+                        id={simpleRecipeProduct?.id}
                       />
                     );
                   }

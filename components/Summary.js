@@ -7,20 +7,58 @@ import {
   Dimensions,
 } from 'react-native';
 import { useCartContext } from '../context/cart';
-
+import { UPDATE_CART } from '../graphql/mutations';
+import { useMutation } from '@apollo/react-hooks';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 const { width, height } = Dimensions.get('window');
 
 const Summary = ({ useQuantity, item }) => {
   const [quantity, setquantity] = useState(1);
+  const { cart } = useCartContext();
 
-  const { removeFromCart } = useCartContext();
+  const [updateCart] = useMutation(UPDATE_CART, {
+    onCompleted: () => {
+      console.log('Product added!');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const removeFromCart = (product) => {
+    let products = cart?.cartInfo?.products;
+    let total = parseFloat(cart?.cartInfo?.total);
+    if (product.type === 'comboProducts') {
+      product.products.forEach(
+        (item) => (total = total - parseFloat(item.product.price))
+      );
+    } else {
+      total = total - parseFloat(product.product.price);
+    }
+    let newCartItems = products?.filter(
+      (item) => item.cartItemId !== product.cartItemId
+    );
+    total = isNaN(total) ? 0 : total < 0 ? 0 : total;
+    const cartInfo = {
+      products: newCartItems,
+      total,
+    }; // you'll have to generate this every time
+
+    updateCart({
+      variables: {
+        id: cart.id,
+        set: {
+          cartInfo: cartInfo,
+        },
+      },
+    });
+  };
+
   if (quantity < 0) {
     setquantity(0);
   }
   if (item.type == 'comboProducts') {
-    console.log(item);
     return (
       <View style={styles.summary_container}>
         <View style={styles.picker_container}>

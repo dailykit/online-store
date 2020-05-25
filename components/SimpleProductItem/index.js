@@ -38,17 +38,18 @@ const SimpleProductItem = ({
     variables: { id },
     onCompleted: (_data) => {
       let item = _data;
-      if (item.simpleRecipeProduct.simpleRecipeProductOptions[0]) {
+      if (item.simpleRecipeProduct?.simpleRecipeProductOptions[0]) {
         let objToPush = {
           product: {
-            id: item.simpleRecipeProduct.id,
-            name: item.simpleRecipeProduct.name,
+            id: item.simpleRecipeProduct?.id,
+            name: item.simpleRecipeProduct?.name,
             price:
-              item.simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
+              item.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.price[0]
                 .value,
             option: {
-              id: item.simpleRecipeProduct.simpleRecipeProductOptions[0].id, // product option id
-              type: item.simpleRecipeProduct.simpleRecipeProductOptions[0].type,
+              id: item.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.id, // product option id
+              type:
+                item.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.type,
             },
             type: 'Simple Recipe',
           },
@@ -59,8 +60,8 @@ const SimpleProductItem = ({
         setobjToAdd(objToPush);
         if (!tunnelItem && independantItem) {
           setPrice(
-            item.simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
-              .value
+            item.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.price[0]
+              ?.value
           );
           setcardData(item);
         }
@@ -87,6 +88,7 @@ const SimpleProductItem = ({
       </View>
     );
   }
+  if (!data) return <Text>Bad Data</Text>;
   return (
     <SimpleProductItemCollapsed
       _id={_id}

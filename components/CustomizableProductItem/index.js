@@ -45,6 +45,9 @@ const CustomizableProductItem = ({
   const { data, loading, error } = useQuery(CUSTOMIZABLE_PRODUCT, {
     variables: { id },
     onCompleted: (_data) => {
+      if (_data?.customizableProduct?.customizableProductOptions === undefined)
+        return;
+
       if (_data !== undefined) {
         if (
           _data &&
@@ -57,23 +60,23 @@ const CustomizableProductItem = ({
         }
         let item = _data.customizableProduct;
         if (item.customizableProductOptions[0]) {
-          let default_product = item.customizableProductOptions[0];
+          let default_product = item?.customizableProductOptions[0];
           let objToAddToCart = {
             customizableProductId: item.id,
-            customizableProductOptionId: default_product.id,
+            customizableProductOptionId: default_product?.id,
             product: {
-              id: default_product.simpleRecipeProduct.id,
-              name: default_product.simpleRecipeProduct.name,
+              id: default_product.simpleRecipeProduct?.id,
+              name: default_product.simpleRecipeProduct?.name,
               price:
                 default_product.simpleRecipeProduct
-                  .simpleRecipeProductOptions[0].price[0].value,
+                  ?.simpleRecipeProductOptions[0]?.price[0]?.value,
               option: {
                 id:
                   default_product.simpleRecipeProduct
-                    .simpleRecipeProductOptions[0].id, // product option id
+                    ?.simpleRecipeProductOptions[0]?.id, // product option id
                 type:
                   default_product.simpleRecipeProduct
-                    .simpleRecipeProductOptions[0].type,
+                    ?.simpleRecipeProductOptions[0]?.type,
               },
               type: 'Simple Recipe',
             },
@@ -113,15 +116,12 @@ const CustomizableProductItem = ({
       </View>
     );
   }
-  const { customizableProduct } = data;
+  const customizableProduct = data?.customizableProduct;
   let default_first_product =
     customizableProduct !== null
-      ? customizableProduct.customizableProductOptions[0]
+      ? customizableProduct?.customizableProductOptions[0]
       : null;
-  if (
-    customizableProduct == null ||
-    customizableProduct.customizableProductOptions == null
-  ) {
+  if (!customizableProduct) {
     return <Text>Bad data</Text>;
   }
   if (
