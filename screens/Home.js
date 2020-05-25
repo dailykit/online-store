@@ -20,7 +20,7 @@ const { width, height } = Dimensions.get('screen');
 import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
-import { CLIENTID, DAILYOS_SERVER } from 'react-native-dotenv';
+import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
 import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
 import { useCartContext } from '../context/cart';
 import * as axios from 'axios';
@@ -35,25 +35,27 @@ const Home = (props) => {
 
   const { user, setCustomer } = useCartContext();
 
+  const fetchData = async (date) => {
+    try {
+      setLoading(true);
+      const response = await axios.post(`${DAILYOS_SERVER_URL}/getMenu`, {
+        input: date,
+      });
+      console.log(response);
+      setData(response.data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+    }
+  };
+
   React.useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const response = await axios.post(`${DAILYOS_SERVER}/getMenu`, {
-          input: {
-            year: moment().year(),
-            month: moment().month(),
-            day: moment().date(),
-          },
-        });
-        console.log(response);
-        setData(response.data);
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-        console.log(err);
-      }
-    })();
+    fetchData({
+      year: moment().year(),
+      month: moment().month(),
+      day: moment().date(),
+    });
   }, []);
 
   // Mutations
