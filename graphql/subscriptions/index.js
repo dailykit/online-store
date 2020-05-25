@@ -27,3 +27,23 @@ export const CUSTOMER = gql`
     }
   }
 `;
+
+export const SAFETY_CHECK = gql`
+  {
+    safety_safetyCheck(order_by: { created_at: desc }, limit: 1) {
+      id
+      created_at
+      SafetyCheckPerUsers {
+        id
+        usesMask
+        usesSanitizer
+        temperature
+        user {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  }
+`;

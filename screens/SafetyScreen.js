@@ -11,15 +11,35 @@ import HeaderBack from '../components/HeaderBack';
 import { Badge } from '../assets/imgs/Badge';
 import { StaffSafetyContainer } from '../components/StaffSafetyContainer';
 import Cart from '../components/Cart';
+import { Spinner } from '@ui-kitten/components';
 
 import thermometer from '../assets/imgs/thermometer.png';
 import patient from '../assets/imgs/patient.png';
 import flat from '../assets/imgs/flat.png';
 import liquidSoap from '../assets/imgs/liquid-soap.png';
+import { useSubscription } from '@apollo/react-hooks';
+import { SAFETY_CHECK } from '../graphql';
 
 const { width, height } = Dimensions.get('window');
 
 export const SafetyScreen = ({ navigation }) => {
+  const [check, setCheck] = React.useState(undefined);
+
+  const { loading, error } = useSubscription(SAFETY_CHECK, {
+    onSubscriptionData: (data) => {
+      if (data.subscriptionData.data.safety_safetyCheck.length)
+        setCheck(data.subscriptionData.data.safety_safetyCheck[0]);
+    },
+  });
+
+  if (error) console.log(error);
+  if (loading)
+    return (
+      <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+        <Spinner status='info' />
+      </View>
+    );
+
   return (
     <>
       <HeaderBack title='Go Back' navigation={navigation} />
@@ -33,9 +53,10 @@ export const SafetyScreen = ({ navigation }) => {
           <Text style={styles.title}>Our Staff Safety Report</Text>
 
           <View style={styles.staffConatiner}>
-            {[1, 2, 3].map((staff, key) => (
-              <StaffSafetyContainer key={`safety-cont-${key}`} />
-            ))}
+            {check?.SafetyCheckPerUsers?.length &&
+              check.SafetyCheckPerUsers.map((checkup) => (
+                <StaffSafetyContainer key={checkup.id} checkup={checkup} />
+              ))}
           </View>
 
           <View style={styles.StaffSafetyContainer}>
