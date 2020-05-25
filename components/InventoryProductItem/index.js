@@ -38,15 +38,17 @@ const InventoryProductItem = ({
     variables: { id },
     onCompleted: (_data) => {
       let item = _data;
-      if (_data.inventoryProduct.inventoryProductOptions[0]) {
+      if (item?.inventoryProduct?.inventoryProductOptions === undefined) return;
+      if (_data?.inventoryProduct?.inventoryProductOptions[0]) {
         let objToPush = {
           product: {
-            id: item.inventoryProduct.id,
-            name: item.inventoryProduct.name,
+            id: item?.inventoryProduct?.id,
+            name: item?.inventoryProduct?.name,
             price:
-              item.inventoryProduct.inventoryProductOptions[0].price[0].value,
+              item?.inventoryProduct?.inventoryProductOptions[0]?.price[0]
+                ?.value,
             option: {
-              id: item.inventoryProduct.inventoryProductOptions[0].id, // product option id
+              id: item?.inventoryProduct?.inventoryProductOptions[0]?.id, // product option id
             },
             type: 'Inventory',
           },
@@ -57,9 +59,8 @@ const InventoryProductItem = ({
         setobjToAdd(objToPush);
         if (!tunnelItem && independantItem) {
           setPrice(
-            _data.inventoryProduct.inventoryProductOptions[0].price[0].value
+            _data.inventoryProduct?.inventoryProductOptions[0]?.price[0]?.value
           );
-          console.log('cardData----->', item);
           setcardData(item);
         }
         if (tunnelItem && isSelected) {

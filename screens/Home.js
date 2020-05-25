@@ -41,6 +41,7 @@ const Home = (props) => {
       const response = await axios.post(`${DAILYOS_SERVER_URL}/getMenu`, {
         input: date,
       });
+      setData(response.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
