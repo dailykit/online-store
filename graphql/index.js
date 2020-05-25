@@ -9,7 +9,7 @@ import {
 
 import { CREATE_CUSTOMER, UPDATE_CART, CREATE_CART } from './mutations';
 
-import { CUSTOMER } from './subscriptions';
+import { CUSTOMER, SAFETY_CHECK } from './subscriptions';
 
 export {
   CUSTOMER,
@@ -22,4 +22,5 @@ export {
   CREATE_CUSTOMER,
   CREATE_CART,
   UPDATE_CART,
+  SAFETY_CHECK,
 };

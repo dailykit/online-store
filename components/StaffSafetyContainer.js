@@ -8,7 +8,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 
 const { width, height } = Dimensions.get('window');
 
-export const StaffSafetyContainer = () => {
+export const StaffSafetyContainer = ({ checkup }) => {
   return (
     <View style={styles.conatiner}>
       <View style={styles.row}>
@@ -16,22 +16,28 @@ export const StaffSafetyContainer = () => {
           source={{ uri: 'https://picsum.photos/200' }}
           style={styles.avatar}
         />
-        <Text style={styles.name}>Sunny Dhama</Text>
+        <Text style={styles.name}>
+          {checkup.user.firstName + ' ' + checkup.user.lastName}
+        </Text>
       </View>
       <View style={[styles.row, { justifyContent: 'space-between' }]}>
         <View style={styles.col1}>
-          <Text style={styles.post}>Manager</Text>
+          <Text style={styles.post}></Text>
         </View>
         <View style={styles.col2}>
           <View style={styles.iconsContainer}>
-            <Image style={styles.image} source={liquidSoap} />
+            {checkup.usesSanitizer && (
+              <Image style={styles.image} source={liquidSoap} />
+            )}
           </View>
           <View style={styles.iconsContainer}>
-            <Image style={styles.image} source={patient} />
+            {checkup.usesMask && (
+              <Image style={styles.image} source={patient} />
+            )}
           </View>
           <View style={styles.iconsContainer}>
             <Image style={styles.image} source={thermometer} />
-            <Text style={styles.temp}>97.6 F</Text>
+            <Text style={styles.temp}>{checkup.temperature} F</Text>
           </View>
         </View>
       </View>
