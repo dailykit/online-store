@@ -134,7 +134,7 @@ const Cart = ({
       <View style={styles.container_left}>
         {!tunnelItem && (
           <Text style={styles.text}>
-            $ {totalPrice} | {numberOfProducts} Products
+            $ {cart.itemTotal} | {numberOfProducts} Products
           </Text>
         )}
       </View>
@@ -172,7 +172,7 @@ export const CartSummary = ({ navigation, text }) => {
     <TouchableOpacity onPress={pay} style={styles.container}>
       <View style={[styles.container_left, { flex: 3 }]}>
         <Text style={[styles.text, { fontSize: 18 }]}>
-          {cart?.cartInfo?.products?.length} items | $ {cart?.cartInfo?.total}
+          {cart?.cartInfo?.products?.length} items | $ {cart.totalPrice}
         </Text>
         <Text style={[styles.text, { fontSize: 10 }]}>
           *extra charges may apply
