@@ -17,7 +17,7 @@ const BillingDetails = () => {
         </View>
         <View style={styles.bill_child_container_right}>
           <Text style={styles.billing_details_right_text}>
-            $ {cart?.cartInfo?.total}
+            $ {cart.itemTotal}
           </Text>
         </View>
       </View>
@@ -26,15 +26,9 @@ const BillingDetails = () => {
           <Text style={styles.billing_details_left_text}>Delivery Fee</Text>
         </View>
         <View style={styles.bill_child_container_right}>
-          <Text style={styles.billing_details_right_text}>$ 1.50</Text>
-        </View>
-      </View>
-      <View style={styles.bill_child_container}>
-        <View style={styles.bill_child_container_left}>
-          <Text style={styles.billing_details_left_text}>Tax @2.5%</Text>
-        </View>
-        <View style={styles.bill_child_container_right}>
-          <Text style={styles.billing_details_right_text}>$ 2.50</Text>
+          <Text style={styles.billing_details_right_text}>
+            $ {cart.deliveryPrice}
+          </Text>
         </View>
       </View>
       <View style={styles.bill_child_container}>
@@ -42,7 +36,8 @@ const BillingDetails = () => {
           <Text style={styles.billing_details_left_text}>Tip</Text>
         </View>
         <View style={styles.bill_child_container_right}>
-          <Text
+          <Text style={styles.billing_details_right_text}>$ {cart.tip}</Text>
+          {/* <Text
             style={[
               styles.billing_details_right_text,
               {
@@ -52,7 +47,17 @@ const BillingDetails = () => {
             ]}
           >
             Add
+          </Text> */}
+        </View>
+      </View>
+      <View style={styles.bill_child_container}>
+        <View style={styles.bill_child_container_left}>
+          <Text style={styles.billing_details_left_text}>
+            Tax @{cart.taxPercent}%
           </Text>
+        </View>
+        <View style={styles.bill_child_container_right}>
+          <Text style={styles.billing_details_right_text}>$ {cart.tax}</Text>
         </View>
       </View>
       <View style={styles.bill_child_container}>
@@ -67,7 +72,7 @@ const BillingDetails = () => {
           <Text
             style={[styles.billing_details_right_text, { fontWeight: 'bold' }]}
           >
-            $ 7.50
+            $ {cart.totalPrice}
           </Text>
         </View>
       </View>

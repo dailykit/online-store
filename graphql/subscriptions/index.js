@@ -18,6 +18,11 @@ export const CUSTOMER = gql`
         addressId
         fulfillmentInfo
         deliveryPrice
+        itemTotal
+        tip
+        taxPercent
+        tax
+        totalPrice
       }
     }
   }
