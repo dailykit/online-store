@@ -1,11 +1,50 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import Modal from 'react-native-modal';
+import { Input } from '@ui-kitten/components';
 
 import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { Button } from 'native-base';
+import { useMutation } from '@apollo/react-hooks';
+import { UPDATE_CART } from '../graphql';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+
+const { width, height } = Dimensions.get('window');
 
 const BillingDetails = () => {
   const { cart } = useCartContext();
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [tip, setTip] = React.useState(cart.tip);
+
+  // Mutation
+  const [updateCart] = useMutation(UPDATE_CART, {
+    onCompleted: () => {
+      console.log('Tip updated!');
+      setIsVisible(false);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  // Handler
+  const addTip = () => {
+    console.log(tip);
+    if (!isNaN(tip)) {
+      const tipFloat = parseFloat(tip);
+      console.log(tipFloat);
+      updateCart({
+        variables: {
+          id: cart.id,
+          set: {
+            tip: tipFloat,
+          },
+        },
+      });
+    }
+  };
+
   return (
     <View style={styles.billing_details}>
       <View style={styles.bill_child_container}>
@@ -37,17 +76,38 @@ const BillingDetails = () => {
         </View>
         <View style={styles.bill_child_container_right}>
           <Text style={styles.billing_details_right_text}>$ {cart.tip}</Text>
-          {/* <Text
-            style={[
-              styles.billing_details_right_text,
-              {
-                fontWeight: 'bold',
-                color: '#3fa4fd',
-              },
-            ]}
+          <Text style={{ marginLeft: 8 }} onPress={() => setIsVisible(true)}>
+            edit
+          </Text>
+          <Modal
+            isVisible={isVisible}
+            onBackdropPress={() => setIsVisible(false)}
           >
-            Add
-          </Text> */}
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <View
+                style={{
+                  padding: 16,
+                  backgroundColor: '#fff',
+                  borderRadius: 6,
+                }}
+              >
+                <Input
+                  placeholder='Add your tip'
+                  value={tip.toString()}
+                  onChangeText={(nextValue) => setTip(nextValue)}
+                />
+                <Button onPress={addTip} style={styles.button_container_left}>
+                  <Text style={{ color: 'white' }}>Add</Text>
+                </Button>
+              </View>
+            </View>
+          </Modal>
         </View>
       </View>
       <View style={styles.bill_child_container}>
@@ -107,6 +167,11 @@ const styles = StyleSheet.create({
   },
   billing_details_left_text: {
     fontSize: 16,
+  },
+  button_container_left: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#3fa4ff',
   },
 });
 
