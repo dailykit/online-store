@@ -87,7 +87,7 @@ const BillingDetails = () => {
             <Text>edit</Text>
           </TouchableOpacity>
           <Modal
-            isVisible={isVisible}
+            visible={isVisible}
             onBackdropPress={() => setIsVisible(false)}
           >
             <View
