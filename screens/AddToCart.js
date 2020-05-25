@@ -48,7 +48,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
       <ScrollView style={styles.container}>
         <View style={styles.title_container}>
           <View style={styles.details}>
-            <Text style={styles.title}>{data.name}</Text>
+            <Text style={styles.title}>{name}</Text>
           </View>
           <View style={styles.close_container}>
             <TouchableOpacity onPress={() => navigation.navigate('Home')}>

@@ -1,14 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import Modal from 'react-native-modal';
-import { Input } from '@ui-kitten/components';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
+import { Input, Modal } from '@ui-kitten/components';
 
 import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Button } from 'native-base';
 import { useMutation } from '@apollo/react-hooks';
 import { UPDATE_CART } from '../graphql';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
 
@@ -76,9 +80,12 @@ const BillingDetails = () => {
         </View>
         <View style={styles.bill_child_container_right}>
           <Text style={styles.billing_details_right_text}>$ {cart.tip}</Text>
-          <Text style={{ marginLeft: 8 }} onPress={() => setIsVisible(true)}>
-            edit
-          </Text>
+          <TouchableOpacity
+            style={{ marginLeft: 8 }}
+            onPress={() => setIsVisible(true)}
+          >
+            <Text>edit</Text>
+          </TouchableOpacity>
           <Modal
             isVisible={isVisible}
             onBackdropPress={() => setIsVisible(false)}

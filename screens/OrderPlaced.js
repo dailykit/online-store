@@ -20,7 +20,9 @@ import { useCartContext } from '../context/cart';
 const { width, height } = Dimensions.get('window');
 
 const OrderPlaced = ({ navigation }) => {
-  const { cartItems } = useCartContext();
+  const { cart } = useCartContext();
+
+  const cartItems = cart?.cartInfo?.products;
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
