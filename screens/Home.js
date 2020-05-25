@@ -15,34 +15,46 @@ import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import moment from 'moment';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import {
-  GET_MENU,
-  CREATE_CUSTOMER,
-  CUSTOMER,
-  CUSTOMER_DETAILS,
-} from '../graphql';
+import { CREATE_CUSTOMER, CUSTOMER, CUSTOMER_DETAILS } from '../graphql';
 const { width, height } = Dimensions.get('screen');
 import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
-import { CLIENTID } from 'react-native-dotenv';
+import { CLIENTID, DAILYOS_SERVER } from 'react-native-dotenv';
 import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
 import { useCartContext } from '../context/cart';
+import * as axios from 'axios';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
   const [selectedPickerItem, setselectedPickerItem] = useState(0);
   const [calendarDate, setcalendarDate] = useState(new Date());
 
+  const [data, setData] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+
   const { user, setCustomer } = useCartContext();
 
-  const { loading, data, error, refetch } = useQuery(GET_MENU, {
-    variables: {
-      year: moment().year(),
-      month: moment().month(),
-      day: moment().date(),
-    },
-  });
+  React.useEffect(() => {
+    (async () => {
+      try {
+        setLoading(true);
+        const response = await axios.post(`${DAILYOS_SERVER}/getMenu`, {
+          input: {
+            year: moment().year(),
+            month: moment().month(),
+            day: moment().date(),
+          },
+        });
+        console.log(response);
+        setData(response.data);
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    })();
+  }, []);
 
   // Mutations
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
@@ -93,7 +105,7 @@ const Home = (props) => {
     },
   });
 
-  if (loading || data.getMenu.length == 0) {
+  if (!data.length) {
     return (
       <View style={styles.home}>
         {/* <Tabs /> */}
@@ -120,15 +132,18 @@ const Home = (props) => {
   let pickerData = [];
   let menuItems = {};
 
-  data.getMenu.forEach((category, _id) => {
-    pickerData.push(category.name);
-    menuItems[category.name] = {};
-    Object.keys(category).forEach((key) => {
-      if (key != 'name' && key != '__typename') {
-        menuItems[category.name][key] = category[key];
-      }
+  if (data.length) {
+    console.log(data);
+    data.forEach((category, _id) => {
+      pickerData.push(category.name);
+      menuItems[category.name] = {};
+      Object.keys(category).forEach((key) => {
+        if (key != 'name' && key != '__typename') {
+          menuItems[category.name][key] = category[key];
+        }
+      });
     });
-  });
+  }
 
   return (
     <View style={styles.home}>

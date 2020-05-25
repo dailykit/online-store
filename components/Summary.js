@@ -29,24 +29,27 @@ const Summary = ({ useQuantity, item }) => {
 
   const removeFromCart = (product) => {
     let products = cart?.cartInfo?.products;
-    let total = parseInt(cart?.cartInfo?.total);
-    let new_price = total - parseFloat(product.price);
-    if (isNaN(new_price) || new_price < 0) {
-      new_price = 0;
+    let total = parseFloat(cart?.cartInfo?.total);
+    if (product.type === 'comboProducts') {
+      product.products.forEach(
+        (item) => (total = total - parseFloat(item.product.price))
+      );
+    } else {
+      total = total - parseFloat(product.price);
     }
-    let newCartItems = cart?.cartInfo?.products?.filter(
+    let newCartItems = products?.filter(
       (item) => item.cartItemId !== product.cartItemId
     );
-    products = newCartItems;
+    console.log('removeFromCart -> newCartItems', newCartItems);
     const cartInfo = {
-      products,
+      products: newCartItems,
       total,
     }; // you'll have to generate this every time
     updateCart({
       variables: {
         id: cart.id,
         set: {
-          cartInfo: cartInfo,
+          cartInfo,
         },
       },
     });
