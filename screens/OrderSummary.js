@@ -39,14 +39,17 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             </Text>
           </View>
           <View style={styles.title_container_right}>
-            <View style={styles.edit}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('EditAddressScreen')}
+              style={styles.edit}
+            >
               <Text style={styles.edit_text}>edit{'  '}</Text>
               <Ionicons
                 style={{ paddingTop: 2 }}
                 size={16}
                 name='ios-arrow-forward'
               />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.summary_title_conatiner}>

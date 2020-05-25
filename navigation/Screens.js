@@ -18,7 +18,6 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import { SafetyScreen } from '../screens/SafetyScreen';
-
 // drawer
 import CustomDrawerContent from './Menu';
 
@@ -29,6 +28,7 @@ import { useAuth } from '../context/auth';
 import { Header } from '../components';
 import ModalContent from '../components/ModalContent';
 import { Delivery } from '../screens/Delivery';
+import { EditAddress } from '../screens/EditAddress';
 
 const { width } = Dimensions.get('screen');
 
@@ -128,6 +128,13 @@ function HomeStack(props) {
       <Stack.Screen
         name='DeliveryScreen'
         component={Delivery}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='EditAddressScreen'
+        component={EditAddress}
         options={{
           headerShown: false,
         }}
