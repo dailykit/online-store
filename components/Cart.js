@@ -162,6 +162,7 @@ export const CartSummary = ({ navigation, text }) => {
         ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
     }
   };
+  if (!cart?.cartInfo?.products?.length) return <></>;
 
   return (
     <TouchableOpacity onPress={pay} style={styles.container}>

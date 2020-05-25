@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import Modal from 'react-native-modal';
-import { Input } from '@ui-kitten/components';
+import { Input, Modal } from '@ui-kitten/components';
 
 import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';

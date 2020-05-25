@@ -41,8 +41,6 @@ const Home = (props) => {
       const response = await axios.post(`${DAILYOS_SERVER_URL}/getMenu`, {
         input: date,
       });
-      console.log(response);
-      setData(response.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -107,7 +105,7 @@ const Home = (props) => {
     },
   });
 
-  if (!data.length) {
+  if (!data.length || loading) {
     return (
       <View style={styles.home}>
         {/* <Tabs /> */}
@@ -121,7 +119,30 @@ const Home = (props) => {
               style={styles.cover_image}
             />
           </View>
-
+          <View style={styles.picker_container}>
+            <View style={styles.picker_placeholder}>
+              <Datepicker
+                date={calendarDate}
+                onSelect={(_date) => {
+                  setcalendarDate(_date);
+                  fetchData({
+                    year: moment(_date).year(),
+                    month: moment(_date).month(),
+                    day: moment(_date).date(),
+                  });
+                }}
+              />
+            </View>
+            <View style={styles.picker_placeholder}>
+              <Select
+                selectedIndex={selectedIndex}
+                value={0}
+                onSelect={() => {}}
+              >
+                <SelectItem title={'Please wait..'} />
+              </Select>
+            </View>
+          </View>
           <View style={styles.flexContainer}>
             <ActivityIndicator />
           </View>
@@ -135,7 +156,6 @@ const Home = (props) => {
   let menuItems = {};
 
   if (data.length) {
-    console.log(data);
     data.forEach((category, _id) => {
       pickerData.push(category.name);
       menuItems[category.name] = {};
@@ -168,7 +188,7 @@ const Home = (props) => {
               date={calendarDate}
               onSelect={(_date) => {
                 setcalendarDate(_date);
-                refetch({
+                fetchData({
                   year: moment(_date).year(),
                   month: moment(_date).month(),
                   day: moment(_date).date(),

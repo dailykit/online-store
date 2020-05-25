@@ -34,18 +34,16 @@ const Summary = ({ useQuantity, item }) => {
         (item) => (total = total - parseFloat(item.product.price))
       );
     } else {
-      total = total - parseFloat(product.price);
+      total = total - parseFloat(product.product.price);
     }
     let newCartItems = products?.filter(
       (item) => item.cartItemId !== product.cartItemId
     );
-    total = isNaN(total) ? 0 : total;
+    total = isNaN(total) ? 0 : total < 0 ? 0 : total;
     const cartInfo = {
       products: newCartItems,
       total,
     }; // you'll have to generate this every time
-
-    console.log('cartInfo --> ', cartInfo);
 
     updateCart({
       variables: {
