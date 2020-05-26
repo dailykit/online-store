@@ -17,6 +17,10 @@ import Summary from '../components/Summary';
 import { CartSummary } from '../components/Cart';
 import BillingDetails from '../components/BillingDetails';
 import HeaderBack from '../components/HeaderBack';
+import {
+  DefaultAddressFloater,
+  DefaultPaymentFloater,
+} from '../components/DefaultFloater';
 
 const { width, height } = Dimensions.get('window');
 
@@ -66,6 +70,8 @@ const OrderSummary = ({ navigation, ...restProps }) => {
           return <Summary item={item} key={index} />;
         })}
         <BillingDetails />
+        <DefaultPaymentFloater navigation={navigation} />
+        <DefaultAddressFloater navigation={navigation} />
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
       <CartSummary

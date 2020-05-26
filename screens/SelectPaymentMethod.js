@@ -9,23 +9,23 @@ import {
 import HeaderBack from '../components/HeaderBack';
 import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Feather } from '@expo/vector-icons';
+import { Feather, AntDesign } from '@expo/vector-icons';
 
 const { height, width } = Dimensions.get('window');
 
 let initialData = [
   {
-    address: 'XXXX XXXX XXXX 3230',
+    cardNumber: 'XXXX XXXX XXXX 3230',
     isSlected: true,
     id: 1,
   },
   {
-    address: 'XXXX XXXX XXXX 3230',
+    cardNumber: 'XXXX XXXX XXXX 3230',
     isSlected: false,
     id: 2,
   },
   {
-    address: 'XXXX XXXX XXXX 3230',
+    cardNumber: 'XXXX XXXX XXXX 3230',
     isSlected: false,
     id: 3,
   },
@@ -33,33 +33,36 @@ let initialData = [
 
 export const SelectPaymentMethod = ({ navigation }) => {
   const { customer, customerDetails } = useCartContext();
-  const [addressData, setaddressData] = useState(initialData);
+  const [cardNumberData, setcardNumberData] = useState(initialData);
   return (
     <View style={styles.conatiner}>
       <HeaderBack navigation={navigation} title='Go Back' />
       <Text style={styles.title}>Choose Payment Card</Text>
-      <View style={styles.addressConatiner}>
-        {addressData.map((item, _key) => (
+      <View style={styles.cardNumberConatiner}>
+        {cardNumberData.map((item, _key) => (
           <TouchableOpacity
             key={`id-${_key}`}
             onPress={() => {
-              let auxData = addressData.map((item, _id) => ({
-                address: item.address,
+              let auxData = cardNumberData.map((item, _id) => ({
+                cardNumber: item.cardNumber,
                 isSlected: false,
                 id: _id + 1,
               }));
               auxData[_key].isSlected = true;
-              setaddressData(auxData);
+              setcardNumberData(auxData);
             }}
             style={[
-              styles.addressOptionConatiner,
+              styles.cardNumberOptionConatiner,
               { backgroundColor: item.isSlected ? '#fff' : '#f3f3f3' },
             ]}
           >
-            <View style={styles.addressTextContainer}>
-              <Text style={styles.addressText}>{item.address}</Text>
+            <View style={styles.cardNumberTextContainer}>
+              <Text style={styles.cardNumberText}>
+                <AntDesign name='creditcard' /> {'  '}
+                {item.cardNumber}
+              </Text>
             </View>
-            <View style={styles.addressSelectedContainer}>
+            <View style={styles.cardNumberSelectedContainer}>
               <View
                 style={[
                   styles.checkContainer,
@@ -89,11 +92,11 @@ const styles = EStyleSheet.create({
     fontSize: '$xl',
     padding: 20,
   },
-  addressConatiner: {
+  cardNumberConatiner: {
     flexDirection: 'column',
     flex: 1,
   },
-  addressOptionConatiner: {
+  cardNumberOptionConatiner: {
     justifyContent: 'center',
     height: height * 0.12,
     flexDirection: 'row',
@@ -101,15 +104,15 @@ const styles = EStyleSheet.create({
     borderColor: '#dedede',
     marginBottom: 4,
   },
-  addressTextContainer: {
+  cardNumberTextContainer: {
     flex: 3,
     justifyContent: 'center',
   },
-  addressText: {
+  cardNumberText: {
     width: width * 0.7,
     paddingLeft: 20,
   },
-  addressSelectedContainer: {
+  cardNumberSelectedContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

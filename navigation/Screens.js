@@ -141,7 +141,7 @@ function HomeStack(props) {
         }}
       />
       <Stack.Screen
-        name='EditAddressScreen'
+        name='SelectPaymentMethodScreen'
         component={SelectPaymentMethod}
         options={{
           headerShown: false,
