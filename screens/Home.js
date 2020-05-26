@@ -68,7 +68,7 @@ const Home = (props) => {
   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
     variables: {
       keycloakId: user.userid,
-      clientId: CLIENTID,
+      // clientId: CLIENTID,
     },
     onCompleted: (data) => {
       console.log('platform -> data', data);
