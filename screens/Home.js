@@ -21,7 +21,11 @@ import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
 import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
-import { useQuery, useMutation, useSubscription } from '@apollo/react-hooks';
+import {
+  useLazyQuery,
+  useMutation,
+  useSubscription,
+} from '@apollo/react-hooks';
 import { useCartContext } from '../context/cart';
 import * as axios from 'axios';
 
@@ -57,6 +61,22 @@ const Home = (props) => {
     });
   }, []);
 
+  // Query
+  const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
+    variables: {
+      keycloakId: user.keycloakId,
+      clientId: CLIENTID,
+    },
+    onCompleted: (data) => {
+      console.log('platform -> data', data);
+      if (data.platform_CustomerByClient.length) {
+        setCustomer(data.platform_CustomerByClient[0].customer);
+      } else {
+        console.log('No customer data found!');
+      }
+    },
+  });
+
   // Mutations
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
     onCompleted: () => {
@@ -75,6 +95,7 @@ const Home = (props) => {
     },
     onSubscriptionData: (data) => {
       const customers = data.subscriptionData.data.customers;
+      customerDetails();
       if (customers.length) {
         setCustomer(customers[0]);
       } else {
@@ -88,20 +109,6 @@ const Home = (props) => {
             },
           },
         });
-      }
-    },
-  });
-
-  // Query
-  useQuery(CUSTOMER_DETAILS, {
-    variables: {
-      keycloakId: user.keycloakId,
-    },
-    onCompleted: (data) => {
-      if (data.platform_CustomerByClient.length) {
-        setCustomer(data.platform_CustomerByClient[0].customer);
-      } else {
-        console.log('No customer data found!');
       }
     },
   });
