@@ -39,7 +39,7 @@ const Home = (props) => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
-  const { setCustomer } = useCartContext();
+  const { setCustomer, setCustomerDetails } = useCartContext();
   const { user } = useAuth();
 
   const fetchData = async (date) => {
@@ -72,8 +72,8 @@ const Home = (props) => {
     },
     onCompleted: (data) => {
       console.log('platform -> data', data);
-      if (data.platform_CustomerByClient?.length) {
-        setCustomer(data.platform_CustomerByClient[0].customer);
+      if (data.platform_customerByClients?.length) {
+        setCustomerDetails(data.platform_customerByClients[0].customer);
       } else {
         console.log('No customer data found!');
       }

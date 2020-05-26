@@ -10,57 +10,95 @@ import HeaderBack from '../components/HeaderBack';
 import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Feather, AntDesign } from '@expo/vector-icons';
+import { Spinner } from '@ui-kitten/components';
+import Cart from '../components/Cart';
+import { UPDATE_CART } from '../graphql';
+import { useMutation } from '@apollo/react-hooks';
 
 const { height, width } = Dimensions.get('window');
 
-let initialData = [
-  {
-    cardNumber: 'XXXX XXXX XXXX 3230',
-    isSlected: true,
-    id: 1,
-  },
-  {
-    cardNumber: 'XXXX XXXX XXXX 3230',
-    isSlected: false,
-    id: 2,
-  },
-  {
-    cardNumber: 'XXXX XXXX XXXX 3230',
-    isSlected: false,
-    id: 3,
-  },
-];
-
 export const SelectPaymentMethod = ({ navigation }) => {
-  const { customer, customerDetails } = useCartContext();
-  const [cardNumberData, setcardNumberData] = useState(initialData);
+  const { cart, customerDetails } = useCartContext();
+
+  const [loading, setLoading] = React.useState(false);
+
+  // Mutation
+  const [updateCart] = useMutation(UPDATE_CART, {
+    onCompleted: () => {
+      console.log('Payment method updated!');
+      navigation.goBack();
+    },
+    onError: (error) => {
+      console.log(error);
+      setLoading(false);
+    },
+  });
+
+  // Handlers
+  const select = (card) => {
+    try {
+      setLoading(true);
+      updateCart({
+        variables: {
+          id: cart.id,
+          set: {
+            paymentMethodId: card.stripePaymentMethodId,
+            stripeCustomerId: customerDetails.stripeCustomerId,
+          },
+        },
+      });
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  if (!customerDetails)
+    return (
+      <View
+        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        onPress={() => navigation.goBack()}
+      >
+        <Text>Error loading data!</Text>
+      </View>
+    );
+
+  if (loading)
+    return (
+      <View
+        style={{ flex: 1, justifyContent: 'center', alignItems: ' center' }}
+        onPress={() => navigation.goBack()}
+      >
+        <Spinner />
+      </View>
+    );
+
   return (
     <View style={styles.conatiner}>
       <HeaderBack navigation={navigation} title='Go Back' />
       <Text style={styles.title}>Choose Payment Card</Text>
       <View style={styles.cardNumberConatiner}>
-        {cardNumberData.map((item, _key) => (
+        {customerDetails.stripePaymentMethods.map((card) => (
           <TouchableOpacity
-            key={`id-${_key}`}
-            onPress={() => {
-              let auxData = cardNumberData.map((item, _id) => ({
-                cardNumber: item.cardNumber,
-                isSlected: false,
-                id: _id + 1,
-              }));
-              auxData[_key].isSlected = true;
-              setcardNumberData(auxData);
-            }}
+            key={card.stripePaymentMethodId}
+            onPress={() => select(card)}
             style={[
               styles.cardNumberOptionConatiner,
-              { backgroundColor: item.isSlected ? '#fff' : '#f3f3f3' },
+              {
+                backgroundColor:
+                  card.stripePaymentMethodId ===
+                  customerDetails.defaultPaymentMethodId
+                    ? '#fff'
+                    : '#f3f3f3',
+              },
             ]}
           >
             <View style={styles.cardNumberTextContainer}>
               <Text style={styles.cardNumberText}>
                 <AntDesign name='creditcard' /> {'  '}
-                {item.cardNumber}
+                XXXX XXXX XXXX {card.last4}
               </Text>
+              <Text style={styles.cardNumberText}>{card.brand}</Text>
             </View>
             <View style={styles.cardNumberSelectedContainer}>
               <View
@@ -68,12 +106,23 @@ export const SelectPaymentMethod = ({ navigation }) => {
                   styles.checkContainer,
                   {
                     borderWidth: 1,
-                    borderColor: item.isSlected ? '#3fa4ff' : '#dedede',
-                    backgroundColor: item.isSlected ? '#3fa4ff' : '#fff',
+                    borderColor:
+                      card.stripePaymentMethodId ===
+                      customerDetails.defaultPaymentMethodId
+                        ? '#3fa4ff'
+                        : '#dedede',
+                    backgroundColor:
+                      card.stripePaymentMethodId ===
+                      customerDetails.defaultPaymentMethodId
+                        ? '#3fa4ff'
+                        : '#fff',
                   },
                 ]}
               >
-                {item.isSlected && <Feather color='#fff' name='check' />}
+                {card.stripePaymentMethodId ===
+                  customerDetails.defaultPaymentMethodId && (
+                  <Feather color='#fff' name='check' />
+                )}
               </View>
             </View>
           </TouchableOpacity>

@@ -10,16 +10,16 @@ export const CUSTOMERS = gql`
   }
 `;
 
+// where: { keycloakId: { _eq: $keycloakId }, clientId: { _eq: $clientId } }
 export const CUSTOMER_DETAILS = gql`
   query CustomerDetails($keycloakId: String!, $clientId: String!) {
-    platform_customerByClients(
-      where: { keycloakId: { _eq: $keycloakId }, clientId: { _eq: $clientId } }
-    ) {
+    platform_customerByClients(where: { keycloakId: { _eq: $keycloakId } }) {
       customer {
         email
         firstName
         lastName
         phoneNumber
+        stripeCustomerId
         customerAddresses {
           line1
           line2
@@ -31,6 +31,10 @@ export const CUSTOMER_DETAILS = gql`
         defaultCustomerAddressId
         stripePaymentMethods {
           stripePaymentMethodId
+          last4
+          expMonth
+          expYear
+          brand
         }
         defaultPaymentMethodId
       }

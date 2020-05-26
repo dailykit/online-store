@@ -106,13 +106,9 @@ const Cart = ({
                 },
                 date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
               },
-              paymentMethodId:
-                customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
-                '1', // remove in prod
-              addressId: customerDetails?.defaultCustomerAddress?.id || '1', // remove in prod,
-              stripeCustomerId:
-                customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
-                '1',
+              paymentMethodId: customerDetails.defaultPaymentMethodId || null,
+              addressId: customerDetails.defaultCustomerAddressId || null,
+              stripeCustomerId: customerDetails.stripeCustomerId || null,
             },
           },
         });
