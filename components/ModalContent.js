@@ -21,6 +21,7 @@ const { width, height } = Dimensions.get('window');
 export default class ModalContent extends Component {
   render() {
     let { data, name, author } = this.props.route.params;
+    console.log(data);
     return (
       <ScrollView style={styles.container}>
         <View style={styles.title_container}>
@@ -48,7 +49,7 @@ export default class ModalContent extends Component {
             style={styles.image_cover}
           />
         </View>
-        <TabsNew />
+        <TabsNew data={data?.tags} />
         <View style={styles.desc}>
           <Text style={styles.desc_content}>{data.description}.</Text>
           <View style={styles.cooking_container}>

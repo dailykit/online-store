@@ -67,11 +67,11 @@ const InventoryProductCollapsed = ({
 
             <TouchableOpacity
               onPress={() => {
-                // navigation.navigate('Modal', {
-                //   data: inventoryProduct.simpleRecipe,
-                //   author: inventoryProduct.simpleRecipe.author,
-                //   name: inventoryProduct.name,
-                // });
+                navigation.navigate('Modal', {
+                  data: inventoryProduct,
+                  author: inventoryProduct.author,
+                  name: inventoryProduct?.name,
+                });
               }}
             >
               <Feather size={14} name='info' />
