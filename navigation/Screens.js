@@ -32,6 +32,7 @@ import { Delivery } from '../screens/Delivery';
 import { EditAddress } from '../screens/EditAddress';
 import { SelectPaymentMethod } from '../screens/SelectPaymentMethod';
 import { OrderHistory } from '../screens/OrderHistory';
+import { Text } from 'native-base';
 
 const { width } = Dimensions.get('screen');
 
@@ -49,24 +50,6 @@ function AuthStack(props) {
           header: null,
           headerShown: false,
           cardStyle: { backgroundColor: '#F8F9FE' },
-        }}
-      />
-      <Stack.Screen
-        name='Login'
-        component={LoginScreen}
-        setLoggedin={props.setLoggedin}
-        options={{
-          headerMode: false,
-          header: null,
-          headerShown: false,
-          stackPresentation: 'modal',
-        }}
-      />
-      <Stack.Screen
-        name='SignUp'
-        component={SignUpScreen}
-        options={{
-          headerShown: false,
         }}
       />
     </Stack.Navigator>
@@ -168,21 +151,8 @@ function HomeStack(props) {
 }
 
 export default function OnboardingStack(props) {
-  const { isAuthenticated, setIsAuthenticated } = useAuth();
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    (async () => {
-      let user = await AsyncStorage.getItem('user');
-      user = JSON.parse(user);
-      if (user && user.token && user.token !== undefined) {
-        setIsAuthenticated(true);
-        setLoading(false);
-      } else {
-        setIsAuthenticated(false);
-        setLoading(false);
-      }
-    })();
-  }, []);
+  const { isAuthenticated } = useAuth();
+  const [loading, setLoading] = useState(false);
   if (loading) {
     return (
       <View
@@ -199,7 +169,6 @@ export default function OnboardingStack(props) {
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>
-        {/* replace isAuth by true to bypass login */}
         {isAuthenticated ? (
           <Stack.Screen name='App' component={AppStack} />
         ) : (

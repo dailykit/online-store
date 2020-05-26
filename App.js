@@ -39,6 +39,8 @@ import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { ApolloProvider } from '@apollo/react-hooks';
 
+// Majburi
+
 const httpLink = new HttpLink({
   uri: HASURA_URL,
 });
