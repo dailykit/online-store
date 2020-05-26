@@ -69,7 +69,7 @@ const Home = (props) => {
     },
     onCompleted: (data) => {
       console.log('platform -> data', data);
-      if (data.platform_CustomerByClient.length) {
+      if (data.platform_CustomerByClient?.length) {
         setCustomer(data.platform_CustomerByClient[0].customer);
       } else {
         console.log('No customer data found!');

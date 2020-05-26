@@ -47,7 +47,7 @@ const Cart = ({
 
   const handleAddToCart = () => {
     let products = cart?.cartInfo?.products || [];
-    let total = parseFloat(cart?.cartInfo?.total) | 0;
+    let total = parseFloat(cart?.cartInfo?.total) || 0;
     if (tunnelItem) {
       if (type == 'comboProducts') {
         let comboItemPrice = 0;
@@ -69,7 +69,7 @@ const Cart = ({
         });
         total = total + parseFloat(cartItem.product.price);
       }
-
+      total = parseFloat(total.toFixed(2));
       // products and total ready
       if (cart) {
         // Update
