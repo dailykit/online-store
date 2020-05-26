@@ -14,6 +14,7 @@ RUN echo "HASURA_URL=${HASURA_URL}" >> .env
 RUN echo "HASURA_WS=${HASURA_WS}" >> .env 
 RUN echo "HASURA_GRAPHQL_ADMIN_SECRET=${HASURA_GRAPHQL_ADMIN_SECRET}" >> .env 
 RUN echo "CLIENTID=${CLIENTID}" >> .env
+RUN echo "DAILYOS_SERVER_URL=${DAILYOS_SERVER_URL}" >> .env
 
 ENV PATH /app/node_modules/.bin:$PATH
 
