@@ -103,7 +103,7 @@ const CustomizableProductItem = ({
     },
   });
 
-  if (loading || !data.customizableProduct) {
+  if (loading) {
     return (
       <View
         style={{
@@ -122,7 +122,7 @@ const CustomizableProductItem = ({
       ? customizableProduct?.customizableProductOptions[0]
       : null;
   if (!customizableProduct) {
-    return <Text>Bad data</Text>;
+    return <Text>Bad Data / Empty customizableProduct product id {id}</Text>;
   }
   if (
     (isSelected && expanded) ||

@@ -86,11 +86,7 @@ const ComboProduct = ({
     );
   }
   if (data == null || data == undefined) {
-    return (
-      <View style={styles.flexContainer}>
-        <ActivityIndicator />
-      </View>
-    );
+    return <Text>Bad Data / Empty comboProduct product id {id}</Text>;
   }
 
   let { comboProduct } = data;

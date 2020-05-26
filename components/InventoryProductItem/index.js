@@ -95,7 +95,7 @@ const InventoryProductItem = ({
           alignItems: 'center',
         }}
       >
-        <ActivityIndicator />
+        <Text>Bad Data / Empty inventory product id {id}</Text>
       </View>
     );
   }

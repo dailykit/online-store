@@ -88,7 +88,9 @@ const SimpleProductItem = ({
       </View>
     );
   }
-  if (!data) return <Text>Bad Data</Text>;
+  if (!data)
+    return <Text>Bad Data / Empty simpleRecipeProduct product id {id}</Text>;
+
   return (
     <SimpleProductItemCollapsed
       _id={_id}
