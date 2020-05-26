@@ -7,7 +7,19 @@ import { useCartContext } from '../context/cart';
 const { height, width } = Dimensions.get('window');
 
 export const DefaultPaymentFloater = ({ navigation }) => {
-  const { customer, customerDetails } = useCartContext();
+  const { cart, customerDetails } = useCartContext();
+  const [card, setCard] = React.useState(undefined);
+
+  React.useEffect(() => {
+    if (customerDetails) {
+      const card = customerDetails.stripePaymentMethods.find(
+        (card) => card.stripePaymentMethodId === cart.paymentMethodId
+      );
+      if (card) {
+        setCard(card);
+      }
+    }
+  }, []);
 
   return (
     <TouchableOpacity
@@ -17,10 +29,14 @@ export const DefaultPaymentFloater = ({ navigation }) => {
       style={styles.conatiner}
     >
       <View style={styles.cardNumberTextContainer}>
-        <Text style={styles.cardNumberText}>
-          <AntDesign name='creditcard' /> {'  '}
-          XXXX XXXX XXXX 2123
-        </Text>
+        {card ? (
+          <Text style={styles.cardNumberText}>
+            <AntDesign name='creditcard' /> {'  '}
+            XXXX XXXX XXXX {card.last4}
+          </Text>
+        ) : (
+          <Text style={styles.cardNumberText}>Select a Card</Text>
+        )}
       </View>
       <View style={styles.cardNumberSelectedContainer}>
         <View>
@@ -34,7 +50,19 @@ export const DefaultPaymentFloater = ({ navigation }) => {
 };
 
 export const DefaultAddressFloater = ({ navigation }) => {
-  const { customer, customerDetails } = useCartContext();
+  const { cart, customerDetails } = useCartContext();
+  const [address, setAddress] = React.useState(undefined);
+
+  React.useEffect(() => {
+    if (customerDetails) {
+      const address = customerDetails.customerAddresses.find(
+        (address) => address.id === cart.addressId
+      );
+      if (address) {
+        setAddress(address);
+      }
+    }
+  }, []);
 
   return (
     <TouchableOpacity
@@ -44,9 +72,13 @@ export const DefaultAddressFloater = ({ navigation }) => {
       style={styles.conatiner}
     >
       <View style={styles.cardNumberTextContainer}>
-        <Text style={styles.cardNumberText}>
-          123, apartment name, street rd, ..
-        </Text>
+        {address ? (
+          <Text style={styles.cardNumberText}>
+            {address.line1}, {address.line2}, {address.city}
+          </Text>
+        ) : (
+          <Text style={styles.cardNumberText}>Select an Address</Text>
+        )}
       </View>
       <View style={styles.cardNumberSelectedContainer}>
         <View>
