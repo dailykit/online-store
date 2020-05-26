@@ -18,6 +18,7 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import { SafetyScreen } from '../screens/SafetyScreen';
+import { ProfileScreen } from '../screens/ProfileScreen';
 // drawer
 import CustomDrawerContent from './Menu';
 
@@ -143,6 +144,13 @@ function HomeStack(props) {
       <Stack.Screen
         name='SelectPaymentMethodScreen'
         component={SelectPaymentMethod}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='ProfileScreen'
+        component={ProfileScreen}
         options={{
           headerShown: false,
         }}
