@@ -86,8 +86,7 @@ export const SelectPaymentMethod = ({ navigation }) => {
               styles.cardNumberOptionConatiner,
               {
                 backgroundColor:
-                  card.stripePaymentMethodId ===
-                  customerDetails.defaultPaymentMethodId
+                  card.stripePaymentMethodId === cart.paymentMethodId
                     ? '#fff'
                     : '#f3f3f3',
               },
@@ -107,20 +106,17 @@ export const SelectPaymentMethod = ({ navigation }) => {
                   {
                     borderWidth: 1,
                     borderColor:
-                      card.stripePaymentMethodId ===
-                      customerDetails.defaultPaymentMethodId
+                      card.stripePaymentMethodId === cart.paymentMethodId
                         ? '#3fa4ff'
                         : '#dedede',
                     backgroundColor:
-                      card.stripePaymentMethodId ===
-                      customerDetails.defaultPaymentMethodId
+                      card.stripePaymentMethodId === cart.paymentMethodId
                         ? '#3fa4ff'
                         : '#fff',
                   },
                 ]}
               >
-                {card.stripePaymentMethodId ===
-                  customerDetails.defaultPaymentMethodId && (
+                {card.stripePaymentMethodId === cart.paymentMethodId && (
                   <Feather color='#fff' name='check' />
                 )}
               </View>
