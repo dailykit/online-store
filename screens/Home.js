@@ -21,6 +21,7 @@ import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
 import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
+
 import {
   useLazyQuery,
   useMutation,
@@ -28,6 +29,7 @@ import {
 } from '@apollo/react-hooks';
 import { useCartContext } from '../context/cart';
 import * as axios from 'axios';
+import { useAuth } from '../context/auth';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
@@ -37,7 +39,8 @@ const Home = (props) => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
-  const { user, setCustomer } = useCartContext();
+  const { setCustomer } = useCartContext();
+  const { user } = useAuth();
 
   const fetchData = async (date) => {
     try {
@@ -64,7 +67,7 @@ const Home = (props) => {
   // Query
   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
     variables: {
-      keycloakId: user.keycloakId,
+      keycloakId: user.userid,
       clientId: CLIENTID,
     },
     onCompleted: (data) => {
@@ -90,7 +93,7 @@ const Home = (props) => {
   // Subscription
   useSubscription(CUSTOMER, {
     variables: {
-      keycloakId: user.keycloakId,
+      keycloakId: user.userid,
       email: user.email,
     },
     onSubscriptionData: (data) => {
@@ -102,9 +105,9 @@ const Home = (props) => {
         createCustomer({
           variables: {
             object: {
-              keycloakId: user.keycloakId,
+              keycloakId: user.userid,
               email: user.email,
-              source: 'RMK',
+              source: 'online store',
               clientId: CLIENTID,
             },
           },

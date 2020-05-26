@@ -5,77 +5,66 @@ const { width } = Dimensions.get('window');
 
 import { GradientButton } from '../components';
 import { theme } from '../constants';
+import { useAuth } from '../context/auth';
 
-class Welcome extends Component {
-  static navigationOptions = {
-    headerShown: false,
-  };
+const Welcome = () => {
+  const { login, register } = useAuth();
 
-  scrollX = new Animated.Value(0);
-
-  state = {
-    showTerms: false,
-  };
-
-  render() {
-    const { navigation } = this.props;
-
-    return (
-      <View style={{ flex: 1 }}>
-        <View
+  return (
+    <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 0.4,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text
           style={{
-            flex: 0.4,
-            justifyContent: 'center',
-            alignItems: 'center',
+            fontSize: 24,
+            textAlign: 'center',
+            fontWeight: 'bold',
           }}
         >
+          Delivering
+          <Text> Mealkits</Text>
+        </Text>
+      </View>
+
+      <View
+        style={{
+          flex: 0.5,
+          paddingHorizontal: theme.sizes.padding * 2,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <GradientButton gradient onPress={login}>
           <Text
             style={{
-              fontSize: 24,
               textAlign: 'center',
-              fontWeight: 'bold',
+              color: '#fff',
+              width: width * 0.8,
             }}
           >
-            Delivering
-            <Text> Mealkits</Text>
+            Login
           </Text>
-        </View>
-
-        <View
-          style={{
-            flex: 0.5,
-            paddingHorizontal: theme.sizes.padding * 2,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <GradientButton gradient onPress={() => navigation.navigate('Login')}>
-            <Text
-              style={{
-                textAlign: 'center',
-                color: '#fff',
-                width: width * 0.8,
-              }}
-            >
-              Login
-            </Text>
-          </GradientButton>
-          <GradientButton shadow onPress={() => navigation.navigate('SignUp')}>
-            <Text
-              style={{
-                textAlign: 'center',
-                fontWeight: 'bold',
-                width: width * 0.8,
-              }}
-            >
-              Signup
-            </Text>
-          </GradientButton>
-        </View>
+        </GradientButton>
+        <GradientButton shadow onPress={register}>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontWeight: 'bold',
+              width: width * 0.8,
+            }}
+          >
+            Signup
+          </Text>
+        </GradientButton>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
 export default Welcome;
 
