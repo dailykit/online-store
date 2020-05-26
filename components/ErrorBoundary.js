@@ -18,6 +18,8 @@ export default class index extends Component {
       error,
       errorInfo,
     });
+    console.log(error);
+    console.log(errorInfo);
     this.setState({
       hasError: true,
     });
@@ -29,8 +31,7 @@ export default class index extends Component {
       return (
         <ScrollView style={styles.flex}>
           <View style={styles.flexContainer}>
-            <Text>{JSON.stringify(this.state.error)}</Text>
-            <Text>{JSON.stringify(this.state.errorInfo)}</Text>
+            <Text>Oops there was an Error, please check back later...</Text>
           </View>
         </ScrollView>
       );

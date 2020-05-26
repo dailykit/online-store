@@ -14,7 +14,8 @@ function CustomDrawerContent({
 }) {
   const screens = [
     { title: 'Home', screen: 'Home' },
-    { title: 'Orders', screen: 'DeliveryScreen' },
+    { title: 'Profile', screen: 'ProfileScreen' },
+    { title: 'Orders', screen: 'OrderHistoryScreen' },
     { title: 'Log out', screen: 'DeliveryScreen' },
   ];
   return (

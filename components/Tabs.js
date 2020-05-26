@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Dimensions, FlatList, Animated, View } from 'react-native';
-
+import { uuid } from '../utils';
 const { width } = Dimensions.get('screen');
 import argonTheme from '../constants/Theme';
 
@@ -13,7 +13,7 @@ const defaultMenu = [
 
 export default class Tabs extends React.Component {
   static defaultProps = {
-    data: defaultMenu,
+    data: [],
     initialIndex: null,
   };
 
@@ -82,7 +82,7 @@ export default class Tabs extends React.Component {
           style={[styles.menuTitle, { color: textColor }]}
           onPress={() => this.selectMenu(item.id)}
         >
-          {item.title}
+          {item}
         </Animated.Text>
       </View>
     );
@@ -98,7 +98,7 @@ export default class Tabs extends React.Component {
         horizontal={true}
         ref={this.menuRef}
         extraData={this.state}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => uuid()}
         showsHorizontalScrollIndicator={false}
         onScrollToIndexFailed={this.onScrollToIndexFailed}
         renderItem={({ item }) => this.renderItem(item)}

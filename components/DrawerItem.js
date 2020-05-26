@@ -16,6 +16,14 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
             color={focused ? 'white' : argonTheme.COLORS.PRIMARY}
           />
         );
+      case 'Profile':
+        return (
+          <Icon
+            name='user'
+            size={14}
+            color={focused ? 'white' : argonTheme.COLORS.PRIMARY}
+          />
+        );
       case 'Orders':
         return (
           <Icon

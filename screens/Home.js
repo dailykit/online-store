@@ -212,13 +212,15 @@ const Home = (props) => {
             </Select>
           </View>
         </View>
-        {Object.keys(
-          menuItems[pickerData[selectedPickerItem]]
-        ).map((type, _id) =>
-          menuItems[pickerData[selectedPickerItem]][type].map((id) => (
-            <Card {...props} type={type} key={id} id={id} />
-          ))
-        )}
+        {menuItems &&
+          menuItems[pickerData[selectedPickerItem]] &&
+          Object.keys(
+            menuItems[pickerData[selectedPickerItem]]
+          ).map((type, _id) =>
+            menuItems[pickerData[selectedPickerItem]][type].map((id) => (
+              <Card {...props} type={type} key={id} id={id} />
+            ))
+          )}
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
       <Cart to='OrderSummary' {...props} text='Checkout' />

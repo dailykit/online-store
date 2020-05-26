@@ -16,6 +16,7 @@ import { CartSummary } from '../components/Cart';
 import BillingDetails from '../components/BillingDetails';
 import HeaderBack from '../components/HeaderBack';
 import { useCartContext } from '../context/cart';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const { width, height } = Dimensions.get('window');
 
@@ -91,7 +92,7 @@ const OrderPlaced = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   conatiner: {
     flex: 1,
   },
@@ -195,9 +196,11 @@ const styles = StyleSheet.create({
   download_recpie_card_text: {
     color: 'white',
     fontWeight: 'bold',
+    fontSize: '$xxs',
   },
   send_email_container_text: {
     fontWeight: 'bold',
+    fontSize: '$xxs',
   },
   image_container: {
     flexDirection: 'row',

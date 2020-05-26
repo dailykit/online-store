@@ -17,6 +17,10 @@ import Summary from '../components/Summary';
 import { CartSummary } from '../components/Cart';
 import BillingDetails from '../components/BillingDetails';
 import HeaderBack from '../components/HeaderBack';
+import {
+  DefaultAddressFloater,
+  DefaultPaymentFloater,
+} from '../components/DefaultFloater';
 
 const { width, height } = Dimensions.get('window');
 
@@ -39,14 +43,17 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             </Text>
           </View>
           <View style={styles.title_container_right}>
-            <View style={styles.edit}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('EditAddressScreen')}
+              style={styles.edit}
+            >
               <Text style={styles.edit_text}>edit{'  '}</Text>
               <Ionicons
                 style={{ paddingTop: 2 }}
                 size={16}
                 name='ios-arrow-forward'
               />
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={styles.summary_title_conatiner}>
@@ -63,6 +70,8 @@ const OrderSummary = ({ navigation, ...restProps }) => {
           return <Summary item={item} key={index} />;
         })}
         <BillingDetails />
+        <DefaultPaymentFloater navigation={navigation} />
+        <DefaultAddressFloater navigation={navigation} />
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
       <CartSummary

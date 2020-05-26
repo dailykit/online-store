@@ -19,7 +19,7 @@ import { useCartContext } from '../context/cart';
 const { width, height } = Dimensions.get('window');
 
 const Card = ({ id, type, navigation, ...restProps }) => {
-  const [price, setPrice] = useState(2.5);
+  const [price, setPrice] = useState('randomNumber');
   const [cardItem, setcardItem] = useState(null); // obj to push to jaguar
   const [cardData, setcardData] = useState(null); // obj to pass to add to cart modal
 
