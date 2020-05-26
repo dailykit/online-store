@@ -31,6 +31,7 @@ import ModalContent from '../components/ModalContent';
 import { Delivery } from '../screens/Delivery';
 import { EditAddress } from '../screens/EditAddress';
 import { SelectPaymentMethod } from '../screens/SelectPaymentMethod';
+import { OrderHistory } from '../screens/OrderHistory';
 
 const { width } = Dimensions.get('screen');
 
@@ -151,6 +152,13 @@ function HomeStack(props) {
       <Stack.Screen
         name='ProfileScreen'
         component={ProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='OrderHistoryScreen'
+        component={OrderHistory}
         options={{
           headerShown: false,
         }}
