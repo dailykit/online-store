@@ -64,6 +64,7 @@ const Home = (props) => {
     });
   }, []);
 
+  // TODO: Add clientId to platform query
   // Query
   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
     variables: {
