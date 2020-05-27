@@ -108,9 +108,10 @@ const Cart = ({
                   },
                   date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
                 },
-                paymentMethodId: customerDetails.defaultPaymentMethodId || null,
-                address: customerDetails.defaultCustomerAddress || null,
-                stripeCustomerId: customerDetails.stripeCustomerId || null,
+                paymentMethodId:
+                  customerDetails?.defaultPaymentMethodId || null,
+                address: customerDetails?.defaultCustomerAddress || null,
+                stripeCustomerId: customerDetails?.stripeCustomerId || null,
               },
             },
           });
