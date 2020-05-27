@@ -159,7 +159,7 @@ function HomeStack(props) {
         name='Add Details'
         component={AddDetails}
         options={{
-          headerShown: true,
+          headerShown: false,
         }}
       />
     </Stack.Navigator>

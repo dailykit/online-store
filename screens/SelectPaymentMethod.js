@@ -10,12 +10,13 @@ import HeaderBack from '../components/HeaderBack';
 import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Feather, AntDesign } from '@expo/vector-icons';
-import { Spinner, Button } from '@ui-kitten/components';
+import { Spinner } from '@ui-kitten/components';
 import Cart from '../components/Cart';
 import { UPDATE_CART } from '../graphql';
 import { useMutation } from '@apollo/react-hooks';
 
 import { height, width } from '../utils/Scalaing';
+import { Button } from 'native-base';
 
 export const SelectPaymentMethod = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();

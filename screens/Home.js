@@ -194,7 +194,7 @@ const Home = (props) => {
           style={styles.cover_image}
         />
       </View>
-      <Text style={styles.title}>Vegan Adda</Text>
+      <Text style={styles.title}>GD Bro Burgers</Text>
       <View style={styles.headerContainer}>
         <SafetyBanner {...props} />
         <View style={styles.picker_container}>
