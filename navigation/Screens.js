@@ -174,7 +174,7 @@ export default function OnboardingStack(props) {
       </View>
     );
   }
-  // TODO : isAuthenticated
+
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>

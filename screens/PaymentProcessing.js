@@ -15,7 +15,7 @@ const PaymentProcessing = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      {cart.paymentStatus === 'PENDING' ? (
+      {cart?.paymentStatus === 'PENDING' ? (
         <React.Fragment>
           <Text style={{ marginBottom: 20 }}>
             Wait! We're trying to process your payment...
