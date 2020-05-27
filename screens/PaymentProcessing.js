@@ -7,10 +7,11 @@ const PaymentProcessing = ({ navigation }) => {
 
   //Effect
   React.useEffect(() => {
-    if (cart.paymentStatus === 'DONE') {
+    console.log(cart);
+    if (cart && cart.paymentStatus === 'DONE') {
       navigation.navigate('OrderPlaced');
     }
-  }, []);
+  }, [cart]);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
