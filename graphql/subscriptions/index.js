@@ -22,6 +22,9 @@ export const CUSTOMER = gql`
         taxPercent
         tax
         totalPrice
+        status
+        paymentStatus
+        orderId
       }
     }
   }
