@@ -19,7 +19,7 @@ export const DefaultPaymentFloater = ({ navigation }) => {
         setCard(card);
       }
     }
-  }, []);
+  }, [cart]);
 
   return (
     <TouchableOpacity
