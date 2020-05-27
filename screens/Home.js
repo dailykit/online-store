@@ -94,7 +94,7 @@ const Home = (props) => {
   });
 
   // Subscription
-  useSubscription(CUSTOMER, {
+  const { error } = useSubscription(CUSTOMER, {
     variables: {
       keycloakId: user.userid,
       email: user.email,
@@ -118,6 +118,8 @@ const Home = (props) => {
       }
     },
   });
+
+  console.log('Subscription error: ', error);
 
   if (!data.length || loading) {
     return (
