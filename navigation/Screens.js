@@ -35,6 +35,7 @@ import { OrderHistory } from '../screens/OrderHistory';
 import { Text } from 'native-base';
 
 import { height, width } from '../utils/Scalaing';
+import PaymentProcessing from '../screens/PaymentProcessing';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -142,6 +143,13 @@ function HomeStack(props) {
       <Stack.Screen
         name='OrderHistoryScreen'
         component={OrderHistory}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='PaymentProcessing'
+        component={PaymentProcessing}
         options={{
           headerShown: false,
         }}

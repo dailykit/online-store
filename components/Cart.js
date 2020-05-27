@@ -154,10 +154,28 @@ const Cart = ({
 
 export const CartSummary = ({ navigation, text }) => {
   const { cart } = useCartContext();
+
+  // Mutation
+  const [updateCart] = useMutation(UPDATE_CART, {
+    onCompleted: () => {
+      console.log('Cart confirmed!');
+      navigation.navigate('PaymentProcessing');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
   const pay = () => {
     if (cart.isValid.status) {
-      // Payment API call
-      navigation.navigate('OrderPlaced');
+      updateCart({
+        variables: {
+          id: cart.id,
+          set: {
+            status: 'PROCESS',
+          },
+        },
+      });
     } else {
       if (Platform.OS == 'android')
         ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
