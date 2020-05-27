@@ -83,6 +83,7 @@ const Home = (props) => {
         console.log('No customer data found!');
       }
     },
+    fetchPolicy: 'cache-and-network',
   });
 
   // Mutations

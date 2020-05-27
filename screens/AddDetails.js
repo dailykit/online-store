@@ -10,7 +10,7 @@ import { Spinner } from '@ui-kitten/components';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 
-const AddDetails = ({ route }) => {
+const AddDetails = ({ route, navigation }) => {
   const { path } = route.params;
 
   const { setCustomerDetails } = useCartContext();
@@ -71,14 +71,14 @@ const AddDetails = ({ route }) => {
         <Ionicons name='ios-arrow-back' size={24} />
         <Text style={{ fontSize: 16, marginLeft: 12 }}>Go Back</Text>
       </TouchableOpacity>
-      <ScrollView>
+      <View>
         <iframe
           src={`https://dailykey.netlify.app/${path || ''}`}
           title='Add Details'
           width={width}
           height={height}
         ></iframe>
-      </ScrollView>
+      </View>
     </React.Fragment>
   );
 };
