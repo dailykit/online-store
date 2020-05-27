@@ -41,7 +41,7 @@ export const EditAddress = ({ navigation }) => {
         variables: {
           id: cart.id,
           set: {
-            addressId: address.id,
+            address: address,
           },
         },
       });
@@ -97,7 +97,7 @@ export const EditAddress = ({ navigation }) => {
               <Text style={styles.addressText}>{address.country}</Text>
               <Text style={styles.addressText}>{address.zipcode}</Text>
             </View>
-            <View style={styles.addressSelectedContainer}>
+            {/* <View style={styles.addressSelectedContainer}>
               <View
                 style={[
                   styles.checkContainer,
@@ -114,7 +114,7 @@ export const EditAddress = ({ navigation }) => {
                   <Feather color='#fff' name='check' />
                 )}
               </View>
-            </View>
+            </View> */}
           </TouchableOpacity>
         ))}
       </View>
