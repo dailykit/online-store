@@ -37,16 +37,18 @@ export const SelectPaymentMethod = ({ navigation }) => {
   // Handlers
   const select = (card) => {
     try {
-      setLoading(true);
-      updateCart({
-        variables: {
-          id: cart.id,
-          set: {
-            paymentMethodId: card.stripePaymentMethodId,
-            stripeCustomerId: customerDetails.stripeCustomerId,
+      if (cart) {
+        setLoading(true);
+        updateCart({
+          variables: {
+            id: cart.id,
+            set: {
+              paymentMethodId: card.stripePaymentMethodId,
+              stripeCustomerId: customerDetails.stripeCustomerId,
+            },
           },
-        },
-      });
+        });
+      }
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -76,7 +78,7 @@ export const SelectPaymentMethod = ({ navigation }) => {
   return (
     <View style={styles.conatiner}>
       <HeaderBack navigation={navigation} title='Go Back' />
-      <Text style={styles.title}>Choose Payment Card</Text>
+      <Text style={styles.title}>Payment Cards</Text>
       <View style={styles.cardNumberConatiner}>
         {customerDetails.stripePaymentMethods.map((card) => (
           <TouchableOpacity
@@ -86,7 +88,7 @@ export const SelectPaymentMethod = ({ navigation }) => {
               styles.cardNumberOptionConatiner,
               {
                 backgroundColor:
-                  card.stripePaymentMethodId === cart.paymentMethodId
+                  card.stripePaymentMethodId === cart?.paymentMethodId
                     ? '#fff'
                     : '#f3f3f3',
               },
@@ -106,17 +108,17 @@ export const SelectPaymentMethod = ({ navigation }) => {
                   {
                     borderWidth: 1,
                     borderColor:
-                      card.stripePaymentMethodId === cart.paymentMethodId
+                      card.stripePaymentMethodId === cart?.paymentMethodId
                         ? '#3fa4ff'
                         : '#dedede',
                     backgroundColor:
-                      card.stripePaymentMethodId === cart.paymentMethodId
+                      card.stripePaymentMethodId === cart?.paymentMethodId
                         ? '#3fa4ff'
                         : '#fff',
                   },
                 ]}
               >
-                {card.stripePaymentMethodId === cart.paymentMethodId && (
+                {card.stripePaymentMethodId === cart?.paymentMethodId && (
                   <Feather color='#fff' name='check' />
                 )}
               </View>

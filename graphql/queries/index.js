@@ -44,6 +44,13 @@ export const CUSTOMER_DETAILS = gql`
           brand
         }
         defaultPaymentMethodId
+        defaultStripePaymentMethod {
+          stripePaymentMethodId
+          last4
+          expMonth
+          expYear
+          brand
+        }
       }
     }
   }
