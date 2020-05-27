@@ -156,10 +156,10 @@ function HomeStack(props) {
         }}
       />
       <Stack.Screen
-        name='AddDetails'
+        name='Add Details'
         component={AddDetails}
         options={{
-          headerShown: false,
+          headerShown: true,
         }}
       />
     </Stack.Navigator>

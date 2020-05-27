@@ -135,7 +135,7 @@ export const SelectPaymentMethod = ({ navigation }) => {
           padding: 8,
           justifyContent: 'center',
         }}
-        onPress={() => navigation.navigate('AddDetails', { path: 'cards' })}
+        onPress={() => navigation.navigate('Add Details', { path: 'cards' })}
       >
         <Text style={{ color: '#fff' }}>Add Card</Text>
       </Button>

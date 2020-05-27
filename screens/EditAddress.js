@@ -129,7 +129,7 @@ export const EditAddress = ({ navigation }) => {
           padding: 8,
           justifyContent: 'center',
         }}
-        onPress={() => navigation.navigate('AddDetails', { path: 'address' })}
+        onPress={() => navigation.navigate('Add Details', { path: 'address' })}
       >
         <Text style={{ color: '#fff' }}>Add Address</Text>
       </Button>

@@ -18,9 +18,7 @@ const AddDetails = ({ route }) => {
     //     borderColor: '#ff0000',
     //   }}
     // />
-    <View
-      style={{ borderColor: '#3FA4FF', borderWidth: 5, borderStyle: 'solid' }}
-    >
+    <View>
       <iframe
         src={`https://dailykey.netlify.app/${path || ''}`}
         title='iframe Example 1'
