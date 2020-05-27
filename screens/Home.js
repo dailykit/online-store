@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   AsyncStorage,
   FlatList,
+  Platform,
 } from 'react-native';
 import { Datepicker } from '@ui-kitten/components';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
@@ -178,52 +179,57 @@ const Home = (props) => {
     });
   }
   return (
-    <View style={styles.home}>
+    <ScrollView style={styles.home}>
       {/* <Tabs /> */}
-      <ScrollView style={{ flex: 1, marginTop: 20 }}>
-        <View style={styles.flexContainerMiddle}>
-          <View style={styles.img_container}>
-            <Image
-              source={{
-                uri:
-                  'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+      <View style={styles.img_container}>
+        <Image
+          source={{
+            uri:
+              'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+          }}
+          style={styles.cover_image}
+        />
+      </View>
+      <Text style={styles.title}>Vegan Adda</Text>
+      <View style={styles.headerContainer}>
+        <SafetyBanner {...props} />
+        <View style={styles.picker_container}>
+          <View style={[styles.picker_placeholder]}>
+            <Datepicker
+              date={calendarDate}
+              onSelect={(_date) => {
+                setcalendarDate(_date);
+                fetchData({
+                  year: moment(_date).year(),
+                  month: moment(_date).month(),
+                  day: moment(_date).date(),
+                });
               }}
-              style={styles.cover_image}
             />
           </View>
-          <Text style={styles.title}>Vegan Adda</Text>
-          <View style={styles.headerContainer}>
-            <SafetyBanner {...props} />
-            <View style={styles.picker_container}>
-              <View style={styles.picker_placeholder}>
-                <Datepicker
-                  date={calendarDate}
-                  onSelect={(_date) => {
-                    setcalendarDate(_date);
-                    fetchData({
-                      year: moment(_date).year(),
-                      month: moment(_date).month(),
-                      day: moment(_date).date(),
-                    });
-                  }}
-                />
-              </View>
-              <View style={styles.picker_placeholder}>
-                <Select
-                  selectedIndex={selectedIndex}
-                  value={pickerData[selectedIndex.row]}
-                  onSelect={(_selectedIndex) => {
-                    setselectedPickerItem(_selectedIndex.row);
-                    setSelectedIndex(_selectedIndex);
-                  }}
-                >
-                  {pickerData.map((title, key) => (
-                    <SelectItem key={key} title={title} />
-                  ))}
-                </Select>
-              </View>
-            </View>
+          <View style={styles.picker_placeholder}>
+            <Select
+              selectedIndex={selectedIndex}
+              value={pickerData[selectedIndex.row]}
+              onSelect={(_selectedIndex) => {
+                setselectedPickerItem(_selectedIndex.row);
+                setSelectedIndex(_selectedIndex);
+              }}
+            >
+              {pickerData.map((title, key) => (
+                <SelectItem key={key} title={title} />
+              ))}
+            </Select>
           </View>
+        </View>
+      </View>
+      <ScrollView
+        style={{
+          marginTop: 20,
+          height: height * 0.81,
+        }}
+      >
+        <View style={styles.flexContainerMiddle}>
           <View style={styles.cardContainer}>
             {menuItems &&
               menuItems[pickerData[selectedPickerItem]] &&
@@ -256,14 +262,14 @@ const Home = (props) => {
         {...props}
         text='Checkout'
       />
-    </View>
+    </ScrollView>
   );
 };
 
 const styles = EStyleSheet.create({
   home: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
   },
   img_container: {
     height: height * 0.3,
