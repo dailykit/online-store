@@ -10,7 +10,7 @@ import HeaderBack from '../components/HeaderBack';
 import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { Feather, AntDesign } from '@expo/vector-icons';
-import { Spinner } from '@ui-kitten/components';
+import { Spinner, Button } from '@ui-kitten/components';
 import Cart from '../components/Cart';
 import { UPDATE_CART } from '../graphql';
 import { useMutation } from '@apollo/react-hooks';
@@ -126,6 +126,19 @@ export const SelectPaymentMethod = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
+      <Button
+        style={{
+          marginBottom: 20,
+          backgroundColor: '#3FA4FF',
+          borderRadius: 0,
+          marginHorizontal: 10,
+          padding: 8,
+          justifyContent: 'center',
+        }}
+        onPress={() => navigation.navigate('AddDetails', { path: 'cards' })}
+      >
+        <Text style={{ color: '#fff' }}>Add Card</Text>
+      </Button>
     </View>
   );
 };

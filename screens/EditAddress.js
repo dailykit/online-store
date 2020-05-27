@@ -15,6 +15,7 @@ import { UPDATE_CART } from '../graphql';
 import { Spinner } from '@ui-kitten/components';
 
 import { height, width } from '../utils/Scalaing';
+import { Button } from 'native-base';
 
 export const EditAddress = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
@@ -119,6 +120,19 @@ export const EditAddress = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
+      <Button
+        style={{
+          marginBottom: 20,
+          backgroundColor: '#3FA4FF',
+          borderRadius: 0,
+          marginHorizontal: 10,
+          padding: 8,
+          justifyContent: 'center',
+        }}
+        onPress={() => navigation.navigate('AddDetails', { path: 'address' })}
+      >
+        <Text style={{ color: '#fff' }}>Add Address</Text>
+      </Button>
     </View>
   );
 };

@@ -44,6 +44,8 @@ const Home = (props) => {
   const { setCustomer, setCustomerDetails } = useCartContext();
   const { user } = useAuth();
 
+  // ref
+
   const fetchData = async (date) => {
     try {
       setLoading(true);
