@@ -8,8 +8,8 @@ const PaymentProcessing = ({ navigation }) => {
   //Effect
   React.useEffect(() => {
     console.log(cart);
-    if (cart && cart.paymentStatus === 'DONE') {
-      navigation.navigate('OrderPlaced');
+    if (cart && cart.status === 'ORDER_PLACED') {
+      navigation.navigate('Home');
     }
   }, [cart]);
 

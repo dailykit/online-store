@@ -44,6 +44,8 @@ const Home = (props) => {
   const { setCustomer, setCustomerDetails } = useCartContext();
   const { user } = useAuth();
 
+  // ref
+
   const fetchData = async (date) => {
     try {
       setLoading(true);
@@ -81,6 +83,7 @@ const Home = (props) => {
         console.log('No customer data found!');
       }
     },
+    fetchPolicy: 'cache-and-network',
   });
 
   // Mutations
@@ -192,7 +195,7 @@ const Home = (props) => {
           style={styles.cover_image}
         />
       </View>
-      <Text style={styles.title}>Vegan Adda</Text>
+      <Text style={styles.title}>GD Bro Burgers</Text>
       <View style={styles.headerContainer}>
         <SafetyBanner {...props} />
         <View style={styles.picker_container}>

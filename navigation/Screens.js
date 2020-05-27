@@ -36,6 +36,7 @@ import { Text } from 'native-base';
 
 import { height, width } from '../utils/Scalaing';
 import PaymentProcessing from '../screens/PaymentProcessing';
+import AddDetails from '../screens/AddDetails';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -150,6 +151,13 @@ function HomeStack(props) {
       <Stack.Screen
         name='PaymentProcessing'
         component={PaymentProcessing}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='Add Details'
+        component={AddDetails}
         options={{
           headerShown: false,
         }}

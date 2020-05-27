@@ -16,6 +16,7 @@ import { UPDATE_CART } from '../graphql';
 import { useMutation } from '@apollo/react-hooks';
 
 import { height, width } from '../utils/Scalaing';
+import { Button } from 'native-base';
 
 export const SelectPaymentMethod = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
@@ -126,6 +127,19 @@ export const SelectPaymentMethod = ({ navigation }) => {
           </TouchableOpacity>
         ))}
       </View>
+      <Button
+        style={{
+          marginBottom: 20,
+          backgroundColor: '#3FA4FF',
+          borderRadius: 0,
+          marginHorizontal: 10,
+          padding: 8,
+          justifyContent: 'center',
+        }}
+        onPress={() => navigation.navigate('Add Details', { path: 'cards' })}
+      >
+        <Text style={{ color: '#fff' }}>Add Card</Text>
+      </Button>
     </View>
   );
 };
