@@ -168,7 +168,6 @@ export const CartSummary = ({ navigation, text }) => {
 
   const pay = () => {
     if (cart.isValid.status) {
-      console.log('Total Price: ', cart.totalPrice);
       updateCart({
         variables: {
           id: cart.id,
