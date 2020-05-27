@@ -279,7 +279,7 @@ const styles = EStyleSheet.create({
     height: height * 0.06,
     flexDirection: 'row',
     alignItems: 'center',
-    width: width / 2,
+    width: width > 1000 ? width / 2 : width,
     justifyContent: 'center',
   },
   picker_placeholder: {
