@@ -28,7 +28,14 @@ export const CUSTOMER_DETAILS = gql`
           city
           country
         }
-        defaultCustomerAddressId
+        defaultCustomerAddress {
+          line1
+          line2
+          state
+          zipcode
+          city
+          country
+        }
         stripePaymentMethods {
           stripePaymentMethodId
           last4

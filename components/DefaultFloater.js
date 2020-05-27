@@ -51,18 +51,6 @@ export const DefaultPaymentFloater = ({ navigation }) => {
 
 export const DefaultAddressFloater = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
-  const [address, setAddress] = React.useState(undefined);
-
-  React.useEffect(() => {
-    if (customerDetails) {
-      const address = customerDetails.customerAddresses.find(
-        (address) => address.id === cart.addressId
-      );
-      if (address) {
-        setAddress(address);
-      }
-    }
-  }, []);
 
   return (
     <TouchableOpacity
@@ -72,9 +60,9 @@ export const DefaultAddressFloater = ({ navigation }) => {
       style={styles.conatiner}
     >
       <View style={styles.cardNumberTextContainer}>
-        {address ? (
+        {cart.address ? (
           <Text style={styles.cardNumberText}>
-            {address.line1}, {address.line2}, {address.city}
+            {cart.address.line1}, {cart.address.line2}, {cart.address.city}
           </Text>
         ) : (
           <Text style={styles.cardNumberText}>Select an Address</Text>

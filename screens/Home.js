@@ -236,6 +236,7 @@ const Home = (props) => {
               Object.keys(menuItems[pickerData[selectedPickerItem]]).map(
                 (type, _id) => (
                   <FlatList
+                    key={_id}
                     data={menuItems[pickerData[selectedPickerItem]][type]}
                     numColumns={width > 1000 ? 3 : 1}
                     renderItem={(render) => {

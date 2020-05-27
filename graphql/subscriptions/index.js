@@ -3,19 +3,18 @@ import gql from 'graphql-tag';
 export const CUSTOMER = gql`
   subscription Customers($keycloakId: String!, $email: String!) {
     customers(
-      where: { keycloakId: { _eq: $keycloakId }, email: { _eq: $email } }
+      where: { email: { _eq: $email }, keycloakId: { _eq: $keycloakId } }
     ) {
       id
-      email
-      keycloakId
       orderCarts(where: { status: { _eq: "PENDING" } }) {
+        id
+        address
         cartInfo
         customerId
         id
         isValid
         paymentMethodId
         stripeCustomerId
-        addressId
         fulfillmentInfo
         deliveryPrice
         itemTotal
@@ -23,6 +22,9 @@ export const CUSTOMER = gql`
         taxPercent
         tax
         totalPrice
+        status
+        paymentStatus
+        orderId
       }
     }
   }
