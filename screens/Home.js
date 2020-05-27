@@ -70,7 +70,7 @@ const Home = (props) => {
   // Query
   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
     variables: {
-      keycloakId: user.userid,
+      keycloakId: user.sub || user.userid,
       // clientId: CLIENTID,
     },
     onCompleted: (data) => {
@@ -96,7 +96,7 @@ const Home = (props) => {
   // Subscription
   const { error } = useSubscription(CUSTOMER, {
     variables: {
-      keycloakId: user.userid,
+      keycloakId: user.sub || user.userid,
       email: user.email,
     },
     onSubscriptionData: (data) => {
@@ -108,7 +108,7 @@ const Home = (props) => {
         createCustomer({
           variables: {
             object: {
-              keycloakId: user.userid,
+              keycloakId: user.sub || user.userid,
               email: user.email,
               source: 'online store',
               clientId: CLIENTID,

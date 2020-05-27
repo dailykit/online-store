@@ -173,6 +173,7 @@ export const CartSummary = ({ navigation, text }) => {
           id: cart.id,
           set: {
             status: 'PROCESS',
+            amount: cart.totalPrice,
           },
         },
       });
