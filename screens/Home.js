@@ -16,7 +16,7 @@ import moment from 'moment';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { CREATE_CUSTOMER, CUSTOMER, CUSTOMER_DETAILS } from '../graphql';
-const { width, height } = Dimensions.get('screen');
+import { height, width } from '../utils/Scalaing';
 import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
@@ -244,7 +244,7 @@ const styles = EStyleSheet.create({
     flex: 1,
   },
   img_container: {
-    height: height * 0.2,
+    height: height * 0.3,
     width,
   },
   cover_image: {
@@ -252,6 +252,7 @@ const styles = EStyleSheet.create({
     resizeMode: 'cover',
     height: null,
     width: null,
+    aspectRatio: 3 / 2,
   },
   picker_container: {
     height: height * 0.06,

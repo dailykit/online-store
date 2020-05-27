@@ -16,7 +16,7 @@ import TabsNew from './Tabs';
 
 import { Tabs, Tab } from 'native-base';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 export default class ModalContent extends Component {
   render() {

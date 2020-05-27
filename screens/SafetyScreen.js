@@ -20,7 +20,7 @@ import liquidSoap from '../assets/imgs/liquid-soap.png';
 import { useSubscription } from '@apollo/react-hooks';
 import { SAFETY_CHECK } from '../graphql';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 export const SafetyScreen = ({ navigation }) => {
   const [check, setCheck] = React.useState(undefined);

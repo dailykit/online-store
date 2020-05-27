@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Animated, StyleSheet, View, Text, Dimensions } from 'react-native';
 
-const { width } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 import { GradientButton } from '../components';
 import { theme } from '../constants';

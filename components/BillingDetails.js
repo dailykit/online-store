@@ -14,7 +14,7 @@ import { Button } from 'native-base';
 import { useMutation } from '@apollo/react-hooks';
 import { UPDATE_CART } from '../graphql';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 const BillingDetails = () => {
   const { cart } = useCartContext();

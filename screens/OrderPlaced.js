@@ -18,7 +18,7 @@ import HeaderBack from '../components/HeaderBack';
 import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 const OrderPlaced = ({ navigation }) => {
   const { cart } = useCartContext();

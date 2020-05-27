@@ -4,7 +4,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
 
-const { height, width } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 export const DefaultPaymentFloater = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();

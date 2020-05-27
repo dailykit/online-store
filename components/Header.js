@@ -7,7 +7,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import Icon from './Icon';
 import argonTheme from '../constants/Theme';
 
-const { width } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 const BasketButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity

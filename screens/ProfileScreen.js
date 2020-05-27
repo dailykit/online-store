@@ -12,7 +12,7 @@ import HeaderBack from '../components/HeaderBack';
 import { ScrollView } from 'react-native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 
-const { height, width } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 export const ProfileScreen = ({ navigation }) => {
   return (

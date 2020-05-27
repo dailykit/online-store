@@ -15,7 +15,7 @@ import Cart from '../components/Cart';
 import { UPDATE_CART } from '../graphql';
 import { useMutation } from '@apollo/react-hooks';
 
-const { height, width } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 export const SelectPaymentMethod = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();

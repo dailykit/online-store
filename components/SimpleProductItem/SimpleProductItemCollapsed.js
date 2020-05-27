@@ -12,7 +12,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 
 import ServingSelect from '../ServingSelect';
 
-const { height, width } = Dimensions.get('window');
+import { height, width } from '../../utils/Scalaing';
 
 const SimpleProductItemCollapsed = ({
   _id,
@@ -204,6 +204,7 @@ const styles = EStyleSheet.create({
     height: null,
     width: null,
     resizeMode: 'cover',
+    aspectRatio: 3 / 2,
   },
   item_title: {
     fontSize: '$xxs',

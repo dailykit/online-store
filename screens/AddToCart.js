@@ -17,7 +17,7 @@ import CustomizableProductItem from '../components/CustomizableProductItem';
 import SimpleProductItem from '../components/SimpleProductItem';
 import InventoryProductItem from '../components/InventoryProductItem';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 const ModalContent = ({ route, navigation, ...restProps }) => {
   const { data, type, id } = route.params;

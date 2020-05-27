@@ -11,7 +11,7 @@ import { UPDATE_CART } from '../graphql/mutations';
 import { useMutation } from '@apollo/react-hooks';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 const Summary = ({ useQuantity, item }) => {
   const [quantity, setquantity] = useState(1);

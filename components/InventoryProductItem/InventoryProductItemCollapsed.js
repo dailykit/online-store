@@ -11,7 +11,7 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import ServingSelect from '../ServingSelect';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const { height, width } = Dimensions.get('window');
+import { height, width } from '../../utils/Scalaing';
 
 const InventoryProductCollapsed = ({
   _id,
@@ -38,8 +38,6 @@ const InventoryProductCollapsed = ({
           styles.item_container,
           {
             borderBottomWidth: 1,
-            flex: 8,
-            height: 'auto',
           },
         ]}
       >
@@ -114,7 +112,6 @@ const InventoryProductCollapsed = ({
 
 const styles = EStyleSheet.create({
   item_container: {
-    flex: 1,
     flexDirection: 'row',
     paddingBottom: 5,
     marginBottom: 2,
@@ -124,6 +121,7 @@ const styles = EStyleSheet.create({
     borderBottomWidth: 1,
     backgroundColor: '#fff',
     borderBottomColor: '#ececec',
+    height: width < height ? height * 0.15 : height * 0.23,
   },
   item_container_one: {
     flex: 2,

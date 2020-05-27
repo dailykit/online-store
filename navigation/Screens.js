@@ -34,7 +34,7 @@ import { SelectPaymentMethod } from '../screens/SelectPaymentMethod';
 import { OrderHistory } from '../screens/OrderHistory';
 import { Text } from 'native-base';
 
-const { width } = Dimensions.get('screen');
+import { height, width } from '../utils/Scalaing';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -169,7 +169,7 @@ export default function OnboardingStack(props) {
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>
-        {isAuthenticated ? (
+        {true ? (
           <Stack.Screen name='App' component={AppStack} />
         ) : (
           <Stack.Screen name='Auth' component={AuthStack} />

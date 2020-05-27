@@ -22,7 +22,7 @@ import {
   DefaultPaymentFloater,
 } from '../components/DefaultFloater';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 const OrderSummary = ({ navigation, ...restProps }) => {
   const { cart } = useCartContext();

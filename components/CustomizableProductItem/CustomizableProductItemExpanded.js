@@ -12,7 +12,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 
 import ServingSelect from '../ServingSelect';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../../utils/Scalaing';
 
 const Item = ({
   _id,
@@ -209,7 +209,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   item_container: {
-    flex: 1,
     flexDirection: 'row',
     paddingBottom: 5,
     borderWidth: 1,
@@ -219,6 +218,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     borderBottomWidth: 1,
     backgroundColor: '#fff',
+    height: width < height ? height * 0.15 : height * 0.35,
   },
   item_container_one: {
     flex: 2,

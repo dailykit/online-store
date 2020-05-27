@@ -14,7 +14,7 @@ import { useMutation } from '@apollo/react-hooks';
 import { UPDATE_CART } from '../graphql';
 import { Spinner } from '@ui-kitten/components';
 
-const { height, width } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 export const EditAddress = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();

@@ -14,7 +14,7 @@ import InventoryProductItem from '../InventoryProductItem';
 import { COMBO_PRODUCT } from '../../graphql';
 import { useQuery } from '@apollo/react-hooks';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../../utils/Scalaing';
 
 const ComboProduct = ({
   tunnelItem,

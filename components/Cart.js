@@ -15,7 +15,7 @@ import { useMutation } from '@apollo/react-hooks';
 import EStyleSheet, { child } from 'react-native-extended-stylesheet';
 import { CREATE_CART, UPDATE_CART } from '../graphql/mutations';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 const Cart = ({
   navigation,

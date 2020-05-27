@@ -16,7 +16,7 @@ import InventoryProductItem from './InventoryProductItem';
 
 import { useCartContext } from '../context/cart';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 const Card = ({ id, type, navigation, ...restProps }) => {
   const [price, setPrice] = useState('randomNumber');
