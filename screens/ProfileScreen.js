@@ -13,8 +13,11 @@ import { ScrollView } from 'react-native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 
 import { height, width } from '../utils/Scalaing';
+import { useCartContext } from '../context/cart';
 
 export const ProfileScreen = ({ navigation }) => {
+  const { customerDetails } = useCartContext();
+
   return (
     <View style={styles.container}>
       <HeaderBack navigation={navigation} title='Go Back' />
@@ -25,7 +28,9 @@ export const ProfileScreen = ({ navigation }) => {
             style={styles.image}
           />
         </View>
-        <Text style={styles.userName}>Sunny Dhama</Text>
+        <Text style={styles.userName}>
+          {customerDetails.firstName + ' ' + customerDetails.lastName}
+        </Text>
       </View>
       <ScrollView style={styles.container}>
         {/* Address card */}
@@ -38,7 +43,19 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={styles.content}>
             <View style={styles.cardNumberTextContainer}>
               <Text style={styles.cardNumberText}>
-                123, apartment name, street rd, ..
+                {customerDetails.defaultCustomerAddress ? (
+                  <React.Fragment>
+                    {customerDetails.defaultCustomerAddress.line1 +
+                      ', ' +
+                      customerDetails.defaultCustomerAddress.line2 +
+                      ', ' +
+                      customerDetails.defaultCustomerAddress.city +
+                      ', ' +
+                      customerDetails.defaultCustomerAddress.state}
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>NA</React.Fragment>
+                )}
               </Text>
             </View>
             <View style={styles.cardNumberSelectedContainer}>
@@ -61,7 +78,8 @@ export const ProfileScreen = ({ navigation }) => {
             <View style={styles.cardNumberTextContainer}>
               <Text style={styles.cardNumberText}>
                 <AntDesign name='creditcard' /> {'  '}
-                XXXX XXXX XXXX 2123
+                XXXX XXXX XXXX{' '}
+                {customerDetails.defaultStripePaymentMethod?.last4 || 'XXXX'}
               </Text>
             </View>
             <View style={styles.cardNumberSelectedContainer}>
@@ -79,7 +97,7 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={styles.content}>
             <View style={styles.cardNumberTextContainer}>
               <Text style={[styles.cardNumberText, { color: 'grey' }]}>
-                20 orders so far
+                0 orders so far
               </Text>
             </View>
             <View style={styles.cardNumberSelectedContainer}>
@@ -138,6 +156,10 @@ const styles = EStyleSheet.create({
   userName: {
     fontSize: '$xl',
     fontWeight: 'bold',
+  },
+  phone: {
+    fontSize: 16,
+    fontWeight: 'normal',
   },
   card: {
     padding: '1rem',

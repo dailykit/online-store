@@ -36,15 +36,17 @@ export const EditAddress = ({ navigation }) => {
   // Handlers
   const select = (address) => {
     try {
-      setLoading(true);
-      updateCart({
-        variables: {
-          id: cart.id,
-          set: {
-            address: address,
+      if (cart) {
+        setLoading(true);
+        updateCart({
+          variables: {
+            id: cart.id,
+            set: {
+              address: address,
+            },
           },
-        },
-      });
+        });
+      }
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -74,7 +76,7 @@ export const EditAddress = ({ navigation }) => {
   return (
     <View style={styles.conatiner}>
       <HeaderBack navigation={navigation} title='Go Back' />
-      <Text style={styles.title}>Choose Address</Text>
+      <Text style={styles.title}>Addresses</Text>
       <View style={styles.addressConatiner}>
         {customerDetails.customerAddresses.map((address) => (
           <TouchableOpacity
@@ -83,8 +85,7 @@ export const EditAddress = ({ navigation }) => {
             style={[
               styles.addressOptionConatiner,
               {
-                backgroundColor:
-                  address.id === cart.addressId ? '#fff' : '#f3f3f3',
+                backgroundColor: address === cart?.address ? '#fff' : '#f3f3f3',
               },
             ]}
           >
