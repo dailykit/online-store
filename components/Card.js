@@ -18,7 +18,7 @@ import { useCartContext } from '../context/cart';
 
 import { height, width } from '../utils/Scalaing';
 
-const Card = ({ id, type, navigation, ...restProps }) => {
+const Card = ({ id, type, navigation, label, ...restProps }) => {
   const [price, setPrice] = useState('randomNumber');
   const [cardItem, setcardItem] = useState(null); // obj to push to jaguar
   const [cardData, setcardData] = useState(null); // obj to pass to add to cart modal
@@ -42,6 +42,7 @@ const Card = ({ id, type, navigation, ...restProps }) => {
                 </View>
               )}
               <ComboProduct
+                label={label}
                 setcardItem={setcardItem}
                 setcardData={(item) => setcardData(item)}
                 id={id}
@@ -60,6 +61,7 @@ const Card = ({ id, type, navigation, ...restProps }) => {
                 </View>
               )}
               <CustomizableProductItem
+                label={label}
                 setcardItem={setcardItem}
                 navigation={navigation}
                 setcardData={(item) => setcardData(item)}
@@ -80,6 +82,7 @@ const Card = ({ id, type, navigation, ...restProps }) => {
                 </View>
               )}
               <SimpleProductItem
+                label={label}
                 setcardItem={setcardItem}
                 setcardData={(item) => setcardData(item)}
                 navigation={navigation}
@@ -100,6 +103,7 @@ const Card = ({ id, type, navigation, ...restProps }) => {
                 </View>
               )}
               <InventoryProductItem
+                label={label}
                 setcardItem={setcardItem}
                 setcardData={(item) => setcardData(item)}
                 navigation={navigation}
@@ -139,7 +143,7 @@ const Card = ({ id, type, navigation, ...restProps }) => {
 
 const styles = EStyleSheet.create({
   card_container: {
-    width,
+    width: width > 1000 ? width * 0.3 : width,
     paddingHorizontal: 20,
     elevation: 2,
     borderBottomColor: 'rgba(0,0,0,0.1)',
@@ -148,6 +152,8 @@ const styles = EStyleSheet.create({
     paddingVertical: 30,
     backgroundColor: '#fff',
     marginBottom: 10,
+    marginRight: width > 1000 ? 20 : 0,
+    marginTop: width > 1000 ? 20 : 0,
   },
   card_title: {
     flex: 1,

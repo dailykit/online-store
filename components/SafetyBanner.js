@@ -37,7 +37,7 @@ const styles = EStyleSheet.create({
   container: {
     padding: 20,
     backgroundColor: '#2e2d4d',
-    width: width * 0.9,
+    width: width > 1000 ? 600 : width * 0.9,
     marginLeft: width * 0.05,
     marginBottom: 10,
     alignItems: 'center',

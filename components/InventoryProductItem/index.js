@@ -17,6 +17,7 @@ const InventoryProductItem = ({
   setSelected,
   isSelected,
   name,
+  label,
 }) => {
   const [objToAdd, setobjToAdd] = useState({});
 
@@ -108,7 +109,7 @@ const InventoryProductItem = ({
       data={inventoryProduct}
       openModal={openModal}
       navigation={navigation}
-      label={'dinner'}
+      label={label}
       tunnelItem={tunnelItem}
       setProductOptionId={setProductOptionId}
       setSelected={setSelected}

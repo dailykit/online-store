@@ -45,8 +45,9 @@ const InventoryProductCollapsed = ({
           <Text style={styles.item_image_title}>{label}</Text>
           <Image
             source={{
-              uri:
-                'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+              uri: inventoryProduct?.assets?.images[0]
+                ? inventoryProduct?.assets?.images[0]
+                : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
             }}
             style={styles.item_image}
           />
@@ -121,7 +122,7 @@ const styles = EStyleSheet.create({
     borderBottomWidth: 1,
     backgroundColor: '#fff',
     borderBottomColor: '#ececec',
-    height: width < height ? height * 0.15 : height * 0.23,
+    height: width < height ? height * 0.15 : height * 0.18,
   },
   item_container_one: {
     flex: 2,

@@ -9,6 +9,7 @@ import {
   Modal,
   ActivityIndicator,
   AsyncStorage,
+  FlatList,
 } from 'react-native';
 import { Datepicker } from '@ui-kitten/components';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
@@ -131,8 +132,8 @@ const Home = (props) => {
               style={styles.cover_image}
             />
           </View>
-          <View style={styles.picker_container}>
-            <View style={styles.picker_placeholder}>
+          <View style={styles.headerContainer}>
+            <View style={styles.picker_container}>
               <Datepicker
                 date={calendarDate}
                 onSelect={(_date) => {
@@ -144,8 +145,6 @@ const Home = (props) => {
                   });
                 }}
               />
-            </View>
-            <View style={styles.picker_placeholder}>
               <Select
                 selectedIndex={selectedIndex}
                 value={0}
@@ -178,63 +177,84 @@ const Home = (props) => {
       });
     });
   }
-
   return (
     <View style={styles.home}>
       {/* <Tabs /> */}
       <ScrollView style={{ flex: 1, marginTop: 20 }}>
-        <View style={styles.img_container}>
-          <Image
-            source={{
-              uri:
-                'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
-            }}
-            style={styles.cover_image}
-          />
-        </View>
-        <Text style={styles.title}>Vegan Adda</Text>
-        <SafetyBanner {...props} />
-        <View style={styles.picker_container}>
-          <View style={styles.picker_placeholder}>
-            <Datepicker
-              date={calendarDate}
-              onSelect={(_date) => {
-                setcalendarDate(_date);
-                fetchData({
-                  year: moment(_date).year(),
-                  month: moment(_date).month(),
-                  day: moment(_date).date(),
-                });
+        <View style={styles.flexContainerMiddle}>
+          <View style={styles.img_container}>
+            <Image
+              source={{
+                uri:
+                  'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
               }}
+              style={styles.cover_image}
             />
           </View>
-          <View style={styles.picker_placeholder}>
-            <Select
-              selectedIndex={selectedIndex}
-              value={pickerData[selectedIndex.row]}
-              onSelect={(_selectedIndex) => {
-                setselectedPickerItem(_selectedIndex.row);
-                setSelectedIndex(_selectedIndex);
-              }}
-            >
-              {pickerData.map((title, key) => (
-                <SelectItem key={key} title={title} />
-              ))}
-            </Select>
+          <Text style={styles.title}>Vegan Adda</Text>
+          <View style={styles.headerContainer}>
+            <SafetyBanner {...props} />
+            <View style={styles.picker_container}>
+              <View style={styles.picker_placeholder}>
+                <Datepicker
+                  date={calendarDate}
+                  onSelect={(_date) => {
+                    setcalendarDate(_date);
+                    fetchData({
+                      year: moment(_date).year(),
+                      month: moment(_date).month(),
+                      day: moment(_date).date(),
+                    });
+                  }}
+                />
+              </View>
+              <View style={styles.picker_placeholder}>
+                <Select
+                  selectedIndex={selectedIndex}
+                  value={pickerData[selectedIndex.row]}
+                  onSelect={(_selectedIndex) => {
+                    setselectedPickerItem(_selectedIndex.row);
+                    setSelectedIndex(_selectedIndex);
+                  }}
+                >
+                  {pickerData.map((title, key) => (
+                    <SelectItem key={key} title={title} />
+                  ))}
+                </Select>
+              </View>
+            </View>
+          </View>
+          <View style={styles.cardContainer}>
+            {menuItems &&
+              menuItems[pickerData[selectedPickerItem]] &&
+              Object.keys(menuItems[pickerData[selectedPickerItem]]).map(
+                (type, _id) => (
+                  <FlatList
+                    data={menuItems[pickerData[selectedPickerItem]][type]}
+                    numColumns={width > 1000 ? 3 : 1}
+                    renderItem={(render) => {
+                      return (
+                        <Card
+                          {...props}
+                          type={type}
+                          key={render.item}
+                          id={render.item}
+                        />
+                      );
+                    }}
+                  />
+                )
+              )}
           </View>
         </View>
-        {menuItems &&
-          menuItems[pickerData[selectedPickerItem]] &&
-          Object.keys(
-            menuItems[pickerData[selectedPickerItem]]
-          ).map((type, _id) =>
-            menuItems[pickerData[selectedPickerItem]][type].map((id) => (
-              <Card {...props} type={type} key={id} id={id} />
-            ))
-          )}
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
-      <Cart to='OrderSummary' {...props} text='Checkout' />
+      <Cart
+        label={pickerData[selectedIndex.row]}
+        to='OrderSummary'
+        {...props}
+        text='Checkout'
+      />
     </View>
   );
 };
@@ -242,6 +262,7 @@ const Home = (props) => {
 const styles = EStyleSheet.create({
   home: {
     flex: 1,
+    alignItems: 'center',
   },
   img_container: {
     height: height * 0.3,
@@ -258,7 +279,8 @@ const styles = EStyleSheet.create({
     height: height * 0.06,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f3f3f3',
+    width: width / 2,
+    justifyContent: 'center',
   },
   picker_placeholder: {
     flex: 1,
@@ -273,6 +295,13 @@ const styles = EStyleSheet.create({
     fontSize: '1.2rem',
     padding: 20,
     fontWeight: 'bold',
+  },
+  cardContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  headerContainer: {
+    alignItems: 'center',
   },
 });
 
