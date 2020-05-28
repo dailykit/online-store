@@ -67,8 +67,14 @@ const PaymentProcessing = ({ navigation }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <React.Fragment>
-        <Text style={{ marginBottom: 20 }}>Wait! {progress}</Text>
-        <Spinner />
+        {!error ? (
+          <React.Fragment>
+            <Text style={{ marginBottom: 20 }}>Wait! {progress}</Text>
+            <Spinner />
+          </React.Fragment>
+        ) : (
+          <Text>Unable to fetch live status! Check in your orders.</Text>
+        )}
       </React.Fragment>
     </View>
   );
