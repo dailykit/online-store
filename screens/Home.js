@@ -68,6 +68,12 @@ const Home = (props) => {
     });
   }, []);
 
+  React.useEffect(() => {
+    if (user.email && user.sub) {
+      customerDetails();
+    }
+  }, [user]);
+
   // TODO: Add clientId to platform query
   // Query
   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
@@ -104,7 +110,6 @@ const Home = (props) => {
     },
     onSubscriptionData: (data) => {
       const customers = data.subscriptionData.data.customers;
-      customerDetails();
       if (customers.length) {
         setCustomer(customers[0]);
       } else {
