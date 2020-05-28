@@ -10,7 +10,6 @@ export const CUSTOMERS = gql`
   }
 `;
 
-// where: { keycloakId: { _eq: $keycloakId }, clientId: { _eq: $clientId } }
 export const CUSTOMER_DETAILS = gql`
   query CustomerDetails($keycloakId: String!) {
     platform_customerByClients(where: { keycloakId: { _eq: $keycloakId } }) {

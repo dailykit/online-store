@@ -29,7 +29,7 @@ export const ProfileScreen = ({ navigation }) => {
           />
         </View>
         <Text style={styles.userName}>
-          {customerDetails.firstName + ' ' + customerDetails.lastName}
+          {customerDetails?.firstName + ' ' + customerDetails?.lastName}
         </Text>
       </View>
       <ScrollView style={styles.container}>
@@ -43,7 +43,7 @@ export const ProfileScreen = ({ navigation }) => {
           <View style={styles.content}>
             <View style={styles.cardNumberTextContainer}>
               <Text style={styles.cardNumberText}>
-                {customerDetails.defaultCustomerAddress ? (
+                {customerDetails?.defaultCustomerAddress ? (
                   <React.Fragment>
                     {customerDetails.defaultCustomerAddress.line1 +
                       ', ' +
@@ -79,7 +79,7 @@ export const ProfileScreen = ({ navigation }) => {
               <Text style={styles.cardNumberText}>
                 <AntDesign name='creditcard' /> {'  '}
                 XXXX XXXX XXXX{' '}
-                {customerDetails.defaultStripePaymentMethod?.last4 || 'XXXX'}
+                {customerDetails?.defaultStripePaymentMethod?.last4 || 'XXXX'}
               </Text>
             </View>
             <View style={styles.cardNumberSelectedContainer}>

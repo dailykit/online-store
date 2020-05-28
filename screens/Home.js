@@ -74,12 +74,10 @@ const Home = (props) => {
     }
   }, [user]);
 
-  // TODO: Add clientId to platform query
   // Query
   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
     variables: {
       keycloakId: user.sub || user.userid,
-      // clientId: CLIENTID,
     },
     onCompleted: (data) => {
       console.log('platform -> data', data);
