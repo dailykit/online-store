@@ -11,7 +11,7 @@ export const DefaultPaymentFloater = ({ navigation }) => {
   const [card, setCard] = React.useState(undefined);
 
   React.useEffect(() => {
-    if (customerDetails) {
+    if (cart && customerDetails) {
       const card = customerDetails.stripePaymentMethods.find(
         (card) => card.stripePaymentMethodId === cart.paymentMethodId
       );
@@ -60,7 +60,7 @@ export const DefaultAddressFloater = ({ navigation }) => {
       style={styles.conatiner}
     >
       <View style={styles.cardNumberTextContainer}>
-        {cart.address ? (
+        {cart?.address ? (
           <Text style={styles.cardNumberText}>
             {cart.address.line1}, {cart.address.line2}, {cart.address.city}
           </Text>
