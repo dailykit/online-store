@@ -58,11 +58,29 @@ export const SelectPaymentMethod = ({ navigation }) => {
 
   if (!customerDetails)
     return (
-      <View
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        onPress={() => navigation.goBack()}
-      >
-        <Text>Error loading data!</Text>
+      <View style={styles.conatiner}>
+        <HeaderBack navigation={navigation} title='Go Back' />
+        <Text style={styles.title}>Payment Cards</Text>
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          onPress={() => navigation.goBack()}
+        >
+          <Button
+            style={{
+              marginBottom: 20,
+              backgroundColor: '#3FA4FF',
+              borderRadius: 0,
+              marginHorizontal: 10,
+              padding: 8,
+              justifyContent: 'center',
+            }}
+            onPress={() =>
+              navigation.navigate('Add Details', { path: 'cards' })
+            }
+          >
+            <Text style={{ color: '#fff' }}>Add Card</Text>
+          </Button>
+        </View>
       </View>
     );
 

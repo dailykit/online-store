@@ -36,6 +36,7 @@ const AddDetails = ({ route, navigation }) => {
       console.log(error);
       navigation.goBack();
     },
+    fetchPolicy: 'cache-and-network',
   });
 
   if (loading)
@@ -59,7 +60,7 @@ const AddDetails = ({ route, navigation }) => {
     // />
     <React.Fragment>
       <TouchableOpacity
-        onPress={() => navigation.goBack()}
+        onPress={fetchDetails}
         style={{
           height: height * 0.07,
           padding: 10,

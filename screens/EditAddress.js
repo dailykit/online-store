@@ -56,11 +56,29 @@ export const EditAddress = ({ navigation }) => {
 
   if (!customerDetails)
     return (
-      <View
-        style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-        onPress={() => navigation.goBack()}
-      >
-        <Text>Error loading data!</Text>
+      <View style={styles.conatiner}>
+        <HeaderBack navigation={navigation} title='Go Back' />
+        <Text style={styles.title}>Addresses</Text>
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          onPress={() => navigation.goBack()}
+        >
+          <Button
+            style={{
+              marginBottom: 20,
+              backgroundColor: '#3FA4FF',
+              borderRadius: 0,
+              marginHorizontal: 10,
+              padding: 8,
+              justifyContent: 'center',
+            }}
+            onPress={() =>
+              navigation.navigate('Add Details', { path: 'address' })
+            }
+          >
+            <Text style={{ color: '#fff' }}>Add Address</Text>
+          </Button>
+        </View>
       </View>
     );
 
@@ -79,7 +97,7 @@ export const EditAddress = ({ navigation }) => {
       <HeaderBack navigation={navigation} title='Go Back' />
       <Text style={styles.title}>Addresses</Text>
       <View style={styles.addressConatiner}>
-        {customerDetails.customerAddresses.map((address) => (
+        {customerDetails?.customerAddresses.map((address) => (
           <TouchableOpacity
             key={address.id}
             onPress={() => select(address)}

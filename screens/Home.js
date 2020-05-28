@@ -68,12 +68,16 @@ const Home = (props) => {
     });
   }, []);
 
-  // TODO: Add clientId to platform query
+  React.useEffect(() => {
+    if (user.email && user.sub) {
+      customerDetails();
+    }
+  }, [user]);
+
   // Query
   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
     variables: {
       keycloakId: user.sub || user.userid,
-      // clientId: CLIENTID,
     },
     onCompleted: (data) => {
       console.log('platform -> data', data);
@@ -104,7 +108,6 @@ const Home = (props) => {
     },
     onSubscriptionData: (data) => {
       const customers = data.subscriptionData.data.customers;
-      customerDetails();
       if (customers.length) {
         setCustomer(customers[0]);
       } else {
