@@ -148,7 +148,6 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
           <Cart
             cartItem={cartItem}
             navigation={navigation}
-            to={'Home'}
             {...restProps}
             text='Proceed'
             cartItemToDisplay={cartItemToDisplay}

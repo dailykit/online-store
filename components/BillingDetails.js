@@ -19,7 +19,7 @@ import { height, width } from '../utils/Scalaing';
 const BillingDetails = () => {
   const { cart } = useCartContext();
   const [isVisible, setIsVisible] = React.useState(false);
-  const [tip, setTip] = React.useState(cart.tip);
+  const [tip, setTip] = React.useState(cart?.tip);
 
   // Mutation
   const [updateCart] = useMutation(UPDATE_CART, {
@@ -60,7 +60,7 @@ const BillingDetails = () => {
         </View>
         <View style={styles.bill_child_container_right}>
           <Text style={styles.billing_details_right_text}>
-            $ {cart.itemTotal}
+            $ {cart?.itemTotal}
           </Text>
         </View>
       </View>
@@ -70,7 +70,7 @@ const BillingDetails = () => {
         </View>
         <View style={styles.bill_child_container_right}>
           <Text style={styles.billing_details_right_text}>
-            $ {cart.deliveryPrice}
+            $ {cart?.deliveryPrice}
           </Text>
         </View>
       </View>
@@ -79,7 +79,7 @@ const BillingDetails = () => {
           <Text style={styles.billing_details_left_text}>Tip</Text>
         </View>
         <View style={styles.bill_child_container_right}>
-          <Text style={styles.billing_details_right_text}>$ {cart.tip}</Text>
+          <Text style={styles.billing_details_right_text}>$ {cart?.tip}</Text>
           <TouchableOpacity
             style={{ marginLeft: 8 }}
             onPress={() => setIsVisible(true)}
@@ -120,11 +120,11 @@ const BillingDetails = () => {
       <View style={styles.bill_child_container}>
         <View style={styles.bill_child_container_left}>
           <Text style={styles.billing_details_left_text}>
-            Tax @{cart.taxPercent}%
+            Tax @{cart?.taxPercent}%
           </Text>
         </View>
         <View style={styles.bill_child_container_right}>
-          <Text style={styles.billing_details_right_text}>$ {cart.tax}</Text>
+          <Text style={styles.billing_details_right_text}>$ {cart?.tax}</Text>
         </View>
       </View>
       <View style={styles.bill_child_container}>
@@ -139,7 +139,7 @@ const BillingDetails = () => {
           <Text
             style={[styles.billing_details_right_text, { fontWeight: 'bold' }]}
           >
-            $ {cart.totalPrice}
+            $ {cart?.totalPrice}
           </Text>
         </View>
       </View>

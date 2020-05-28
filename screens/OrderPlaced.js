@@ -42,7 +42,7 @@ const OrderPlaced = ({ navigation }) => {
           Your order has been place. Your receipt will shortly be emailed to
           you.
         </Text>
-        <View style={styles.title_container}>
+        {/* <View style={styles.title_container}>
           <View style={styles.title_container_left}>
             <Text style={styles.deliver_on_text}>Deliver on</Text>
             <Text style={styles.time_text}>Monday, Dec 9</Text>
@@ -86,7 +86,7 @@ const OrderPlaced = ({ navigation }) => {
               DOWNLOAD RECIPE CARD
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );

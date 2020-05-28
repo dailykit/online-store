@@ -49,3 +49,13 @@ export const SAFETY_CHECK = gql`
     }
   }
 `;
+
+export const CART_BY_PK = gql`
+  subscription CartByPK($id: Int!) {
+    cartByPK(id: $id) {
+      paymentStatus
+      status
+      id
+    }
+  }
+`;
