@@ -28,8 +28,8 @@ export const AuthProvider = ({ children }) => {
       onLoad: 'check-sso',
       promiseType: 'native',
     });
+    setIsInitialized(true);
     if (authenticated) {
-      setIsInitialized(true);
       setIsAuthenticated(authenticated);
       const profile = await keycloak.loadUserInfo();
       setUser(profile);
