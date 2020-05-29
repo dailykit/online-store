@@ -3,6 +3,7 @@ import Keycloak from 'keycloak-js';
 
 import { CLIENTID } from 'react-native-dotenv';
 
+// TODO: pass clientId from vars
 const keycloak = new Keycloak({
   realm: 'consumers',
   url: 'https://secure.dailykit.org/auth',
