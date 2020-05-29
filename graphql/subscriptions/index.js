@@ -56,6 +56,7 @@ export const CART_BY_PK = gql`
       paymentStatus
       status
       id
+      orderId
     }
   }
 `;

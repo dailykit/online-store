@@ -51,7 +51,9 @@ const PaymentProcessing = ({ navigation }) => {
           if (data.cartByPK.status !== 'ORDER_PLACED') {
             return setProgress('Getting order details...');
           } else {
-            return navigation.navigate('OrderPlaced');
+            return navigation.navigate('OrderPlaced', {
+              orderId: data.cartByPK.orderId,
+            });
           }
         }
         case 'FAILED': {
