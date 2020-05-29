@@ -40,7 +40,9 @@ const OrderDetails = ({ orderId }) => {
         <View style={styles.data}>
           <Text style={styles.title}>Name: </Text>
           <Text>
-            {data.order.deliveryInfo.dropoff.dropoffInfo.customerFirstName}
+            {data.order.deliveryInfo.dropoff.dropoffInfo.customerFirstName +
+              ' ' +
+              data.order.deliveryInfo.dropoff.dropoffInfo.customerLastName}
           </Text>
         </View>
       </View>

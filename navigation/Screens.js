@@ -207,19 +207,15 @@ export default function OnboardingStack(props) {
     );
   }
 
+  console.log(isInitialized);
+
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>
-        {isInitialized ? (
-          <React.Fragment>
-            {isAuthenticated ? (
-              <Stack.Screen name='App' component={AppStack} />
-            ) : (
-              <Stack.Screen name='Auth' component={AuthStack} />
-            )}
-          </React.Fragment>
+        {isAuthenticated ? (
+          <Stack.Screen name='App' component={AppStack} />
         ) : (
-          <Stack.Screen name='Loader' component={LoaderStack} />
+          <Stack.Screen name='Auth' component={AuthStack} />
         )}
       </Stack.Navigator>
     </>

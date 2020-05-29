@@ -48,10 +48,10 @@ const Cart = ({
   const handleAddToCart = () => {
     try {
       if (
-        customerDetails.firstName &&
-        customerDetails.lastName &&
-        customerDetails.email &&
-        customerDetails.phoneNumber
+        customerDetails?.firstName &&
+        customerDetails?.lastName &&
+        customerDetails?.email &&
+        customerDetails?.phoneNumber
       ) {
         let products = cart?.cartInfo?.products || [];
         let total = parseFloat(cart?.cartInfo?.total) || 0;
