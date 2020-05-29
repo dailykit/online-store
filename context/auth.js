@@ -3,10 +3,12 @@ import Keycloak from 'keycloak-js';
 
 import { CLIENTID } from 'react-native-dotenv';
 
+// TODO: pass clientId from vars
 const keycloak = new Keycloak({
   realm: 'consumers',
   url: 'https://secure.dailykit.org/auth',
-  clientId: CLIENTID,
+  clientId: 'restaurantmealkit',
+  // clientId: CLIENTID,
   'ssl-required': 'none',
   'public-client': true,
   'bearer-only': false,
@@ -27,11 +29,10 @@ export const AuthProvider = ({ children }) => {
       onLoad: 'check-sso',
       promiseType: 'native',
     });
+    setIsInitialized(true);
     if (authenticated) {
-      setIsInitialized(true);
       setIsAuthenticated(authenticated);
       const profile = await keycloak.loadUserInfo();
-      console.log('initialize -> profile', profile);
       setUser(profile);
     }
   };
