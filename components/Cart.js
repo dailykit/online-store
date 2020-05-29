@@ -47,77 +47,93 @@ const Cart = ({
 
   const handleAddToCart = () => {
     try {
-      let products = cart?.cartInfo?.products || [];
-      let total = parseFloat(cart?.cartInfo?.total) || 0;
-      if (tunnelItem) {
-        if (type == 'comboProducts') {
-          let comboItemPrice = 0;
-          comboProductItems.forEach((product) => {
-            comboItemPrice = comboItemPrice + parseFloat(product.product.price);
-          });
-          total = total + comboItemPrice;
-          products.push({
-            cartItemId: uuid(),
-            products: comboProductItems,
-            type,
-            price: comboItemPrice,
-          });
-        } else {
-          products.push({
-            cartItemId: uuid(),
-            ...cartItem,
-            type,
-          });
-          total = total + parseFloat(cartItem.product.price);
-        }
-        total = parseFloat(total.toFixed(2));
-        // products and total ready
-        if (!customer) throw Error('Customer subscription failed!');
-        if (cart) {
-          // Update
-          // cartInfo are your products
-          const cartInfo = {
-            products,
-            total,
-          }; // you'll have to generate this every time
-          updateCart({
-            variables: {
-              id: cart.id,
-              set: {
-                cartInfo: cartInfo,
-              },
-            },
-          });
-        } else {
-          // Create
-          // cartInfo are your products
-          const cartInfo = {
-            products,
-            total,
-          }; // you'll have to generate this every time
-          createCart({
-            variables: {
-              object: {
-                cartInfo: cartInfo,
-                customerId: customer.id,
-                fulfillmentInfo: {
-                  type: 'DELIVERY',
-                  time: {
-                    from: '15:00',
-                    to: '19:00',
-                  },
-                  date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
+      if (
+        customerDetails.firstName &&
+        customerDetails.lastName &&
+        customerDetails.email &&
+        customerDetails.phoneNumber
+      ) {
+        let products = cart?.cartInfo?.products || [];
+        let total = parseFloat(cart?.cartInfo?.total) || 0;
+        if (tunnelItem) {
+          if (type == 'comboProducts') {
+            let comboItemPrice = 0;
+            comboProductItems.forEach((product) => {
+              comboItemPrice =
+                comboItemPrice + parseFloat(product.product.price);
+            });
+            total = total + comboItemPrice;
+            products.push({
+              cartItemId: uuid(),
+              products: comboProductItems,
+              type,
+              price: comboItemPrice,
+            });
+          } else {
+            products.push({
+              cartItemId: uuid(),
+              ...cartItem,
+              type,
+            });
+            total = total + parseFloat(cartItem.product.price);
+          }
+          total = parseFloat(total.toFixed(2));
+          // products and total ready
+          if (!customer) throw Error('Customer subscription failed!');
+          if (cart) {
+            // Update
+            // cartInfo are your products
+            const cartInfo = {
+              products,
+              total,
+            }; // you'll have to generate this every time
+            updateCart({
+              variables: {
+                id: cart.id,
+                set: {
+                  cartInfo: cartInfo,
                 },
-                paymentMethodId:
-                  customerDetails?.defaultPaymentMethodId || null,
-                address: customerDetails?.defaultCustomerAddress || null,
-                stripeCustomerId: customerDetails?.stripeCustomerId || null,
               },
-            },
-          });
+            });
+          } else {
+            // Create
+            // cartInfo are your products
+            const cartInfo = {
+              products,
+              total,
+            }; // you'll have to generate this every time
+            createCart({
+              variables: {
+                object: {
+                  cartInfo: cartInfo,
+                  customerId: customer.id,
+                  customerInfo: {
+                    customerFirstName: customerDetails.firstName,
+                    customerLastName: customerDetails.lastName,
+                    customerPhone: customerDetails.phoneNumber,
+                    customerEmail: customerDetails.email,
+                  },
+                  fulfillmentInfo: {
+                    type: 'DELIVERY',
+                    time: {
+                      from: '15:00',
+                      to: '19:00',
+                    },
+                    date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
+                  },
+                  paymentMethodId:
+                    customerDetails?.defaultPaymentMethodId || null,
+                  address: customerDetails?.defaultCustomerAddress || null,
+                  stripeCustomerId: customerDetails?.stripeCustomerId || null,
+                },
+              },
+            });
+          }
         }
+        navigation.navigate(to);
+      } else {
+        navigation.navigate('Add Details', { path: 'profile' });
       }
-      navigation.navigate(to);
     } catch (error) {
       console.log(error);
     }

@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Text, Spinner } from 'native-base';
+import { View, Text } from 'native-base';
 import { useCartContext } from '../context/cart';
 import { useMutation, useSubscription } from '@apollo/react-hooks';
 import { UPDATE_CART, CART_BY_PK } from '../graphql';
+import { Spinner } from '@ui-kitten/components';
 
 const PaymentProcessing = ({ navigation }) => {
   const { cart } = useCartContext();
@@ -72,7 +73,7 @@ const PaymentProcessing = ({ navigation }) => {
         {!error ? (
           <React.Fragment>
             <Text style={{ marginBottom: 20 }}>Wait! {progress}</Text>
-            <Spinner />
+            <Spinner status='success' />
           </React.Fragment>
         ) : (
           <Text>Unable to fetch live status! Check in your orders.</Text>

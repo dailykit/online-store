@@ -37,6 +37,7 @@ import { Text } from 'native-base';
 import { height, width } from '../utils/Scalaing';
 import PaymentProcessing from '../screens/PaymentProcessing';
 import AddDetails from '../screens/AddDetails';
+import { Spinner } from '@ui-kitten/components';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -47,6 +48,29 @@ function AuthStack(props) {
       <Stack.Screen
         name='Welcome'
         component={WelcomeScreen}
+        options={{
+          headerMode: false,
+          header: null,
+          headerShown: false,
+          cardStyle: { backgroundColor: '#F8F9FE' },
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
+const Loader = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Spinner status='warning' size='large' />
+  </View>
+);
+
+function LoaderStack(props) {
+  return (
+    <Stack.Navigator mode='card' headerMode='screen'>
+      <Stack.Screen
+        name='Loader'
+        component={Loader}
         options={{
           headerMode: false,
           header: null,
@@ -167,7 +191,7 @@ function HomeStack(props) {
 }
 
 export default function OnboardingStack(props) {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isInitialized } = useAuth();
   const [loading, setLoading] = useState(false);
   if (loading) {
     return (
@@ -186,10 +210,16 @@ export default function OnboardingStack(props) {
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>
-        {isAuthenticated ? (
-          <Stack.Screen name='App' component={AppStack} />
+        {isInitialized ? (
+          <React.Fragment>
+            {isAuthenticated ? (
+              <Stack.Screen name='App' component={AppStack} />
+            ) : (
+              <Stack.Screen name='Auth' component={AuthStack} />
+            )}
+          </React.Fragment>
         ) : (
-          <Stack.Screen name='Auth' component={AuthStack} />
+          <Stack.Screen name='Loader' component={LoaderStack} />
         )}
       </Stack.Navigator>
     </>
