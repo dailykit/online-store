@@ -9,6 +9,7 @@ export const CUSTOMER = gql`
       orderCarts(where: { status: { _eq: "PENDING" } }) {
         id
         address
+        customerInfo
         cartInfo
         customerId
         id
