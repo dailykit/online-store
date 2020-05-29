@@ -5,6 +5,7 @@ import {
   CUSTOMIZABLE_PRODUCT,
   INVENTORY_PRODUCT,
   SIMPLE_PRODUCT,
+  ORDER,
 } from './queries';
 
 import { CREATE_CUSTOMER, UPDATE_CART, CREATE_CART } from './mutations';
@@ -24,4 +25,5 @@ export {
   UPDATE_CART,
   SAFETY_CHECK,
   CART_BY_PK,
+  ORDER,
 };

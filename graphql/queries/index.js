@@ -1,5 +1,14 @@
 import gql from 'graphql-tag';
 
+export const ORDER = gql`
+  query Order($id: oid!) {
+    order(id: $id) {
+      itemTotal
+      deliveryInfo
+    }
+  }
+`;
+
 export const CUSTOMERS = gql`
   query Customers($dailyKeyID: String!, $email: String!) {
     customers(

@@ -94,7 +94,7 @@ export const SafetyScreen = ({ navigation }) => {
         </View>
         <View style={{ padding: 40 }} />
       </ScrollView>
-      <Cart to='OrderSummary' navigation={navigation} text='Checkout' />
+      <Cart to='' navigation={navigation} text='Checkout' />
     </>
   );
 };

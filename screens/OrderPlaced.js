@@ -19,6 +19,7 @@ import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { height, width } from '../utils/Scalaing';
+import OrderDetails from '../components/OrderDetails';
 
 const OrderPlaced = ({ route, navigation }) => {
   const { cart } = useCartContext();
@@ -54,6 +55,7 @@ const OrderPlaced = ({ route, navigation }) => {
         >
           Order ID: {orderId}
         </Text>
+        <OrderDetails orderId={orderId} />
         {/* <View style={styles.title_container}>
           <View style={styles.title_container_left}>
             <Text style={styles.deliver_on_text}>Deliver on</Text>
