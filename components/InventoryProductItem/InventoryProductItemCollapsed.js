@@ -64,7 +64,7 @@ const InventoryProductCollapsed = ({
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.item_title}>{`${inventoryProduct.name} `}</Text>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => {
                 navigation.navigate('Modal', {
                   data: inventoryProduct,
@@ -74,7 +74,7 @@ const InventoryProductCollapsed = ({
               }}
             >
               <Feather size={14} name='info' />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
           <Text style={styles.item_category}></Text>
           <Text

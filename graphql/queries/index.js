@@ -1,5 +1,23 @@
 import gql from 'graphql-tag';
 
+export const SIMPLE_RECIPE = gql`
+  query SimpleRecipe($id: Int!) {
+    simpleRecipe(id: $id) {
+      id
+      name
+      image
+      author
+      type
+      cookingTime
+      cuisine
+      description
+      ingredients
+      utensils
+      procedures
+    }
+  }
+`;
+
 export const ORDER = gql`
   query Order($id: oid!) {
     order(id: $id) {
@@ -198,16 +216,11 @@ export const SIMPLE_PRODUCT = gql`
       }
       simpleRecipe {
         author
-        cookingTime
-        assets
         cuisine
-        description
         id
-        image
         name
-        procedures
         show
-        utensils
+        type
       }
     }
   }

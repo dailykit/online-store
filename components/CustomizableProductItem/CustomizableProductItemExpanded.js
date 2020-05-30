@@ -28,7 +28,7 @@ const Item = ({
   tunnelItem,
   setproductOptionId,
 }) => {
-  const [typeSelected, setTypeSelected] = useState(true);
+  const [typeSelected, setTypeSelected] = useState('mealKit');
   const [servingIndex, setServingIndex] = useState(0);
   const [isSelected, setisSelected] = useState(0);
 
@@ -95,7 +95,11 @@ const Item = ({
                   >{`${simpleRecipeProduct?.name} `}</Text>
 
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('Modal')}
+                    onPress={() =>
+                      navigation.navigate('Modal', {
+                        recipeId: simpleRecipeProduct?.simpleRecipe?.id,
+                      })
+                    }
                   >
                     <Feather size={14} name='info' />
                   </TouchableOpacity>
@@ -132,26 +136,30 @@ const Item = ({
                     <TouchableOpacity
                       style={[
                         styles.type_button,
-                        typeSelected ? styles.selected_type_conatiner : {},
+                        typeSelected === 'mealKit'
+                          ? styles.selected_type_conatiner
+                          : {},
                       ]}
-                      onPress={() => setTypeSelected(!typeSelected)}
+                      onPress={() => setTypeSelected('mealKit')}
                     >
                       <Text style={styles.type_text}>Meal Kit</Text>
-                      {typeSelected && (
+                      {typeSelected === 'mealKit' && (
                         <View style={styles.done_container}>
                           <MaterialIcons name='done' size={16} color='#fff' />
                         </View>
                       )}
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => setTypeSelected(!typeSelected)}
+                      onPress={() => setTypeSelected('readyToEat')}
                       style={[
                         styles.type_button,
-                        !typeSelected ? styles.selected_type_conatiner : {},
+                        typeSelected === 'readyToEat'
+                          ? styles.selected_type_conatiner
+                          : {},
                       ]}
                     >
                       <Text style={styles.type_text}>Ready To Eat</Text>
-                      {!typeSelected && (
+                      {typeSelected === 'readyToEat' && (
                         <View style={[styles.done_container]}>
                           <MaterialIcons name='done' size={16} color='#fff' />
                         </View>
@@ -160,8 +168,9 @@ const Item = ({
                   </View>
                 </View>
                 <Text style={styles.item_chef}>Avaliable Servings:</Text>
-                {simpleRecipeProduct?.simpleRecipeProductOptions?.map(
-                  (item_data, key) => {
+                {simpleRecipeProduct?.simpleRecipeProductOptions
+                  ?.filter((serving) => serving.type === typeSelected)
+                  .map((item_data, key) => {
                     return (
                       <ServingSelect
                         key={key}
@@ -170,7 +179,11 @@ const Item = ({
                         setServingIndex={(index) => setServingIndex(index)}
                         size={item_data.simpleRecipeYield.yield.serving}
                         price={item_data.price[0].value}
-                        display={typeSelected ? 'Meal Kit' : 'Ready To Eat'}
+                        display={
+                          typeSelected === 'mealKit'
+                            ? 'Meal Kit'
+                            : 'Ready To Eat'
+                        }
                         type={item_data?.type}
                         customizableProduct
                         name={simpleRecipeProduct?.name}
@@ -191,8 +204,7 @@ const Item = ({
                         id={simpleRecipeProduct?.id}
                       />
                     );
-                  }
-                )}
+                  })}
               </View>
             )}
           </>
