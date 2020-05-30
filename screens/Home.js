@@ -44,7 +44,7 @@ const Home = (props) => {
   const { setCustomer, setCustomerDetails } = useCartContext();
   const { user } = useAuth();
 
-  console.log(user);
+  console.log('USER:', user);
 
   // ref
 
