@@ -76,9 +76,7 @@ const SimpleProductItemCollapsed = ({
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('Modal', {
-                  data: simpleRecipeProduct.simpleRecipe,
-                  author: simpleRecipeProduct.simpleRecipe.author,
-                  name: simpleRecipeProduct.name,
+                  recipeId: simpleRecipeProduct?.simpleRecipe?.id,
                 })
               }
             >
@@ -88,7 +86,9 @@ const SimpleProductItemCollapsed = ({
           <Text
             style={styles.item_chef}
           >{`${simpleRecipeProduct.simpleRecipe.author} `}</Text>
-          <Text style={styles.item_category}>vegeterian</Text>
+          <Text style={styles.item_category}>
+            {simpleRecipeProduct.simpleRecipe.type}
+          </Text>
         </View>
         <View style={styles.item_container_three}>
           <View style={styles.item_three_upper}></View>

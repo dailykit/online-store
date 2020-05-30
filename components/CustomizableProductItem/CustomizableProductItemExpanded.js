@@ -95,7 +95,11 @@ const Item = ({
                   >{`${simpleRecipeProduct?.name} `}</Text>
 
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('Modal')}
+                    onPress={() =>
+                      navigation.navigate('Modal', {
+                        recipeId: simpleRecipeProduct?.simpleRecipe?.id,
+                      })
+                    }
                   >
                     <Feather size={14} name='info' />
                   </TouchableOpacity>
