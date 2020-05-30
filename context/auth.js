@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }) => {
     if (authenticated) {
       setIsAuthenticated(authenticated);
       const profile = await keycloak.loadUserInfo();
+      console.log('initialize -> profile', profile);
       setUser(profile);
     }
   };

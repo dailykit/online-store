@@ -69,7 +69,7 @@ const Home = (props) => {
   }, []);
 
   React.useEffect(() => {
-    if (user.email && user.sub) {
+    if (user.sub || user.userid) {
       customerDetails();
     }
   }, [user]);
@@ -125,7 +125,7 @@ const Home = (props) => {
     },
   });
 
-  console.log('Subscription error: ', error);
+  if (error) console.log('Subscription error: ', error);
 
   if (!data.length || loading) {
     return (
