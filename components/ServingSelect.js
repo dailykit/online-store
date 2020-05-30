@@ -23,6 +23,8 @@ const ServingSelect = ({
   simpleRecipeProductId,
   name,
 }) => {
+  console.log(size);
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -38,7 +40,7 @@ const ServingSelect = ({
         {
           borderColor: isSelected ? '#3fa4ff' : '#ececec',
           backgroundColor: '#fff',
-          display: display == type ? 'flex' : 'none',
+          display: 'flex',
         },
       ]}
     >

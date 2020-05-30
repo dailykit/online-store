@@ -87,7 +87,7 @@ const InventoryProductItem = ({
       </View>
     );
   }
-  if (!data.inventoryProduct) {
+  if (!data?.inventoryProduct) {
     return (
       <View
         style={{

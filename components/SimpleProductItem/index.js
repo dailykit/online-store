@@ -39,6 +39,7 @@ const SimpleProductItem = ({
     variables: { id },
     onCompleted: (_data) => {
       let item = _data;
+      console.log(_data);
       if (item.simpleRecipeProduct?.simpleRecipeProductOptions[0]) {
         let objToPush = {
           product: {
