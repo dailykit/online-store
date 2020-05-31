@@ -17,11 +17,16 @@ import InventoryProductItem from './InventoryProductItem';
 import { useCartContext } from '../context/cart';
 
 import { height, width } from '../utils/Scalaing';
+import { useAppContext } from '../context/app';
 
 const Card = ({ id, type, navigation, label, ...restProps }) => {
   const [price, setPrice] = useState('randomNumber');
   const [cardItem, setcardItem] = useState(null); // obj to push to jaguar
   const [cardData, setcardData] = useState(null); // obj to pass to add to cart modal
+
+  const { visual } = useAppContext();
+
+  console.log(visual);
 
   useEffect(() => {
     console.log(id, type);

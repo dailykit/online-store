@@ -237,8 +237,7 @@ const Home = (props) => {
           <View style={styles.img_container}>
             <Image
               source={{
-                uri:
-                  'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+                uri: visual.cover,
               }}
               style={styles.cover_image}
             />
@@ -294,13 +293,12 @@ const Home = (props) => {
       <View style={styles.img_container}>
         <Image
           source={{
-            uri:
-              'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+            uri: visual.cover,
           }}
           style={styles.cover_image}
         />
       </View>
-      <Text style={styles.title}>GD Bro Burgers</Text>
+      <Text style={styles.title}>{brand.name}</Text>
       <View style={styles.headerContainer}>
         <SafetyBanner {...props} />
         <View style={styles.picker_container}>
