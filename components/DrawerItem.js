@@ -4,8 +4,11 @@ import { useAuth } from '../context/auth';
 import Icon from './Icon';
 import argonTheme from '../constants/Theme';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { useAppContext } from '../context/app';
 
 const DrawerItem = ({ focused, title, navigation, screen }) => {
+  const { visual } = useAppContext();
+
   const renderIcon = () => {
     switch (title) {
       case 'Home':
@@ -13,7 +16,9 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
           <Icon
             name='home'
             size={14}
-            color={focused ? 'white' : argonTheme.COLORS.PRIMARY}
+            color={
+              focused ? 'white' : visual.color || argonTheme.COLORS.PRIMARY
+            }
           />
         );
       case 'Profile':
@@ -21,7 +26,9 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
           <Icon
             name='user'
             size={14}
-            color={focused ? 'white' : argonTheme.COLORS.PRIMARY}
+            color={
+              focused ? 'white' : visual.color || argonTheme.COLORS.PRIMARY
+            }
           />
         );
       case 'Orders':
@@ -29,7 +36,9 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
           <Icon
             name='package'
             size={14}
-            color={focused ? 'white' : argonTheme.COLORS.PRIMARY}
+            color={
+              focused ? 'white' : visual.color || argonTheme.COLORS.PRIMARY
+            }
           />
         );
 
@@ -43,7 +52,13 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
   };
   const containerStyles = [
     styles.defaultStyle,
-    focused ? [styles.activeStyle, styles.shadow] : null,
+    focused
+      ? [
+          styles.activeStyle,
+          styles.shadow,
+          { backgroundColor: visual.color || argonTheme.COLORS.ACTIVE },
+        ]
+      : null,
     { flexDirection: 'row' },
   ];
 
