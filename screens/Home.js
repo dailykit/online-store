@@ -139,7 +139,7 @@ const Home = (props) => {
   };
 
   React.useEffect(() => {
-    if (availability && availability.store.isOpen) {
+    if (availability && isStoreOpen()) {
       fetchData({
         year: moment().year(),
         month: moment().month(),
@@ -205,6 +205,25 @@ const Home = (props) => {
     },
   });
 
+  const isStoreOpen = () => {
+    const current = new Date();
+    if (availability.store.isOpen) {
+      const minutes = current.getMinutes() + current.getHours() * 60;
+      const from = availability.store.from.split(':');
+      const to = availability.store.to.split(':');
+      const fromMinutes = parseInt(from[1]) + parseInt(from[0]) * 60;
+      const toMinutes = parseInt(to[1]) + parseInt(to[0]) * 60;
+
+      if (minutes >= fromMinutes && minutes <= toMinutes) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  };
+
   if (error) console.log('Subscription error: ', error);
 
   if (settingsLoading) {
@@ -221,7 +240,7 @@ const Home = (props) => {
     );
   }
 
-  if (availability && !availability.store.isOpen)
+  if (availability && !isStoreOpen())
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text style={{ fontWeight: 500, fontSize: 24 }}>Store Closed</Text>

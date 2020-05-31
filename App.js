@@ -137,7 +137,6 @@ const App = () => {
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
       ...Ionicons.font,
     });
-    await fetchStoreSettings();
     return Promise.all([...cacheImages(assetImages)]);
   };
 
