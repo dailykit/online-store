@@ -1,5 +1,15 @@
 import gql from 'graphql-tag';
 
+export const STORE_SETTINGS = gql`
+  query {
+    storeSettings {
+      type
+      value
+      identifier
+    }
+  }
+`;
+
 export const SIMPLE_RECIPE = gql`
   query SimpleRecipe($id: Int!) {
     simpleRecipe(id: $id) {

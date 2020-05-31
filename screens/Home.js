@@ -17,7 +17,12 @@ import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
 import moment from 'moment';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { CREATE_CUSTOMER, CUSTOMER, CUSTOMER_DETAILS } from '../graphql';
+import {
+  CREATE_CUSTOMER,
+  CUSTOMER,
+  CUSTOMER_DETAILS,
+  STORE_SETTINGS,
+} from '../graphql';
 import { height, width } from '../utils/Scalaing';
 import Card from '../components/Card';
 import Cart from '../components/Cart';
@@ -28,10 +33,12 @@ import {
   useLazyQuery,
   useMutation,
   useSubscription,
+  useQuery,
 } from '@apollo/react-hooks';
 import { useCartContext } from '../context/cart';
 import * as axios from 'axios';
 import { useAuth } from '../context/auth';
+import { useAppContext } from '../context/app';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
@@ -44,9 +51,78 @@ const Home = (props) => {
   const { setCustomer, setCustomerDetails } = useCartContext();
   const { user } = useAuth();
 
-  console.log('USER:', user);
+  const {
+    brand,
+    setBrand,
+    visual,
+    setVisual,
+    availability,
+    setAvailability,
+  } = useAppContext();
 
-  // ref
+  // Query
+  const { loading: settingsLoading } = useQuery(STORE_SETTINGS, {
+    onCompleted: (data) => {
+      data.storeSettings.forEach(({ type, identifier, value }) => {
+        switch (type) {
+          case 'brand': {
+            switch (identifier) {
+              case 'Brand Logo': {
+                return setBrand({ ...brand, logo: value.url });
+              }
+              case 'Brand Name': {
+                return setBrand({ ...brand, name: value.name });
+              }
+              default: {
+                return;
+              }
+            }
+          }
+          case 'visual': {
+            switch (identifier) {
+              case 'App Title': {
+                return setVisual({ ...visual, title: value.title });
+              }
+              case 'Favicon': {
+                return setVisual({ ...visual, favicon: value.url });
+              }
+              case 'Primary Color': {
+                return setVisual({ ...visual, color: value.color });
+              }
+              case 'Cover': {
+                return setVisual({ ...visual, cover: value.url });
+              }
+              default: {
+                return;
+              }
+            }
+          }
+          case 'availability': {
+            switch (identifier) {
+              case 'Store Availability': {
+                return setAvailability({ ...availability, store: value });
+              }
+              case 'Pickup': {
+                return setAvailability({ ...availability, pickup: value });
+              }
+              case 'Delivery': {
+                return setAvailability({ ...availability, delivery: value });
+              }
+              default: {
+                return;
+              }
+            }
+          }
+          default: {
+            return;
+          }
+        }
+      });
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const fetchData = async (date) => {
     try {
@@ -63,12 +139,14 @@ const Home = (props) => {
   };
 
   React.useEffect(() => {
-    fetchData({
-      year: moment().year(),
-      month: moment().month(),
-      day: moment().date(),
-    });
-  }, []);
+    if (availability && availability.store.isOpen) {
+      fetchData({
+        year: moment().year(),
+        month: moment().month(),
+        day: moment().date(),
+      });
+    }
+  }, [availability]);
 
   React.useEffect(() => {
     if (user.sub || user.userid) {
@@ -128,6 +206,28 @@ const Home = (props) => {
   });
 
   if (error) console.log('Subscription error: ', error);
+
+  if (settingsLoading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <ActivityIndicator size='large' />
+      </View>
+    );
+  }
+
+  if (availability && !availability.store.isOpen)
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text style={{ fontWeight: 500, fontSize: 24 }}>Store Closed</Text>
+        <Text style={{ fontSize: 20 }}>{availability.store.shutMessage}</Text>
+      </View>
+    );
 
   if (!data.length || loading) {
     return (

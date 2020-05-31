@@ -8,6 +8,7 @@ import {
   ORDER,
   ORDERS,
   SIMPLE_RECIPE,
+  STORE_SETTINGS,
 } from './queries';
 
 import { CREATE_CUSTOMER, UPDATE_CART, CREATE_CART } from './mutations';
@@ -30,4 +31,5 @@ export {
   ORDER,
   ORDERS,
   SIMPLE_RECIPE,
+  STORE_SETTINGS,
 };

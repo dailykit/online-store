@@ -38,6 +38,9 @@ import { height, width } from '../utils/Scalaing';
 import PaymentProcessing from '../screens/PaymentProcessing';
 import AddDetails from '../screens/AddDetails';
 import { Spinner } from '@ui-kitten/components';
+import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+import { STORE_SETTINGS } from '../graphql';
+import { useAppContext } from '../context/app';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -192,27 +195,13 @@ function HomeStack(props) {
 
 export default function OnboardingStack(props) {
   const { isAuthenticated, isInitialized } = useAuth();
-  const [loading, setLoading] = useState(false);
-  if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <ActivityIndicator size='large' />
-      </View>
-    );
-  }
 
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>
-        {isInitialized ? (
+        {true ? (
           <React.Fragment>
-            {isAuthenticated ? (
+            {true ? (
               <Stack.Screen name='App' component={AppStack} />
             ) : (
               <Stack.Screen name='Auth' component={AuthStack} />
