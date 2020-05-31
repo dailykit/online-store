@@ -28,7 +28,7 @@ const SimpleProductItemCollapsed = ({
   const [typeSelected, setTypeSelected] = useState('mealKit');
   const [servingIndex, setServingIndex] = useState(0);
   const [isSelectedIndex, setisSelectedIndex] = useState(0);
-  console.log('typeSelected', typeSelected);
+
   if (!simpleRecipeProduct) {
     return <Text>Bad Data</Text>;
   }

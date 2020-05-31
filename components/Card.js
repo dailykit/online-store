@@ -26,8 +26,6 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
 
   const { visual } = useAppContext();
 
-  console.log(visual);
-
   useEffect(() => {
     console.log(id, type);
   }, []);
@@ -133,6 +131,7 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
               style={[
                 styles.button,
                 { display: isNaN(price) ? 'none' : 'flex' },
+                { backgroundColor: visual.color || '#3fa4ff' },
               ]}
             >
               <Text style={styles.add_to_card_text}>

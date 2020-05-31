@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { useAppContext } from '../context/app';
 
 const ServingSelect = ({
   index,
@@ -23,7 +24,7 @@ const ServingSelect = ({
   simpleRecipeProductId,
   name,
 }) => {
-  console.log(size);
+  const { visual } = useAppContext();
 
   return (
     <TouchableOpacity
@@ -38,7 +39,11 @@ const ServingSelect = ({
       style={[
         styles.servingSelectContainer,
         {
-          borderColor: isSelected ? '#3fa4ff' : '#ececec',
+          borderColor: isSelected
+            ? visual.color
+              ? visual.color
+              : '#3fa4ff'
+            : '#ececec',
           backgroundColor: '#fff',
           display: 'flex',
         },
@@ -56,7 +61,12 @@ const ServingSelect = ({
       </View>
       <View style={styles.servingSelectContainer_three}>
         {isSelected && (
-          <View style={styles.done_container}>
+          <View
+            style={[
+              styles.done_container,
+              { backgroundColor: visual.color || '#3fa4ff' },
+            ]}
+          >
             <MaterialIcons name='done' size={16} color='#fff' />
           </View>
         )}

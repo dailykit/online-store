@@ -16,6 +16,7 @@ import EStyleSheet, { child } from 'react-native-extended-stylesheet';
 import { CREATE_CART, UPDATE_CART } from '../graphql/mutations';
 
 import { height, width } from '../utils/Scalaing';
+import { useAppContext } from '../context/app';
 
 const Cart = ({
   navigation,
@@ -27,6 +28,7 @@ const Cart = ({
   comboProductItems,
 }) => {
   const { cart, customerDetails, customer } = useCartContext();
+  const { visual } = useAppContext();
 
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
@@ -145,7 +147,10 @@ const Cart = ({
   if (!tunnelItem && !numberOfProducts) return <></>;
 
   return (
-    <TouchableOpacity onPress={handleAddToCart} style={styles.container}>
+    <TouchableOpacity
+      onPress={handleAddToCart}
+      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+    >
       <View style={styles.container_left}>
         {!tunnelItem && (
           <Text style={styles.text}>
@@ -171,6 +176,7 @@ const Cart = ({
 
 export const CartSummary = ({ navigation, text }) => {
   const { cart } = useCartContext();
+  const { visual } = useAppContext();
 
   const pay = () => {
     if (cart.isValid.status) {
@@ -183,7 +189,10 @@ export const CartSummary = ({ navigation, text }) => {
   if (!cart?.cartInfo?.products?.length) return <></>;
 
   return (
-    <TouchableOpacity onPress={pay} style={styles.container}>
+    <TouchableOpacity
+      onPress={pay}
+      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+    >
       <View style={[styles.container_left, { flex: 3 }]}>
         <Text style={[styles.text, { fontSize: 18 }]}>
           {cart?.cartInfo?.products?.length} items | $ {cart.totalPrice}
@@ -214,12 +223,13 @@ export const ComboProductItemProceed = ({
   setCurrentComboProductIndex,
   currentComboProductIndex,
 }) => {
+  const { visual } = useAppContext();
   return (
     <TouchableOpacity
       onPress={() => {
         setCurrentComboProductIndex(currentComboProductIndex + 1);
       }}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
     >
       <View style={[styles.container_left, { flex: 4 }]}>
         <Text style={[styles.text, { fontSize: 14 }]}>

@@ -31,14 +31,14 @@ class Header extends React.Component {
     const { white, title, navigation } = this.props;
 
     switch (title) {
-      case 'Home':
-        return [
-          <BasketButton
-            key='basket-home'
-            navigation={navigation}
-            isWhite={white}
-          />,
-        ];
+      // case 'Home':
+      //   return [
+      //     <BasketButton
+      //       key='basket-home'
+      //       navigation={navigation}
+      //       isWhite={white}
+      //     />,
+      //   ];
       default:
         break;
     }
