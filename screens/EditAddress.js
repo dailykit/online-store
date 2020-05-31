@@ -16,9 +16,11 @@ import { Spinner } from '@ui-kitten/components';
 
 import { height, width } from '../utils/Scalaing';
 import { Button } from 'native-base';
+import { useAppContext } from '../context/app';
 
 export const EditAddress = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
+  const { visual } = useAppContext();
 
   const [loading, setLoading] = React.useState(false);
 
@@ -66,7 +68,7 @@ export const EditAddress = ({ navigation }) => {
           <Button
             style={{
               marginBottom: 20,
-              backgroundColor: '#3FA4FF',
+              backgroundColor: visual.color || '#3FA4FF',
               borderRadius: 0,
               marginHorizontal: 10,
               padding: 8,
@@ -141,7 +143,7 @@ export const EditAddress = ({ navigation }) => {
       <Button
         style={{
           marginBottom: 20,
-          backgroundColor: '#3FA4FF',
+          backgroundColor: visual.color || '#3FA4FF',
           borderRadius: 0,
           marginHorizontal: 10,
           padding: 8,

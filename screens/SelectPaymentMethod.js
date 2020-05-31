@@ -20,6 +20,7 @@ import { Button } from 'native-base';
 
 export const SelectPaymentMethod = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
+  const { visual } = useAppContext();
 
   const [loading, setLoading] = React.useState(false);
 
@@ -68,7 +69,7 @@ export const SelectPaymentMethod = ({ navigation }) => {
           <Button
             style={{
               marginBottom: 20,
-              backgroundColor: '#3FA4FF',
+              backgroundColor: visual.color || '#3FA4FF',
               borderRadius: 0,
               marginHorizontal: 10,
               padding: 8,
@@ -128,11 +129,15 @@ export const SelectPaymentMethod = ({ navigation }) => {
                     borderWidth: 1,
                     borderColor:
                       card.stripePaymentMethodId === cart?.paymentMethodId
-                        ? '#3fa4ff'
+                        ? visual.color
+                          ? visual.color
+                          : '#3fa4ff'
                         : '#dedede',
                     backgroundColor:
                       card.stripePaymentMethodId === cart?.paymentMethodId
-                        ? '#3fa4ff'
+                        ? visual.color
+                          ? visual.color
+                          : '#3fa4ff'
                         : '#fff',
                   },
                 ]}
@@ -148,7 +153,7 @@ export const SelectPaymentMethod = ({ navigation }) => {
       <Button
         style={{
           marginBottom: 20,
-          backgroundColor: '#3FA4FF',
+          backgroundColor: visual.color || '#3FA4FF',
           borderRadius: 0,
           marginHorizontal: 10,
           padding: 8,

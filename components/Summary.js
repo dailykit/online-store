@@ -12,10 +12,12 @@ import { useMutation } from '@apollo/react-hooks';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import { height, width } from '../utils/Scalaing';
+import { useAppContext } from '../context/app';
 
 const Summary = ({ useQuantity, item }) => {
   const [quantity, setquantity] = useState(1);
   const { cart } = useCartContext();
+  const { visual } = useAppContext();
 
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
@@ -105,7 +107,10 @@ const Summary = ({ useQuantity, item }) => {
                   onPress={() => {
                     removeFromCart(item);
                   }}
-                  style={styles.button_container_left}
+                  style={[
+                    styles.button_container_left,
+                    { backgroundColor: visual.color || '#3fa4ff' },
+                  ]}
                 >
                   <Text style={{ color: 'white' }}>Remove Item</Text>
                 </TouchableOpacity>
@@ -156,7 +161,10 @@ const Summary = ({ useQuantity, item }) => {
                 onPress={() => {
                   removeFromCart(item);
                 }}
-                style={styles.button_container_left}
+                style={[
+                  styles.button_container_left,
+                  { backgroundColor: visual.color || '#3fa4ff' },
+                ]}
               >
                 <Text style={{ color: 'white' }}>Remove Item</Text>
               </TouchableOpacity>
