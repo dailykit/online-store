@@ -92,7 +92,7 @@ export const ProfileScreen = ({ navigation }) => {
           </View>
         </TouchableOpacity>
         {/* Order History Card */}
-        <TouchableOpacity onPress={() => {}} style={styles.card}>
+        {/* <TouchableOpacity onPress={() => {}} style={styles.card}>
           <Text style={styles.cardTitle}>Order History</Text>
           <View style={styles.content}>
             <View style={styles.cardNumberTextContainer}>
@@ -108,7 +108,7 @@ export const ProfileScreen = ({ navigation }) => {
               </View>
             </View>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </ScrollView>
     </View>
   );
