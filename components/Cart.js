@@ -128,11 +128,13 @@ const Cart = ({
                     customerDetails?.defaultPaymentMethodId || null,
                   address: customerDetails?.defaultCustomerAddress || null,
                   stripeCustomerId: customerDetails?.stripeCustomerId || null,
+                  tip: 0,
                 },
               },
             });
           }
         }
+        if (text === 'Checkout') navigation.navigate('OrderSummary');
         setIsModalVisible(false);
       } else {
         setIsModalVisible(false);

@@ -106,7 +106,7 @@ const BillingDetails = () => {
               >
                 <Input
                   placeholder='Add your tip'
-                  value={tip.toString()}
+                  value={tip}
                   onChangeText={(nextValue) => setTip(nextValue)}
                 />
                 <Button onPress={addTip} style={styles.button_container_left}>
