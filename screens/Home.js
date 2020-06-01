@@ -252,7 +252,6 @@ const Home = (props) => {
     );
   }
 
-  console.log(availability);
   if (availability && !isStoreOpen())
     return (
       <>
@@ -260,14 +259,14 @@ const Home = (props) => {
         <View
           style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
         >
-          <Text style={{ fontWeight: 500, fontSize: 24 }}>Store Closed</Text>
+          <Text style={{ fontWeight: 500, fontSize: 24, marginBottom: 20 }}>
+            Store Closed
+          </Text>
           <Text style={{ fontSize: 20 }}>{availability.store.shutMessage}</Text>
         </View>
       </>
     );
 
-  // console.log('Visual:', visual);
-  // console.log('Brand:', brand);
   const _renderItem = ({ section, index }) => {
     let numColumns = width > 1000 ? 3 : 1;
 
@@ -389,7 +388,20 @@ const Home = (props) => {
             style={styles.cover_image}
           />
         </View>
-        <Text style={styles.title}>{brand.name}</Text>
+        <View
+          style={{
+            marginHorizontal: 20,
+            flexDirection: 'row',
+            marginVertical: 10,
+            alignItems: 'center',
+          }}
+        >
+          <Image
+            style={{ width: 50, height: 50, borderRadius: 25 }}
+            source={{ uri: brand.logo }}
+          />
+          <Text style={styles.title}>{brand.name}</Text>
+        </View>
         <View style={styles.headerContainer}>
           <SafetyBanner {...props} />
         </View>
@@ -523,7 +535,7 @@ const styles = EStyleSheet.create({
   },
   title: {
     fontSize: '1.2rem',
-    padding: 20,
+    padding: 10,
     fontWeight: 'bold',
   },
   cardContainer: {
