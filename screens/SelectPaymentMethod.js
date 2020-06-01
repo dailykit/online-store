@@ -17,6 +17,7 @@ import { useMutation } from '@apollo/react-hooks';
 
 import { height, width } from '../utils/Scalaing';
 import { Button } from 'native-base';
+import { useAppContext } from '../context/app';
 
 export const SelectPaymentMethod = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
