@@ -8,12 +8,16 @@ import {
   ORDER,
   ORDERS,
   SIMPLE_RECIPE,
-  STORE_SETTINGS,
 } from './queries';
 
 import { CREATE_CUSTOMER, UPDATE_CART, CREATE_CART } from './mutations';
 
-import { CUSTOMER, SAFETY_CHECK, CART_BY_PK } from './subscriptions';
+import {
+  CUSTOMER,
+  SAFETY_CHECK,
+  CART_BY_PK,
+  STORE_SETTINGS,
+} from './subscriptions';
 
 export {
   CUSTOMER,

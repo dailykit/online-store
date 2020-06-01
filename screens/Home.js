@@ -61,68 +61,80 @@ const Home = (props) => {
   } = useAppContext();
 
   // Query
-  const { loading: settingsLoading } = useQuery(STORE_SETTINGS, {
-    onCompleted: (data) => {
-      data.storeSettings.forEach(({ type, identifier, value }) => {
-        switch (type) {
-          case 'brand': {
-            switch (identifier) {
-              case 'Brand Logo': {
-                return setBrand({ ...brand, logo: value.url });
-              }
-              case 'Brand Name': {
-                return setBrand({ ...brand, name: value.name });
-              }
-              default: {
-                return;
-              }
+  const { loading: settingsLoading, error: settingsError } = useSubscription(
+    STORE_SETTINGS,
+    {
+      onSubscriptionData: (data) => {
+        const brandSettings = data.subscriptionData.data.storeSettings.filter(
+          (setting) => setting.type === 'brand'
+        );
+        const visualSettings = data.subscriptionData.data.storeSettings.filter(
+          (setting) => setting.type === 'visual'
+        );
+        const availabilitySettings = data.subscriptionData.data.storeSettings.filter(
+          (setting) => setting.type === 'availability'
+        );
+
+        let brandState = {};
+        brandSettings.forEach(({ identifier, value }) => {
+          switch (identifier) {
+            case 'Brand Logo': {
+              brandState.logo = value.url;
+              return;
+            }
+            case 'Brand Name': {
+              brandState.name = value.name;
+              return;
+            }
+            default: {
+              return;
             }
           }
-          case 'visual': {
-            switch (identifier) {
-              case 'App Title': {
-                return setVisual({ ...visual, title: value.title });
-              }
-              case 'Favicon': {
-                return setVisual({ ...visual, favicon: value.url });
-              }
-              case 'Primary Color': {
-                return setVisual({ ...visual, color: value.color });
-              }
-              case 'Cover': {
-                return setVisual({ ...visual, cover: value.url });
-              }
-              default: {
-                return;
-              }
+        });
+        setBrand({ ...brandState });
+
+        let visualState = {};
+        visualSettings.forEach(({ identifier, value }) => {
+          switch (identifier) {
+            case 'Primary Color': {
+              visualState.color = value.color;
+              return;
+            }
+            case 'Cover': {
+              visualState.cover = value.url;
+              return;
+            }
+            default: {
+              return;
             }
           }
-          case 'availability': {
-            switch (identifier) {
-              case 'Store Availability': {
-                return setAvailability({ ...availability, store: value });
-              }
-              case 'Pickup Availability': {
-                return setAvailability({ ...availability, pickup: value });
-              }
-              case 'Delivery Availability': {
-                return setAvailability({ ...availability, delivery: value });
-              }
-              default: {
-                return;
-              }
+        });
+        setVisual({ ...visualState });
+
+        let availabilityState = {};
+        availabilitySettings.forEach(({ identifier, value }) => {
+          switch (identifier) {
+            case 'Store Availability': {
+              availabilityState.store = value;
+              return;
+            }
+            case 'Pickup Availability': {
+              availabilityState.pickup = value;
+              return;
+            }
+            case 'Delivery Availability': {
+              availabilityState.delivery = value;
+              return;
+            }
+            default: {
+              return;
             }
           }
-          default: {
-            return;
-          }
-        }
-      });
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+        });
+        setAvailability({ ...availabilityState });
+      },
+    }
+  );
 
   const fetchData = async (date) => {
     try {
@@ -240,6 +252,7 @@ const Home = (props) => {
     );
   }
 
+  console.log(availability);
   if (availability && !isStoreOpen())
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
