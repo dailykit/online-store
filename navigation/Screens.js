@@ -199,9 +199,9 @@ export default function OnboardingStack(props) {
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>
-        {isInitialized ? (
+        {true ? (
           <React.Fragment>
-            {isAuthenticated ? (
+            {true ? (
               <Stack.Screen name='App' component={AppStack} />
             ) : (
               <Stack.Screen name='Auth' component={AuthStack} />

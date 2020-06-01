@@ -193,17 +193,8 @@ const ComboProduct = ({
 export default ComboProduct;
 
 const styles = EStyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { backgroundColor: '#fff' },
 
-  card_container: {
-    height: height * 0.55,
-    width,
-    paddingHorizontal: 20,
-    elevation: 2,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
-    shadowColor: '#000',
-    shadowOffset: {},
-  },
   card_title: {
     flex: 1,
     flexDirection: 'row',
@@ -219,7 +210,6 @@ const styles = EStyleSheet.create({
     color: 'gray',
   },
   item_parent_container: {
-    flex: 5,
     backgroundColor: '#fff',
   },
   flexContainer: {

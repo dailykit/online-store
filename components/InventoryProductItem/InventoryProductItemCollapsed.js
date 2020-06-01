@@ -156,7 +156,7 @@ const styles = EStyleSheet.create({
     flex: 1,
     height: null,
     width: null,
-    resizeMode: 'cover',
+    resizeMode: 'contain',
   },
   item_title: {
     fontSize: '$xxs',

@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
-  StyleSheet,
-  Dimensions,
   ScrollView,
   View,
   Image,
   Text,
-  Modal,
   ActivityIndicator,
-  AsyncStorage,
-  FlatList,
-  Platform,
+  SectionList,
 } from 'react-native';
 import { Datepicker } from '@ui-kitten/components';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
@@ -50,6 +45,8 @@ const Home = (props) => {
 
   const { setCustomer, setCustomerDetails } = useCartContext();
   const { user } = useAuth();
+
+  const sectionListRef = useRef();
 
   const {
     brand,
@@ -142,6 +139,7 @@ const Home = (props) => {
       const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
         input: date,
       });
+      console.log(response.data);
       setData(response.data);
       setLoading(false);
     } catch (err) {
@@ -261,8 +259,41 @@ const Home = (props) => {
       </View>
     );
 
-  console.log('Visual:', visual);
-  console.log('Brand:', brand);
+  // console.log('Visual:', visual);
+  // console.log('Brand:', brand);
+  const _renderItem = ({ section, index }) => {
+    let numColumns = width > 1000 ? 3 : 1;
+
+    if (index % numColumns !== 0) return null;
+
+    const items = [];
+
+    for (let i = index; i < index + numColumns; i++) {
+      if (i >= section.data.length) {
+        break;
+      }
+
+      items.push(
+        <Card
+          {...props}
+          type={section.data[i].type}
+          key={Math.floor(Math.random() * 100000)}
+          id={section.data[i].id}
+        />
+      );
+    }
+
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        {items}
+      </View>
+    );
+  };
 
   if (!data.length || loading) {
     return (
@@ -293,6 +324,7 @@ const Home = (props) => {
               <Select
                 selectedIndex={selectedIndex}
                 value={0}
+                style={styles.selectStyle}
                 onSelect={() => {}}
               >
                 <SelectItem title={'Please wait..'} />
@@ -309,19 +341,29 @@ const Home = (props) => {
     );
   }
   let pickerData = [];
-  let menuItems = {};
+  let sectionsData = [];
 
   if (data.length) {
     data.forEach((category, _id) => {
       pickerData.push(category.name);
-      menuItems[category.name] = {};
+      let dataItems = [];
       Object.keys(category).forEach((key) => {
         if (key != 'name' && key != '__typename') {
-          menuItems[category.name][key] = category[key];
+          category[key].forEach((el) =>
+            dataItems.push({
+              type: key,
+              id: el,
+            })
+          );
         }
+      });
+      sectionsData.push({
+        title: category.name,
+        data: dataItems,
       });
     });
   }
+
   return (
     <ScrollView style={styles.home}>
       {/* <Tabs /> */}
@@ -336,8 +378,11 @@ const Home = (props) => {
       <Text style={styles.title}>{brand.name}</Text>
       <View style={styles.headerContainer}>
         <SafetyBanner {...props} />
-        <View style={styles.picker_container}>
-          <View style={[styles.picker_placeholder]}>
+      </View>
+
+      <View style={styles.flexContainerMiddle}>
+        <View style={styles.cardContainer}>
+          <View style={styles.picker_container}>
             <Datepicker
               date={calendarDate}
               onSelect={(_date) => {
@@ -349,14 +394,20 @@ const Home = (props) => {
                 });
               }}
             />
-          </View>
-          <View style={styles.picker_placeholder}>
+
             <Select
               selectedIndex={selectedIndex}
+              style={styles.selectStyle}
               value={pickerData[selectedIndex.row]}
               onSelect={(_selectedIndex) => {
                 setselectedPickerItem(_selectedIndex.row);
                 setSelectedIndex(_selectedIndex);
+                sectionListRef.current.scrollToLocation({
+                  animated: true,
+                  itemIndex: 0,
+                  sectionIndex: _selectedIndex.row,
+                  viewOffset: 30,
+                });
               }}
             >
               {pickerData.map((title, key) => (
@@ -364,41 +415,38 @@ const Home = (props) => {
               ))}
             </Select>
           </View>
+          {sectionsData?.length && (
+            <SectionList
+              ref={sectionListRef}
+              style={{
+                height: height - 16 * 4.125 - 80 - 48,
+              }}
+              maxToRenderPerBatch={40}
+              initialNumToRender={40}
+              removeClippedSubviews={true}
+              getItemLayout={(data, index) => {
+                const _height =
+                  (width < height ? height * 0.15 : height * 0.18) + 60;
+                return {
+                  length: _height,
+                  offset: _height * index,
+                  index,
+                };
+              }}
+              sections={sectionsData}
+              keyExtractor={(item, index) => item + index}
+              // numColumns={width > 1000 ? 3 : 1}
+              stickySectionHeadersEnabled={true}
+              stickyHeaderIndices={[0]}
+              renderSectionHeader={({ section: { title } }) => (
+                <Text style={styles.header}>{title}</Text>
+              )}
+              renderItem={_renderItem}
+            />
+          )}
         </View>
       </View>
-      <ScrollView
-        style={{
-          marginTop: 20,
-          height: height * 0.81,
-        }}
-      >
-        <View style={styles.flexContainerMiddle}>
-          <View style={styles.cardContainer}>
-            {menuItems &&
-              menuItems[pickerData[selectedPickerItem]] &&
-              Object.keys(menuItems[pickerData[selectedPickerItem]]).map(
-                (type, _id) => (
-                  <FlatList
-                    key={_id}
-                    data={menuItems[pickerData[selectedPickerItem]][type]}
-                    numColumns={width > 1000 ? 3 : 1}
-                    renderItem={(render) => {
-                      return (
-                        <Card
-                          {...props}
-                          type={type}
-                          key={render.item}
-                          id={render.item}
-                        />
-                      );
-                    }}
-                  />
-                )
-              )}
-          </View>
-        </View>
-        <View style={{ height: height * 0.08 }} />
-      </ScrollView>
+      <View style={{ height: height * 0.08 }} />
       <Cart
         label={pickerData[selectedIndex.row]}
         to='OrderSummary'
@@ -426,7 +474,7 @@ const styles = EStyleSheet.create({
     aspectRatio: 3 / 2,
   },
   picker_container: {
-    height: height * 0.06,
+    height: 80,
     flexDirection: 'row',
     alignItems: 'center',
     width: width > 1000 ? width / 2 : width,
@@ -452,6 +500,32 @@ const styles = EStyleSheet.create({
   },
   headerContainer: {
     alignItems: 'center',
+  },
+  header: {
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    paddingLeft: '2rem',
+    backgroundColor: '#fff',
+    paddingTop: 10,
+    paddingBottom: 10,
+  },
+  selectStyle: {
+    transitionProperty: 'opacity',
+    transitionDuration: '0.15s',
+    userSelect: 'none',
+    cursor: 'pointer',
+    touchAction: 'manipulation',
+    outlineWidth: 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 8,
+    borderColor: '#E4E9F2',
+    backgroundColor: '#F7F9FC',
+    borderRadius: 4,
+    borderWidth: 1,
+    minHeight: 40,
+    paddingVertical: 7,
   },
 });
 

@@ -26,10 +26,6 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
 
   const { visual } = useAppContext();
 
-  useEffect(() => {
-    console.log(id, type);
-  }, []);
-
   return (
     <>
       <View style={styles.card_container}>
@@ -153,14 +149,13 @@ const styles = EStyleSheet.create({
     borderBottomColor: 'rgba(0,0,0,0.1)',
     shadowColor: '#000',
     shadowOffset: {},
-    paddingVertical: 30,
+    paddingVertical: 10,
     backgroundColor: '#fff',
     marginBottom: 10,
     marginRight: width > 1000 ? 20 : 0,
     marginTop: width > 1000 ? 20 : 0,
   },
   card_title: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
