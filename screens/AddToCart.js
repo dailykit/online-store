@@ -19,8 +19,13 @@ import InventoryProductItem from '../components/InventoryProductItem';
 
 import { height, width } from '../utils/Scalaing';
 
-const ModalContent = ({ route, navigation, ...restProps }) => {
-  const { data, type, id } = route.params;
+const ModalContent = ({
+  route,
+  navigation,
+  setIsModalVisible,
+  ...restProps
+}) => {
+  const { data, type, id } = restProps;
   const [isLastComboItem, setIsLastComboItem] = useState(false);
   const [cartItem, setcartItem] = useState(null); // obj to push to jaguar
   const [comboProductItems, setcomboProductItems] = useState([]);
@@ -31,16 +36,16 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
   const [currentComboProductIndex, setCurrentComboProductIndex] = useState(0);
   let name = '';
   if (type == 'simpleRecipeProducts') {
-    name = data.simpleRecipeProduct.name;
+    name = data?.simpleRecipeProduct.name;
   }
   if (type == 'comboProducts') {
-    name = data.name;
+    name = data?.name;
   }
   if (type == 'inventoryProducts') {
-    name = data.inventoryProduct.name;
+    name = data?.inventoryProduct.name;
   }
   if (type == 'customizableProducts') {
-    name = data.name;
+    name = data?.name;
   }
 
   return (
@@ -51,7 +56,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
             <Text style={styles.title}>{name}</Text>
           </View>
           <View style={styles.close_container}>
-            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity onPress={() => setIsModalVisible(false)}>
               <AntDesign size={30} name='close' />
             </TouchableOpacity>
           </View>
@@ -154,7 +159,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
             comboProductItems={comboProductItems}
             tunnelItem
             type={type}
-            to='Home'
+            setIsModalVisible={setIsModalVisible}
           />
         )}
       {type == 'comboProducts' &&
@@ -173,6 +178,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff' },
   item_title: {
     fontSize: 16,
+    opacity: 0.6,
   },
   title: {
     fontSize: 20,

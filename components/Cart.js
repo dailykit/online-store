@@ -26,6 +26,7 @@ const Cart = ({
   tunnelItem,
   type,
   comboProductItems,
+  setIsModalVisible,
 }) => {
   const { cart, customerDetails, customer } = useCartContext();
   const { visual } = useAppContext();
@@ -132,8 +133,9 @@ const Cart = ({
             });
           }
         }
-        navigation.navigate(to);
+        setIsModalVisible(false);
       } else {
+        setIsModalVisible(false);
         navigation.navigate('Add Details', { path: 'profile' });
       }
     } catch (error) {

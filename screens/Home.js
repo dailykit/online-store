@@ -35,6 +35,7 @@ import * as axios from 'axios';
 import { useAuth } from '../context/auth';
 import { useAppContext } from '../context/app';
 import { Header } from '../components';
+import { Drawer } from '../components/Drawer';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));

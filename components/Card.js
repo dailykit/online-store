@@ -18,16 +18,27 @@ import { useCartContext } from '../context/cart';
 
 import { height, width } from '../utils/Scalaing';
 import { useAppContext } from '../context/app';
+import { Drawer } from './Drawer';
 
 const Card = ({ id, type, navigation, label, ...restProps }) => {
   const [price, setPrice] = useState('randomNumber');
   const [cardItem, setcardItem] = useState(null); // obj to push to jaguar
   const [cardData, setcardData] = useState(null); // obj to pass to add to cart modal
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const { visual } = useAppContext();
 
   return (
     <>
+      {cardData && (
+        <Drawer
+          isVisible={isModalVisible}
+          navigation={navigation}
+          data={cardData}
+          type={type}
+          id={id}
+          setIsModalVisible={setIsModalVisible}
+        />
+      )}
       <View style={styles.card_container}>
         <View style={styles.item_parent_container}>
           {type == 'comboProducts' && (
@@ -122,7 +133,8 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
           <View style={styles.add_to_cart_container}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('AddToCart', { data: cardData, type, id });
+                setIsModalVisible(true);
+                // navigation.navigate('AddToCart', { data: cardData, type, id });
               }}
               style={[
                 styles.button,
