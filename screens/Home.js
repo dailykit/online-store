@@ -256,13 +256,7 @@ const Home = (props) => {
   if (availability && !isStoreOpen())
     return (
       <>
-        <Header
-          title='Home'
-          search
-          options
-          navigation={props.navigation}
-          scene={scene}
-        />
+        <Header title='Home' search options navigation={props.navigation} />
         <View
           style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
         >
