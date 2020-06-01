@@ -1,5 +1,15 @@
 import gql from 'graphql-tag';
 
+export const STORE_SETTINGS = gql`
+  subscription {
+    storeSettings {
+      type
+      value
+      identifier
+    }
+  }
+`;
+
 export const CUSTOMER = gql`
   subscription Customers($keycloakId: String!, $email: String!) {
     customers(
