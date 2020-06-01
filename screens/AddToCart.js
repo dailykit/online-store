@@ -136,7 +136,7 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
           navigation={navigation}
           to={'Home'}
           {...restProps}
-          text='Proceed'
+          text='Add to Cart'
           cartItemToDisplay={cartItemToDisplay}
           comboProductItems={comboProductItems}
           tunnelItem
@@ -149,11 +149,12 @@ const ModalContent = ({ route, navigation, ...restProps }) => {
             cartItem={cartItem}
             navigation={navigation}
             {...restProps}
-            text='Proceed'
+            text='Add to Cart'
             cartItemToDisplay={cartItemToDisplay}
             comboProductItems={comboProductItems}
             tunnelItem
             type={type}
+            to='Home'
           />
         )}
       {type == 'comboProducts' &&
