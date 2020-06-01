@@ -156,7 +156,12 @@ const Summary = ({ useQuantity, item }) => {
             </View>
           )} */}
           {!useQuantity && (
-            <View style={styles.button_container}>
+            <View
+              style={[
+                styles.button_container,
+                { borderColor: visual.color || '#3fa4ff' },
+              ]}
+            >
               <TouchableOpacity
                 onPress={() => {
                   removeFromCart(item);
