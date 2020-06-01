@@ -92,16 +92,7 @@ function HomeStack(props) {
         name='Home'
         component={Home}
         options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title='Home'
-              search
-              options
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          cardStyle: { backgroundColor: '#F8F9FE' },
+          headerShown: false,
         }}
       />
 

@@ -34,6 +34,7 @@ import { useCartContext } from '../context/cart';
 import * as axios from 'axios';
 import { useAuth } from '../context/auth';
 import { useAppContext } from '../context/app';
+import { Header } from '../components';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
@@ -253,10 +254,21 @@ const Home = (props) => {
   console.log(availability);
   if (availability && !isStoreOpen())
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text style={{ fontWeight: 500, fontSize: 24 }}>Store Closed</Text>
-        <Text style={{ fontSize: 20 }}>{availability.store.shutMessage}</Text>
-      </View>
+      <>
+        <Header
+          title='Home'
+          search
+          options
+          navigation={props.navigation}
+          scene={scene}
+        />
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
+          <Text style={{ fontWeight: 500, fontSize: 24 }}>Store Closed</Text>
+          <Text style={{ fontSize: 20 }}>{availability.store.shutMessage}</Text>
+        </View>
+      </>
     );
 
   // console.log('Visual:', visual);
@@ -365,95 +377,119 @@ const Home = (props) => {
   }
 
   return (
-    <ScrollView style={styles.home}>
-      {/* <Tabs /> */}
-      <View style={styles.img_container}>
-        <Image
-          source={{
-            uri: visual.cover,
-          }}
-          style={styles.cover_image}
-        />
-      </View>
-      <Text style={styles.title}>{brand.name}</Text>
-      <View style={styles.headerContainer}>
-        <SafetyBanner {...props} />
-      </View>
-
-      <View style={styles.flexContainerMiddle}>
-        <View style={styles.cardContainer}>
-          <View style={styles.picker_container}>
-            <Datepicker
-              date={calendarDate}
-              onSelect={(_date) => {
-                setcalendarDate(_date);
-                fetchData({
-                  year: moment(_date).year(),
-                  month: moment(_date).month(),
-                  day: moment(_date).date(),
-                });
-              }}
-            />
-
-            <Select
-              selectedIndex={selectedIndex}
-              style={styles.selectStyle}
-              value={pickerData[selectedIndex.row]}
-              onSelect={(_selectedIndex) => {
-                setselectedPickerItem(_selectedIndex.row);
-                setSelectedIndex(_selectedIndex);
-                sectionListRef.current.scrollToLocation({
-                  animated: true,
-                  itemIndex: 0,
-                  sectionIndex: _selectedIndex.row,
-                  viewOffset: 30,
-                });
-              }}
-            >
-              {pickerData.map((title, key) => (
-                <SelectItem key={key} title={title} />
-              ))}
-            </Select>
-          </View>
-          {sectionsData?.length && (
-            <SectionList
-              ref={sectionListRef}
-              style={{
-                height: height - 16 * 4.125 - 80 - 48,
-              }}
-              maxToRenderPerBatch={40}
-              initialNumToRender={40}
-              removeClippedSubviews={true}
-              getItemLayout={(data, index) => {
-                const _height =
-                  (width < height ? height * 0.15 : height * 0.18) + 60;
-                return {
-                  length: _height,
-                  offset: _height * index,
-                  index,
-                };
-              }}
-              sections={sectionsData}
-              keyExtractor={(item, index) => item + index}
-              // numColumns={width > 1000 ? 3 : 1}
-              stickySectionHeadersEnabled={true}
-              stickyHeaderIndices={[0]}
-              renderSectionHeader={({ section: { title } }) => (
-                <Text style={styles.header}>{title}</Text>
-              )}
-              renderItem={_renderItem}
-            />
-          )}
-        </View>
-      </View>
-      <View style={{ height: height * 0.08 }} />
-      <Cart
-        label={pickerData[selectedIndex.row]}
-        to='OrderSummary'
-        {...props}
-        text='Checkout'
+    <>
+      <Header
+        title={brand?.name ? brand?.name : 'Home'}
+        search
+        options
+        navigation={props.navigation}
       />
-    </ScrollView>
+      <ScrollView style={styles.home}>
+        {/* <Tabs /> */}
+        <View style={styles.img_container}>
+          <Image
+            source={{
+              uri: visual.cover,
+            }}
+            style={styles.cover_image}
+          />
+        </View>
+        <Text style={styles.title}>{brand.name}</Text>
+        <View style={styles.headerContainer}>
+          <SafetyBanner {...props} />
+        </View>
+
+        <View style={styles.flexContainerMiddle}>
+          <View style={styles.cardContainer}>
+            <View style={styles.picker_container}>
+              <Datepicker
+                date={calendarDate}
+                onSelect={(_date) => {
+                  setcalendarDate(_date);
+                  fetchData({
+                    year: moment(_date).year(),
+                    month: moment(_date).month(),
+                    day: moment(_date).date(),
+                  });
+                }}
+              />
+
+              <Select
+                selectedIndex={selectedIndex}
+                style={styles.selectStyle}
+                value={pickerData[selectedIndex.row]}
+                onSelect={(_selectedIndex) => {
+                  setselectedPickerItem(_selectedIndex.row);
+                  setSelectedIndex(_selectedIndex);
+                  sectionListRef.current.scrollToLocation({
+                    animated: true,
+                    itemIndex: 0,
+                    sectionIndex: _selectedIndex.row,
+                    viewOffset: 60,
+                  });
+                }}
+              >
+                {pickerData.map((title, key) => (
+                  <SelectItem key={key} title={title} />
+                ))}
+              </Select>
+            </View>
+            {sectionsData?.length && (
+              <SectionList
+                ref={sectionListRef}
+                style={{
+                  height: height - 16 * 4.125 - 80 - 48,
+                }}
+                maxToRenderPerBatch={40}
+                initialNumToRender={40}
+                removeClippedSubviews={true}
+                getItemLayout={(data, index) => {
+                  const _height =
+                    (width < height ? height * 0.15 : height * 0.18) + 60;
+                  return {
+                    length: _height,
+                    offset: _height * index,
+                    index,
+                  };
+                }}
+                sections={sectionsData}
+                keyExtractor={(item, index) => item + index}
+                stickySectionHeadersEnabled={true}
+                stickyHeaderIndices={[0]}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View style={{ backgroundColor: '#fff' }}>
+                    <Text
+                      style={[
+                        styles.header,
+                        { textAlign: 'center', fontSize: 12, color: 'gray' },
+                      ]}
+                    >
+                      Now Showing
+                    </Text>
+                    <Text
+                      style={[
+                        styles.header,
+                        { textAlign: 'center', fontSize: 18, color: 'gray' },
+                      ]}
+                    >
+                      {title}
+                    </Text>
+                  </View>
+                )}
+                renderItem={_renderItem}
+              />
+            )}
+          </View>
+        </View>
+        <View style={{ height: height * 0.08 }} />
+        <Cart
+          label={pickerData[selectedIndex.row]}
+          to='OrderSummary'
+          {...props}
+          text='Checkout'
+        />
+      </ScrollView>
+    </>
   );
 };
 
@@ -461,6 +497,7 @@ const styles = EStyleSheet.create({
   home: {
     flex: 1,
     // alignItems: 'center',
+    marginTop: 20,
   },
   img_container: {
     height: height * 0.3,
