@@ -4,7 +4,11 @@ const AppContext = React.createContext();
 
 export const AppContextProvider = ({ children }) => {
   const [visual, setVisual] = useState({
-    color: '',
+    color: '#3fa4ff',
+    cover:
+      'https://images.pexels.com/photos/1565982/pexels-photo-1565982.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+    title: 'Online Store',
+    favicon: '',
   });
   const [brand, setBrand] = useState({
     name: 'Online Store',

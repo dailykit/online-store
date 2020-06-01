@@ -102,10 +102,10 @@ const Home = (props) => {
               case 'Store Availability': {
                 return setAvailability({ ...availability, store: value });
               }
-              case 'Pickup': {
+              case 'Pickup Availability': {
                 return setAvailability({ ...availability, pickup: value });
               }
-              case 'Delivery': {
+              case 'Delivery Availability': {
                 return setAvailability({ ...availability, delivery: value });
               }
               default: {
@@ -247,6 +247,9 @@ const Home = (props) => {
         <Text style={{ fontSize: 20 }}>{availability.store.shutMessage}</Text>
       </View>
     );
+
+  console.log('Visual:', visual);
+  console.log('Brand:', brand);
 
   if (!data.length || loading) {
     return (
