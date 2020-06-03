@@ -23,37 +23,37 @@ const ModalContent = ({
   route,
   navigation,
   setIsModalVisible,
+  data,
+  type,
+  id,
   ...restProps
 }) => {
-  const { data, type, id } = restProps;
-  const [isLastComboItem, setIsLastComboItem] = useState(false);
   const [cartItem, setcartItem] = useState(null); // obj to push to jaguar
   const [comboProductItems, setcomboProductItems] = useState([]);
-  const [cartItemToDisplay, setcartItemToDisplay] = useState(null); // obj to push to jaguar
   const [numberOfComboProductItem, setnumberOfComboProductItem] = useState(
     1000
   );
   const [currentComboProductIndex, setCurrentComboProductIndex] = useState(0);
-  let name = '';
-  if (type == 'simpleRecipeProducts') {
-    name = data?.simpleRecipeProduct.name;
-  }
-  if (type == 'comboProducts') {
-    name = data?.name;
-  }
-  if (type == 'inventoryProducts') {
-    name = data?.inventoryProduct.name;
-  }
-  if (type == 'customizableProducts') {
-    name = data?.name;
-  }
+  // let name = '';
+  // if (type == 'simpleRecipeProduct') {
+  //   name = dataname;
+  // }
+  // if (type == 'comboProducts') {
+  //   name = data?.name;
+  // }
+  // if (type == 'inventoryProduct') {
+  //   name = data.name;
+  // }
+  // if (type == 'customizableProduct') {
+  //   name = data?.name;
+  // }
 
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <View style={styles.title_container}>
           <View style={styles.details}>
-            <Text style={styles.title}>{name}</Text>
+            <Text style={styles.title}>{data.name}</Text>
           </View>
           <View style={styles.close_container}>
             <TouchableOpacity onPress={() => setIsModalVisible(false)}>
@@ -62,7 +62,7 @@ const ModalContent = ({
           </View>
         </View>
         <View style={styles.item_parent_container}>
-          {type == 'comboProducts' && (
+          {type == 'comboProduct' && (
             <ComboProduct
               setcartItem={(item) => {
                 let auxArray = comboProductItems;
@@ -83,7 +83,6 @@ const ModalContent = ({
                   setcomboProductItems(auxArray);
                 }
               }}
-              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               tunnelItem
               setIsLastComboItem={setIsLastComboItem}
@@ -92,78 +91,79 @@ const ModalContent = ({
               currentComboProductIndex={currentComboProductIndex}
               name={data.name}
               id={id}
+              product={data}
               {...restProps}
             />
           )}
-          {type == 'customizableProducts' && (
+          {type == 'customizableProduct' && (
             <CustomizableProductItem
               setcartItem={setcartItem}
-              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               independantItem
               tunnelItem
               isSelected
               id={id}
+              product={data}
               {...restProps}
             />
           )}
-          {type == 'simpleRecipeProducts' && (
+          {type == 'simpleRecipeProduct' && (
             <SimpleProductItem
               setcartItem={(item) => setcartItem(item)}
-              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               independantItem
               tunnelItem
               isSelected
               id={id}
+              product={data}
               {...restProps}
             />
           )}
-          {type == 'inventoryProducts' && (
+          {type == 'inventoryProduct' && (
             <InventoryProductItem
-              setcartItem={(item) => setcartItem(item)}
-              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
+              setcartItem={(item) => {
+                console.log('set cartitem called', item);
+                setcartItem(item);
+              }}
               navigation={navigation}
               independantItem
               tunnelItem
               isSelected
               id={id}
+              product={data}
               {...restProps}
             />
           )}
         </View>
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
-      {/* {isLastComboItem && ( */}
-      {type !== 'comboProducts' && (
+      {type !== 'comboProduct' && (
         <Cart
           cartItem={cartItem}
           navigation={navigation}
           to={'Home'}
           {...restProps}
           text='Add to Cart'
-          cartItemToDisplay={cartItemToDisplay}
           comboProductItems={comboProductItems}
           tunnelItem
           type={type}
           setIsModalVisible={setIsModalVisible}
         />
       )}
-      {type == 'comboProducts' &&
+      {type == 'comboProduct' &&
         numberOfComboProductItem - 1 == currentComboProductIndex && (
           <Cart
             cartItem={cartItem}
             navigation={navigation}
             {...restProps}
             text='Add to Cart'
-            cartItemToDisplay={cartItemToDisplay}
             comboProductItems={comboProductItems}
             tunnelItem
             type={type}
             setIsModalVisible={setIsModalVisible}
           />
         )}
-      {type == 'comboProducts' &&
+      {type == 'comboProduct' &&
         numberOfComboProductItem - 1 != currentComboProductIndex && (
           <ComboProductItemProceed
             setCurrentComboProductIndex={setCurrentComboProductIndex}

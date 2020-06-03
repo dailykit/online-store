@@ -21,8 +21,8 @@ import { useAppContext } from '../context/app';
 import { Drawer } from './Drawer';
 import { useAuth } from '../context/auth';
 
-const Card = ({ id, type, navigation, label, ...restProps }) => {
-  const [price, setPrice] = useState('randomNumber');
+const Card = ({ id, type, navigation, label, product, ...restProps }) => {
+  const [price, setPrice] = useState(0);
   const [cardItem, setcardItem] = useState(null); // obj to push to jaguar
   const [cardData, setcardData] = useState(null); // obj to pass to add to cart modal
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -36,39 +36,35 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
           isVisible={isModalVisible}
           navigation={navigation}
           data={cardData}
-          type={type}
-          id={id}
+          type={cardData.__typename.split('_')[1]}
+          id={cardData.id}
           setIsModalVisible={setIsModalVisible}
         />
       )}
       <View style={styles.card_container}>
         <View style={styles.item_parent_container}>
-          {type == 'comboProducts' && (
+          {product?.__typename.includes('comboProduct') && (
             <>
-              {cardData && (
-                <View style={styles.card_title}>
-                  <Text style={styles.card_title_text}>
-                    {cardData.name ? cardData.name : 'Resturant Name'}
-                  </Text>
-                  <Text style={styles.is_customizable}>Customizeable</Text>
-                </View>
-              )}
+              <View style={styles.card_title}>
+                <Text style={styles.card_title_text}>{product.name}</Text>
+                <Text style={styles.is_customizable}>Customizeable</Text>
+              </View>
               <ComboProduct
                 label={label}
                 setcardItem={setcardItem}
                 setcardData={(item) => setcardData(item)}
-                id={id}
+                product={product}
                 navigation={navigation}
                 setPrice={setPrice}
                 {...restProps}
               />
             </>
           )}
-          {type == 'customizableProducts' && (
+          {product?.__typename.includes('customizableProduct') && (
             <>
               {cardData && (
                 <View style={styles.card_title}>
-                  <Text style={styles.card_title_text}>{cardData?.name}</Text>
+                  <Text style={styles.card_title_text}>{product.name}</Text>
                   <Text style={styles.is_customizable}>Customizeable</Text>
                 </View>
               )}
@@ -78,19 +74,17 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
                 navigation={navigation}
                 setcardData={(item) => setcardData(item)}
                 independantItem
-                id={id}
+                product={product}
                 {...restProps}
                 setPrice={(price) => setPrice(price)}
               />
             </>
           )}
-          {type == 'simpleRecipeProducts' && (
+          {product?.__typename.includes('simpleRecipeProduct') && (
             <>
               {cardData && (
                 <View style={styles.card_title}>
-                  <Text style={styles.card_title_text}>
-                    {cardData?.simpleRecipeProduct?.name}
-                  </Text>
+                  <Text style={styles.card_title_text}>{product.name}</Text>
                 </View>
               )}
               <SimpleProductItem
@@ -99,19 +93,17 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
                 setcardData={(item) => setcardData(item)}
                 navigation={navigation}
                 independantItem
-                id={id}
+                product={product}
                 {...restProps}
                 setPrice={(price) => setPrice(price)}
               />
             </>
           )}
-          {type == 'inventoryProducts' && (
+          {product?.__typename.includes('inventoryProduct') && (
             <>
               {cardData && (
                 <View style={styles.card_title}>
-                  <Text style={styles.card_title_text}>
-                    {cardData.inventoryProduct?.name}
-                  </Text>
+                  <Text style={styles.card_title_text}>{product.name}</Text>
                 </View>
               )}
               <InventoryProductItem
@@ -120,7 +112,7 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
                 setcardData={(item) => setcardData(item)}
                 navigation={navigation}
                 independantItem
-                id={id}
+                product={product}
                 {...restProps}
                 setPrice={(price) => setPrice(price)}
               />
@@ -130,7 +122,7 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
 
         <View style={styles.bottom_container}>
           <View style={styles.price}>
-            <Text style={styles.price_text}>$ {isNaN(price) ? 0 : price}</Text>
+            <Text style={styles.price_text}>$ {price}</Text>
           </View>
           <View style={styles.add_to_cart_container}>
             <TouchableOpacity

@@ -18,6 +18,7 @@ const InventoryProductItem = ({
   isSelected,
   name,
   label,
+  product,
 }) => {
   const [objToAdd, setobjToAdd] = useState({});
 
@@ -30,83 +31,48 @@ const InventoryProductItem = ({
   };
 
   useEffect(() => {
-    if (tunnelItem && isSelected && !loading) {
+    if (
+      product?.inventoryProductOptions === undefined ||
+      !product?.inventoryProductOptions[0]
+    )
+      return;
+    let objToPush = {
+      product: {
+        id: product?.id,
+        name: product?.name,
+        price: product?.inventoryProductOptions[0]?.price[0]?.value,
+        option: {
+          id: product?.inventoryProductOptions[0]?.id, // product option id
+        },
+        type: 'Inventory',
+      },
+    };
+    if (!independantItem) {
+      objToPush['name'] = name;
+    }
+    setobjToAdd(objToPush);
+    if (!tunnelItem && independantItem) {
+      setPrice(product?.inventoryProductOptions[0]?.price[0]?.value);
+      setcardData(product);
+    }
+    if (tunnelItem && isSelected) {
+      setcartItem(objToPush);
+    }
+    if (tunnelItem && independantItem) {
+      setcartItem(objToPush);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (tunnelItem && isSelected && objToAdd?.product?.price) {
       setcartItem(objToAdd);
     }
   }, [isSelected]);
 
-  const { data, loading, error } = useQuery(INVENTORY_PRODUCT, {
-    variables: { id },
-    onCompleted: (_data) => {
-      let item = _data;
-      if (item?.inventoryProduct?.inventoryProductOptions === undefined) return;
-      if (_data?.inventoryProduct?.inventoryProductOptions[0]) {
-        let objToPush = {
-          product: {
-            id: item?.inventoryProduct?.id,
-            name: item?.inventoryProduct?.name,
-            price:
-              item?.inventoryProduct?.inventoryProductOptions[0]?.price[0]
-                ?.value,
-            option: {
-              id: item?.inventoryProduct?.inventoryProductOptions[0]?.id, // product option id
-            },
-            type: 'Inventory',
-          },
-        };
-        if (!independantItem) {
-          objToPush['name'] = name;
-        }
-        setobjToAdd(objToPush);
-        if (!tunnelItem && independantItem) {
-          setPrice(
-            _data.inventoryProduct?.inventoryProductOptions[0]?.price[0]?.value
-          );
-          setcardData(item);
-        }
-        if (tunnelItem && isSelected) {
-          setcartItem(objToPush);
-        }
-        if (tunnelItem && independantItem) {
-          setcartItem(objToPush);
-        }
-      }
-    },
-  });
-
-  if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <ActivityIndicator />
-      </View>
-    );
-  }
-  if (!data?.inventoryProduct) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Text>Bad Data / Empty inventory product id {id}</Text>
-      </View>
-    );
-  }
-
-  let inventoryProduct = data.inventoryProduct;
-  if (!inventoryProduct) return <Text>Bad Data</Text>;
   return (
     <InventoryProductCollapsed
       _id={_id}
-      data={inventoryProduct}
+      data={product}
       openModal={openModal}
       navigation={navigation}
       label={label}

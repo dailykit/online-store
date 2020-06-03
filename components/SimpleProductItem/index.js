@@ -8,7 +8,6 @@ const SimpleProductItem = ({
   _id,
   openModal,
   navigation,
-  id,
   setPrice,
   independantItem,
   setcartItem,
@@ -18,6 +17,7 @@ const SimpleProductItem = ({
   isSelected,
   name,
   label,
+  product,
 }) => {
   const [objToAdd, setobjToAdd] = useState({});
 
@@ -29,74 +29,41 @@ const SimpleProductItem = ({
     setcartItem(newItem);
   };
 
-  useEffect(() => {
-    if (tunnelItem && isSelected && !loading) {
-      setcartItem(objToAdd);
-    }
-  }, [isSelected]);
-
-  const { data, loading, error } = useQuery(SIMPLE_PRODUCT, {
-    variables: { id },
-    onCompleted: (_data) => {
-      let item = _data;
-      console.log(_data);
-      if (item.simpleRecipeProduct?.simpleRecipeProductOptions[0]) {
-        let objToPush = {
-          product: {
-            id: item.simpleRecipeProduct?.id,
-            name: item.simpleRecipeProduct?.name,
-            price:
-              item.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.price[0]
-                .value,
-            option: {
-              id: item.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.id, // product option id
-              type:
-                item.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.type,
-            },
-            type: 'Simple Recipe',
+  React.useEffect(() => {
+    if (product.simpleRecipeProductOptions[0]) {
+      let objToPush = {
+        product: {
+          id: product.id,
+          name: product.name,
+          price: product.simpleRecipeProductOptions[0]?.price[0].value,
+          option: {
+            id: product.simpleRecipeProductOptions[0]?.id, // product option id
+            type: product.simpleRecipeProductOptions[0]?.type,
           },
-        };
-        if (!independantItem) {
-          objToPush['name'] = name;
-        }
-        setobjToAdd(objToPush);
-        if (!tunnelItem && independantItem) {
-          setPrice(
-            item.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.price[0]
-              ?.value
-          );
-          setcardData(item);
-        }
-        if (tunnelItem && isSelected) {
-          setcartItem(objToPush);
-        }
-        if (tunnelItem && independantItem) {
-          setcartItem(objToPush);
-        }
+          type: 'Simple Recipe',
+        },
+      };
+      if (!independantItem) {
+        objToPush['name'] = name;
       }
-    },
-  });
-
-  if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <ActivityIndicator />
-      </View>
-    );
-  }
-  if (!data)
-    return <Text>Bad Data / Empty simpleRecipeProduct product id {id}</Text>;
+      setobjToAdd(objToPush);
+      if (!tunnelItem && independantItem) {
+        setPrice(product.simpleRecipeProductOptions[0]?.price[0]?.value);
+        setcardData(product);
+      }
+      if (tunnelItem && isSelected) {
+        setcartItem(objToPush);
+      }
+      if (tunnelItem && independantItem) {
+        setcartItem(objToPush);
+      }
+    }
+  }, []);
 
   return (
     <SimpleProductItemCollapsed
       _id={_id}
-      data={data}
+      data={product}
       openModal={openModal}
       navigation={navigation}
       label={label}

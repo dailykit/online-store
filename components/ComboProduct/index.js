@@ -20,96 +20,67 @@ const ComboProduct = ({
   tunnelItem,
   navigation,
   setcardData,
-  id,
   setcartItem,
   setIsLastComboItem,
   setCurrentComboProductIndex,
   setnumberOfComboProductItem,
   currentComboProductIndex,
   setPrice,
+  product,
 }) => {
   const [selected, setSelected] = useState(0);
 
   const [comboProductsArray, setcomboProductsArray] = useState([]);
 
-  const { data, loading, error } = useQuery(COMBO_PRODUCT, {
-    variables: { id },
-    onCompleted: (_data) => {
-      let items = _data;
-      if (_data?.comboProduct?.comboProductComponents === undefined) return;
-      if (!tunnelItem) {
-        setcardData(_data.comboProduct);
-        let price = 0;
-        _data.comboProduct.comboProductComponents.forEach((product) => {
-          if (product.inventoryProductId !== null) {
-            price =
-              price +
-              parseFloat(
-                product.inventoryProduct.inventoryProductOptions[0].price[0]
-                  .value
-              );
-          }
-          if (product.simpleRecipeProductId !== null) {
-            price =
-              price +
-              parseFloat(
-                product.simpleRecipeProduct.simpleRecipeProductOptions[0]
-                  .price[0].value
-              );
-          }
-          if (product.customizableProductId !== null) {
-            price =
-              price +
-              parseFloat(
-                product.customizableProduct?.customizableProductOptions[0]
-                  ?.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.price[0]
-                  ?.value
-              );
-          }
-        });
-        setPrice(price);
+  React.useEffect(() => {
+    let price = 0;
+    product.comboProductComponents.forEach((product) => {
+      if (product.inventoryProductId !== null) {
+        price =
+          price +
+          parseFloat(
+            product.inventoryProduct.inventoryProductOptions[0].price[0].value
+          );
       }
-      if (tunnelItem) {
-        setcartItem(comboProductsArray);
-        setnumberOfComboProductItem(
-          items.comboProduct.comboProductComponents.length
-        );
+      if (product.simpleRecipeProductId !== null) {
+        price =
+          price +
+          parseFloat(
+            product.simpleRecipeProduct.simpleRecipeProductOptions[0].price[0]
+              .value
+          );
       }
-    },
-  });
+      if (product.customizableProductId !== null) {
+        price =
+          price +
+          parseFloat(
+            product.customizableProduct?.customizableProductOptions[0]
+              ?.simpleRecipeProduct?.simpleRecipeProductOptions[0]?.price[0]
+              ?.value
+          );
+      }
+    });
+    setPrice(price);
+  }, []);
 
-  if (loading) {
-    return (
-      <View style={styles.flexContainer}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-  if (data == null || data == undefined) {
-    return <Text>Bad Data / Empty comboProduct product id {id}</Text>;
-  }
-
-  let { comboProduct } = data;
-  let comboProductComponents = comboProduct?.comboProductComponents;
-  if (comboProductComponents == undefined) return <Text>Bad Data</Text>;
-  let selectedArr = data?.comboProduct?.comboProductComponents?.map(
-    (el, _id) => false
-  );
+  // let comboProductComponents = product.comboProductComponents;
+  let selectedArr = product.comboProductComponents?.map((el, _id) => false);
+  // if (comboProductComponents == undefined) return <Text>Bad Data</Text>;
   return (
     <View style={styles.container}>
       <View style={styles.item_parent_container}>
-        {comboProductComponents.map((el, _id) => {
+        {product.comboProductComponents.map((el, _id) => {
           let last = false;
           let isSelected = false;
           if (!tunnelItem) {
             isSelected = selected == _id;
-            if (_id == comboProductComponents.length - 1) {
+            if (_id == product.comboProductComponents.length - 1) {
               last = true;
             }
           } else {
             last = false;
             isSelected = currentComboProductIndex == _id;
-            if (_id == comboProductComponents.length - 1) {
+            if (_id == product.comboProductComponents.length - 1) {
               last = true;
             }
           }
@@ -118,7 +89,7 @@ const ComboProduct = ({
               <CustomizableProductItem
                 isSelected={isSelected}
                 _id={_id}
-                data={el}
+                product={el.customizableProduct}
                 setSelected={(index) => {
                   selectedArr[index] = true;
                   setSelected(index);
@@ -133,7 +104,7 @@ const ComboProduct = ({
                 id={el.customizableProductId}
                 setcartItem={setcartItem}
                 setDefault={(item) => setcomboProductsArray(item)}
-                name={data.comboProduct?.name}
+                name={el.name}
               />
             );
           }
@@ -142,7 +113,7 @@ const ComboProduct = ({
               <SimpleProductItem
                 isSelected={isSelected}
                 _id={_id}
-                data={el}
+                product={el.simpleRecipeProduct}
                 setSelected={(index) => {
                   selectedArr[index] = true;
                   setSelected(index);
@@ -156,7 +127,7 @@ const ComboProduct = ({
                 id={el.simpleRecipeProductId}
                 tunnelItem={tunnelItem}
                 setcartItem={setcartItem}
-                name={data.comboProduct?.name}
+                name={el.name}
               />
             );
           }
@@ -165,7 +136,7 @@ const ComboProduct = ({
               <InventoryProductItem
                 isSelected={isSelected}
                 _id={_id}
-                data={el}
+                product={el.inventoryProduct}
                 setSelected={(index) => {
                   selectedArr[index] = true;
                   setSelected(index);
@@ -180,7 +151,7 @@ const ComboProduct = ({
                 id={el.inventoryProductId}
                 tunnelItem={tunnelItem}
                 setcartItem={setcartItem}
-                name={data.comboProduct.name}
+                name={el.name}
               />
             );
           }

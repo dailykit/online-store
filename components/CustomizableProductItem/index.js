@@ -14,13 +14,13 @@ const CustomizableProductItem = ({
   isLast,
   openModal,
   navigation,
-  id,
   independantItem,
   tunnelItem,
   setcardData,
   setcartItem,
   setPrice,
   name,
+  product,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [numberOfOptions, setnumberOfOptions] = useState(0);
@@ -42,81 +42,48 @@ const CustomizableProductItem = ({
     }
   }, [isSelected]);
 
-  const { data, loading, error } = useQuery(CUSTOMIZABLE_PRODUCT, {
-    variables: { id },
-    onCompleted: (_data) => {
-      if (_data?.customizableProduct?.customizableProductOptions === undefined)
-        return;
-
-      if (_data !== undefined) {
-        if (
-          _data &&
-          _data.customizableProduct &&
-          _data.customizableProduct.customizableProductOptions
-        ) {
-          setnumberOfOptions(
-            _data.customizableProduct.customizableProductOptions.length
-          );
-        }
-        let item = _data.customizableProduct;
-        if (item.customizableProductOptions[0]) {
-          let default_product = item?.customizableProductOptions[0];
-          let objToAddToCart = {
-            customizableProductId: item.id,
-            customizableProductOptionId: default_product?.id,
-            product: {
-              id: default_product.simpleRecipeProduct?.id,
-              name: default_product.simpleRecipeProduct?.name,
-              price:
-                default_product.simpleRecipeProduct
-                  ?.simpleRecipeProductOptions[0]?.price[0]?.value,
-              option: {
-                id:
-                  default_product.simpleRecipeProduct
-                    ?.simpleRecipeProductOptions[0]?.id, // product option id
-                type:
-                  default_product.simpleRecipeProduct
-                    ?.simpleRecipeProductOptions[0]?.type,
-              },
-              type: 'Simple Recipe',
-            },
-          };
-          if (!independantItem) {
-            objToAddToCart['name'] = name;
-          }
-          setobjToAdd(objToAddToCart);
-          if (!tunnelItem && independantItem) {
-            setPrice(
-              item.customizableProductOptions[0].simpleRecipeProduct
-                .simpleRecipeProductOptions[0].price[0].value
-            );
-            setcardData(item);
-          }
-          if (tunnelItem && isSelected) {
-            setcartItem(objToAddToCart);
-          }
-          if (tunnelItem && independantItem) {
-            setcartItem(objToAddToCart);
-          }
-        }
-      }
-    },
-  });
-
-  if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <ActivityIndicator />
-      </View>
-    );
+  if (product.customizableProductOptions[0]) {
+    let default_product = item?.customizableProductOptions[0];
+    let objToAddToCart = {
+      customizableProductId: item.id,
+      customizableProductOptionId: default_product?.id,
+      product: {
+        id: default_product.simpleRecipeProduct?.id,
+        name: default_product.simpleRecipeProduct?.name,
+        price:
+          default_product.simpleRecipeProduct?.simpleRecipeProductOptions[0]
+            ?.price[0]?.value,
+        option: {
+          id:
+            default_product.simpleRecipeProduct?.simpleRecipeProductOptions[0]
+              ?.id, // product option id
+          type:
+            default_product.simpleRecipeProduct?.simpleRecipeProductOptions[0]
+              ?.type,
+        },
+        type: 'Simple Recipe',
+      },
+    };
+    if (!independantItem) {
+      objToAddToCart['name'] = name;
+    }
+    setobjToAdd(objToAddToCart);
+    if (!tunnelItem && independantItem) {
+      setPrice(
+        item.customizableProductOptions[0].simpleRecipeProduct
+          .simpleRecipeProductOptions[0].price[0].value
+      );
+      setcardData(item);
+    }
+    if (tunnelItem && isSelected) {
+      setcartItem(objToAddToCart);
+    }
+    if (tunnelItem && independantItem) {
+      setcartItem(objToAddToCart);
+    }
   }
-  const customizableProduct = data?.customizableProduct;
+
+  const customizableProduct = product;
   let default_first_product =
     customizableProduct !== null
       ? customizableProduct?.customizableProductOptions[0]

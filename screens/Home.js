@@ -6,6 +6,7 @@ import {
   Text,
   ActivityIndicator,
   SectionList,
+  FlatList,
 } from 'react-native';
 import { Datepicker } from '@ui-kitten/components';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
@@ -36,6 +37,7 @@ import { useAuth } from '../context/auth';
 import { useAppContext } from '../context/app';
 import { Header } from '../components';
 import { Drawer } from '../components/Drawer';
+import Products from '../components/Products';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
@@ -150,6 +152,7 @@ const Home = (props) => {
     }
   };
 
+  // Effects
   React.useEffect(() => {
     if (availability && isStoreOpen()) {
       fetchData({
@@ -165,6 +168,12 @@ const Home = (props) => {
       customerDetails();
     }
   }, [user]);
+
+  React.useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
 
   // Query
   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
@@ -353,9 +362,14 @@ const Home = (props) => {
     data.forEach((category, _id) => {
       pickerData.push(category.name);
       let dataItems = [];
-      Object.keys(category).forEach((key) => {
-        if (key != 'name' && key != '__typename') {
-          category[key].forEach((el) =>
+      Object.keys(category)?.forEach((key) => {
+        if (
+          key != 'name' &&
+          key != '__typename' &&
+          key != 'title' &&
+          key != 'data'
+        ) {
+          category[key]?.forEach((el) =>
             dataItems.push({
               type: key,
               id: el,
@@ -369,7 +383,10 @@ const Home = (props) => {
       });
     });
   }
-
+  data.forEach((el) => {
+    el.title = el.name;
+    el.data = [{ ...el }];
+  });
   return (
     <>
       <Header
@@ -441,51 +458,45 @@ const Home = (props) => {
                 ))}
               </Select>
             </View>
-            {sectionsData?.length && (
-              <SectionList
-                ref={sectionListRef}
-                style={{
-                  height: height - 16 * 4.125 - 80 - 48,
-                }}
-                maxToRenderPerBatch={40}
-                initialNumToRender={40}
-                removeClippedSubviews={true}
-                getItemLayout={(data, index) => {
-                  const _height =
-                    (width < height ? height * 0.15 : height * 0.18) + 60;
-                  return {
-                    length: _height,
-                    offset: _height * index,
-                    index,
-                  };
-                }}
-                sections={sectionsData}
-                keyExtractor={(item, index) => item + index}
-                stickySectionHeadersEnabled={true}
-                stickyHeaderIndices={[0]}
-                renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ backgroundColor: '#fff' }}>
-                    <Text
-                      style={[
-                        styles.header,
-                        { textAlign: 'center', fontSize: 12, color: 'gray' },
-                      ]}
-                    >
-                      Now Showing
-                    </Text>
-                    <Text
-                      style={[
-                        styles.header,
-                        { textAlign: 'center', fontSize: 18, color: 'gray' },
-                      ]}
-                    >
-                      {title}
-                    </Text>
-                  </View>
-                )}
-                renderItem={_renderItem}
+            <SectionList
+              ref={sectionListRef}
+              sections={data}
+              style={{
+                height: height - 16 * 4.125 - 80 - 48,
+              }}
+              stickySectionHeadersEnabled={true}
+              keyExtractor={(item, index) => item + index}
+              renderSectionHeader={({ section: { title } }) => (
+                <View style={{ backgroundColor: '#fff' }}>
+                  <Text
+                    style={[
+                      styles.header,
+                      { textAlign: 'center', fontSize: 12, color: 'gray' },
+                    ]}
+                  >
+                    Now Showing
+                  </Text>
+                  <Text
+                    style={[
+                      styles.header,
+                      { textAlign: 'center', fontSize: 18, color: 'gray' },
+                    ]}
+                  >
+                    {title}
+                  </Text>
+                </View>
+              )}
+              stickyHeaderIndices={[0]}
+              renderItem={({ item: category }) => (
+                <Products category={category} />
+              )}
+            />
+            {/* {data.map((category) => (
+              <Products
+                key={Math.floor(Math.random * 10000)}
+                category={category}
               />
-            )}
+            ))} */}
           </View>
         </View>
         <View style={{ height: height * 0.08 }} />

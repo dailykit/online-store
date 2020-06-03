@@ -16,13 +16,13 @@ import { height, width } from '../../utils/Scalaing';
 const InventoryProductCollapsed = ({
   _id,
   navigation,
-  data,
+  data: inventoryProduct,
   label,
   tunnelItem,
   setProductOptionId,
   setSelected,
 }) => {
-  let inventoryProduct = data;
+  console.log('THISHISH', inventoryProduct);
   const [servingIndex, setServingIndex] = useState(0);
   if (!inventoryProduct) {
     return <Text>Bad Data</Text>;
