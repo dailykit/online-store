@@ -362,9 +362,13 @@ const Home = (props) => {
     data.forEach((category, _id) => {
       pickerData.push(category.name);
       let dataItems = [];
-      console.log(category);
       Object.keys(category)?.forEach((key) => {
-        if (key != 'name' && key != '__typename') {
+        if (
+          key != 'name' &&
+          key != '__typename' &&
+          key != 'title' &&
+          key != 'data'
+        ) {
           category[key]?.forEach((el) =>
             dataItems.push({
               type: key,
