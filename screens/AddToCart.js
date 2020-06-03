@@ -146,6 +146,7 @@ const ModalContent = ({
           comboProductItems={comboProductItems}
           tunnelItem
           type={type}
+          setIsModalVisible={setIsModalVisible}
         />
       )}
       {type == 'comboProducts' &&

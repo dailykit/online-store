@@ -124,10 +124,9 @@ const Cart = ({
                     },
                     date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
                   },
-                  paymentMethodId:
-                    customerDetails?.defaultPaymentMethodId || null,
-                  address: customerDetails?.defaultCustomerAddress || null,
-                  stripeCustomerId: customerDetails?.stripeCustomerId || null,
+                  paymentMethodId: customerDetails?.defaultPaymentMethodId,
+                  address: customerDetails?.defaultCustomerAddress,
+                  stripeCustomerId: customerDetails?.stripeCustomerId,
                   tip: 0,
                 },
               },
@@ -135,11 +134,10 @@ const Cart = ({
           }
         }
         if (text === 'Checkout') navigation.navigate('OrderSummary');
-        setIsModalVisible(false);
       } else {
-        setIsModalVisible(false);
         navigation.navigate('Add Details', { path: 'profile' });
       }
+      setIsModalVisible(false);
     } catch (error) {
       console.log(error);
     }

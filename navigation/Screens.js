@@ -14,9 +14,6 @@ import Home from '../screens/Home';
 import AddToCart from '../screens/AddToCart';
 import OrderSummary from '../screens/OrderSummary';
 import OrderPlaced from '../screens/OrderPlaced';
-import WelcomeScreen from '../screens/WelcomeScreen';
-import LoginScreen from '../screens/LoginScreen';
-import SignUpScreen from '../screens/SignUpScreen';
 import { SafetyScreen } from '../screens/SafetyScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 // drawer
@@ -44,23 +41,6 @@ import { useAppContext } from '../context/app';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
-
-function AuthStack(props) {
-  return (
-    <Stack.Navigator mode='card' headerMode='screen'>
-      <Stack.Screen
-        name='Welcome'
-        component={WelcomeScreen}
-        options={{
-          headerMode: false,
-          header: null,
-          headerShown: false,
-          cardStyle: { backgroundColor: '#F8F9FE' },
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
 
 const Loader = () => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -191,13 +171,7 @@ export default function OnboardingStack(props) {
     <>
       <Stack.Navigator mode='card' headerMode='none'>
         {isInitialized ? (
-          <React.Fragment>
-            {isAuthenticated ? (
-              <Stack.Screen name='App' component={AppStack} />
-            ) : (
-              <Stack.Screen name='Auth' component={AuthStack} />
-            )}
-          </React.Fragment>
+          <Stack.Screen name='App' component={AppStack} />
         ) : (
           <Stack.Screen name='Loader' component={LoaderStack} />
         )}

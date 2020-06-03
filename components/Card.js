@@ -19,6 +19,7 @@ import { useCartContext } from '../context/cart';
 import { height, width } from '../utils/Scalaing';
 import { useAppContext } from '../context/app';
 import { Drawer } from './Drawer';
+import { useAuth } from '../context/auth';
 
 const Card = ({ id, type, navigation, label, ...restProps }) => {
   const [price, setPrice] = useState('randomNumber');
@@ -26,6 +27,7 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
   const [cardData, setcardData] = useState(null); // obj to pass to add to cart modal
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { visual } = useAppContext();
+  const { isAuthenticated, login } = useAuth();
 
   return (
     <>
@@ -133,7 +135,7 @@ const Card = ({ id, type, navigation, label, ...restProps }) => {
           <View style={styles.add_to_cart_container}>
             <TouchableOpacity
               onPress={() => {
-                setIsModalVisible(true);
+                !isAuthenticated ? login() : setIsModalVisible(true);
                 // navigation.navigate('AddToCart', { data: cardData, type, id });
               }}
               style={[
