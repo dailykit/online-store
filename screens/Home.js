@@ -362,9 +362,10 @@ const Home = (props) => {
     data.forEach((category, _id) => {
       pickerData.push(category.name);
       let dataItems = [];
-      Object.keys(category).forEach((key) => {
+      console.log(category);
+      Object.keys(category)?.forEach((key) => {
         if (key != 'name' && key != '__typename') {
-          category[key].forEach((el) =>
+          category[key]?.forEach((el) =>
             dataItems.push({
               type: key,
               id: el,
@@ -378,6 +379,10 @@ const Home = (props) => {
       });
     });
   }
+  data.forEach((el) => {
+    el.title = el.name;
+    el.data = [{ ...el }];
+  });
   return (
     <>
       <Header
@@ -449,12 +454,45 @@ const Home = (props) => {
                 ))}
               </Select>
             </View>
-            {data.map((category) => (
+            <SectionList
+              ref={sectionListRef}
+              sections={data}
+              style={{
+                height: height - 16 * 4.125 - 80 - 48,
+              }}
+              stickySectionHeadersEnabled={true}
+              keyExtractor={(item, index) => item + index}
+              renderSectionHeader={({ section: { title } }) => (
+                <View style={{ backgroundColor: '#fff' }}>
+                  <Text
+                    style={[
+                      styles.header,
+                      { textAlign: 'center', fontSize: 12, color: 'gray' },
+                    ]}
+                  >
+                    Now Showing
+                  </Text>
+                  <Text
+                    style={[
+                      styles.header,
+                      { textAlign: 'center', fontSize: 18, color: 'gray' },
+                    ]}
+                  >
+                    {title}
+                  </Text>
+                </View>
+              )}
+              stickyHeaderIndices={[0]}
+              renderItem={({ item: category }) => (
+                <Products category={category} />
+              )}
+            />
+            {/* {data.map((category) => (
               <Products
                 key={Math.floor(Math.random * 10000)}
                 category={category}
               />
-            ))}
+            ))} */}
           </View>
         </View>
         <View style={{ height: height * 0.08 }} />

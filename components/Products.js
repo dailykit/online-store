@@ -12,6 +12,7 @@ import Card from './Card';
 import { width } from '../utils/Scalaing';
 
 const Products = ({ category }) => {
+  console.log(category, 'rendered');
   const [products, setProducts] = React.useState([]);
 
   // Subscriptions
