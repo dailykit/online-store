@@ -23,7 +23,7 @@ import { height, width } from "../utils/Scalaing";
 import Card from "../components/Card";
 import Cart from "../components/Cart";
 import { SafetyBanner } from "../components/SafetyBanner";
-import { CLIENTID, DAILYOS_SERVER_URL } from "react-native-dotenv";
+import { CLIENTID, DAILYOS_SERVER_URL } from "react-native-dotenv"; // 2
 
 import {
   useLazyQuery,
@@ -395,7 +395,7 @@ const Home = (props) => {
         options
         navigation={props.navigation}
       />
-      {/* <ScrollView style={styles.home}>
+      <ScrollView style={styles.home}>
         <View style={styles.img_container}>
           <Image
             source={{
@@ -404,24 +404,9 @@ const Home = (props) => {
             style={styles.cover_image}
           />
         </View>
-        <View
-          style={{
-            marginHorizontal: 20,
-            flexDirection: "row",
-            marginVertical: 10,
-            alignItems: "center",
-          }}
-        >
-          <Image
-            style={{ width: 50, height: 50, borderRadius: 25 }}
-            source={{ uri: brand.logo }}
-          />
-          <Text style={styles.title}>{brand.name}</Text>
-        </View>
         <View style={styles.headerContainer}>
           <SafetyBanner {...props} />
         </View>
-
         <View style={styles.flexContainerMiddle}>
           <View style={styles.cardContainer}>
             <View style={styles.picker_container}>
@@ -499,7 +484,7 @@ const Home = (props) => {
           {...props}
           text="Checkout"
         />
-      </ScrollView>  */}
+      </ScrollView>
     </>
   );
 };
