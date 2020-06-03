@@ -1,25 +1,26 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   TouchableOpacity,
   StyleSheet,
   Dimensions,
   Text,
-} from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
+  Button,
+} from "react-native";
+import EStyleSheet from "react-native-extended-stylesheet";
 
 // galio components
-import Icon from './Icon';
-import theme from '../constants/Theme';
+import Icon from "./Icon";
+import theme from "../constants/Theme";
+import { useAuth } from "../context/auth";
 
-const { height, width } = Dimensions.get('window');
+const { height, width } = Dimensions.get("window");
 
 export default function NavBar({
   back,
   hideLeft,
   hideRight,
   left,
-  leftStyle,
   leftIconColor,
   leftHitSlop,
   leftIconName,
@@ -31,9 +32,12 @@ export default function NavBar({
   transparent,
   title,
   titleStyle,
+  navigation,
 }) {
+  const { isAuthenticated, login, logout } = useAuth();
+
   function renderTitle() {
-    if (typeof title === 'string') {
+    if (typeof title === "string") {
       return (
         <View style={styles.title}>
           <Text style={[styles.titleTextStyle, titleStyle]}>{title}</Text>
@@ -50,21 +54,21 @@ export default function NavBar({
     if (!hideLeft) {
       if (leftIconName || back) {
         return (
-          <View style={[styles.left, leftStyle]}>
+          <View style={[styles.left]}>
             <TouchableOpacity
               onPress={() => onLeftPress && onLeftPress()}
               hitSlop={leftHitSlop}
             >
               <Icon
                 color={leftIconColor || theme.COLORS.ICON}
-                size={16 * 1.0625}
-                name={leftIconName || (back ? 'chevron-left' : 'navicon')}
+                size={18}
+                name={leftIconName || (back ? "chevron-left" : "navicon")}
               />
             </TouchableOpacity>
           </View>
         );
       }
-      return <View style={[styles.left, leftStyle]}>{left}</View>;
+      return <View style={[styles.left]}>{left}</View>;
     }
     return <View style={[styles.left]} />;
   }
@@ -82,50 +86,97 @@ export default function NavBar({
 
   return (
     <View style={navStyles}>
-      {renderLeft()}
+      {width < 768 && renderLeft()}
       {renderTitle()}
       {renderRight()}
+      {width > 768 && (
+        <View style={styles.rightNav}>
+          <Text style={styles.navLinks} onPress={() => navigation.navigate("")}>
+            About Us
+          </Text>
+          <Text
+            style={styles.navLinks}
+            onPress={() => navigation.navigate("OrderHistoryScreen")}
+          >
+            Orders
+          </Text>
+          <Text
+            style={styles.navLinks}
+            onPress={() => navigation.navigate("ProfileScreen")}
+          >
+            Profile
+          </Text>
+          <Text
+            style={[
+              styles.authButton,
+              { backgroundColor: isAuthenticated ? "#D93025" : "#BB00BB" },
+            ]}
+            onPress={() => (isAuthenticated ? logout() : login())}
+          >
+            {isAuthenticated ? "Logout" : "Login"}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   navBar: {
-    width: 'auto',
+    width: "auto",
     height: 16 * 4.125,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-evenly",
     backgroundColor: theme.COLORS.WHITE,
     paddingVertical: 16,
   },
   title: {
     flex: 2,
     height: height * 0.07,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginLeft: width > 768 ? 16 : 0,
+    alignItems: "center",
+    justifyContent: "center",
   },
   titleTextStyle: {
-    fontWeight: '400',
+    fontWeight: "400",
     fontSize: 16 * 0.875,
     color: theme.COLORS.BLACK,
   },
   left: {
-    flex: 0.5,
-    height: height * 0.07,
-    justifyContent: 'center',
-    marginLeft: 16,
+    width: 64,
+    height: 64,
+    alignContent: "center",
+    justifyContent: "center",
   },
   right: {
     flex: 0.5,
     height: height * 0.07,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 16,
   },
   transparent: {
-    backgroundColor: 'transparent',
-    borderColor: 'transparent',
+    backgroundColor: "transparent",
+    borderColor: "transparent",
     borderWidth: 0,
+  },
+  rightNav: {
+    alignItems: "center",
+    flexDirection: "row",
+    paddingRight: 16,
+  },
+  navLinks: {
+    marginLeft: 16,
+    fontSize: 18,
+  },
+  authButton: {
+    fontSize: 18,
+    marginLeft: 16,
+    borderRadius: 8,
+    color: "#ffffff",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    justifyContent: "center",
   },
 });

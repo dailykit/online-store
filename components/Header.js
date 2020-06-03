@@ -1,23 +1,23 @@
-import React from 'react';
-import { withNavigation } from '@react-navigation/compat';
-import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
-import NavBar from './NavBar';
-import EStyleSheet from 'react-native-extended-stylesheet';
+import React from "react";
+import { withNavigation } from "@react-navigation/compat";
+import { TouchableOpacity, StyleSheet, Dimensions, View } from "react-native";
+import NavBar from "./NavBar";
+import EStyleSheet from "react-native-extended-stylesheet";
 
-import Icon from './Icon';
-import argonTheme from '../constants/Theme';
+import Icon from "./Icon";
+import argonTheme from "../constants/Theme";
 
-import { height, width } from '../utils/Scalaing';
+import { height, width } from "../utils/Scalaing";
 
 const BasketButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity
     style={[styles.button, style]}
-    onPress={() => navigation.navigate('OrderSummary')}
+    onPress={() => navigation.navigate("OrderSummary")}
   >
     <Icon
       size={16}
-      name='shopping-cart'
-      color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+      name="shopping-cart"
+      color={argonTheme.COLORS[isWhite ? "WHITE" : "ICON"]}
     />
   </TouchableOpacity>
 );
@@ -58,8 +58,8 @@ class Header extends React.Component {
     } = this.props;
 
     const headerStyles = [
-      transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null,
-      { height: 40 },
+      transparent ? { backgroundColor: "rgba(0,0,0,0)" } : null,
+      { height: 64 },
     ];
 
     const navbarStyles = [
@@ -72,27 +72,27 @@ class Header extends React.Component {
         <NavBar
           back={false}
           title={title}
+          navigation={navigation}
           style={navbarStyles}
           transparent={transparent}
           right={this.renderRight()}
-          rightStyle={{ alignItems: 'center' }}
+          rightStyle={{ alignItems: "center" }}
           left={
             <Icon
-              name={back ? 'chevron-left' : 'menu'}
-              family='entypo'
+              name={back ? "chevron-left" : "menu"}
+              family="entypo"
               size={20}
               onPress={this.handleLeftPress}
               color={
                 iconColor ||
                 (white ? argonTheme.COLORS.WHITE : argonTheme.COLORS.ICON)
               }
-              style={{ marginTop: 2 }}
             />
           }
-          leftStyle={{ paddingVertical: 12, flex: 0.2 }}
+          //  leftStyle={{ paddingVertical: 12, flex: 0.2 }}
           titleStyle={[
             styles.title,
-            { color: argonTheme.COLORS[white ? 'WHITE' : 'HEADER'] },
+            { color: argonTheme.COLORS[white ? "WHITE" : "HEADER"] },
             titleColor && { color: titleColor },
           ]}
           {...props}
@@ -105,12 +105,12 @@ class Header extends React.Component {
 const styles = StyleSheet.create({
   button: {
     padding: 12,
-    position: 'relative',
+    position: "relative",
   },
   title: {
-    width: '100%',
+    width: "100%",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   navbar: {
     paddingVertical: 0,
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     height: 16 / 2,
     width: 16 / 2,
-    position: 'absolute',
+    position: "absolute",
     top: 9,
     right: 12,
   },
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   tabTitle: {
     lineHeight: 19,
-    fontWeight: '400',
+    fontWeight: "400",
     color: argonTheme.COLORS.HEADER,
   },
 });

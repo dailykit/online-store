@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import {
   ScrollView,
   View,
@@ -7,37 +7,37 @@ import {
   ActivityIndicator,
   SectionList,
   FlatList,
-} from 'react-native';
-import { Datepicker } from '@ui-kitten/components';
-import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
-import moment from 'moment';
-import EStyleSheet from 'react-native-extended-stylesheet';
+} from "react-native";
+import { Datepicker } from "@ui-kitten/components";
+import { IndexPath, Select, SelectItem } from "@ui-kitten/components";
+import moment from "moment";
+import EStyleSheet from "react-native-extended-stylesheet";
 
 import {
   CREATE_CUSTOMER,
   CUSTOMER,
   CUSTOMER_DETAILS,
   STORE_SETTINGS,
-} from '../graphql';
-import { height, width } from '../utils/Scalaing';
-import Card from '../components/Card';
-import Cart from '../components/Cart';
-import { SafetyBanner } from '../components/SafetyBanner';
-import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
+} from "../graphql";
+import { height, width } from "../utils/Scalaing";
+import Card from "../components/Card";
+import Cart from "../components/Cart";
+import { SafetyBanner } from "../components/SafetyBanner";
+import { CLIENTID, DAILYOS_SERVER_URL } from "react-native-dotenv";
 
 import {
   useLazyQuery,
   useMutation,
   useSubscription,
   useQuery,
-} from '@apollo/react-hooks';
-import { useCartContext } from '../context/cart';
-import * as axios from 'axios';
-import { useAuth } from '../context/auth';
-import { useAppContext } from '../context/app';
-import { Header } from '../components';
-import { Drawer } from '../components/Drawer';
-import Products from '../components/Products';
+} from "@apollo/react-hooks";
+import { useCartContext } from "../context/cart";
+import * as axios from "axios";
+import { useAuth } from "../context/auth";
+import { useAppContext } from "../context/app";
+import { Header } from "../components";
+import { Drawer } from "../components/Drawer";
+import Products from "../components/Products";
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
@@ -67,23 +67,23 @@ const Home = (props) => {
     {
       onSubscriptionData: (data) => {
         const brandSettings = data.subscriptionData.data.storeSettings.filter(
-          (setting) => setting.type === 'brand'
+          (setting) => setting.type === "brand"
         );
         const visualSettings = data.subscriptionData.data.storeSettings.filter(
-          (setting) => setting.type === 'visual'
+          (setting) => setting.type === "visual"
         );
         const availabilitySettings = data.subscriptionData.data.storeSettings.filter(
-          (setting) => setting.type === 'availability'
+          (setting) => setting.type === "availability"
         );
 
         let brandState = {};
         brandSettings.forEach(({ identifier, value }) => {
           switch (identifier) {
-            case 'Brand Logo': {
+            case "Brand Logo": {
               brandState.logo = value.url;
               return;
             }
-            case 'Brand Name': {
+            case "Brand Name": {
               brandState.name = value.name;
               return;
             }
@@ -97,11 +97,11 @@ const Home = (props) => {
         let visualState = {};
         visualSettings.forEach(({ identifier, value }) => {
           switch (identifier) {
-            case 'Primary Color': {
+            case "Primary Color": {
               visualState.color = value.color;
               return;
             }
-            case 'Cover': {
+            case "Cover": {
               visualState.cover = value.url;
               return;
             }
@@ -115,15 +115,15 @@ const Home = (props) => {
         let availabilityState = {};
         availabilitySettings.forEach(({ identifier, value }) => {
           switch (identifier) {
-            case 'Store Availability': {
+            case "Store Availability": {
               availabilityState.store = value;
               return;
             }
-            case 'Pickup Availability': {
+            case "Pickup Availability": {
               availabilityState.pickup = value;
               return;
             }
-            case 'Delivery Availability': {
+            case "Delivery Availability": {
               availabilityState.delivery = value;
               return;
             }
@@ -181,20 +181,20 @@ const Home = (props) => {
       keycloakId: user.sub || user.userid,
     },
     onCompleted: (data) => {
-      console.log('platform -> data', data);
+      console.log("platform -> data", data);
       if (data.platform_customerByClients?.length) {
         setCustomerDetails(data.platform_customerByClients[0].customer);
       } else {
-        console.log('No customer data found!');
+        console.log("No customer data found!");
       }
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: "cache-and-network",
   });
 
   // Mutations
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
     onCompleted: () => {
-      console.log('Customer created');
+      console.log("Customer created");
     },
     onError: (error) => {
       console.log(error);
@@ -217,7 +217,7 @@ const Home = (props) => {
             object: {
               keycloakId: user.sub || user.userid,
               email: user.email,
-              source: 'online store',
+              source: "online store",
               clientId: CLIENTID,
             },
           },
@@ -230,8 +230,8 @@ const Home = (props) => {
     const current = new Date();
     if (availability.store.isOpen) {
       const minutes = current.getMinutes() + current.getHours() * 60;
-      const from = availability.store.from.split(':');
-      const to = availability.store.to.split(':');
+      const from = availability.store.from.split(":");
+      const to = availability.store.to.split(":");
       const fromMinutes = parseInt(from[1]) + parseInt(from[0]) * 60;
       const toMinutes = parseInt(to[1]) + parseInt(to[0]) * 60;
 
@@ -245,18 +245,18 @@ const Home = (props) => {
     }
   };
 
-  if (error) console.log('Subscription error: ', error);
+  if (error) console.log("Subscription error: ", error);
 
   if (settingsLoading) {
     return (
       <View
         style={{
           flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <ActivityIndicator size='large' />
+        <ActivityIndicator size="large" />
       </View>
     );
   }
@@ -264,9 +264,9 @@ const Home = (props) => {
   if (availability && !isStoreOpen())
     return (
       <>
-        <Header title='Home' search options navigation={props.navigation} />
+        <Header title="Home" search options navigation={props.navigation} />
         <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
           <Text style={{ fontWeight: 500, fontSize: 24, marginBottom: 20 }}>
             Store Closed
@@ -301,8 +301,8 @@ const Home = (props) => {
     return (
       <View
         style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
+          flexDirection: "row",
+          justifyContent: "space-between",
         }}
       >
         {items}
@@ -342,7 +342,7 @@ const Home = (props) => {
                 style={styles.selectStyle}
                 onSelect={() => {}}
               >
-                <SelectItem title={'Please wait..'} />
+                <SelectItem title={"Please wait.."} />
               </Select>
             </View>
           </View>
@@ -351,7 +351,7 @@ const Home = (props) => {
           </View>
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
-        <Cart to='OrderSummary' {...props} text='Checkout' />
+        <Cart to="OrderSummary" {...props} text="Checkout" />
       </View>
     );
   }
@@ -364,10 +364,10 @@ const Home = (props) => {
       let dataItems = [];
       Object.keys(category)?.forEach((key) => {
         if (
-          key != 'name' &&
-          key != '__typename' &&
-          key != 'title' &&
-          key != 'data'
+          key != "name" &&
+          key != "__typename" &&
+          key != "title" &&
+          key != "data"
         ) {
           category[key]?.forEach((el) =>
             dataItems.push({
@@ -390,13 +390,12 @@ const Home = (props) => {
   return (
     <>
       <Header
-        title={brand?.name ? brand?.name : 'Home'}
+        title={brand?.name ? brand?.name : "Home"}
         search
         options
         navigation={props.navigation}
       />
-      <ScrollView style={styles.home}>
-        {/* <Tabs /> */}
+      {/* <ScrollView style={styles.home}>
         <View style={styles.img_container}>
           <Image
             source={{
@@ -408,9 +407,9 @@ const Home = (props) => {
         <View
           style={{
             marginHorizontal: 20,
-            flexDirection: 'row',
+            flexDirection: "row",
             marginVertical: 10,
-            alignItems: 'center',
+            alignItems: "center",
           }}
         >
           <Image
@@ -467,11 +466,11 @@ const Home = (props) => {
               stickySectionHeadersEnabled={true}
               keyExtractor={(item, index) => item + index}
               renderSectionHeader={({ section: { title } }) => (
-                <View style={{ backgroundColor: '#fff' }}>
+                <View style={{ backgroundColor: "#fff" }}>
                   <Text
                     style={[
                       styles.header,
-                      { textAlign: 'center', fontSize: 12, color: 'gray' },
+                      { textAlign: "center", fontSize: 12, color: "gray" },
                     ]}
                   >
                     Now Showing
@@ -479,7 +478,7 @@ const Home = (props) => {
                   <Text
                     style={[
                       styles.header,
-                      { textAlign: 'center', fontSize: 18, color: 'gray' },
+                      { textAlign: "center", fontSize: 18, color: "gray" },
                     ]}
                   >
                     {title}
@@ -491,22 +490,16 @@ const Home = (props) => {
                 <Products category={category} />
               )}
             />
-            {/* {data.map((category) => (
-              <Products
-                key={Math.floor(Math.random * 10000)}
-                category={category}
-              />
-            ))} */}
           </View>
         </View>
         <View style={{ height: height * 0.08 }} />
         <Cart
           label={pickerData[selectedIndex.row]}
-          to='OrderSummary'
+          to="OrderSummary"
           {...props}
-          text='Checkout'
+          text="Checkout"
         />
-      </ScrollView>
+      </ScrollView>  */}
     </>
   );
 };
@@ -515,7 +508,7 @@ const styles = EStyleSheet.create({
   home: {
     flex: 1,
     // alignItems: 'center',
-    marginTop: 20,
+    marginTop: 2,
   },
   img_container: {
     height: height * 0.3,
@@ -523,60 +516,60 @@ const styles = EStyleSheet.create({
   },
   cover_image: {
     flex: 1,
-    resizeMode: 'cover',
+    resizeMode: "cover",
     height: null,
     width: null,
     aspectRatio: 3 / 2,
   },
   picker_container: {
     height: 80,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     width: width > 1000 ? width / 2 : width,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   picker_placeholder: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   flexContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   title: {
-    fontSize: '1.2rem',
+    fontSize: "1.2rem",
     padding: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   cardContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   headerContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   header: {
-    fontSize: '2rem',
-    fontWeight: 'bold',
-    paddingLeft: '2rem',
-    backgroundColor: '#fff',
+    fontSize: "2rem",
+    fontWeight: "bold",
+    paddingLeft: "2rem",
+    backgroundColor: "#fff",
     paddingTop: 10,
     paddingBottom: 10,
   },
   selectStyle: {
-    transitionProperty: 'opacity',
-    transitionDuration: '0.15s',
-    userSelect: 'none',
-    cursor: 'pointer',
-    touchAction: 'manipulation',
+    transitionProperty: "opacity",
+    transitionDuration: "0.15s",
+    userSelect: "none",
+    cursor: "pointer",
+    touchAction: "manipulation",
     outlineWidth: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 8,
-    borderColor: '#E4E9F2',
-    backgroundColor: '#F7F9FC',
+    borderColor: "#E4E9F2",
+    backgroundColor: "#F7F9FC",
     borderRadius: 4,
     borderWidth: 1,
     minHeight: 40,
