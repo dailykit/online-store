@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   View,
   TouchableOpacity,
@@ -6,15 +6,17 @@ import {
   Dimensions,
   Text,
   Button,
-} from "react-native";
-import EStyleSheet from "react-native-extended-stylesheet";
+  Image,
+} from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 // galio components
-import Icon from "./Icon";
-import theme from "../constants/Theme";
-import { useAuth } from "../context/auth";
+import Icon from './Icon';
+import theme from '../constants/Theme';
+import { useAuth } from '../context/auth';
+import { useAppContext } from '../context/app';
 
-const { height, width } = Dimensions.get("window");
+const { height, width } = Dimensions.get('window');
 
 export default function NavBar({
   back,
@@ -35,11 +37,15 @@ export default function NavBar({
   navigation,
 }) {
   const { isAuthenticated, login, logout } = useAuth();
+  const { brand } = useAppContext();
 
   function renderTitle() {
-    if (typeof title === "string") {
+    if (typeof title === 'string') {
       return (
         <View style={styles.title}>
+          {width > 768 && (
+            <Image source={{ uri: brand.logo }} style={styles.logo} />
+          )}
           <Text style={[styles.titleTextStyle, titleStyle]}>{title}</Text>
         </View>
       );
@@ -62,7 +68,7 @@ export default function NavBar({
               <Icon
                 color={leftIconColor || theme.COLORS.ICON}
                 size={18}
-                name={leftIconName || (back ? "chevron-left" : "navicon")}
+                name={leftIconName || (back ? 'chevron-left' : 'navicon')}
               />
             </TouchableOpacity>
           </View>
@@ -91,29 +97,29 @@ export default function NavBar({
       {renderRight()}
       {width > 768 && (
         <View style={styles.rightNav}>
-          <Text style={styles.navLinks} onPress={() => navigation.navigate("")}>
+          <Text style={styles.navLinks} onPress={() => navigation.navigate('')}>
             About Us
           </Text>
           <Text
             style={styles.navLinks}
-            onPress={() => navigation.navigate("OrderHistoryScreen")}
+            onPress={() => navigation.navigate('OrderHistoryScreen')}
           >
             Orders
           </Text>
           <Text
             style={styles.navLinks}
-            onPress={() => navigation.navigate("ProfileScreen")}
+            onPress={() => navigation.navigate('ProfileScreen')}
           >
             Profile
           </Text>
           <Text
             style={[
               styles.authButton,
-              { backgroundColor: isAuthenticated ? "#D93025" : "#BB00BB" },
+              { backgroundColor: isAuthenticated ? '#D93025' : '#BB00BB' },
             ]}
             onPress={() => (isAuthenticated ? logout() : login())}
           >
-            {isAuthenticated ? "Logout" : "Login"}
+            {isAuthenticated ? 'Logout' : 'Login'}
           </Text>
         </View>
       )}
@@ -123,11 +129,11 @@ export default function NavBar({
 
 const styles = StyleSheet.create({
   navBar: {
-    width: "auto",
+    width: 'auto',
     height: 16 * 4.125,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-evenly",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
     backgroundColor: theme.COLORS.WHITE,
     paddingVertical: 16,
   },
@@ -135,35 +141,42 @@ const styles = StyleSheet.create({
     flex: 2,
     height: height * 0.07,
     marginLeft: width > 768 ? 16 : 0,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  logo: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginRight: 16,
   },
   titleTextStyle: {
-    fontWeight: "400",
+    fontWeight: '400',
     fontSize: 16 * 0.875,
     color: theme.COLORS.BLACK,
   },
   left: {
     width: 64,
     height: 64,
-    alignContent: "center",
-    justifyContent: "center",
+    alignContent: 'center',
+    justifyContent: 'center',
   },
   right: {
     flex: 0.5,
     height: height * 0.07,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginRight: 16,
   },
   transparent: {
-    backgroundColor: "transparent",
-    borderColor: "transparent",
+    backgroundColor: 'transparent',
+    borderColor: 'transparent',
     borderWidth: 0,
   },
   rightNav: {
-    alignItems: "center",
-    flexDirection: "row",
+    alignItems: 'center',
+    flexDirection: 'row',
     paddingRight: 16,
   },
   navLinks: {
@@ -174,9 +187,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginLeft: 16,
     borderRadius: 8,
-    color: "#ffffff",
+    color: '#ffffff',
     paddingVertical: 8,
     paddingHorizontal: 12,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
 });
