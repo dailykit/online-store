@@ -77,14 +77,22 @@ const InventoryProductCollapsed = ({
             </TouchableOpacity> */}
           </View>
           <Text style={styles.item_category}></Text>
-          <Text
-            style={styles.item_chef}
-          >{`Unit size: ${inventoryProduct?.inventoryProductOptions[0]?.label} `}</Text>
+          <Text style={styles.item_chef}>
+            {inventoryProduct?.sachetItem
+              ? inventoryProduct?.sachetItem?.unitSize +
+                ' ' +
+                inventoryProduct?.sachetItem?.unit
+              : inventoryProduct?.supplierItem?.unitSize +
+                ' ' +
+                inventoryProduct?.supplierItem?.unit}
+          </Text>
         </View>
         <View style={styles.item_container_three}>
           <View style={styles.item_three_upper}></View>
           <View style={styles.item_three_lower}>
-            <Text style={styles.item_details}>{`Size: 1*1 `}</Text>
+            <Text style={styles.item_details}>
+              {inventoryProduct?.inventoryProductOptions[0]?.label}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>
