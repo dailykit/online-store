@@ -127,7 +127,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
           <View style={styles.add_to_cart_container}>
             <TouchableOpacity
               onPress={() => {
-                !true ? login() : setIsModalVisible(true);
+                !isAuthenticated ? login() : setIsModalVisible(true);
                 // navigation.navigate('AddToCart', { data: cardData, type, id });
               }}
               style={[
