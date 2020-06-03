@@ -447,13 +447,6 @@ const Home = props => {
                   />
                </View>
             </View>
-            <View style={{ height: height * 0.08 }} />
-            <Cart
-               label={pickerData[selectedIndex.row]}
-               to="OrderSummary"
-               {...props}
-               text="Checkout"
-            />
          </ScrollView>
       </>
    );
