@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -7,16 +7,16 @@ import {
   TouchableOpacity,
   ToastAndroid,
   Platform,
-} from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { useCartContext } from '../context/cart';
-import { uuid } from '../utils';
-import { useMutation } from '@apollo/react-hooks';
-import EStyleSheet, { child } from 'react-native-extended-stylesheet';
-import { CREATE_CART, UPDATE_CART } from '../graphql/mutations';
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useCartContext } from "../context/cart";
+import { uuid } from "../utils";
+import { useMutation } from "@apollo/react-hooks";
+import EStyleSheet, { child } from "react-native-extended-stylesheet";
+import { CREATE_CART, UPDATE_CART } from "../graphql/mutations";
 
-import { height, width } from '../utils/Scalaing';
-import { useAppContext } from '../context/app';
+import { height, width } from "../utils/Scalaing";
+import { useAppContext } from "../context/app";
 
 const Cart = ({
   navigation,
@@ -33,7 +33,7 @@ const Cart = ({
 
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
-      console.log('Product added!');
+      console.log("Product added!");
     },
     onError: (error) => {
       console.log(error);
@@ -41,7 +41,7 @@ const Cart = ({
   });
   const [createCart] = useMutation(CREATE_CART, {
     onCompleted: () => {
-      console.log('Cart created!');
+      console.log("Cart created!");
     },
     onError: (error) => {
       console.log(error);
@@ -49,7 +49,7 @@ const Cart = ({
   });
 
   const handleAddToCart = () => {
-    console.log('CART Item:', cartItem);
+    console.log("CART Item:", cartItem);
     try {
       if (
         customerDetails?.firstName &&
@@ -60,7 +60,7 @@ const Cart = ({
         let products = cart?.cartInfo?.products || [];
         let total = parseFloat(cart?.cartInfo?.total) || 0;
         if (tunnelItem) {
-          if (type == 'comboProducts') {
+          if (type == "comboProducts") {
             let comboItemPrice = 0;
             comboProductItems.forEach((product) => {
               comboItemPrice =
@@ -83,7 +83,7 @@ const Cart = ({
           }
           total = parseFloat(total.toFixed(2));
           // products and total ready
-          if (!customer) throw Error('Customer subscription failed!');
+          if (!customer) throw Error("Customer subscription failed!");
           if (cart) {
             // Update
             // cartInfo are your products
@@ -118,10 +118,10 @@ const Cart = ({
                     customerEmail: customerDetails.email,
                   },
                   fulfillmentInfo: {
-                    type: 'DELIVERY',
+                    type: "DELIVERY",
                     time: {
-                      from: '15:00',
-                      to: '19:00',
+                      from: "15:00",
+                      to: "19:00",
                     },
                     date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
                   },
@@ -134,9 +134,9 @@ const Cart = ({
             });
           }
         }
-        if (text === 'Checkout') navigation.navigate('OrderSummary');
+        if (text === "Checkout") navigation.navigate("OrderSummary");
       } else {
-        navigation.navigate('Add Details', { path: 'profile' });
+        navigation.navigate("Add Details", { path: "profile" });
       }
       setIsModalVisible(false);
     } catch (error) {
@@ -152,7 +152,7 @@ const Cart = ({
   return (
     <TouchableOpacity
       onPress={handleAddToCart}
-      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+      style={[styles.container, { backgroundColor: visual.color || "#3fa4ff" }]}
     >
       <View style={styles.container_left}>
         {!tunnelItem && (
@@ -164,11 +164,11 @@ const Cart = ({
       <View style={styles.container_right}>
         <Text style={styles.text}>
           {text}
-          {'    '}
+          {"    "}
         </Text>
         <Ionicons
-          name='ios-arrow-forward'
-          color='#fff'
+          name="ios-arrow-forward"
+          color="#fff"
           size={20}
           style={{ marginTop: 2 }}
         />
@@ -183,9 +183,9 @@ export const CartSummary = ({ navigation, text }) => {
 
   const pay = () => {
     if (cart.isValid.status) {
-      navigation.navigate('PaymentProcessing');
+      navigation.navigate("PaymentProcessing");
     } else {
-      if (Platform.OS == 'android')
+      if (Platform.OS == "android")
         ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
     }
   };
@@ -194,7 +194,7 @@ export const CartSummary = ({ navigation, text }) => {
   return (
     <TouchableOpacity
       onPress={pay}
-      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+      style={[styles.container, { backgroundColor: visual.color || "#3fa4ff" }]}
     >
       <View style={[styles.container_left, { flex: 3 }]}>
         <Text style={[styles.text, { fontSize: 18 }]}>
@@ -207,11 +207,11 @@ export const CartSummary = ({ navigation, text }) => {
       <View style={styles.container_right}>
         <Text style={styles.text}>
           {text}
-          {'    '}
+          {"    "}
         </Text>
         <Ionicons
-          name='ios-arrow-forward'
-          color='#fff'
+          name="ios-arrow-forward"
+          color="#fff"
           size={20}
           style={{ marginTop: 2 }}
         />
@@ -232,7 +232,7 @@ export const ComboProductItemProceed = ({
       onPress={() => {
         setCurrentComboProductIndex(currentComboProductIndex + 1);
       }}
-      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+      style={[styles.container, { backgroundColor: visual.color || "#3fa4ff" }]}
     >
       <View style={[styles.container_left, { flex: 4 }]}>
         <Text style={[styles.text, { fontSize: 14 }]}>
@@ -242,11 +242,11 @@ export const ComboProductItemProceed = ({
       <View style={styles.container_right}>
         <Text style={styles.text}>
           {text}
-          {'    '}
+          {"    "}
         </Text>
         <Ionicons
-          name='ios-arrow-forward'
-          color='#fff'
+          name="ios-arrow-forward"
+          color="#fff"
           size={20}
           style={{ marginTop: 2 }}
         />
@@ -259,29 +259,29 @@ const styles = StyleSheet.create({
   container: {
     height: height * 0.08,
     width,
-    backgroundColor: '#3fa4ff',
-    position: 'fixed',
+    backgroundColor: "#3fa4ff",
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   text: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
   },
   container_left: {
     flex: 3,
     paddingHorizontal: 20,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    alignItems: "flex-start",
+    justifyContent: "center",
   },
   container_right: {
     flex: 3,
     paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
 });
 
