@@ -101,7 +101,7 @@ const InventoryProductCollapsed = ({
          </TouchableOpacity>
          {tunnelItem && (
             <View style={{ paddingHorizontal: 20 }}>
-               <Text style={styles.item_chef}>Avaliable Servings:</Text>
+               <Text style={styles.something}>Avaliable Servings:</Text>
                {inventoryProduct.inventoryProductOptions.map(
                   (item_data, key) => {
                      return (
@@ -172,11 +172,16 @@ const styles = EStyleSheet.create({
       resizeMode: 'contain',
    },
    item_title: {
-      fontSize: '$xxs',
+      fontSize: '$s',
    },
    item_chef: {
-      fontSize: '$xxxs',
-      fontWeight: 'bold',
+      fontSize: '$xs',
+      color: '#4f4e4e',
+   },
+   something: {
+      fontSize: '$xs',
+      color: '#4f4e4e',
+      marginVertical: 10,
    },
    item_category: {
       color: 'white',
@@ -195,7 +200,7 @@ const styles = EStyleSheet.create({
    item_details: {
       textAlign: 'right',
       fontWeight: 'bold',
-      fontSize: '$xxxs',
+      fontSize: '$xxs',
    },
    price: {
       flex: 1,
