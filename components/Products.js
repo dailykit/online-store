@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, FlatList } from 'react-native';
 import { useSubscription } from '@apollo/react-hooks';
 import {
   INVENTORY_PRODUCTS,
@@ -9,6 +9,7 @@ import {
 } from '../graphql';
 import { Spinner, Text } from 'native-base';
 import Card from './Card';
+import { width } from '../utils/Scalaing';
 
 const Products = ({ category }) => {
   const [products, setProducts] = React.useState([]);
@@ -89,11 +90,12 @@ const Products = ({ category }) => {
       {products.length ? (
         <>
           <Text>{category.name}</Text>
-          <View>
-            {products.map((product) => (
-              <Card key={product.id} product={product} />
-            ))}
-          </View>
+          <FlatList
+            numColumns={width > 1000 ? 3 : 1}
+            data={products}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item: product }) => <Card product={product} />}
+          />
         </>
       ) : (
         <Text> Oops! </Text>

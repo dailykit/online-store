@@ -86,6 +86,11 @@ export const SelectPaymentMethod = ({ navigation }) => {
             invalidColor={'red'}
             placeholderColor={'darkgray'}
             onFocus={_onFocus}
+            placeholder={{
+              number: '4335 3245 2343 5678',
+              expiry: '12/24',
+              cvc: '123',
+            }}
             values={{
               number: '4335 3245 2343 5678',
               expiry: '12/24',

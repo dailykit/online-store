@@ -31,38 +31,40 @@ const InventoryProductItem = ({
   };
 
   useEffect(() => {
-    if (product?.inventoryProductOptions === undefined) return;
-    if (product?.inventoryProductOptions[0]) {
-      let objToPush = {
-        product: {
-          id: product?.id,
-          name: product?.name,
-          price: product?.inventoryProductOptions[0]?.price[0]?.value,
-          option: {
-            id: product?.inventoryProductOptions[0]?.id, // product option id
-          },
-          type: 'Inventory',
+    if (
+      product?.inventoryProductOptions === undefined ||
+      !product?.inventoryProductOptions[0]
+    )
+      return;
+    let objToPush = {
+      product: {
+        id: product?.id,
+        name: product?.name,
+        price: product?.inventoryProductOptions[0]?.price[0]?.value,
+        option: {
+          id: product?.inventoryProductOptions[0]?.id, // product option id
         },
-      };
-      if (!independantItem) {
-        objToPush['name'] = name;
-      }
-      setobjToAdd(objToPush);
-      if (!tunnelItem && independantItem) {
-        setPrice(product?.inventoryProductOptions[0]?.price[0]?.value);
-        setcardData(product);
-      }
-      if (tunnelItem && isSelected) {
-        setcartItem(objToPush);
-      }
-      if (tunnelItem && independantItem) {
-        setcartItem(objToPush);
-      }
+        type: 'Inventory',
+      },
+    };
+    if (!independantItem) {
+      objToPush['name'] = name;
+    }
+    setobjToAdd(objToPush);
+    if (!tunnelItem && independantItem) {
+      setPrice(product?.inventoryProductOptions[0]?.price[0]?.value);
+      setcardData(product);
+    }
+    if (tunnelItem && isSelected) {
+      setcartItem(objToPush);
+    }
+    if (tunnelItem && independantItem) {
+      setcartItem(objToPush);
     }
   }, []);
 
   useEffect(() => {
-    if (tunnelItem && isSelected) {
+    if (tunnelItem && isSelected && objToAdd?.product?.price) {
       setcartItem(objToAdd);
     }
   }, [isSelected]);

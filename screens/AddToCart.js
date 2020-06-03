@@ -28,10 +28,8 @@ const ModalContent = ({
   id,
   ...restProps
 }) => {
-  const [isLastComboItem, setIsLastComboItem] = useState(false);
   const [cartItem, setcartItem] = useState(null); // obj to push to jaguar
   const [comboProductItems, setcomboProductItems] = useState([]);
-  const [cartItemToDisplay, setcartItemToDisplay] = useState(null); // obj to push to jaguar
   const [numberOfComboProductItem, setnumberOfComboProductItem] = useState(
     1000
   );
@@ -49,10 +47,6 @@ const ModalContent = ({
   // if (type == 'customizableProduct') {
   //   name = data?.name;
   // }
-
-  console.log(data);
-  console.log(type);
-  console.log(id);
 
   return (
     <View style={{ flex: 1 }}>
@@ -89,7 +83,6 @@ const ModalContent = ({
                   setcomboProductItems(auxArray);
                 }
               }}
-              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               tunnelItem
               setIsLastComboItem={setIsLastComboItem}
@@ -105,7 +98,6 @@ const ModalContent = ({
           {type == 'customizableProduct' && (
             <CustomizableProductItem
               setcartItem={setcartItem}
-              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               independantItem
               tunnelItem
@@ -118,7 +110,6 @@ const ModalContent = ({
           {type == 'simpleRecipeProduct' && (
             <SimpleProductItem
               setcartItem={(item) => setcartItem(item)}
-              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
               navigation={navigation}
               independantItem
               tunnelItem
@@ -130,8 +121,10 @@ const ModalContent = ({
           )}
           {type == 'inventoryProduct' && (
             <InventoryProductItem
-              setcartItem={(item) => setcartItem(item)}
-              setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
+              setcartItem={(item) => {
+                console.log('set cartitem called', item);
+                setcartItem(item);
+              }}
               navigation={navigation}
               independantItem
               tunnelItem
@@ -144,7 +137,6 @@ const ModalContent = ({
         </View>
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
-      {/* {isLastComboItem && ( */}
       {type !== 'comboProduct' && (
         <Cart
           cartItem={cartItem}
@@ -152,7 +144,6 @@ const ModalContent = ({
           to={'Home'}
           {...restProps}
           text='Add to Cart'
-          cartItemToDisplay={cartItemToDisplay}
           comboProductItems={comboProductItems}
           tunnelItem
           type={type}
@@ -166,7 +157,6 @@ const ModalContent = ({
             navigation={navigation}
             {...restProps}
             text='Add to Cart'
-            cartItemToDisplay={cartItemToDisplay}
             comboProductItems={comboProductItems}
             tunnelItem
             type={type}

@@ -6,6 +6,7 @@ import {
   Text,
   ActivityIndicator,
   SectionList,
+  FlatList,
 } from 'react-native';
 import { Datepicker } from '@ui-kitten/components';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
@@ -377,7 +378,6 @@ const Home = (props) => {
       });
     });
   }
-
   return (
     <>
       <Header
@@ -450,53 +450,11 @@ const Home = (props) => {
               </Select>
             </View>
             {data.map((category) => (
-              <Products category={category} />
-            ))}
-            {sectionsData?.length && (
-              <SectionList
-                ref={sectionListRef}
-                style={{
-                  height: height - 16 * 4.125 - 80 - 48,
-                }}
-                maxToRenderPerBatch={40}
-                initialNumToRender={40}
-                removeClippedSubviews={true}
-                getItemLayout={(data, index) => {
-                  const _height =
-                    (width < height ? height * 0.15 : height * 0.18) + 60;
-                  return {
-                    length: _height,
-                    offset: _height * index,
-                    index,
-                  };
-                }}
-                sections={sectionsData}
-                keyExtractor={(item, index) => item + index}
-                stickySectionHeadersEnabled={true}
-                stickyHeaderIndices={[0]}
-                renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ backgroundColor: '#fff' }}>
-                    <Text
-                      style={[
-                        styles.header,
-                        { textAlign: 'center', fontSize: 12, color: 'gray' },
-                      ]}
-                    >
-                      Now Showing
-                    </Text>
-                    <Text
-                      style={[
-                        styles.header,
-                        { textAlign: 'center', fontSize: 18, color: 'gray' },
-                      ]}
-                    >
-                      {title}
-                    </Text>
-                  </View>
-                )}
-                renderItem={_renderItem}
+              <Products
+                key={Math.floor(Math.random * 10000)}
+                category={category}
               />
-            )}
+            ))}
           </View>
         </View>
         <View style={{ height: height * 0.08 }} />

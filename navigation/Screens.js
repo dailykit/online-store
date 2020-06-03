@@ -170,7 +170,7 @@ export default function OnboardingStack(props) {
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>
-        {isInitialized ? (
+        {true ? (
           <Stack.Screen name='App' component={AppStack} />
         ) : (
           <Stack.Screen name='Loader' component={LoaderStack} />
