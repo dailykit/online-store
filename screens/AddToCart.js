@@ -23,9 +23,11 @@ const ModalContent = ({
   route,
   navigation,
   setIsModalVisible,
+  data,
+  type,
+  id,
   ...restProps
 }) => {
-  const { data, type, id } = restProps;
   const [isLastComboItem, setIsLastComboItem] = useState(false);
   const [cartItem, setcartItem] = useState(null); // obj to push to jaguar
   const [comboProductItems, setcomboProductItems] = useState([]);
@@ -34,26 +36,30 @@ const ModalContent = ({
     1000
   );
   const [currentComboProductIndex, setCurrentComboProductIndex] = useState(0);
-  let name = '';
-  if (type == 'simpleRecipeProducts') {
-    name = data?.simpleRecipeProduct.name;
-  }
-  if (type == 'comboProducts') {
-    name = data?.name;
-  }
-  if (type == 'inventoryProducts') {
-    name = data?.inventoryProduct.name;
-  }
-  if (type == 'customizableProducts') {
-    name = data?.name;
-  }
+  // let name = '';
+  // if (type == 'simpleRecipeProduct') {
+  //   name = dataname;
+  // }
+  // if (type == 'comboProducts') {
+  //   name = data?.name;
+  // }
+  // if (type == 'inventoryProduct') {
+  //   name = data.name;
+  // }
+  // if (type == 'customizableProduct') {
+  //   name = data?.name;
+  // }
+
+  console.log(data);
+  console.log(type);
+  console.log(id);
 
   return (
     <View style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         <View style={styles.title_container}>
           <View style={styles.details}>
-            <Text style={styles.title}>{name}</Text>
+            <Text style={styles.title}>{data.name}</Text>
           </View>
           <View style={styles.close_container}>
             <TouchableOpacity onPress={() => setIsModalVisible(false)}>
@@ -62,7 +68,7 @@ const ModalContent = ({
           </View>
         </View>
         <View style={styles.item_parent_container}>
-          {type == 'comboProducts' && (
+          {type == 'comboProduct' && (
             <ComboProduct
               setcartItem={(item) => {
                 let auxArray = comboProductItems;
@@ -92,10 +98,11 @@ const ModalContent = ({
               currentComboProductIndex={currentComboProductIndex}
               name={data.name}
               id={id}
+              product={data}
               {...restProps}
             />
           )}
-          {type == 'customizableProducts' && (
+          {type == 'customizableProduct' && (
             <CustomizableProductItem
               setcartItem={setcartItem}
               setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
@@ -104,10 +111,11 @@ const ModalContent = ({
               tunnelItem
               isSelected
               id={id}
+              product={data}
               {...restProps}
             />
           )}
-          {type == 'simpleRecipeProducts' && (
+          {type == 'simpleRecipeProduct' && (
             <SimpleProductItem
               setcartItem={(item) => setcartItem(item)}
               setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
@@ -116,10 +124,11 @@ const ModalContent = ({
               tunnelItem
               isSelected
               id={id}
+              product={data}
               {...restProps}
             />
           )}
-          {type == 'inventoryProducts' && (
+          {type == 'inventoryProduct' && (
             <InventoryProductItem
               setcartItem={(item) => setcartItem(item)}
               setcartItemToDisplay={(item) => setcartItemToDisplay(item)}
@@ -128,6 +137,7 @@ const ModalContent = ({
               tunnelItem
               isSelected
               id={id}
+              product={data}
               {...restProps}
             />
           )}
@@ -135,7 +145,7 @@ const ModalContent = ({
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
       {/* {isLastComboItem && ( */}
-      {type !== 'comboProducts' && (
+      {type !== 'comboProduct' && (
         <Cart
           cartItem={cartItem}
           navigation={navigation}
@@ -149,7 +159,7 @@ const ModalContent = ({
           setIsModalVisible={setIsModalVisible}
         />
       )}
-      {type == 'comboProducts' &&
+      {type == 'comboProduct' &&
         numberOfComboProductItem - 1 == currentComboProductIndex && (
           <Cart
             cartItem={cartItem}
@@ -163,7 +173,7 @@ const ModalContent = ({
             setIsModalVisible={setIsModalVisible}
           />
         )}
-      {type == 'comboProducts' &&
+      {type == 'comboProduct' &&
         numberOfComboProductItem - 1 != currentComboProductIndex && (
           <ComboProductItemProceed
             setCurrentComboProductIndex={setCurrentComboProductIndex}

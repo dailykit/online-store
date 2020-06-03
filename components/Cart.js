@@ -49,6 +49,7 @@ const Cart = ({
   });
 
   const handleAddToCart = () => {
+    console.log('CART Item:', cartItem);
     try {
       if (
         customerDetails?.firstName &&
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
     height: height * 0.08,
     width,
     backgroundColor: '#3fa4ff',
-    position: 'absolute',
+    position: 'fixed',
     bottom: 0,
     left: 0,
     right: 0,

@@ -12,7 +12,6 @@ export const Drawer = ({
   isVisible,
   setIsModalVisible,
 }) => {
-  console.log('------------------------------', isVisible);
   return (
     <Modal
       style={styles.container}

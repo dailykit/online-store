@@ -36,6 +36,7 @@ import { useAuth } from '../context/auth';
 import { useAppContext } from '../context/app';
 import { Header } from '../components';
 import { Drawer } from '../components/Drawer';
+import Products from '../components/Products';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
@@ -150,6 +151,7 @@ const Home = (props) => {
     }
   };
 
+  // Effects
   React.useEffect(() => {
     if (availability && isStoreOpen()) {
       fetchData({
@@ -165,6 +167,12 @@ const Home = (props) => {
       customerDetails();
     }
   }, [user]);
+
+  React.useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data]);
 
   // Query
   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
@@ -441,6 +449,9 @@ const Home = (props) => {
                 ))}
               </Select>
             </View>
+            {data.map((category) => (
+              <Products category={category} />
+            ))}
             {sectionsData?.length && (
               <SectionList
                 ref={sectionListRef}

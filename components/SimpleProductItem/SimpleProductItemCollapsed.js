@@ -17,21 +17,16 @@ import { height, width } from '../../utils/Scalaing';
 const SimpleProductItemCollapsed = ({
   _id,
   navigation,
-  data,
+  data: simpleRecipeProduct,
   label,
   tunnelItem,
   setProductOptionId,
   setSelected,
   isSelected,
 }) => {
-  let simpleRecipeProduct = data.simpleRecipeProduct;
   const [typeSelected, setTypeSelected] = useState('mealKit');
   const [servingIndex, setServingIndex] = useState(0);
-  const [isSelectedIndex, setisSelectedIndex] = useState(0);
 
-  if (!simpleRecipeProduct) {
-    return <Text>Bad Data</Text>;
-  }
   return (
     <>
       <TouchableOpacity
@@ -71,7 +66,7 @@ const SimpleProductItemCollapsed = ({
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text
               style={styles.item_title}
-            >{`${simpleRecipeProduct.name} `}</Text>
+            >{`${simpleRecipeProduct?.name} `}</Text>
 
             <TouchableOpacity
               onPress={() =>
