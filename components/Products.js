@@ -94,7 +94,7 @@ const Products = ({ category }) => {
 
    return (
       <View>
-         {products.length ? (
+         {Boolean(products.length) && (
             <>
                <FlatList
                   numColumns={width > 1000 ? 3 : 1}
@@ -103,8 +103,6 @@ const Products = ({ category }) => {
                   renderItem={({ item: product }) => <Card product={product} />}
                />
             </>
-         ) : (
-            <Text> Oops! </Text>
          )}
       </View>
    );

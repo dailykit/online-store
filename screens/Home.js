@@ -8,8 +8,13 @@ import {
    SectionList,
    FlatList,
 } from 'react-native';
-import { Datepicker, Spinner } from '@ui-kitten/components';
-import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
+import {
+   Datepicker,
+   Spinner,
+   IndexPath,
+   Select,
+   SelectItem,
+} from '@ui-kitten/components';
 import moment from 'moment';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
@@ -20,7 +25,6 @@ import {
    STORE_SETTINGS,
 } from '../graphql';
 import { height, width } from '../utils/Scalaing';
-import Card from '../components/Card';
 import Cart from '../components/Cart';
 import { SafetyBanner } from '../components/SafetyBanner';
 import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
@@ -263,106 +267,45 @@ const Home = props => {
 
    if (availability && !isStoreOpen())
       return (
-         <>
-            <Header title="Home" search options navigation={props.navigation} />
-            <View
-               style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-               }}
-            >
-               <Text
-                  style={{ fontWeight: 500, fontSize: 24, marginBottom: 20 }}
-               >
-                  Store Closed
-               </Text>
-               <Text style={{ fontSize: 20 }}>
-                  {availability.store.shutMessage}
-               </Text>
-            </View>
-         </>
-      );
-
-   const _renderItem = ({ section, index }) => {
-      let numColumns = width > 1000 ? 3 : 1;
-
-      if (index % numColumns !== 0) return null;
-
-      const items = [];
-
-      for (let i = index; i < index + numColumns; i++) {
-         if (i >= section.data.length) {
-            break;
-         }
-
-         items.push(
-            <Card
-               {...props}
-               type={section.data[i].type}
-               key={Math.floor(Math.random() * 100000)}
-               id={section.data[i].id}
-            />
-         );
-      }
-
-      return (
-         <View
-            style={{
-               flexDirection: 'row',
-               justifyContent: 'space-between',
-            }}
-         >
-            {items}
-         </View>
-      );
-   };
-
-   if (!data.length || loading) {
-      return (
-         <View style={styles.home}>
-            {/* <Tabs /> */}
-            <ScrollView style={{ flex: 1, marginTop: 20 }}>
-               <View style={styles.img_container}>
-                  <Image
-                     source={{
-                        uri: visual.cover,
-                     }}
-                     style={styles.cover_image}
+         <View>
+            <ScrollView>
+               <View>
+                  <Header
+                     title="Home"
+                     search
+                     options
+                     navigation={props.navigation}
                   />
-               </View>
-               <View style={styles.headerContainer}>
-                  <View style={styles.picker_container}>
-                     <Datepicker
-                        date={calendarDate}
-                        onSelect={_date => {
-                           setcalendarDate(_date);
-                           fetchData({
-                              year: moment(_date).year(),
-                              month: moment(_date).month(),
-                              day: moment(_date).date(),
-                           });
+                  <View
+                     style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                     }}
+                  >
+                     <Text
+                        style={{
+                           fontWeight: 500,
+                           fontSize: 24,
+                           marginBottom: 20,
                         }}
-                     />
-                     <Select
-                        selectedIndex={selectedIndex}
-                        value={0}
-                        style={styles.selectStyle}
-                        onSelect={() => {}}
                      >
-                        <SelectItem title={'Please wait..'} />
-                     </Select>
+                        Store Closed
+                     </Text>
+                     <Text style={{ fontSize: 20 }}>
+                        {availability.store.shutMessage}
+                     </Text>
                   </View>
                </View>
                <View style={styles.flexContainer}>
-                  <Spinner size="large" />
+                  <Spinner />
                </View>
                <View style={{ height: height * 0.08 }} />
             </ScrollView>
             <Cart to="OrderSummary" {...props} text="Checkout" />
          </View>
       );
-   }
+
    let pickerData = [];
    let sectionsData = [];
 
@@ -412,99 +355,95 @@ const Home = props => {
                   style={styles.cover_image}
                />
             </View>
-            <View
-               style={{
-                  marginHorizontal: 20,
-                  flexDirection: 'row',
-                  marginVertical: 10,
-                  alignItems: 'center',
-               }}
-            >
-               <Image
-                  style={{ width: 50, height: 50, borderRadius: 25 }}
-                  source={{ uri: brand.logo }}
-               />
-               <Text style={styles.title}>{brand.name}</Text>
-            </View>
             <View style={styles.headerContainer}>
                <SafetyBanner {...props} />
             </View>
-
             <View style={styles.flexContainerMiddle}>
                <View style={styles.cardContainer}>
-                  <View style={styles.picker_container}>
-                     <Datepicker
-                        date={calendarDate}
-                        onSelect={_date => {
-                           setcalendarDate(_date);
-                           fetchData({
-                              year: moment(_date).year(),
-                              month: moment(_date).month(),
-                              day: moment(_date).date(),
-                           });
-                        }}
-                     />
+                  <View style={styles.flexContainerMiddle}>
+                     <View style={styles.cardContainer}>
+                        <View style={styles.picker_container}>
+                           <Datepicker
+                              date={calendarDate}
+                              onSelect={_date => {
+                                 setcalendarDate(_date);
+                                 fetchData({
+                                    year: moment(_date).year(),
+                                    month: moment(_date).month(),
+                                    day: moment(_date).date(),
+                                 });
+                              }}
+                           />
 
-                     <Select
-                        selectedIndex={selectedIndex}
-                        style={styles.selectStyle}
-                        value={pickerData[selectedIndex.row]}
-                        onSelect={_selectedIndex => {
-                           setselectedPickerItem(_selectedIndex.row);
-                           setSelectedIndex(_selectedIndex);
-                           sectionListRef.current.scrollToLocation({
-                              animated: true,
-                              itemIndex: 0,
-                              sectionIndex: _selectedIndex.row,
-                              viewOffset: 60,
-                           });
-                        }}
-                     >
-                        {pickerData.map((title, key) => (
-                           <SelectItem key={key} title={title} />
-                        ))}
-                     </Select>
-                  </View>
-                  <SectionList
-                     ref={sectionListRef}
-                     sections={data}
-                     style={{
-                        height: height - 16 * 4.125 - 80 - 48,
-                     }}
-                     stickySectionHeadersEnabled={true}
-                     keyExtractor={(item, index) => item + index}
-                     renderSectionHeader={({ section: { title } }) => (
-                        <View style={{ backgroundColor: '#fff' }}>
-                           <Text
-                              style={[
-                                 styles.header,
-                                 {
-                                    textAlign: 'center',
-                                    fontSize: 12,
-                                    color: 'gray',
-                                 },
-                              ]}
+                           <Select
+                              selectedIndex={selectedIndex}
+                              style={styles.selectStyle}
+                              value={pickerData[selectedIndex.row]}
+                              onSelect={_selectedIndex => {
+                                 setselectedPickerItem(_selectedIndex.row);
+                                 setSelectedIndex(_selectedIndex);
+                                 sectionListRef.current.scrollToLocation({
+                                    animated: true,
+                                    itemIndex: 0,
+                                    sectionIndex: _selectedIndex.row,
+                                    viewOffset: 60,
+                                 });
+                              }}
                            >
-                              Now Showing
-                           </Text>
-                           <Text
-                              style={[
-                                 styles.header,
-                                 {
-                                    textAlign: 'center',
-                                    fontSize: 18,
-                                    color: 'gray',
-                                 },
-                              ]}
-                           >
-                              {title}
-                           </Text>
+                              {pickerData.map((title, key) => (
+                                 <SelectItem key={key} title={title} />
+                              ))}
+                           </Select>
                         </View>
-                     )}
-                     stickyHeaderIndices={[0]}
-                     renderItem={({ item: category }) => (
-                        <Products category={category} />
-                     )}
+                        <SectionList
+                           ref={sectionListRef}
+                           sections={data}
+                           style={{
+                              height: height - 16 * 4.125 - 80 - 48,
+                           }}
+                           stickySectionHeadersEnabled={true}
+                           keyExtractor={(item, index) => item + index}
+                           renderSectionHeader={({ section: { title } }) => (
+                              <View style={{ backgroundColor: '#fff' }}>
+                                 <Text
+                                    style={[
+                                       styles.header,
+                                       {
+                                          textAlign: 'center',
+                                          fontSize: 12,
+                                          color: 'gray',
+                                       },
+                                    ]}
+                                 >
+                                    Now Showing
+                                 </Text>
+                                 <Text
+                                    style={[
+                                       styles.header,
+                                       {
+                                          textAlign: 'center',
+                                          fontSize: 18,
+                                          color: 'gray',
+                                       },
+                                    ]}
+                                 >
+                                    {title}
+                                 </Text>
+                              </View>
+                           )}
+                           stickyHeaderIndices={[0]}
+                           renderItem={({ item: category }) => (
+                              <Products category={category} />
+                           )}
+                        />
+                     </View>
+                  </View>
+                  <View style={{ height: height * 0.08 }} />
+                  <Cart
+                     label={pickerData[selectedIndex.row]}
+                     to="OrderSummary"
+                     {...props}
+                     text="Checkout"
                   />
                </View>
             </View>
