@@ -90,7 +90,6 @@ const Products = ({ category }) => {
     <View>
       {products.length ? (
         <>
-          <Text>{category.name}</Text>
           <FlatList
             numColumns={width > 1000 ? 3 : 1}
             data={products}
