@@ -10,7 +10,6 @@ export const CREATE_CUSTOMER = gql`
   }
 `;
 
-//  { cartInfo: "", fulfillmentInfo: "", customerId: 10 }
 export const CREATE_CART = gql`
   mutation($object: crm_orderCart_insert_input!) {
     createCart(object: $object) {

@@ -9,7 +9,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 const HeaderBack = ({ title, navigation }) => {
   return (

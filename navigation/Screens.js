@@ -14,9 +14,6 @@ import Home from '../screens/Home';
 import AddToCart from '../screens/AddToCart';
 import OrderSummary from '../screens/OrderSummary';
 import OrderPlaced from '../screens/OrderPlaced';
-import WelcomeScreen from '../screens/WelcomeScreen';
-import LoginScreen from '../screens/LoginScreen';
-import SignUpScreen from '../screens/SignUpScreen';
 import { SafetyScreen } from '../screens/SafetyScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 // drawer
@@ -32,41 +29,36 @@ import { Delivery } from '../screens/Delivery';
 import { EditAddress } from '../screens/EditAddress';
 import { SelectPaymentMethod } from '../screens/SelectPaymentMethod';
 import { OrderHistory } from '../screens/OrderHistory';
+import { Text } from 'native-base';
 
-const { width } = Dimensions.get('screen');
+import { height, width } from '../utils/Scalaing';
+import PaymentProcessing from '../screens/PaymentProcessing';
+import AddDetails from '../screens/AddDetails';
+import { Spinner } from '@ui-kitten/components';
+import { useLazyQuery, useQuery } from '@apollo/react-hooks';
+import { STORE_SETTINGS } from '../graphql';
+import { useAppContext } from '../context/app';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-function AuthStack(props) {
+const Loader = () => (
+  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <Spinner status='warning' size='large' />
+  </View>
+);
+
+function LoaderStack(props) {
   return (
     <Stack.Navigator mode='card' headerMode='screen'>
       <Stack.Screen
-        name='Welcome'
-        component={WelcomeScreen}
+        name='Loader'
+        component={Loader}
         options={{
           headerMode: false,
           header: null,
           headerShown: false,
           cardStyle: { backgroundColor: '#F8F9FE' },
-        }}
-      />
-      <Stack.Screen
-        name='Login'
-        component={LoginScreen}
-        setLoggedin={props.setLoggedin}
-        options={{
-          headerMode: false,
-          header: null,
-          headerShown: false,
-          stackPresentation: 'modal',
-        }}
-      />
-      <Stack.Screen
-        name='SignUp'
-        component={SignUpScreen}
-        options={{
-          headerShown: false,
         }}
       />
     </Stack.Navigator>
@@ -80,16 +72,7 @@ function HomeStack(props) {
         name='Home'
         component={Home}
         options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              title='Home'
-              search
-              options
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-          cardStyle: { backgroundColor: '#F8F9FE' },
+          headerShown: false,
         }}
       />
 
@@ -163,47 +146,34 @@ function HomeStack(props) {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name='PaymentProcessing'
+        component={PaymentProcessing}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='Add Details'
+        component={AddDetails}
+        options={{
+          headerShown: false,
+        }}
+      />
     </Stack.Navigator>
   );
 }
 
 export default function OnboardingStack(props) {
-  const { isAuthenticated, setIsAuthenticated } = useAuth();
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    (async () => {
-      let user = await AsyncStorage.getItem('user');
-      user = JSON.parse(user);
-      if (user && user.token && user.token !== undefined) {
-        setIsAuthenticated(true);
-        setLoading(false);
-      } else {
-        setIsAuthenticated(false);
-        setLoading(false);
-      }
-    })();
-  }, []);
-  if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <ActivityIndicator size='large' />
-      </View>
-    );
-  }
+  const { isAuthenticated, isInitialized } = useAuth();
+
   return (
     <>
       <Stack.Navigator mode='card' headerMode='none'>
-        {/* replace isAuth by true to bypass login */}
-        {isAuthenticated ? (
+        {isInitialized ? (
           <Stack.Screen name='App' component={AppStack} />
         ) : (
-          <Stack.Screen name='Auth' component={AuthStack} />
+          <Stack.Screen name='Loader' component={LoaderStack} />
         )}
       </Stack.Navigator>
     </>

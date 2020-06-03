@@ -16,95 +16,103 @@ import InventoryProductItem from './InventoryProductItem';
 
 import { useCartContext } from '../context/cart';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
+import { useAppContext } from '../context/app';
+import { Drawer } from './Drawer';
+import { useAuth } from '../context/auth';
 
-const Card = ({ id, type, navigation, ...restProps }) => {
-  const [price, setPrice] = useState('randomNumber');
+const Card = ({ id, type, navigation, label, product, ...restProps }) => {
+  const [price, setPrice] = useState(0);
   const [cardItem, setcardItem] = useState(null); // obj to push to jaguar
   const [cardData, setcardData] = useState(null); // obj to pass to add to cart modal
-
-  useEffect(() => {
-    console.log(id, type);
-  }, []);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { visual } = useAppContext();
+  const { isAuthenticated, login } = useAuth();
 
   return (
     <>
+      {cardData && (
+        <Drawer
+          isVisible={isModalVisible}
+          navigation={navigation}
+          data={cardData}
+          type={cardData.__typename.split('_')[1]}
+          id={cardData.id}
+          setIsModalVisible={setIsModalVisible}
+        />
+      )}
       <View style={styles.card_container}>
         <View style={styles.item_parent_container}>
-          {type == 'comboProducts' && (
+          {product?.__typename.includes('comboProduct') && (
             <>
-              {cardData && (
-                <View style={styles.card_title}>
-                  <Text style={styles.card_title_text}>
-                    {cardData.name ? cardData.name : 'Resturant Name'}
-                  </Text>
-                  <Text style={styles.is_customizable}>Customizeable</Text>
-                </View>
-              )}
+              <View style={styles.card_title}>
+                <Text style={styles.card_title_text}>{product.name}</Text>
+                <Text style={styles.is_customizable}>Customizeable</Text>
+              </View>
               <ComboProduct
+                label={label}
                 setcardItem={setcardItem}
                 setcardData={(item) => setcardData(item)}
-                id={id}
+                product={product}
                 navigation={navigation}
                 setPrice={setPrice}
                 {...restProps}
               />
             </>
           )}
-          {type == 'customizableProducts' && (
+          {product?.__typename.includes('customizableProduct') && (
             <>
               {cardData && (
                 <View style={styles.card_title}>
-                  <Text style={styles.card_title_text}>{cardData?.name}</Text>
+                  <Text style={styles.card_title_text}>{product.name}</Text>
                   <Text style={styles.is_customizable}>Customizeable</Text>
                 </View>
               )}
               <CustomizableProductItem
+                label={label}
                 setcardItem={setcardItem}
                 navigation={navigation}
                 setcardData={(item) => setcardData(item)}
                 independantItem
-                id={id}
+                product={product}
                 {...restProps}
                 setPrice={(price) => setPrice(price)}
               />
             </>
           )}
-          {type == 'simpleRecipeProducts' && (
+          {product?.__typename.includes('simpleRecipeProduct') && (
             <>
               {cardData && (
                 <View style={styles.card_title}>
-                  <Text style={styles.card_title_text}>
-                    {cardData?.simpleRecipeProduct?.name}
-                  </Text>
+                  <Text style={styles.card_title_text}>{product.name}</Text>
                 </View>
               )}
               <SimpleProductItem
+                label={label}
                 setcardItem={setcardItem}
                 setcardData={(item) => setcardData(item)}
                 navigation={navigation}
                 independantItem
-                id={id}
+                product={product}
                 {...restProps}
                 setPrice={(price) => setPrice(price)}
               />
             </>
           )}
-          {type == 'inventoryProducts' && (
+          {product?.__typename.includes('inventoryProduct') && (
             <>
               {cardData && (
                 <View style={styles.card_title}>
-                  <Text style={styles.card_title_text}>
-                    {cardData.inventoryProduct?.name}
-                  </Text>
+                  <Text style={styles.card_title_text}>{product.name}</Text>
                 </View>
               )}
               <InventoryProductItem
+                label={label}
                 setcardItem={setcardItem}
                 setcardData={(item) => setcardData(item)}
                 navigation={navigation}
                 independantItem
-                id={id}
+                product={product}
                 {...restProps}
                 setPrice={(price) => setPrice(price)}
               />
@@ -114,16 +122,18 @@ const Card = ({ id, type, navigation, ...restProps }) => {
 
         <View style={styles.bottom_container}>
           <View style={styles.price}>
-            <Text style={styles.price_text}>$ {isNaN(price) ? 0 : price}</Text>
+            <Text style={styles.price_text}>$ {price}</Text>
           </View>
           <View style={styles.add_to_cart_container}>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('AddToCart', { data: cardData, type, id });
+                !isAuthenticated ? login() : setIsModalVisible(true);
+                // navigation.navigate('AddToCart', { data: cardData, type, id });
               }}
               style={[
                 styles.button,
                 { display: isNaN(price) ? 'none' : 'flex' },
+                { backgroundColor: visual.color || '#3fa4ff' },
               ]}
             >
               <Text style={styles.add_to_card_text}>
@@ -139,18 +149,19 @@ const Card = ({ id, type, navigation, ...restProps }) => {
 
 const styles = EStyleSheet.create({
   card_container: {
-    width,
+    width: width > 1000 ? width * 0.3 : width,
     paddingHorizontal: 20,
     elevation: 2,
     borderBottomColor: 'rgba(0,0,0,0.1)',
     shadowColor: '#000',
     shadowOffset: {},
-    paddingVertical: 30,
+    paddingVertical: 10,
     backgroundColor: '#fff',
     marginBottom: 10,
+    marginRight: width > 1000 ? 20 : 0,
+    marginTop: width > 1000 ? 20 : 0,
   },
   card_title: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',

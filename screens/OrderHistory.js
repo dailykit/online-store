@@ -1,53 +1,104 @@
 import React from 'react';
+import * as moment from 'moment';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import HeaderBack from '../components/HeaderBack';
 import { Accordion } from 'native-base';
-import { Divider } from '@ui-kitten/components';
+import { Divider, Spinner } from '@ui-kitten/components';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { ScrollView } from 'react-native';
+import { ORDERS } from '../graphql';
+import { useQuery } from '@apollo/react-hooks';
+import { useCartContext } from '../context/cart';
+
 const dataArray = [
   { title: '3 items', content: 'Lorem ipsum dolor sit amet' },
   { title: 'Bill Details', content: 'Lorem ipsum dolor sit amet' },
 ];
 export const OrderHistory = ({ navigation }) => {
+  const { customer } = useCartContext();
+
+  // Query
+  const { data, loading, error } = useQuery(ORDERS, {
+    variables: {
+      id: customer.id,
+    },
+  });
+
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <Spinner />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text>Oops! We could not get orders. Check again later!</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <HeaderBack title='Order History' navigation={navigation} />
-      {[1, 2, 3].map((order, _key) => (
-        <>
-          <TouchableOpacity
-            key={_key}
-            onPress={() => navigation.navigate('DeliveryScreen')}
-            style={styles.card}
-          >
-            <Text style={styles.title}>Order ID: VEGADA342615</Text>
-            <Text style={[styles.muted, styles.bold]}>
-              Ordered on: <Text style={styles.lite}>Tuesday May 22</Text>
-            </Text>
-            <Text style={[styles.muted, styles.bold]}>
-              Deliver on: <Text style={styles.lite}>Webnesday May 23</Text>
-            </Text>
-            <Text style={styles.muted}>
-              123, apartment name, street rd, city -0000
-            </Text>
-            <Accordion
-              headerStyle={styles.header}
-              dataArray={dataArray}
-              expanded={0}
-            />
-            <View style={styles.flexContainer}>
-              <Text style={styles.total}>Total</Text>
-              <Text style={styles.total}>$ 6.5</Text>
-            </View>
-          </TouchableOpacity>
-          <Divider />
-        </>
-      ))}
+      {data.orders
+        .filter((order) => order.deliveryInfo)
+        .map((order) => (
+          <>
+            <TouchableOpacity
+              key={order.id}
+              // onPress={() => navigation.navigate('DeliveryScreen')}
+              style={styles.card}
+            >
+              <Text style={styles.title}>Order ID: {order.id}</Text>
+              <Text style={[styles.muted, styles.bold]}>
+                Ordered on:{' '}
+                <Text style={styles.lite}>
+                  {moment(order.created_at).format('LLLL')}
+                </Text>
+              </Text>
+              <Text style={[styles.muted, styles.bold]}>
+                Deliver on: <Text style={styles.lite}>NA</Text>
+              </Text>
+              <Text style={styles.muted}>
+                {order.deliveryInfo.dropoff.dropoffInfo.customerAddress.line1 +
+                  ', ' +
+                  order.deliveryInfo.dropoff.dropoffInfo.customerAddress.line2 +
+                  ', ' +
+                  order.deliveryInfo.dropoff.dropoffInfo.customerAddress.city +
+                  ', ' +
+                  order.deliveryInfo.dropoff.dropoffInfo.customerAddress.state +
+                  ', ' +
+                  order.deliveryInfo.dropoff.dropoffInfo.customerAddress
+                    .country}{' '}
+                -{' '}
+                {order.deliveryInfo.dropoff.dropoffInfo.customerAddress.zipcode}
+              </Text>
+              <Accordion
+                headerStyle={styles.header}
+                dataArray={dataArray}
+                expanded={0}
+              />
+              <View style={styles.flexContainer}>
+                <Text style={styles.total}>Total</Text>
+                <Text style={styles.total}>$ {order.itemTotal}</Text>
+              </View>
+            </TouchableOpacity>
+            <Divider />
+          </>
+        ))}
     </ScrollView>
   );
 };
 
 const styles = EStyleSheet.create({
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

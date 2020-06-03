@@ -12,7 +12,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import Icon from './Icon';
 import theme from '../constants/Theme';
 
-const { height } = Dimensions.get('screen');
+const { height, width } = Dimensions.get('window');
 
 export default function NavBar({
   back,

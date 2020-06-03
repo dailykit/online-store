@@ -22,12 +22,13 @@ import {
   DefaultPaymentFloater,
 } from '../components/DefaultFloater';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 const OrderSummary = ({ navigation, ...restProps }) => {
   const { cart } = useCartContext();
 
   let cartItems = cart?.cartInfo?.products;
+  console.log('OrderSummary -> cartItems', cartItems);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <HeaderBack title='Go Back' navigation={navigation} />
@@ -62,11 +63,11 @@ const OrderSummary = ({ navigation, ...restProps }) => {
           </View>
           <View style={styles.summary_title_conatiner_right}>
             <Text style={[styles.summary_title_text, { textAlign: 'right' }]}>
-              {cartItems.length} products
+              {cartItems?.length} products
             </Text>
           </View>
         </View>
-        {cartItems.map((item, index) => {
+        {cartItems?.map((item, index) => {
           return <Summary item={item} key={index} />;
         })}
         <BillingDetails />
@@ -78,6 +79,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
         {...restProps}
         navigation={navigation}
         text='CONFIRM AND PAY'
+        to='PaymentProcessing'
         pay
       />
     </SafeAreaView>

@@ -12,25 +12,21 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 
 import ServingSelect from '../ServingSelect';
 
-const { height, width } = Dimensions.get('window');
+import { height, width } from '../../utils/Scalaing';
 
 const SimpleProductItemCollapsed = ({
   _id,
   navigation,
-  data,
+  data: simpleRecipeProduct,
   label,
   tunnelItem,
   setProductOptionId,
   setSelected,
   isSelected,
 }) => {
-  let simpleRecipeProduct = data.simpleRecipeProduct;
-  const [typeSelected, setTypeSelected] = useState(true);
+  const [typeSelected, setTypeSelected] = useState('mealKit');
   const [servingIndex, setServingIndex] = useState(0);
-  const [isSelectedIndex, setisSelectedIndex] = useState(0);
-  if (!simpleRecipeProduct) {
-    return <Text>Bad Data</Text>;
-  }
+
   return (
     <>
       <TouchableOpacity
@@ -51,8 +47,9 @@ const SimpleProductItemCollapsed = ({
           <Text style={styles.item_image_title}>{label}</Text>
           <Image
             source={{
-              uri:
-                'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+              uri: simpleRecipeProduct?.assets?.images[0]
+                ? simpleRecipeProduct?.assets?.images[0]
+                : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
             }}
             style={styles.item_image}
           />
@@ -69,14 +66,12 @@ const SimpleProductItemCollapsed = ({
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text
               style={styles.item_title}
-            >{`${simpleRecipeProduct.name} `}</Text>
+            >{`${simpleRecipeProduct?.name} `}</Text>
 
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('Modal', {
-                  data: simpleRecipeProduct.simpleRecipe,
-                  author: simpleRecipeProduct.simpleRecipe.author,
-                  name: simpleRecipeProduct.name,
+                  recipeId: simpleRecipeProduct?.simpleRecipe?.id,
                 })
               }
             >
@@ -86,7 +81,9 @@ const SimpleProductItemCollapsed = ({
           <Text
             style={styles.item_chef}
           >{`${simpleRecipeProduct.simpleRecipe.author} `}</Text>
-          <Text style={styles.item_category}>vegeterian</Text>
+          <Text style={styles.item_category}>
+            {simpleRecipeProduct.simpleRecipe.type}
+          </Text>
         </View>
         <View style={styles.item_container_three}>
           <View style={styles.item_three_upper}></View>
@@ -106,26 +103,30 @@ const SimpleProductItemCollapsed = ({
               <TouchableOpacity
                 style={[
                   styles.type_button,
-                  typeSelected ? styles.selected_type_conatiner : {},
+                  typeSelected === 'mealKit'
+                    ? styles.selected_type_conatiner
+                    : {},
                 ]}
-                onPress={() => setTypeSelected(!typeSelected)}
+                onPress={() => setTypeSelected('mealKit')}
               >
                 <Text style={styles.type_text}>Meal Kit</Text>
-                {typeSelected && (
+                {typeSelected === 'mealKit' && (
                   <View style={styles.done_container}>
                     <MaterialIcons name='done' size={16} color='#fff' />
                   </View>
                 )}
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setTypeSelected(!typeSelected)}
+                onPress={() => setTypeSelected('readyToEat')}
                 style={[
                   styles.type_button,
-                  !typeSelected ? styles.selected_type_conatiner : {},
+                  typeSelected === 'readyToEat'
+                    ? styles.selected_type_conatiner
+                    : {},
                 ]}
               >
                 <Text style={styles.type_text}>Ready To Eat</Text>
-                {!typeSelected && (
+                {typeSelected === 'readyToEat' && (
                   <View style={[styles.done_container]}>
                     <MaterialIcons name='done' size={16} color='#fff' />
                   </View>
@@ -134,8 +135,9 @@ const SimpleProductItemCollapsed = ({
             </View>
           </View>
           <Text style={styles.item_chef}>Avaliable Servings:</Text>
-          {simpleRecipeProduct.simpleRecipeProductOptions.map(
-            (item_data, key) => {
+          {simpleRecipeProduct.simpleRecipeProductOptions
+            .filter((serving) => serving.type === typeSelected)
+            .map((item_data, key) => {
               return (
                 <ServingSelect
                   key={key}
@@ -144,14 +146,15 @@ const SimpleProductItemCollapsed = ({
                   setServingIndex={(index) => setServingIndex(index)}
                   size={item_data.simpleRecipeYield.yield.serving}
                   price={item_data.price[0].value}
-                  display={typeSelected ? 'Meal Kit' : 'Ready To Eat'}
+                  display={
+                    typeSelected === 'mealKit' ? 'Meal Kit' : 'Ready To Eat'
+                  }
                   type={item_data.type}
                   setproductOptionId={setProductOptionId}
                   id={item_data.id}
                 />
               );
-            }
-          )}
+            })}
         </View>
       )}
     </>
@@ -204,6 +207,7 @@ const styles = EStyleSheet.create({
     height: null,
     width: null,
     resizeMode: 'cover',
+    aspectRatio: 3 / 2,
   },
   item_title: {
     fontSize: '$xxs',

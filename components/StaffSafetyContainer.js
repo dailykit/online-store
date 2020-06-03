@@ -6,7 +6,7 @@ import flat from '../assets/imgs/flat.png';
 import liquidSoap from '../assets/imgs/liquid-soap.png';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 export const StaffSafetyContainer = ({ checkup }) => {
   return (

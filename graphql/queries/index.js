@@ -1,4 +1,42 @@
-import gql from "graphql-tag";
+import gql from 'graphql-tag';
+
+export const SIMPLE_RECIPE = gql`
+  query SimpleRecipe($id: Int!) {
+    simpleRecipe(id: $id) {
+      id
+      name
+      image
+      author
+      type
+      cookingTime
+      cuisine
+      description
+      ingredients
+      utensils
+      procedures
+    }
+  }
+`;
+
+export const ORDER = gql`
+  query Order($id: oid!) {
+    order(id: $id) {
+      itemTotal
+      deliveryInfo
+    }
+  }
+`;
+
+export const ORDERS = gql`
+  query Orders($id: Int!) {
+    orders(where: { customerId: { _eq: $id } }) {
+      id
+      itemTotal
+      deliveryInfo
+      created_at
+    }
+  }
+`;
 
 export const CUSTOMERS = gql`
   query Customers($dailyKeyID: String!, $email: String!) {
@@ -12,28 +50,45 @@ export const CUSTOMERS = gql`
 
 export const CUSTOMER_DETAILS = gql`
   query CustomerDetails($keycloakId: String!) {
-    platform_CustomerByClient(where: { keycloakId: { _eq: $keycloakId } }) {
+    platform_customerByClients(where: { keycloakId: { _eq: $keycloakId } }) {
       customer {
+        email
         firstName
         lastName
         phoneNumber
+        stripeCustomerId
         customerAddresses {
-          city
-          country
-          id
           line1
           line2
           state
           zipcode
+          city
+          country
+          notes
         }
         defaultCustomerAddress {
-          id
-        }
-        defaultPaymentMethod {
-          stripePaymentMethodId
+          line1
+          line2
+          state
+          zipcode
+          city
+          country
+          notes
         }
         stripePaymentMethods {
           stripePaymentMethodId
+          last4
+          expMonth
+          expYear
+          brand
+        }
+        defaultPaymentMethodId
+        defaultStripePaymentMethod {
+          stripePaymentMethodId
+          last4
+          expMonth
+          expYear
+          brand
         }
       }
     }
@@ -161,16 +216,11 @@ export const SIMPLE_PRODUCT = gql`
       }
       simpleRecipe {
         author
-        cookingTime
-        assets
         cuisine
-        description
         id
-        image
         name
-        procedures
         show
-        utensils
+        type
       }
     }
   }

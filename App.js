@@ -23,6 +23,7 @@ import { Ionicons } from '@expo/vector-icons';
 // Context Providers
 import { AuthProvider } from './context/auth';
 import { CartContextProvider } from './context/cart';
+import { AppContextProvider } from './context/app';
 
 // Before rendering any navigation stack
 import { enableScreens } from 'react-native-screens';
@@ -37,7 +38,9 @@ import { split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider, useLazyQuery } from '@apollo/react-hooks';
+
+// Majburi
 
 const httpLink = new HttpLink({
   uri: HASURA_URL,
@@ -89,7 +92,8 @@ if (!global.atob) {
 
 // setup rem
 import EStyleSheet from 'react-native-extended-stylesheet';
-let { height, width } = Dimensions.get('window');
+import { width, height } from './utils/Scalaing';
+import { STORE_SETTINGS } from './graphql';
 EStyleSheet.build({
   $rem: width > 340 ? 16 : 13,
   $xl: '1.2rem',
@@ -124,55 +128,10 @@ function cacheImages(images) {
   });
 }
 
-export default class App extends React.Component {
-  state = {
-    isLoadingComplete: false,
-  };
+const App = () => {
+  const [isLoadingComplete, setIsLoadingComplete] = React.useState(false);
 
-  render() {
-    if (!this.state.isLoadingComplete) {
-      return (
-        <AppLoading
-          startAsync={this._loadResourcesAsync}
-          onError={this._handleLoadingError}
-          onFinish={this._handleFinishLoading}
-        />
-      );
-    } else {
-      return (
-        <Suspense fallback={FallBack}>
-          <ErrorBoundary>
-            <NavigationContainer>
-              <SafeAreaView style={{ flex: 1 }}>
-                <View
-                  style={{
-                    marginTop:
-                      Platform.OS == 'android' ? Constants.statusBarHeight : 0,
-                    flex: 1,
-                  }}
-                >
-                  {Platform.OS == 'ios' && (
-                    <StatusBar barStyle='dark-content' />
-                  )}
-                  <ApplicationProvider {...eva} theme={eva.light}>
-                    <ApolloProvider client={client}>
-                      <AuthProvider>
-                        <CartContextProvider>
-                          <Screens />
-                        </CartContextProvider>
-                      </AuthProvider>
-                    </ApolloProvider>
-                  </ApplicationProvider>
-                </View>
-              </SafeAreaView>
-            </NavigationContainer>
-          </ErrorBoundary>
-        </Suspense>
-      );
-    }
-  }
-
-  _loadResourcesAsync = async () => {
+  const _loadResourcesAsync = async () => {
     await Font.loadAsync({
       Roboto: require('native-base/Fonts/Roboto.ttf'),
       Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
@@ -181,13 +140,56 @@ export default class App extends React.Component {
     return Promise.all([...cacheImages(assetImages)]);
   };
 
-  _handleLoadingError = (error) => {
+  const _handleLoadingError = (error) => {
     // In this case, you might want to report the error to your error
     // reporting service, for example Sentry
     console.warn(error);
   };
 
-  _handleFinishLoading = () => {
-    this.setState({ isLoadingComplete: true });
+  const _handleFinishLoading = () => {
+    setIsLoadingComplete(true);
   };
-}
+
+  if (!isLoadingComplete) {
+    return (
+      <AppLoading
+        startAsync={_loadResourcesAsync}
+        onError={_handleLoadingError}
+        onFinish={_handleFinishLoading}
+      />
+    );
+  } else {
+    return (
+      <Suspense fallback={FallBack}>
+        <ErrorBoundary>
+          <NavigationContainer>
+            <SafeAreaView style={{ flex: 1 }}>
+              <View
+                style={{
+                  marginTop:
+                    Platform.OS == 'android' ? Constants.statusBarHeight : 0,
+                  flex: 1,
+                }}
+              >
+                {Platform.OS == 'ios' && <StatusBar barStyle='dark-content' />}
+                <ApplicationProvider {...eva} theme={eva.light}>
+                  <ApolloProvider client={client}>
+                    <AuthProvider>
+                      <AppContextProvider>
+                        <CartContextProvider>
+                          <Screens />
+                        </CartContextProvider>
+                      </AppContextProvider>
+                    </AuthProvider>
+                  </ApolloProvider>
+                </ApplicationProvider>
+              </View>
+            </SafeAreaView>
+          </NavigationContainer>
+        </ErrorBoundary>
+      </Suspense>
+    );
+  }
+};
+
+export default App;

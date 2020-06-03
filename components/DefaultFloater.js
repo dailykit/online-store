@@ -4,10 +4,22 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
 
-const { height, width } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 export const DefaultPaymentFloater = ({ navigation }) => {
-  const { customer, customerDetails } = useCartContext();
+  const { cart, customerDetails } = useCartContext();
+  const [card, setCard] = React.useState(undefined);
+
+  React.useEffect(() => {
+    if (cart && customerDetails) {
+      const card = customerDetails.stripePaymentMethods.find(
+        (card) => card.stripePaymentMethodId === cart.paymentMethodId
+      );
+      if (card) {
+        setCard(card);
+      }
+    }
+  }, [cart]);
 
   return (
     <TouchableOpacity
@@ -17,10 +29,14 @@ export const DefaultPaymentFloater = ({ navigation }) => {
       style={styles.conatiner}
     >
       <View style={styles.cardNumberTextContainer}>
-        <Text style={styles.cardNumberText}>
-          <AntDesign name='creditcard' /> {'  '}
-          XXXX XXXX XXXX 2123
-        </Text>
+        {card ? (
+          <Text style={styles.cardNumberText}>
+            <AntDesign name='creditcard' /> {'  '}
+            XXXX XXXX XXXX {card.last4}
+          </Text>
+        ) : (
+          <Text style={styles.cardNumberText}>Select a Card</Text>
+        )}
       </View>
       <View style={styles.cardNumberSelectedContainer}>
         <View>
@@ -34,7 +50,7 @@ export const DefaultPaymentFloater = ({ navigation }) => {
 };
 
 export const DefaultAddressFloater = ({ navigation }) => {
-  const { customer, customerDetails } = useCartContext();
+  const { cart, customerDetails } = useCartContext();
 
   return (
     <TouchableOpacity
@@ -44,9 +60,13 @@ export const DefaultAddressFloater = ({ navigation }) => {
       style={styles.conatiner}
     >
       <View style={styles.cardNumberTextContainer}>
-        <Text style={styles.cardNumberText}>
-          123, apartment name, street rd, ..
-        </Text>
+        {cart?.address ? (
+          <Text style={styles.cardNumberText}>
+            {cart.address.line1}, {cart.address.line2}, {cart.address.city}
+          </Text>
+        ) : (
+          <Text style={styles.cardNumberText}>Select an Address</Text>
+        )}
       </View>
       <View style={styles.cardNumberSelectedContainer}>
         <View>

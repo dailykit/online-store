@@ -10,7 +10,7 @@ import {
 import { Feather, Ionicons } from '@expo/vector-icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const { height, width } = Dimensions.get('window');
+import { height, width } from '../../utils/Scalaing';
 
 const CustomizableProductItemCollapsed = ({
   isSelected,
@@ -48,8 +48,9 @@ const CustomizableProductItemCollapsed = ({
         <Text style={styles.item_image_title}>{label}</Text>
         <Image
           source={{
-            uri:
-              'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+            uri: simpleRecipeProduct?.assets?.images[0]
+              ? simpleRecipeProduct?.assets?.images[0]
+              : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
           }}
           style={styles.item_image}
         />
@@ -71,9 +72,7 @@ const CustomizableProductItemCollapsed = ({
           <TouchableOpacity
             onPress={() =>
               navigation.navigate('Modal', {
-                data: simpleRecipeProduct?.simpleRecipe,
-                author: simpleRecipeProduct?.simpleRecipe?.author,
-                name: simpleRecipeProduct?.name,
+                recipeId: simpleRecipeProduct?.simpleRecipe?.id,
               })
             }
           >
@@ -115,7 +114,6 @@ const CustomizableProductItemCollapsed = ({
 
 const styles = EStyleSheet.create({
   item_container: {
-    flex: 1,
     flexDirection: 'row',
     paddingBottom: 5,
     marginBottom: 2,
@@ -125,6 +123,7 @@ const styles = EStyleSheet.create({
     borderBottomWidth: 1,
     backgroundColor: '#fff',
     borderBottomColor: '#ececec',
+    height: width < height ? height * 0.15 : height * 0.35,
   },
   item_container_one: {
     flex: 2,

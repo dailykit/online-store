@@ -12,7 +12,7 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 
 import ServingSelect from '../ServingSelect';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../../utils/Scalaing';
 
 const Item = ({
   _id,
@@ -28,7 +28,7 @@ const Item = ({
   tunnelItem,
   setproductOptionId,
 }) => {
-  const [typeSelected, setTypeSelected] = useState(true);
+  const [typeSelected, setTypeSelected] = useState('mealKit');
   const [servingIndex, setServingIndex] = useState(0);
   const [isSelected, setisSelected] = useState(0);
 
@@ -81,8 +81,9 @@ const Item = ({
               <View style={[styles.item_container_one]}>
                 <Image
                   source={{
-                    uri:
-                      'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+                    uri: simpleRecipeProduct?.assets?.images[0]
+                      ? simpleRecipeProduct?.assets?.images[0]
+                      : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
                   }}
                   style={styles.item_image}
                 />
@@ -94,7 +95,11 @@ const Item = ({
                   >{`${simpleRecipeProduct?.name} `}</Text>
 
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('Modal')}
+                    onPress={() =>
+                      navigation.navigate('Modal', {
+                        recipeId: simpleRecipeProduct?.simpleRecipe?.id,
+                      })
+                    }
                   >
                     <Feather size={14} name='info' />
                   </TouchableOpacity>
@@ -131,26 +136,30 @@ const Item = ({
                     <TouchableOpacity
                       style={[
                         styles.type_button,
-                        typeSelected ? styles.selected_type_conatiner : {},
+                        typeSelected === 'mealKit'
+                          ? styles.selected_type_conatiner
+                          : {},
                       ]}
-                      onPress={() => setTypeSelected(!typeSelected)}
+                      onPress={() => setTypeSelected('mealKit')}
                     >
                       <Text style={styles.type_text}>Meal Kit</Text>
-                      {typeSelected && (
+                      {typeSelected === 'mealKit' && (
                         <View style={styles.done_container}>
                           <MaterialIcons name='done' size={16} color='#fff' />
                         </View>
                       )}
                     </TouchableOpacity>
                     <TouchableOpacity
-                      onPress={() => setTypeSelected(!typeSelected)}
+                      onPress={() => setTypeSelected('readyToEat')}
                       style={[
                         styles.type_button,
-                        !typeSelected ? styles.selected_type_conatiner : {},
+                        typeSelected === 'readyToEat'
+                          ? styles.selected_type_conatiner
+                          : {},
                       ]}
                     >
                       <Text style={styles.type_text}>Ready To Eat</Text>
-                      {!typeSelected && (
+                      {typeSelected === 'readyToEat' && (
                         <View style={[styles.done_container]}>
                           <MaterialIcons name='done' size={16} color='#fff' />
                         </View>
@@ -159,8 +168,9 @@ const Item = ({
                   </View>
                 </View>
                 <Text style={styles.item_chef}>Avaliable Servings:</Text>
-                {simpleRecipeProduct?.simpleRecipeProductOptions?.map(
-                  (item_data, key) => {
+                {simpleRecipeProduct?.simpleRecipeProductOptions
+                  ?.filter((serving) => serving.type === typeSelected)
+                  .map((item_data, key) => {
                     return (
                       <ServingSelect
                         key={key}
@@ -169,7 +179,11 @@ const Item = ({
                         setServingIndex={(index) => setServingIndex(index)}
                         size={item_data.simpleRecipeYield.yield.serving}
                         price={item_data.price[0].value}
-                        display={typeSelected ? 'Meal Kit' : 'Ready To Eat'}
+                        display={
+                          typeSelected === 'mealKit'
+                            ? 'Meal Kit'
+                            : 'Ready To Eat'
+                        }
                         type={item_data?.type}
                         customizableProduct
                         name={simpleRecipeProduct?.name}
@@ -190,8 +204,7 @@ const Item = ({
                         id={simpleRecipeProduct?.id}
                       />
                     );
-                  }
-                )}
+                  })}
               </View>
             )}
           </>
@@ -209,7 +222,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   item_container: {
-    flex: 1,
     flexDirection: 'row',
     paddingBottom: 5,
     borderWidth: 1,
@@ -219,6 +231,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     borderBottomWidth: 1,
     backgroundColor: '#fff',
+    height: width < height ? height * 0.15 : height * 0.35,
   },
   item_container_one: {
     flex: 2,

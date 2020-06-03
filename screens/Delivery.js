@@ -12,7 +12,7 @@ import MapView from 'react-native-maps';
 
 import HeaderBack from '../components/HeaderBack';
 
-const { height, width } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 import orderpreparing from '../assets/imgs/orderpreparing.png';
 import orderpickup from '../assets/imgs/orderpickup.png';

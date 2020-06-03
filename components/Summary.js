@@ -11,11 +11,13 @@ import { UPDATE_CART } from '../graphql/mutations';
 import { useMutation } from '@apollo/react-hooks';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
+import { useAppContext } from '../context/app';
 
 const Summary = ({ useQuantity, item }) => {
   const [quantity, setquantity] = useState(1);
   const { cart } = useCartContext();
+  const { visual } = useAppContext();
 
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
@@ -105,7 +107,10 @@ const Summary = ({ useQuantity, item }) => {
                   onPress={() => {
                     removeFromCart(item);
                   }}
-                  style={styles.button_container_left}
+                  style={[
+                    styles.button_container_left,
+                    { backgroundColor: visual.color || '#3fa4ff' },
+                  ]}
                 >
                   <Text style={{ color: 'white' }}>Remove Item</Text>
                 </TouchableOpacity>
@@ -151,12 +156,20 @@ const Summary = ({ useQuantity, item }) => {
             </View>
           )} */}
           {!useQuantity && (
-            <View style={styles.button_container}>
+            <View
+              style={[
+                styles.button_container,
+                { borderColor: visual.color || '#3fa4ff' },
+              ]}
+            >
               <TouchableOpacity
                 onPress={() => {
                   removeFromCart(item);
                 }}
-                style={styles.button_container_left}
+                style={[
+                  styles.button_container_left,
+                  { backgroundColor: visual.color || '#3fa4ff' },
+                ]}
               >
                 <Text style={{ color: 'white' }}>Remove Item</Text>
               </TouchableOpacity>
@@ -235,7 +248,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
+    borderWidth: 0,
     borderColor: '#3fa4ff',
     width: '80%',
   },

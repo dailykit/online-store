@@ -9,7 +9,7 @@ import {
   SafeAreaView,
   Image,
 } from 'react-native';
-import { Feather, Ionicons } from '@expo/vector-icons';
+import { Feather, Ionicons, AntDesign } from '@expo/vector-icons';
 
 import Summary from '../components/Summary';
 import { CartSummary } from '../components/Cart';
@@ -18,16 +18,24 @@ import HeaderBack from '../components/HeaderBack';
 import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
+import OrderDetails from '../components/OrderDetails';
 
-const OrderPlaced = ({ navigation }) => {
+const OrderPlaced = ({ route, navigation }) => {
   const { cart } = useCartContext();
+
+  const { orderId } = route.params;
 
   const cartItems = cart?.cartInfo?.products;
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <HeaderBack title='Go Back' navigation={navigation} />
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Home')}
+        style={styles.header}
+      >
+        <AntDesign name='closecircleo' size={24} color='black' />
+      </TouchableOpacity>
       <ScrollView style={styles.conatiner}>
         <View style={styles.image_container}>
           <Image
@@ -42,7 +50,13 @@ const OrderPlaced = ({ navigation }) => {
           Your order has been place. Your receipt will shortly be emailed to
           you.
         </Text>
-        <View style={styles.title_container}>
+        <Text
+          style={[styles.time_text, { textAlign: 'center', marginBottom: 10 }]}
+        >
+          Order ID: {orderId}
+        </Text>
+        <OrderDetails orderId={orderId} />
+        {/* <View style={styles.title_container}>
           <View style={styles.title_container_left}>
             <Text style={styles.deliver_on_text}>Deliver on</Text>
             <Text style={styles.time_text}>Monday, Dec 9</Text>
@@ -86,7 +100,7 @@ const OrderPlaced = ({ navigation }) => {
               DOWNLOAD RECIPE CARD
             </Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -96,7 +110,12 @@ const styles = EStyleSheet.create({
   conatiner: {
     flex: 1,
   },
-
+  header: {
+    height: height * 0.07,
+    padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   summary_title_conatiner: {
     flex: 1,
     flexDirection: 'row',

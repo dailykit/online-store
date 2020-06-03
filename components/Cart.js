@@ -15,7 +15,8 @@ import { useMutation } from '@apollo/react-hooks';
 import EStyleSheet, { child } from 'react-native-extended-stylesheet';
 import { CREATE_CART, UPDATE_CART } from '../graphql/mutations';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
+import { useAppContext } from '../context/app';
 
 const Cart = ({
   navigation,
@@ -25,8 +26,10 @@ const Cart = ({
   tunnelItem,
   type,
   comboProductItems,
+  setIsModalVisible,
 }) => {
   const { cart, customerDetails, customer } = useCartContext();
+  const { visual } = useAppContext();
 
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
@@ -46,79 +49,99 @@ const Cart = ({
   });
 
   const handleAddToCart = () => {
-    let products = cart?.cartInfo?.products || [];
-    let total = parseFloat(cart?.cartInfo?.total) | 0;
-    if (tunnelItem) {
-      if (type == 'comboProducts') {
-        let comboItemPrice = 0;
-        comboProductItems.forEach((product) => {
-          comboItemPrice = comboItemPrice + parseFloat(product.product.price);
-        });
-        total = total + comboItemPrice;
-        products.push({
-          cartItemId: uuid(),
-          products: comboProductItems,
-          type,
-          price: comboItemPrice,
-        });
-      } else {
-        products.push({
-          cartItemId: uuid(),
-          ...cartItem,
-          type,
-        });
-        total = total + parseFloat(cartItem.product.price);
-      }
-
-      // products and total ready
-      if (cart) {
-        // Update
-        // cartInfo are your products
-        const cartInfo = {
-          products,
-          total,
-        }; // you'll have to generate this every time
-        updateCart({
-          variables: {
-            id: cart.id,
-            set: {
-              cartInfo: cartInfo,
-            },
-          },
-        });
-      } else {
-        // Create
-        // cartInfo are your products
-        const cartInfo = {
-          products,
-          total,
-        }; // you'll have to generate this every time
-        createCart({
-          variables: {
-            object: {
-              cartInfo: cartInfo,
-              customerId: customer.id,
-              fulfillmentInfo: {
-                type: 'DELIVERY',
-                time: {
-                  from: '15:00',
-                  to: '19:00',
+    console.log('CART Item:', cartItem);
+    try {
+      if (
+        customerDetails?.firstName &&
+        customerDetails?.lastName &&
+        customerDetails?.email &&
+        customerDetails?.phoneNumber
+      ) {
+        let products = cart?.cartInfo?.products || [];
+        let total = parseFloat(cart?.cartInfo?.total) || 0;
+        if (tunnelItem) {
+          if (type == 'comboProducts') {
+            let comboItemPrice = 0;
+            comboProductItems.forEach((product) => {
+              comboItemPrice =
+                comboItemPrice + parseFloat(product.product.price);
+            });
+            total = total + comboItemPrice;
+            products.push({
+              cartItemId: uuid(),
+              products: comboProductItems,
+              type,
+              price: comboItemPrice,
+            });
+          } else {
+            products.push({
+              cartItemId: uuid(),
+              ...cartItem,
+              type,
+            });
+            total = total + parseFloat(cartItem.product.price);
+          }
+          total = parseFloat(total.toFixed(2));
+          // products and total ready
+          if (!customer) throw Error('Customer subscription failed!');
+          if (cart) {
+            // Update
+            // cartInfo are your products
+            const cartInfo = {
+              products,
+              total,
+            }; // you'll have to generate this every time
+            updateCart({
+              variables: {
+                id: cart.id,
+                set: {
+                  cartInfo: cartInfo,
                 },
-                date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
               },
-              paymentMethodId:
-                customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
-                '1', // remove in prod
-              addressId: customerDetails?.defaultCustomerAddress?.id || '1', // remove in prod,
-              stripeCustomerId:
-                customerDetails?.defaultPaymentMethod?.stripePaymentMethodId ||
-                '1',
-            },
-          },
-        });
+            });
+          } else {
+            // Create
+            // cartInfo are your products
+            const cartInfo = {
+              products,
+              total,
+            }; // you'll have to generate this every time
+            createCart({
+              variables: {
+                object: {
+                  cartInfo: cartInfo,
+                  customerId: customer.id,
+                  customerInfo: {
+                    customerFirstName: customerDetails.firstName,
+                    customerLastName: customerDetails.lastName,
+                    customerPhone: customerDetails.phoneNumber,
+                    customerEmail: customerDetails.email,
+                  },
+                  fulfillmentInfo: {
+                    type: 'DELIVERY',
+                    time: {
+                      from: '15:00',
+                      to: '19:00',
+                    },
+                    date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
+                  },
+                  paymentMethodId: customerDetails?.defaultPaymentMethodId,
+                  address: customerDetails?.defaultCustomerAddress,
+                  stripeCustomerId: customerDetails?.stripeCustomerId,
+                  tip: 0,
+                },
+              },
+            });
+          }
+        }
+        if (text === 'Checkout') navigation.navigate('OrderSummary');
+      } else {
+        navigation.navigate('Add Details', { path: 'profile' });
       }
+      setIsModalVisible(false);
+    } catch (error) {
+      console.log(error);
     }
-    navigation.navigate(to);
   };
 
   // cart.cartInfo = products
@@ -127,7 +150,10 @@ const Cart = ({
   if (!tunnelItem && !numberOfProducts) return <></>;
 
   return (
-    <TouchableOpacity onPress={handleAddToCart} style={styles.container}>
+    <TouchableOpacity
+      onPress={handleAddToCart}
+      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+    >
       <View style={styles.container_left}>
         {!tunnelItem && (
           <Text style={styles.text}>
@@ -153,10 +179,11 @@ const Cart = ({
 
 export const CartSummary = ({ navigation, text }) => {
   const { cart } = useCartContext();
+  const { visual } = useAppContext();
+
   const pay = () => {
     if (cart.isValid.status) {
-      // Payment API call
-      navigation.navigate('OrderPlaced');
+      navigation.navigate('PaymentProcessing');
     } else {
       if (Platform.OS == 'android')
         ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
@@ -165,7 +192,10 @@ export const CartSummary = ({ navigation, text }) => {
   if (!cart?.cartInfo?.products?.length) return <></>;
 
   return (
-    <TouchableOpacity onPress={pay} style={styles.container}>
+    <TouchableOpacity
+      onPress={pay}
+      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+    >
       <View style={[styles.container_left, { flex: 3 }]}>
         <Text style={[styles.text, { fontSize: 18 }]}>
           {cart?.cartInfo?.products?.length} items | $ {cart.totalPrice}
@@ -196,12 +226,13 @@ export const ComboProductItemProceed = ({
   setCurrentComboProductIndex,
   currentComboProductIndex,
 }) => {
+  const { visual } = useAppContext();
   return (
     <TouchableOpacity
       onPress={() => {
         setCurrentComboProductIndex(currentComboProductIndex + 1);
       }}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
     >
       <View style={[styles.container_left, { flex: 4 }]}>
         <Text style={[styles.text, { fontSize: 14 }]}>
@@ -229,7 +260,7 @@ const styles = StyleSheet.create({
     height: height * 0.08,
     width,
     backgroundColor: '#3fa4ff',
-    position: 'absolute',
+    position: 'fixed',
     bottom: 0,
     left: 0,
     right: 0,

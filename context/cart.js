@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 const CartContext = React.createContext();
 
 export const CartContextProvider = ({ children }) => {
-  // From keycloak
-  const [user, setUser] = useState({ email: '', keycloakId: '' });
   // From Hasura
   const [customer, setCustomer] = useState(undefined);
   const [cart, setCart] = useState(undefined);
@@ -23,8 +21,6 @@ export const CartContextProvider = ({ children }) => {
   return (
     <CartContext.Provider
       value={{
-        user,
-        setUser,
         customer,
         setCustomer,
         cart,

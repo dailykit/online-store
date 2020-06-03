@@ -20,7 +20,7 @@ import liquidSoap from '../assets/imgs/liquid-soap.png';
 import { useSubscription } from '@apollo/react-hooks';
 import { SAFETY_CHECK } from '../graphql';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 export const SafetyScreen = ({ navigation }) => {
   const [check, setCheck] = React.useState(undefined);
@@ -94,7 +94,7 @@ export const SafetyScreen = ({ navigation }) => {
         </View>
         <View style={{ padding: 40 }} />
       </ScrollView>
-      <Cart to='OrderSummary' navigation={navigation} text='Checkout' />
+      <Cart to='' navigation={navigation} text='Checkout' />
     </>
   );
 };

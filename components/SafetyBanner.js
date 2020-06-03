@@ -9,7 +9,7 @@ import {
 import { Badge } from '../assets/imgs/Badge';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const { width, height } = Dimensions.get('window');
+import { height, width } from '../utils/Scalaing';
 
 export const SafetyBanner = ({ navigation }) => {
   return (
@@ -17,7 +17,7 @@ export const SafetyBanner = ({ navigation }) => {
       style={styles.container}
       onPress={() => navigation.navigate('SafetyScreen')}
     >
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Badge height={52} width={52} />
       </View>
       <View style={{ flex: 3 }}>
@@ -37,7 +37,7 @@ const styles = EStyleSheet.create({
   container: {
     padding: 20,
     backgroundColor: '#2e2d4d',
-    width: width * 0.9,
+    width: width > 1000 ? 600 : width * 0.9,
     marginLeft: width * 0.05,
     marginBottom: 10,
     alignItems: 'center',
