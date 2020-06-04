@@ -18,8 +18,7 @@ RUN echo "DAILYOS_SERVER_URL=${DAILYOS_SERVER_URL}" >> .env
 
 ENV PATH /app/node_modules/.bin:$PATH
 
-RUN npm i -g expo-cli 
-RUN expo build:web --no-pwa
+RUN npx expo-cli build:web --no-pwa
 
 FROM nginx:1.15.2-alpine
 COPY --from=build /usr/src/app/web-build /usr/share/nginx/html
