@@ -36,6 +36,7 @@ import { Header } from '../components';
 import { Drawer } from '../components/Drawer';
 import Products from '../components/Products';
 import { CategoryBanner } from '../components/CategoryBanner';
+import DrawerLayout from '../components/DrawerLayout';
 
 const Home = props => {
    const [selectedIndex, setSelectedIndex] = useState(0);
@@ -454,6 +455,7 @@ const Home = props => {
                {...props}
                text="Checkout"
             />
+            <DrawerLayout />
          </ScrollView>
       </>
    );
