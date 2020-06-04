@@ -123,24 +123,28 @@ const EditAddress = ({ navigation }) => {
                      <Text style={styles.addressText}>{address.country}</Text>
                      <Text style={styles.addressText}>{address.zipcode}</Text>
                   </View>
-                  {/* <View style={styles.addressSelectedContainer}>
-              <View
-                style={[
-                  styles.checkContainer,
-                  {
-                    borderWidth: 1,
-                    borderColor:
-                      address.id === cart.addressId ? '#3fa4ff' : '#dedede',
-                    backgroundColor:
-                      address.id === cart.addressId ? '#3fa4ff' : '#fff',
-                  },
-                ]}
-              >
-                {address.id === cart.addressId && (
-                  <Feather color='#fff' name='check' />
-                )}
-              </View>
-            </View> */}
+                  <View style={styles.addressSelectedContainer}>
+                     <View
+                        style={[
+                           styles.checkContainer,
+                           {
+                              borderWidth: 1,
+                              borderColor:
+                                 address.id === cart.address.id
+                                    ? visual.color
+                                    : '#dedede',
+                              backgroundColor:
+                                 address.id === cart.address.id
+                                    ? visual.color
+                                    : '#fff',
+                           },
+                        ]}
+                     >
+                        {address.id === cart.address.id && (
+                           <Feather color="#fff" name="check" />
+                        )}
+                     </View>
+                  </View>
                </TouchableOpacity>
             ))}
          </View>
