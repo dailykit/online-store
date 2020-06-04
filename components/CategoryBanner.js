@@ -93,12 +93,12 @@ export const CategoryBanner = ({ category }) => {
 const styles = EStyleSheet.create({
   conatiner: {
     width,
-    height: width > height ? height * 0.15 : height * 0.1,
+    height: width > height ? height * 0.12 : height * 0.1,
     flexDirection: 'row',
     justifyContent: 'center',
   },
   categoryTextContainer: {
-    width: width * 0.9,
+    width: width > height ? width * 0.9 : width * 0.7,
     paddingLeft: '2rem',
     flexDirection: 'row',
     alignItems: 'center',
@@ -109,8 +109,8 @@ const styles = EStyleSheet.create({
   },
   imageContainer: {},
   image: {
-    height: width > height ? height * 0.15 : height * 0.1,
-    width: width * 0.1,
+    height: width > height ? height * 0.12 : height * 0.1,
+    width: width > height ? width * 0.1 : width * 0.3,
     resizeMode: 'cover',
   },
 });

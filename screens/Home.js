@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   SectionList,
   FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import { Datepicker } from '@ui-kitten/components';
 import { IndexPath, Select, SelectItem } from '@ui-kitten/components';
@@ -41,7 +42,7 @@ import Products from '../components/Products';
 import { CategoryBanner } from '../components/CategoryBanner';
 
 const Home = (props) => {
-  const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
+  const [selectedIndex, setSelectedIndex] = useState(0);
   const [selectedPickerItem, setselectedPickerItem] = useState(0);
   const [calendarDate, setcalendarDate] = useState(new Date());
 
@@ -326,8 +327,21 @@ const Home = (props) => {
           </View>
           <View style={styles.headerContainer}>
             <View style={styles.picker_container}>
+              <Text
+                style={{
+                  width: width * 0.5,
+                  fontWeight: 'bold',
+                  paddingLeft: 20,
+                  fontSize: 16,
+                }}
+              >
+                Order For
+              </Text>
               <Datepicker
                 date={calendarDate}
+                style={{
+                  width: width * 0.5,
+                }}
                 onSelect={(_date) => {
                   setcalendarDate(_date);
                   fetchData({
@@ -337,14 +351,6 @@ const Home = (props) => {
                   });
                 }}
               />
-              <Select
-                selectedIndex={selectedIndex}
-                value={0}
-                style={styles.selectStyle}
-                onSelect={() => {}}
-              >
-                <SelectItem title={'Please wait..'} />
-              </Select>
             </View>
           </View>
           <View style={styles.flexContainer}>
@@ -427,8 +433,21 @@ const Home = (props) => {
         <View style={styles.flexContainerMiddle}>
           <View style={styles.cardContainer}>
             <View style={styles.picker_container}>
+              <Text
+                style={{
+                  width: width * 0.5,
+                  fontWeight: 'bold',
+                  paddingLeft: 20,
+                  fontSize: 16,
+                }}
+              >
+                Order For
+              </Text>
               <Datepicker
                 date={calendarDate}
+                style={{
+                  width: width * 0.5,
+                }}
                 onSelect={(_date) => {
                   setcalendarDate(_date);
                   fetchData({
@@ -438,26 +457,49 @@ const Home = (props) => {
                   });
                 }}
               />
-
-              <Select
-                selectedIndex={selectedIndex}
-                style={styles.selectStyle}
-                value={pickerData[selectedIndex.row]}
-                onSelect={(_selectedIndex) => {
-                  setselectedPickerItem(_selectedIndex.row);
-                  setSelectedIndex(_selectedIndex);
-                  sectionListRef.current.scrollToLocation({
-                    animated: true,
-                    itemIndex: 0,
-                    sectionIndex: _selectedIndex.row,
-                    viewOffset: 60,
-                  });
+            </View>
+            <View style={styles.picker_container}>
+              <ScrollView
+                horizontal
+                style={{
+                  flex: 1,
                 }}
               >
                 {pickerData.map((title, key) => (
-                  <SelectItem key={key} title={title} />
+                  <TouchableOpacity
+                    onPress={() => {
+                      setSelectedIndex(key);
+                      sectionListRef.current.scrollToLocation({
+                        animated: true,
+                        itemIndex: 0,
+                        sectionIndex: key,
+                        viewOffset: 60,
+                      });
+                    }}
+                    style={{
+                      paddingHorizontal: 10,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: 80,
+                      flexDirection: 'row',
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: selectedIndex == key ? '#3fa4ff' : 'grey',
+                        borderBottomColor:
+                          selectedIndex == key ? '#3fa4ff' : 'grey',
+                        paddingBottom: 4,
+                        borderBottomWidth: selectedIndex == key ? 3 : 0,
+                        fontWeight: selectedIndex == key ? 'bold' : 'normal',
+                        marginTop: 10,
+                      }}
+                    >
+                      {title}
+                    </Text>
+                  </TouchableOpacity>
                 ))}
-              </Select>
+              </ScrollView>
             </View>
             <SectionList
               ref={sectionListRef}
@@ -475,12 +517,6 @@ const Home = (props) => {
                 <Products category={category} />
               )}
             />
-            {/* {data.map((category) => (
-              <Products
-                key={Math.floor(Math.random * 10000)}
-                category={category}
-              />
-            ))} */}
           </View>
         </View>
         <View style={{ height: height * 0.08 }} />
@@ -516,8 +552,9 @@ const styles = EStyleSheet.create({
     height: 80,
     flexDirection: 'row',
     alignItems: 'center',
-    width: width > 1000 ? width / 2 : width,
+    width: width,
     justifyContent: 'center',
+    backgroundColor: '#fff',
   },
   picker_placeholder: {
     flex: 1,
