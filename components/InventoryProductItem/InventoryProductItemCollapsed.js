@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
-import {
-   View,
-   Text,
-   TouchableOpacity,
-   StyleSheet,
-   Dimensions,
-   Image,
-} from 'react-native';
-import { Feather, Ionicons } from '@expo/vector-icons';
-import ServingSelect from '../ServingSelect';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
 import { height, width } from '../../utils/Scalaing';
+import ServingSelect from '../ServingSelect';
 
 const InventoryProductCollapsed = ({
    _id,
@@ -22,7 +13,6 @@ const InventoryProductCollapsed = ({
    setProductOptionId,
    setSelected,
 }) => {
-   console.log('THISHISH', inventoryProduct);
    const [servingIndex, setServingIndex] = useState(0);
    if (!inventoryProduct) {
       return <Text>Bad Data</Text>;

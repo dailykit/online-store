@@ -141,7 +141,6 @@ const Home = props => {
          const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
             input: date,
          });
-         console.log(response.data);
          setData(response.data);
          setLoading(false);
       } catch (err) {
@@ -167,19 +166,12 @@ const Home = props => {
       }
    }, [user]);
 
-   React.useEffect(() => {
-      if (data) {
-         console.log(data);
-      }
-   }, [data]);
-
    // Query
    const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
       variables: {
          keycloakId: user.sub || user.userid,
       },
       onCompleted: data => {
-         console.log('platform -> data', data);
          if (data.platform_customerByClients?.length) {
             setCustomerDetails(data.platform_customerByClients[0].customer);
          } else {
