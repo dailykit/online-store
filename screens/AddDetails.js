@@ -32,6 +32,7 @@ const AddDetails = ({ params }) => {
                src={`https://dailykey.netlify.app/${path || ''}`}
                title="Add Details"
                height={600}
+               frameBorder="0"
             ></iframe>
          </ScrollView>
       </React.Fragment>

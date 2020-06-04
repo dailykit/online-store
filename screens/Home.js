@@ -252,7 +252,7 @@ const Home = props => {
    }
    if (availability && !isStoreOpen())
       return (
-         <View>
+         <View style={styles.reallyBigContainer}>
             <ScrollView>
                <View>
                   <Header
@@ -330,7 +330,7 @@ const Home = props => {
             options
             navigation={props.navigation}
          />
-         <ScrollView style={styles.home}>
+         <ScrollView style={(styles.home, styles.reallyBigContainer)}>
             {/* <Tabs /> */}
             <View style={styles.img_container}>
                <Image
@@ -344,83 +344,145 @@ const Home = props => {
                <SafetyBanner {...props} />
             </View>
 
+            <View style={styles.picker_container}>
+               <Text
+                  style={{
+                     width: width * 0.5,
+                     fontWeight: 'bold',
+                     paddingLeft: 20,
+                     fontSize: 16,
+                  }}
+               >
+                  Order For
+               </Text>
+               <Datepicker
+                  date={calendarDate}
+                  style={{
+                     width: width * 0.5,
+                  }}
+                  onSelect={_date => {
+                     setcalendarDate(_date);
+                     fetchData({
+                        year: moment(_date).year(),
+                        month: moment(_date).month(),
+                        day: moment(_date).date(),
+                     });
+                  }}
+               />
+            </View>
             <View style={styles.flexContainerMiddle}>
                <View style={styles.cardContainer}>
                   <View style={styles.picker_container}>
-                     <Text
-                        style={{
-                           width: width * 0.5,
-                           fontWeight: 'bold',
-                           paddingLeft: 20,
-                           fontSize: 16,
-                        }}
-                     >
-                        Order For
-                     </Text>
-                     <Datepicker
-                        date={calendarDate}
-                        style={{
-                           width: width * 0.5,
-                        }}
-                        onSelect={_date => {
-                           setcalendarDate(_date);
-                           fetchData({
-                              year: moment(_date).year(),
-                              month: moment(_date).month(),
-                              day: moment(_date).date(),
-                           });
-                        }}
-                     />
-                  </View>
-                  <View style={styles.picker_container}>
-                     <ScrollView
-                        horizontal
-                        style={{
-                           flex: 1,
-                        }}
-                     >
-                        {pickerData.map((title, key) => (
-                           <TouchableOpacity
-                              onPress={() => {
-                                 setSelectedIndex(key);
-                                 sectionListRef.current.scrollToLocation({
-                                    animated: true,
-                                    itemIndex: 0,
-                                    sectionIndex: key,
-                                    viewOffset: 60,
-                                 });
-                              }}
+                     {width > 768 && (
+                        <View
+                           style={{
+                              marginHorizontal: 'auto',
+                           }}
+                        >
+                           <ScrollView
+                              horizontal
                               style={{
-                                 paddingHorizontal: 10,
-                                 justifyContent: 'center',
-                                 alignItems: 'center',
-                                 height: 80,
-                                 flexDirection: 'row',
+                                 flex: 1,
                               }}
                            >
-                              <Text
+                              {pickerData.map((title, key) => (
+                                 <TouchableOpacity
+                                    onPress={() => {
+                                       setSelectedIndex(key);
+                                       sectionListRef.current.scrollToLocation({
+                                          animated: true,
+                                          itemIndex: 0,
+                                          sectionIndex: key,
+                                          viewOffset: 60,
+                                       });
+                                    }}
+                                    style={{
+                                       paddingHorizontal: 10,
+                                       justifyContent: 'center',
+                                       alignItems: 'center',
+                                       height: 80,
+                                       flexDirection: 'row',
+                                    }}
+                                 >
+                                    <Text
+                                       style={{
+                                          color:
+                                             selectedIndex == key
+                                                ? '#3fa4ff'
+                                                : 'grey',
+                                          borderBottomColor:
+                                             selectedIndex == key
+                                                ? '#3fa4ff'
+                                                : 'grey',
+                                          paddingBottom: 4,
+                                          borderBottomWidth:
+                                             selectedIndex == key ? 3 : 0,
+                                          fontWeight:
+                                             selectedIndex == key
+                                                ? 'bold'
+                                                : 'normal',
+                                          marginTop: 10,
+                                       }}
+                                    >
+                                       {title}
+                                    </Text>
+                                 </TouchableOpacity>
+                              ))}
+                           </ScrollView>
+                        </View>
+                     )}
+                     {width <= 768 && (
+                        <ScrollView
+                           horizontal
+                           style={{
+                              flex: 1,
+                           }}
+                        >
+                           {pickerData.map((title, key) => (
+                              <TouchableOpacity
+                                 onPress={() => {
+                                    setSelectedIndex(key);
+                                    sectionListRef.current.scrollToLocation({
+                                       animated: true,
+                                       itemIndex: 0,
+                                       sectionIndex: key,
+                                       viewOffset: 60,
+                                    });
+                                 }}
                                  style={{
-                                    color:
-                                       selectedIndex == key
-                                          ? '#3fa4ff'
-                                          : 'grey',
-                                    borderBottomColor:
-                                       selectedIndex == key
-                                          ? '#3fa4ff'
-                                          : 'grey',
-                                    paddingBottom: 4,
-                                    borderBottomWidth:
-                                       selectedIndex == key ? 3 : 0,
-                                    fontWeight:
-                                       selectedIndex == key ? 'bold' : 'normal',
-                                    marginTop: 10,
+                                    paddingHorizontal: 10,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    height: 80,
+                                    flexDirection: 'row',
                                  }}
                               >
-                                 {title}
-                              </Text>
-                           </TouchableOpacity>
-                        ))}
-                     </ScrollView>
+                                 <Text
+                                    style={{
+                                       color:
+                                          selectedIndex == key
+                                             ? '#3fa4ff'
+                                             : 'grey',
+                                       borderBottomColor:
+                                          selectedIndex == key
+                                             ? '#3fa4ff'
+                                             : 'grey',
+                                       paddingBottom: 4,
+                                       borderBottomWidth:
+                                          selectedIndex == key ? 3 : 0,
+                                       fontWeight:
+                                          selectedIndex == key
+                                             ? 'bold'
+                                             : 'normal',
+                                       marginTop: 10,
+                                    }}
+                                 >
+                                    {title}
+                                 </Text>
+                              </TouchableOpacity>
+                           ))}
+                        </ScrollView>
+                     )}
                   </View>
                   <SectionList
                      ref={sectionListRef}
@@ -453,12 +515,16 @@ const Home = props => {
 };
 
 const styles = EStyleSheet.create({
+   reallyBigContainer: {
+      width: width > 1280 ? 1280 : width,
+      marginHorizontal: 'auto',
+   },
    home: {
       flex: 1,
    },
    img_container: {
       height: height * 0.3,
-      width,
+      width: width > 1280 ? 1280 : width,
    },
    cover_image: {
       flex: 1,
@@ -471,7 +537,7 @@ const styles = EStyleSheet.create({
       height: 80,
       flexDirection: 'row',
       alignItems: 'center',
-      width: width,
+      width: width > 1280 ? 1280 : width,
       justifyContent: 'center',
       backgroundColor: '#fff',
    },

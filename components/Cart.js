@@ -272,13 +272,14 @@ export const ComboProductItemProceed = ({
 const styles = StyleSheet.create({
    container: {
       height: height * 0.08,
-      width,
+      width: width > 1280 ? 1280 : width,
       backgroundColor: '#3fa4ff',
       position: 'absolute',
       bottom: 0,
       left: 0,
       right: 0,
       flexDirection: 'row',
+      marginHorizontal: 'auto',
    },
    text: {
       color: 'white',

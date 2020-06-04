@@ -130,17 +130,17 @@ const EditAddress = ({ navigation }) => {
                            {
                               borderWidth: 1,
                               borderColor:
-                                 address.id === cart.address.id
+                                 address?.id === cart?.address?.id
                                     ? visual.color
                                     : '#dedede',
                               backgroundColor:
-                                 address.id === cart.address.id
+                                 address?.id === cart?.address?.id
                                     ? visual.color
                                     : '#fff',
                            },
                         ]}
                      >
-                        {address.id === cart.address.id && (
+                        {address?.id === cart?.address?.id && (
                            <Feather color="#fff" name="check" />
                         )}
                      </View>

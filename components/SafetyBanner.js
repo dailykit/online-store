@@ -44,10 +44,7 @@ export const SafetyBanner = ({ navigation }) => {
          </View>
       );
    return (
-      <TouchableOpacity
-         style={styles.container}
-         onPress={() => navigation.navigate('SafetyScreen')}
-      >
+      <TouchableOpacity style={styles.container} onPress={() => open('Safety')}>
          <View
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
          >
@@ -71,7 +68,7 @@ export const SafetyBanner = ({ navigation }) => {
 const styles = EStyleSheet.create({
    desktopContainer: {
       backgroundColor: '#2e2d4d',
-      width: width,
+      width: width > 1280 ? 1280 : width,
       alignItems: 'center',
       flexDirection: 'row',
       height: 120,
@@ -108,14 +105,11 @@ const styles = EStyleSheet.create({
       fontWeight: 500,
    },
    container: {
-      padding: 20,
       backgroundColor: '#2e2d4d',
-      width: width > 1000 ? 600 : width * 0.9,
-      marginLeft: width * 0.05,
+      width,
       marginBottom: 10,
       alignItems: 'center',
       flexDirection: 'row',
-      borderRadius: 20,
       height: height * 0.18,
    },
    textConatiner: {

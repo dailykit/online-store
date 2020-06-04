@@ -77,7 +77,7 @@ const SelectPaymentMethod = () => {
                      padding: 8,
                      justifyContent: 'center',
                   }}
-                  onPress={() => open('AddDetails', { path: 'cards/create' })}
+                  onPress={() => open('AddDetails', { path: 'card/create' })}
                >
                   <Text style={{ color: '#fff' }}>Add Card</Text>
                </Button>
@@ -150,7 +150,7 @@ const SelectPaymentMethod = () => {
                padding: 8,
                justifyContent: 'center',
             }}
-            onPress={() => open('AddDetails', { path: 'cards/create' })}
+            onPress={() => open('AddDetails', { path: 'card/create' })}
          >
             <Text style={{ color: '#fff' }}>Add Card</Text>
          </Button>

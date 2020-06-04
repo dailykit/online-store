@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
       // width: width * 0.9,
       backgroundColor: '#2e2d4d',
       padding: 20,
-      borderRadius: 20,
       marginTop: 40,
    },
    title: {
@@ -169,7 +168,6 @@ const styles = StyleSheet.create({
       // width: width * 0.9,
       backgroundColor: '#eddea4',
       padding: 20,
-      borderRadius: 20,
       marginTop: 20,
       alignItems: 'center',
    },

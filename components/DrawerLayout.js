@@ -75,14 +75,18 @@ const DrawerLayout = () => {
 
    return (
       <Modal
-         style={styles.modal}
+         style={width > 1280 ? styles.modal : styles.phoneModal}
          isVisible={isDrawerOpen}
          onBackdropPress={() => {
             setIsDrawerOpen(false);
          }}
       >
-         <View style={styles.container}>
-            <View style={styles.component}>{renderScreen()}</View>
+         <View style={width > 1280 ? styles.container : styles.phoneContainer}>
+            <View
+               style={width > 1280 ? styles.component : styles.phoneComponent}
+            >
+               {renderScreen()}
+            </View>
          </View>
       </Modal>
    );
@@ -92,6 +96,13 @@ export default DrawerLayout;
 
 const styles = StyleSheet.create({
    modal: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      left: 0,
+      right: 0,
+   },
+   phoneModal: {
       height: height * 0.8,
       width,
       position: 'absolute',
@@ -103,11 +114,25 @@ const styles = StyleSheet.create({
       overflow: 'hidden',
    },
    container: {
+      height: height * 0.9,
+      width: width > 1280 ? 1280 : width,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      borderRadius: 5,
+      overflow: 'hidden',
+      marginHorizontal: 'auto',
+   },
+   phoneContainer: {
       flex: 1,
       backgroundColor: '#fff',
       alignItems: 'center',
    },
    component: {
+      maxWidth: 768,
+      height: '100%',
+      position: 'relative',
+   },
+   phoneComponent: {
       maxWidth: 768,
       height: '100%',
       position: 'relative',

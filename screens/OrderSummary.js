@@ -104,7 +104,7 @@ const styles = EStyleSheet.create({
    wrapper: {
       marginLeft: 'auto',
       marginRight: 'auto',
-      width: width > 980 ? 980 : width,
+      width: width > 1280 ? 1280 : width,
    },
 
    summary_title_conatiner: {
