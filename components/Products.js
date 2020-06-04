@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, StyleSheet } from 'react-native';
 import { useSubscription } from '@apollo/react-hooks';
 import {
    INVENTORY_PRODUCTS,
@@ -83,6 +83,7 @@ const Products = ({ category }) => {
          {Boolean(products.length) && (
             <>
                <FlatList
+                  style={styles.productList}
                   numColumns={width > 1000 ? 3 : 1}
                   data={products}
                   keyExtractor={item => item.id}
@@ -95,3 +96,11 @@ const Products = ({ category }) => {
 };
 
 export default Products;
+
+const styles = StyleSheet.create({
+   productList: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      paddingHorizontal: 48,
+   },
+});
