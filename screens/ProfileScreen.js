@@ -110,16 +110,16 @@ export default ProfileScreen;
 
 const styles = EStyleSheet.create({
    container: {
-      flex: 1,
+      width: '100%',
       backgroundColor: '#fff',
    },
    cardNumberTextContainer: {
-      flex: 3,
+      width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
    },
    cardNumberText: {
-      width: width * 0.7,
+      width: '100%',
       paddingLeft: 20,
       fontSize: '$s',
    },
