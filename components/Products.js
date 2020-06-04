@@ -78,20 +78,6 @@ const Products = ({ category }) => {
       },
    });
 
-   //  if (
-   //     inventoryProductsLoading ||
-   //     simpleRecipeProductsLoading ||
-   //     customizableProductsLoading ||
-   //     comboProductsLoading
-   //  )
-   //     return (
-   //        <View
-   //           style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-   //        >
-   //           <Spinner />
-   //        </View>
-   //     );
-
    return (
       <View>
          {Boolean(products.length) && (

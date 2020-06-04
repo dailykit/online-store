@@ -4,17 +4,10 @@ import {
    View,
    Image,
    Text,
-   ActivityIndicator,
    SectionList,
-   FlatList,
+   TouchableOpacity,
 } from 'react-native';
-import {
-   Datepicker,
-   Spinner,
-   IndexPath,
-   Select,
-   SelectItem,
-} from '@ui-kitten/components';
+import { Datepicker, Spinner } from '@ui-kitten/components';
 import moment from 'moment';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
@@ -42,10 +35,10 @@ import { useAppContext } from '../context/app';
 import { Header } from '../components';
 import { Drawer } from '../components/Drawer';
 import Products from '../components/Products';
+import { CategoryBanner } from '../components/CategoryBanner';
 
 const Home = props => {
-   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
-   const [selectedPickerItem, setselectedPickerItem] = useState(0);
+   const [selectedIndex, setSelectedIndex] = useState(0);
    const [calendarDate, setcalendarDate] = useState(new Date());
 
    const [data, setData] = React.useState([]);
@@ -264,7 +257,6 @@ const Home = props => {
          </View>
       );
    }
-
    if (availability && !isStoreOpen())
       return (
          <View>
@@ -305,7 +297,6 @@ const Home = props => {
             <Cart to="OrderSummary" {...props} text="Checkout" />
          </View>
       );
-
    let pickerData = [];
    let sectionsData = [];
 
@@ -347,6 +338,7 @@ const Home = props => {
             navigation={props.navigation}
          />
          <ScrollView style={styles.home}>
+            {/* <Tabs /> */}
             <View style={styles.img_container}>
                <Image
                   source={{
@@ -358,95 +350,110 @@ const Home = props => {
             <View style={styles.headerContainer}>
                <SafetyBanner {...props} />
             </View>
+
             <View style={styles.flexContainerMiddle}>
                <View style={styles.cardContainer}>
-                  <View style={styles.flexContainerMiddle}>
-                     <View style={styles.cardContainer}>
-                        <View style={styles.picker_container}>
-                           <Datepicker
-                              date={calendarDate}
-                              onSelect={_date => {
-                                 setcalendarDate(_date);
-                                 fetchData({
-                                    year: moment(_date).year(),
-                                    month: moment(_date).month(),
-                                    day: moment(_date).date(),
-                                 });
-                              }}
-                           />
-
-                           <Select
-                              selectedIndex={selectedIndex}
-                              style={styles.selectStyle}
-                              value={pickerData[selectedIndex.row]}
-                              onSelect={_selectedIndex => {
-                                 setselectedPickerItem(_selectedIndex.row);
-                                 setSelectedIndex(_selectedIndex);
+                  <View style={styles.picker_container}>
+                     <Text
+                        style={{
+                           width: width * 0.5,
+                           fontWeight: 'bold',
+                           paddingLeft: 20,
+                           fontSize: 16,
+                        }}
+                     >
+                        Order For
+                     </Text>
+                     <Datepicker
+                        date={calendarDate}
+                        style={{
+                           width: width * 0.5,
+                        }}
+                        onSelect={_date => {
+                           setcalendarDate(_date);
+                           fetchData({
+                              year: moment(_date).year(),
+                              month: moment(_date).month(),
+                              day: moment(_date).date(),
+                           });
+                        }}
+                     />
+                  </View>
+                  <View style={styles.picker_container}>
+                     <ScrollView
+                        horizontal
+                        style={{
+                           flex: 1,
+                        }}
+                     >
+                        {pickerData.map((title, key) => (
+                           <TouchableOpacity
+                              onPress={() => {
+                                 setSelectedIndex(key);
                                  sectionListRef.current.scrollToLocation({
                                     animated: true,
                                     itemIndex: 0,
-                                    sectionIndex: _selectedIndex.row,
+                                    sectionIndex: key,
                                     viewOffset: 60,
                                  });
                               }}
+                              style={{
+                                 paddingHorizontal: 10,
+                                 justifyContent: 'center',
+                                 alignItems: 'center',
+                                 height: 80,
+                                 flexDirection: 'row',
+                              }}
                            >
-                              {pickerData.map((title, key) => (
-                                 <SelectItem key={key} title={title} />
-                              ))}
-                           </Select>
-                        </View>
-                        <SectionList
-                           ref={sectionListRef}
-                           sections={data}
-                           style={{
-                              height: height - 16 * 4.125 - 80 - 48,
-                           }}
-                           stickySectionHeadersEnabled={true}
-                           keyExtractor={(item, index) => item + index}
-                           renderSectionHeader={({ section: { title } }) => (
-                              <View style={{ backgroundColor: '#fff' }}>
-                                 <Text
-                                    style={[
-                                       styles.header,
-                                       {
-                                          textAlign: 'center',
-                                          fontSize: 12,
-                                          color: 'gray',
-                                       },
-                                    ]}
-                                 >
-                                    Now Showing
-                                 </Text>
-                                 <Text
-                                    style={[
-                                       styles.header,
-                                       {
-                                          textAlign: 'center',
-                                          fontSize: 18,
-                                          color: 'gray',
-                                       },
-                                    ]}
-                                 >
-                                    {title}
-                                 </Text>
-                              </View>
-                           )}
-                           stickyHeaderIndices={[0]}
-                           renderItem={({ item: category }) => (
-                              <Products category={category} />
-                           )}
-                        />
-                     </View>
+                              <Text
+                                 style={{
+                                    color:
+                                       selectedIndex == key
+                                          ? '#3fa4ff'
+                                          : 'grey',
+                                    borderBottomColor:
+                                       selectedIndex == key
+                                          ? '#3fa4ff'
+                                          : 'grey',
+                                    paddingBottom: 4,
+                                    borderBottomWidth:
+                                       selectedIndex == key ? 3 : 0,
+                                    fontWeight:
+                                       selectedIndex == key ? 'bold' : 'normal',
+                                    marginTop: 10,
+                                 }}
+                              >
+                                 {title}
+                              </Text>
+                           </TouchableOpacity>
+                        ))}
+                     </ScrollView>
                   </View>
-                  <View style={{ height: height * 0.08 }} />
-                  <Cart
-                     label={pickerData[selectedIndex.row]}
-                     to="OrderSummary"
-                     {...props}
-                     text="Checkout"
+                  <SectionList
+                     ref={sectionListRef}
+                     sections={data}
+                     style={{
+                        height: height - 16 * 4.125 - 80 - 48,
+                     }}
+                     stickySectionHeadersEnabled={true}
+                     keyExtractor={(item, index) => item + index}
+                     renderSectionHeader={({ section: { title } }) => (
+                        <CategoryBanner category={title} />
+                     )}
+                     stickyHeaderIndices={[0]}
+                     renderItem={({ item: category }) => (
+                        <Products category={category} />
+                     )}
                   />
                </View>
             </View>
+            <View style={{ height: height * 0.08 }} />
+            <Cart
+               label={pickerData[selectedIndex.row]}
+               to="OrderSummary"
+               {...props}
+               text="Checkout"
+            />
          </ScrollView>
       </>
    );
@@ -455,8 +462,6 @@ const Home = props => {
 const styles = EStyleSheet.create({
    home: {
       flex: 1,
-      // alignItems: 'center',
-      marginTop: 2,
    },
    img_container: {
       height: height * 0.3,
@@ -473,8 +478,9 @@ const styles = EStyleSheet.create({
       height: 80,
       flexDirection: 'row',
       alignItems: 'center',
-      width: width > 1000 ? width / 2 : width,
+      width: width,
       justifyContent: 'center',
+      backgroundColor: '#fff',
    },
    picker_placeholder: {
       flex: 1,
