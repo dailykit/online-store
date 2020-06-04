@@ -6,8 +6,10 @@ import { height, width } from '../utils/Scalaing';
 
 // Screens
 import ProfileScreen from '../screens/ProfileScreen';
+import EditAddress from '../screens/EditAddress';
+import SelectPaymentMethod from '../screens/SelectPaymentMethod';
 
-const DrawerLayout = ({ children }) => {
+const DrawerLayout = () => {
    const { drawerView, isDrawerOpen, setIsDrawerOpen } = useDrawerContext();
 
    const renderScreen = () => {
@@ -15,6 +17,10 @@ const DrawerLayout = ({ children }) => {
       switch (drawerView) {
          case 'Profile':
             return <ProfileScreen />;
+         case 'EditAddressScreen':
+            return <EditAddress />;
+         case 'SelectPaymentMethod':
+            return <SelectPaymentMethod />;
          default:
             return <Text>Oops!</Text>;
       }

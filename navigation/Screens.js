@@ -118,7 +118,7 @@ function HomeStack(props) {
                headerShown: false,
             }}
          />
-         <Stack.Screen
+         {/* <Stack.Screen
             name="EditAddressScreen"
             component={EditAddress}
             options={{
@@ -131,7 +131,7 @@ function HomeStack(props) {
             options={{
                headerShown: false,
             }}
-         />
+         /> */}
          {/* <Stack.Screen
             name="ProfileScreen"
             component={ProfileScreen}
