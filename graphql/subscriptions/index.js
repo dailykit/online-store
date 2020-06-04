@@ -9,6 +9,14 @@ export const INVENTORY_PRODUCTS = gql`
       description
       name
       tags
+      sachetItem {
+        unitSize
+        unit
+      }
+      supplierItem {
+        unitSize
+        unit
+      }
       inventoryProductOptions {
         id
         price
@@ -61,6 +69,14 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
           description
           name
           tags
+          sachetItem {
+            unitSize
+            unit
+          }
+          supplierItem {
+            unitSize
+            unit
+          }
           inventoryProductOptions {
             id
             price
@@ -119,6 +135,14 @@ export const COMBO_PRODUCTS = gql`
               description
               name
               tags
+              sachetItem {
+                unitSize
+                unit
+              }
+              supplierItem {
+                unitSize
+                unit
+              }
               inventoryProductOptions {
                 id
                 price

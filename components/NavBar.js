@@ -5,12 +5,16 @@ import {
   StyleSheet,
   Dimensions,
   Text,
+  Button,
+  Image,
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 // galio components
 import Icon from './Icon';
 import theme from '../constants/Theme';
+import { useAuth } from '../context/auth';
+import { useAppContext } from '../context/app';
 
 const { height, width } = Dimensions.get('window');
 
@@ -19,7 +23,6 @@ export default function NavBar({
   hideLeft,
   hideRight,
   left,
-  leftStyle,
   leftIconColor,
   leftHitSlop,
   leftIconName,
@@ -31,11 +34,18 @@ export default function NavBar({
   transparent,
   title,
   titleStyle,
+  navigation,
 }) {
+  const { isAuthenticated, login, logout } = useAuth();
+  const { brand } = useAppContext();
+
   function renderTitle() {
     if (typeof title === 'string') {
       return (
         <View style={styles.title}>
+          {width > 768 && (
+            <Image source={{ uri: brand.logo }} style={styles.logo} />
+          )}
           <Text style={[styles.titleTextStyle, titleStyle]}>{title}</Text>
         </View>
       );
@@ -50,21 +60,21 @@ export default function NavBar({
     if (!hideLeft) {
       if (leftIconName || back) {
         return (
-          <View style={[styles.left, leftStyle]}>
+          <View style={[styles.left]}>
             <TouchableOpacity
               onPress={() => onLeftPress && onLeftPress()}
               hitSlop={leftHitSlop}
             >
               <Icon
                 color={leftIconColor || theme.COLORS.ICON}
-                size={16 * 1.0625}
+                size={18}
                 name={leftIconName || (back ? 'chevron-left' : 'navicon')}
               />
             </TouchableOpacity>
           </View>
         );
       }
-      return <View style={[styles.left, leftStyle]}>{left}</View>;
+      return <View style={[styles.left]}>{left}</View>;
     }
     return <View style={[styles.left]} />;
   }
@@ -82,9 +92,37 @@ export default function NavBar({
 
   return (
     <View style={navStyles}>
-      {renderLeft()}
+      {width < 768 && renderLeft()}
       {renderTitle()}
       {renderRight()}
+      {width > 768 && (
+        <View style={styles.rightNav}>
+          <Text style={styles.navLinks} onPress={() => navigation.navigate('')}>
+            About Us
+          </Text>
+          <Text
+            style={styles.navLinks}
+            onPress={() => navigation.navigate('OrderHistoryScreen')}
+          >
+            Orders
+          </Text>
+          <Text
+            style={styles.navLinks}
+            onPress={() => navigation.navigate('ProfileScreen')}
+          >
+            Profile
+          </Text>
+          <Text
+            style={[
+              styles.authButton,
+              { backgroundColor: isAuthenticated ? '#D93025' : '#BB00BB' },
+            ]}
+            onPress={() => (isAuthenticated ? logout() : login())}
+          >
+            {isAuthenticated ? 'Logout' : 'Login'}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -102,8 +140,16 @@ const styles = StyleSheet.create({
   title: {
     flex: 2,
     height: height * 0.07,
+    marginLeft: width > 768 ? 16 : 0,
     alignItems: 'center',
     justifyContent: 'center',
+    flexDirection: 'row',
+  },
+  logo: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    marginRight: 16,
   },
   titleTextStyle: {
     fontWeight: '400',
@@ -111,10 +157,10 @@ const styles = StyleSheet.create({
     color: theme.COLORS.BLACK,
   },
   left: {
-    flex: 0.5,
-    height: height * 0.07,
+    width: 64,
+    height: 64,
+    alignContent: 'center',
     justifyContent: 'center',
-    marginLeft: 16,
   },
   right: {
     flex: 0.5,
@@ -127,5 +173,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderColor: 'transparent',
     borderWidth: 0,
+  },
+  rightNav: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingRight: 16,
+  },
+  navLinks: {
+    marginLeft: 16,
+    fontSize: 18,
+  },
+  authButton: {
+    fontSize: 18,
+    marginLeft: 16,
+    borderRadius: 8,
+    color: '#ffffff',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
   },
 });
