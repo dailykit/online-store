@@ -139,13 +139,13 @@ function HomeStack(props) {
                headerShown: false,
             }}
          /> */}
-         <Stack.Screen
+         {/* <Stack.Screen
             name="OrderHistoryScreen"
             component={OrderHistory}
             options={{
                headerShown: false,
             }}
-         />
+         /> */}
          <Stack.Screen
             name="PaymentProcessing"
             component={PaymentProcessing}

@@ -109,7 +109,7 @@ export default function NavBar({
                </Text>
                <Text
                   style={styles.navLinks}
-                  onPress={() => navigation.navigate('OrderHistoryScreen')}
+                  onPress={() => open('OrderHistory')}
                >
                   Orders
                </Text>

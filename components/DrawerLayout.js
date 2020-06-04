@@ -8,6 +8,7 @@ import { height, width } from '../utils/Scalaing';
 import ProfileScreen from '../screens/ProfileScreen';
 import EditAddress from '../screens/EditAddress';
 import SelectPaymentMethod from '../screens/SelectPaymentMethod';
+import OrderHistory from '../screens/OrderHistory';
 
 const DrawerLayout = () => {
    const { drawerView, isDrawerOpen, setIsDrawerOpen } = useDrawerContext();
@@ -21,6 +22,8 @@ const DrawerLayout = () => {
             return <EditAddress />;
          case 'SelectPaymentMethod':
             return <SelectPaymentMethod />;
+         case 'OrderHistory':
+            return <OrderHistory />;
          default:
             return <Text>Oops!</Text>;
       }
