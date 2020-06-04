@@ -75,12 +75,6 @@ export const SelectPaymentMethod = ({ navigation }) => {
           style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
           onPress={() => navigation.goBack()}
         >
-          {/* TODO : EXAMPLE COMPONENT (REMOVE IN PRODUCTION) */}
-          <CreditCardInput
-            number='1234 5678 1234 5678'
-            expiry='12/23'
-            brand='visa'
-          />
           <Button
             style={{
               marginBottom: 20,
@@ -116,54 +110,42 @@ export const SelectPaymentMethod = ({ navigation }) => {
       <Text style={styles.title}>Payment Cards</Text>
       <View style={styles.cardNumberConatiner}>
         {customerDetails.stripePaymentMethods.map((card) => (
-          <></>
-          // <TouchableOpacity
-          //   key={card.stripePaymentMethodId}
-          //   onPress={() => select(card)}
-          //   style={[
-          //     styles.cardNumberOptionConatiner,
-          //     {
-          //       backgroundColor:
-          //         card.stripePaymentMethodId === cart?.paymentMethodId
-          //           ? '#fff'
-          //           : '#f3f3f3',
-          //     },
-          //   ]}
-          // >
-          //   <View style={styles.cardNumberTextContainer}>
-          //     <Text style={styles.cardNumberText}>
-          //       <AntDesign name='creditcard' /> {'  '}
-          //       XXXX XXXX XXXX {card.last4}
-          //     </Text>
-          //     <Text style={styles.cardNumberText}>{card.brand}</Text>
-          //   </View>
-          //   <View style={styles.cardNumberSelectedContainer}>
-          //     <View
-          //       style={[
-          //         styles.checkContainer,
-          //         {
-          //           borderWidth: 1,
-          //           borderColor:
-          //             card.stripePaymentMethodId === cart?.paymentMethodId
-          //               ? visual.color
-          //                 ? visual.color
-          //                 : '#3fa4ff'
-          //               : '#dedede',
-          //           backgroundColor:
-          //             card.stripePaymentMethodId === cart?.paymentMethodId
-          //               ? visual.color
-          //                 ? visual.color
-          //                 : '#3fa4ff'
-          //               : '#fff',
-          //         },
-          //       ]}
-          //     >
-          //       {card.stripePaymentMethodId === cart?.paymentMethodId && (
-          //         <Feather color='#fff' name='check' />
-          //       )}
-          //     </View>
-          //   </View>
-          // </TouchableOpacity>
+          <TouchableOpacity
+            key={card?.stripePaymentMethodId}
+            onPress={() => select(card)}
+          >
+            <CreditCardInput
+              number={`XXXX XXXX XXXX ${card?.last4}`}
+              expiry='12/23'
+              brand='visa'
+            />
+            <View style={styles.cardNumberSelectedContainer}>
+              <View
+                style={[
+                  styles.checkContainer,
+                  {
+                    borderWidth: 1,
+                    borderColor:
+                      card?.stripePaymentMethodId === cart?.paymentMethodId
+                        ? visual.color
+                          ? visual.color
+                          : '#3fa4ff'
+                        : '#dedede',
+                    backgroundColor:
+                      card?.stripePaymentMethodId === cart?.paymentMethodId
+                        ? visual.color
+                          ? visual.color
+                          : '#3fa4ff'
+                        : '#fff',
+                  },
+                ]}
+              >
+                {card?.stripePaymentMethodId === cart?.paymentMethodId && (
+                  <Feather color='#fff' name='check' />
+                )}
+              </View>
+            </View>
+          </TouchableOpacity>
         ))}
       </View>
 
