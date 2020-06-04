@@ -107,15 +107,22 @@ export default function NavBar({
                >
                   About Us
                </Text>
-               <Text
-                  style={styles.navLinks}
-                  onPress={() => open('OrderHistory')}
-               >
-                  Orders
-               </Text>
-               <Text style={styles.navLinks} onPress={() => open('Profile')}>
-                  Profile
-               </Text>
+               {isAuthenticated && (
+                  <>
+                     <Text
+                        style={styles.navLinks}
+                        onPress={() => open('OrderHistory')}
+                     >
+                        Orders
+                     </Text>
+                     <Text
+                        style={styles.navLinks}
+                        onPress={() => open('Profile')}
+                     >
+                        Profile
+                     </Text>
+                  </>
+               )}
                <Text
                   style={[
                      styles.authButton,
