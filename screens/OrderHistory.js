@@ -115,10 +115,131 @@ const OrderHistory = ({ navigation }) => {
                            headerStyle={styles.header}
                            dataArray={[
                               {
-                                 title: '3 items',
+                                 title: `${
+                                    order.orderInventoryProducts.length +
+                                    order.orderMealKitProducts.length +
+                                    order.orderReadyToEatProducts.length
+                                 }  Item(s)`,
                                  content: (
-                                    <View>
-                                       <Text>Coming Soon</Text>
+                                    <View style={{ width: '100%' }}>
+                                       {order.orderInventoryProducts.map(
+                                          product => (
+                                             <View style={styles.product}>
+                                                <View
+                                                   style={styles.productInfo}
+                                                >
+                                                   <Text>
+                                                      {
+                                                         product
+                                                            .inventoryProduct
+                                                            .name
+                                                      }
+                                                   </Text>
+                                                   <Text
+                                                      style={
+                                                         styles.productOption
+                                                      }
+                                                   >
+                                                      {
+                                                         product
+                                                            .inventoryProductOption
+                                                            .label
+                                                      }
+                                                   </Text>
+                                                </View>
+                                                <Text
+                                                   style={styles.productPrice}
+                                                >
+                                                   ${' '}
+                                                   {
+                                                      product
+                                                         .inventoryProductOption
+                                                         .price[0].value
+                                                   }
+                                                </Text>
+                                             </View>
+                                          )
+                                       )}
+                                       {order.orderMealKitProducts.map(
+                                          product => (
+                                             <View style={styles.product}>
+                                                <View
+                                                   style={styles.productInfo}
+                                                >
+                                                   <Text>
+                                                      {
+                                                         product
+                                                            .simpleRecipeProduct
+                                                            .name
+                                                      }
+                                                   </Text>
+                                                   <Text
+                                                      style={
+                                                         styles.productOption
+                                                      }
+                                                   >
+                                                      Meal Kit Serving:{' '}
+                                                      {
+                                                         product
+                                                            .simpleRecipeProductOption
+                                                            .simpleRecipeYield
+                                                            .yield.serving
+                                                      }
+                                                   </Text>
+                                                </View>
+                                                <Text
+                                                   style={styles.productPrice}
+                                                >
+                                                   ${' '}
+                                                   {
+                                                      product
+                                                         .simpleRecipeProductOption
+                                                         .price[0].value
+                                                   }
+                                                </Text>
+                                             </View>
+                                          )
+                                       )}
+                                       {order.orderReadyToEatProducts.map(
+                                          product => (
+                                             <View style={styles.product}>
+                                                <View
+                                                   style={styles.productInfo}
+                                                >
+                                                   <Text>
+                                                      {
+                                                         product
+                                                            .simpleRecipeProduct
+                                                            .name
+                                                      }
+                                                   </Text>
+                                                   <Text
+                                                      style={
+                                                         styles.productOption
+                                                      }
+                                                   >
+                                                      Ready to Eat Serving:{' '}
+                                                      {
+                                                         product
+                                                            .simpleRecipeProductOption
+                                                            .simpleRecipeYield
+                                                            .yield.serving
+                                                      }
+                                                   </Text>
+                                                </View>
+                                                <Text
+                                                   style={styles.productPrice}
+                                                >
+                                                   ${' '}
+                                                   {
+                                                      product
+                                                         .simpleRecipeProductOption
+                                                         .price[0].value
+                                                   }
+                                                </Text>
+                                             </View>
+                                          )
+                                       )}
                                     </View>
                                  ),
                               },
@@ -241,5 +362,23 @@ const styles = EStyleSheet.create({
       flex: 1,
       flexDirection: 'row',
       justifyContent: 'space-between',
+   },
+   product: {
+      justifyContent: 'space-between',
+      flexDirection: 'row',
+      flex: 1,
+      marginBottom: 10,
+      width: '100%',
+   },
+   productInfo: {
+      fontSize: '$xs',
+      flex: 1,
+   },
+   productOption: {
+      fontSize: '$xxs',
+      color: '#666',
+   },
+   productPrice: {
+      fontSize: '$s',
    },
 });

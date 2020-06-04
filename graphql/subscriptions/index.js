@@ -17,6 +17,37 @@ export const ORDERS = gql`
          tax
          tip
          transactionId
+         orderInventoryProducts {
+            inventoryProduct {
+               name
+            }
+            inventoryProductOption {
+               label
+               price
+            }
+         }
+         orderMealKitProducts {
+            simpleRecipeProduct {
+               name
+            }
+            simpleRecipeProductOption {
+               price
+               simpleRecipeYield {
+                  yield
+               }
+            }
+         }
+         orderReadyToEatProducts {
+            simpleRecipeProduct {
+               name
+            }
+            simpleRecipeProductOption {
+               price
+               simpleRecipeYield {
+                  yield
+               }
+            }
+         }
       }
    }
 `;
