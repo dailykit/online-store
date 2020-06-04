@@ -10,6 +10,7 @@ import EditAddress from '../screens/EditAddress';
 import SelectPaymentMethod from '../screens/SelectPaymentMethod';
 import OrderHistory from '../screens/OrderHistory';
 import AddDetails from '../screens/AddDetails';
+import SafetyScreen from '../screens/SafetyScreen';
 
 const DrawerLayout = () => {
    const {
@@ -32,6 +33,8 @@ const DrawerLayout = () => {
             return <OrderHistory />;
          case 'AddDetails':
             return <AddDetails params={params} />;
+         case 'Safety':
+            return <SafetyScreen />;
          default:
             return <Text>Oops!</Text>;
       }

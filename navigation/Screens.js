@@ -104,13 +104,13 @@ function HomeStack(props) {
                headerShown: false,
             }}
          />
-         <Stack.Screen
+         {/* <Stack.Screen
             name="SafetyScreen"
             component={SafetyScreen}
             options={{
                headerShown: false,
             }}
-         />
+         /> */}
          <Stack.Screen
             name="DeliveryScreen"
             component={Delivery}
