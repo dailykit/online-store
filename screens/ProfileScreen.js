@@ -1,20 +1,10 @@
-import React from 'react';
-import {
-   Text,
-   View,
-   StyleSheet,
-   Image,
-   Dimensions,
-   TouchableOpacity,
-} from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import HeaderBack from '../components/HeaderBack';
-import { ScrollView } from 'react-native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
-
-import { height, width } from '../utils/Scalaing';
+import React from 'react';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
 import { useCartContext } from '../context/cart';
 import { useDrawerContext } from '../context/drawer';
+import { width } from '../utils/Scalaing';
 
 const ProfileScreen = () => {
    const { customerDetails } = useCartContext();
@@ -36,7 +26,7 @@ const ProfileScreen = () => {
          <ScrollView style={styles.container}>
             {/* Address card */}
             <TouchableOpacity
-               onPress={() => open('EditAddressScreen')}
+               onPress={() => open('EditAddress')}
                style={styles.card}
             >
                <Text style={styles.cardTitle}>My Addresses</Text>
@@ -70,7 +60,7 @@ const ProfileScreen = () => {
             </TouchableOpacity>
             {/* Payment Card */}
             <TouchableOpacity
-               onPress={() => open('SelectPaymentMethodScreen')}
+               onPress={() => open('SelectPaymentMethod')}
                style={styles.card}
             >
                <Text style={styles.cardTitle}>My Payment cards</Text>

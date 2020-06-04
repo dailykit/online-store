@@ -17,7 +17,7 @@ const DrawerLayout = () => {
       switch (drawerView) {
          case 'Profile':
             return <ProfileScreen />;
-         case 'EditAddressScreen':
+         case 'EditAddress':
             return <EditAddress />;
          case 'SelectPaymentMethod':
             return <SelectPaymentMethod />;
