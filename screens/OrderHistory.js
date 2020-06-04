@@ -7,18 +7,27 @@ import { Divider, Spinner } from '@ui-kitten/components';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { ScrollView } from 'react-native';
 import { ORDERS } from '../graphql';
-import { useQuery } from '@apollo/react-hooks';
+import { useSubscription } from '@apollo/react-hooks';
 import { useCartContext } from '../context/cart';
 
-const dataArray = [
-   { title: '3 items', content: 'Lorem ipsum dolor sit amet' },
-   { title: 'Bill Details', content: 'Lorem ipsum dolor sit amet' },
-];
 const OrderHistory = ({ navigation }) => {
    const { customer } = useCartContext();
 
+   const whatColor = status => {
+      switch (status) {
+         case 'PENDING':
+            return '#F6AD55';
+         case 'READY_TO_DISPATCH':
+            return '#4299E1';
+         case 'DELIVERED':
+            return '#48BB78';
+         default:
+            return '#aaa';
+      }
+   };
+
    // Query
-   const { data, loading, error } = useQuery(ORDERS, {
+   const { data, loading, error } = useSubscription(ORDERS, {
       variables: {
          id: customer?.id,
       },
@@ -55,16 +64,32 @@ const OrderHistory = ({ navigation }) => {
                         // onPress={() => navigation.navigate('DeliveryScreen')}
                         style={styles.card}
                      >
-                        <Text style={styles.title}>Order ID: {order?.id}</Text>
+                        <View style={styles.head}>
+                           <Text style={styles.title}>
+                              Order ID: {order?.id}
+                           </Text>
+                           <Text
+                              style={[
+                                 styles.status,
+                                 {
+                                    backgroundColor: whatColor(
+                                       order.orderStatus
+                                    ),
+                                 },
+                              ]}
+                           >
+                              {order.orderStatus.replace(/_/g, ' ')}
+                           </Text>
+                        </View>
                         <Text style={[styles.muted, styles.bold]}>
                            Ordered on:{' '}
                            <Text style={styles.lite}>
                               {moment(order?.created_at).format('LLLL')}
                            </Text>
                         </Text>
-                        <Text style={[styles.muted, styles.bold]}>
+                        {/* <Text style={[styles.muted, styles.bold]}>
                            Deliver on: <Text style={styles.lite}>NA</Text>
-                        </Text>
+                        </Text> */}
                         <Text style={styles.muted}>
                            {order?.deliveryInfo?.dropoff?.dropoffInfo
                               ?.customerAddress?.line1 +
@@ -88,8 +113,45 @@ const OrderHistory = ({ navigation }) => {
                         </Text>
                         <Accordion
                            headerStyle={styles.header}
-                           dataArray={dataArray}
-                           expanded={0}
+                           dataArray={[
+                              {
+                                 title: '3 items',
+                                 content: (
+                                    <View>
+                                       <Text>Coming Soon</Text>
+                                    </View>
+                                 ),
+                              },
+                              {
+                                 title: 'Bill Details',
+                                 content: (
+                                    <View style={styles.rowContainer}>
+                                       <View style={styles.row}>
+                                          <Text>Txn ID</Text>
+                                          <Text>{order.transactionId}</Text>
+                                       </View>
+                                       <View style={styles.row}>
+                                          <Text>Delivery Price</Text>
+                                          <Text>$ {order.deliveryPrice}</Text>
+                                       </View>
+                                       {order.tip && (
+                                          <View style={styles.row}>
+                                             <Text>Tip</Text>
+                                             <Text>$ {order.tip}</Text>
+                                          </View>
+                                       )}
+                                       <View style={styles.row}>
+                                          <Text>Tax</Text>
+                                          <Text>$ {order.tax}</Text>
+                                       </View>
+                                       <View style={styles.row}>
+                                          <Text>Total Price</Text>
+                                          <Text>$ {order.itemTotal}</Text>
+                                       </View>
+                                    </View>
+                                 ),
+                              },
+                           ]}
                         />
                         <View style={styles.flexContainer}>
                            <Text style={styles.total}>Total</Text>
@@ -130,10 +192,21 @@ const styles = EStyleSheet.create({
       borderBottomWidth: 1,
       marginBottom: 10,
    },
+   head: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 10,
+   },
+   status: {
+      backgroundColor: '#aaa',
+      color: '#fff',
+      borderRadius: 2,
+      padding: 5,
+   },
    title: {
       fontWeight: 'bold',
       fontSize: '$l',
-      marginBottom: 10,
    },
    muted: {
       color: 'gray',
@@ -158,5 +231,15 @@ const styles = EStyleSheet.create({
    },
    header: {
       backgroundColor: '#fff',
+   },
+   rowContainer: {
+      flex: 1,
+      width: '100%',
+   },
+   row: {
+      marginBottom: 5,
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
    },
 });

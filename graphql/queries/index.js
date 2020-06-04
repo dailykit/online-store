@@ -27,17 +27,6 @@ export const ORDER = gql`
    }
 `;
 
-export const ORDERS = gql`
-   query Orders($id: Int!) {
-      orders(where: { customerId: { _eq: $id } }) {
-         id
-         itemTotal
-         deliveryInfo
-         created_at
-      }
-   }
-`;
-
 export const CUSTOMERS = gql`
    query Customers($dailyKeyID: String!, $email: String!) {
       customers(
