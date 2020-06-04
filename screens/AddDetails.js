@@ -1,51 +1,8 @@
 import React from 'react';
-import { WebView } from 'react-native-webview';
-import { height, width } from '../utils/Scalaing';
-import { View, Text } from 'native-base';
-import { useCartContext } from '../context/cart';
-import { useLazyQuery } from '@apollo/react-hooks';
-import { CUSTOMER_DETAILS } from '../graphql';
-import { useAuth } from '../context/auth';
-import { Spinner } from '@ui-kitten/components';
-import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
-import { Ionicons } from '@expo/vector-icons';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const AddDetails = ({ params }) => {
    const { path } = params;
-
-   const { setCustomerDetails } = useCartContext();
-   const { user } = useAuth();
-
-   // Query
-   const [fetchDetails, { loading }] = useLazyQuery(CUSTOMER_DETAILS, {
-      variables: {
-         keycloakId: user.sub || user.userid,
-      },
-      onCompleted: data => {
-         console.log('platform -> data', data);
-         if (data.platform_customerByClients?.length) {
-            setCustomerDetails(data.platform_customerByClients[0].customer);
-            navigation.goBack();
-         } else {
-            console.log('No customer data found!');
-            navigation.goBack();
-         }
-      },
-      onError: error => {
-         console.log(error);
-         navigation.goBack();
-      },
-      fetchPolicy: 'cache-and-network',
-   });
-
-   if (loading)
-      return (
-         <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-         >
-            <Spinner />
-         </View>
-      );
 
    return (
       // <WebView

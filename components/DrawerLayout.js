@@ -11,6 +11,10 @@ import SelectPaymentMethod from '../screens/SelectPaymentMethod';
 import OrderHistory from '../screens/OrderHistory';
 import AddDetails from '../screens/AddDetails';
 import SafetyScreen from '../screens/SafetyScreen';
+import { useCartContext } from '../context/cart';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { CUSTOMER_DETAILS } from '../graphql';
+import { useAuth } from '../context/auth';
 
 const DrawerLayout = () => {
    const {
@@ -19,7 +23,36 @@ const DrawerLayout = () => {
       setIsDrawerOpen,
       params,
    } = useDrawerContext();
+   const { setCustomerDetails } = useCartContext();
+   const { user } = useAuth();
 
+   // Query
+   const [fetchDetails] = useLazyQuery(CUSTOMER_DETAILS, {
+      variables: {
+         keycloakId: user.sub || user.userid,
+      },
+      onCompleted: data => {
+         console.log('platform -> data', data);
+         if (data.platform_customerByClients?.length) {
+            setCustomerDetails(data.platform_customerByClients[0].customer);
+         } else {
+            console.log('No customer data found!');
+         }
+      },
+      onError: error => {
+         console.log(error);
+      },
+      fetchPolicy: 'cache-and-network',
+   });
+
+   //Effects
+   React.useEffect(() => {
+      if (!isDrawerOpen && drawerView === 'AddDetails') {
+         fetchDetails();
+      }
+   }, [isDrawerOpen]);
+
+   // Handlers
    const renderScreen = () => {
       console.log(drawerView);
       switch (drawerView) {
