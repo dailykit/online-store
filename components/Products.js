@@ -89,15 +89,12 @@ const Products = ({ category }) => {
   return (
     <View>
       {products.length ? (
-        <>
-          <Text>{category.name}</Text>
-          <FlatList
-            numColumns={width > 1000 ? 3 : 1}
-            data={products}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item: product }) => <Card product={product} />}
-          />
-        </>
+        <FlatList
+          numColumns={width > 1000 ? 3 : 1}
+          data={products}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item: product }) => <Card product={product} />}
+        />
       ) : (
         <Text> Oops! </Text>
       )}

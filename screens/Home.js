@@ -38,6 +38,7 @@ import { useAppContext } from '../context/app';
 import { Header } from '../components';
 import { Drawer } from '../components/Drawer';
 import Products from '../components/Products';
+import { CategoryBanner } from '../components/CategoryBanner';
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
@@ -467,24 +468,7 @@ const Home = (props) => {
               stickySectionHeadersEnabled={true}
               keyExtractor={(item, index) => item + index}
               renderSectionHeader={({ section: { title } }) => (
-                <View style={{ backgroundColor: '#fff' }}>
-                  <Text
-                    style={[
-                      styles.header,
-                      { textAlign: 'center', fontSize: 12, color: 'gray' },
-                    ]}
-                  >
-                    Now Showing
-                  </Text>
-                  <Text
-                    style={[
-                      styles.header,
-                      { textAlign: 'center', fontSize: 18, color: 'gray' },
-                    ]}
-                  >
-                    {title}
-                  </Text>
-                </View>
+                <CategoryBanner category={title} />
               )}
               stickyHeaderIndices={[0]}
               renderItem={({ item: category }) => (
