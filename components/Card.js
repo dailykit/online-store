@@ -49,9 +49,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         <Text style={styles.card_title_text}>
                            {product.name}
                         </Text>
-                        <Text style={styles.is_customizable}>
-                           Customizeable
-                        </Text>
+                        <Text style={styles.is_customizable}>Combo</Text>
                      </View>
                      <ComboProduct
                         label={label}
@@ -72,7 +70,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                               {product.name}
                            </Text>
                            <Text style={styles.is_customizable}>
-                              Customizeable
+                              Customizable
                            </Text>
                         </View>
                      )}
