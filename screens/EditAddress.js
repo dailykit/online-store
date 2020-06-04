@@ -18,10 +18,12 @@ import { height, width } from '../utils/Scalaing';
 import { Button } from 'native-base';
 import { useAppContext } from '../context/app';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useDrawerContext } from '../context/drawer';
 
 const EditAddress = ({ navigation }) => {
    const { cart, customerDetails } = useCartContext();
    const { visual } = useAppContext();
+   const { open } = useDrawerContext();
 
    const [loading, setLoading] = React.useState(false);
 
@@ -78,9 +80,7 @@ const EditAddress = ({ navigation }) => {
                      padding: 8,
                      justifyContent: 'center',
                   }}
-                  onPress={() =>
-                     navigation.navigate('Add Details', { path: 'address' })
-                  }
+                  onPress={() => open('AddDetails', { path: 'address/create' })}
                >
                   <Text style={{ color: '#fff' }}>Add Address</Text>
                </Button>
@@ -153,9 +153,7 @@ const EditAddress = ({ navigation }) => {
                padding: 8,
                justifyContent: 'center',
             }}
-            onPress={() =>
-               navigation.navigate('Add Details', { path: 'address' })
-            }
+            onPress={() => open('AddDetails', { path: 'address/create' })}
          >
             <Text style={{ color: '#fff' }}>Add Address</Text>
          </Button>

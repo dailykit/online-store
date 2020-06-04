@@ -10,10 +10,12 @@ import { useAppContext } from '../context/app';
 import { useCartContext } from '../context/cart';
 import { UPDATE_CART } from '../graphql';
 import { height, width } from '../utils/Scalaing';
+import { useDrawerContext } from '../context/drawer';
 
 const SelectPaymentMethod = () => {
    const { cart, customerDetails } = useCartContext();
    const { visual } = useAppContext();
+   const { open } = useDrawerContext();
 
    const [loading, setLoading] = React.useState(false);
 
@@ -75,9 +77,7 @@ const SelectPaymentMethod = () => {
                      padding: 8,
                      justifyContent: 'center',
                   }}
-                  onPress={() =>
-                     navigation.navigate('Add Details', { path: 'cards' })
-                  }
+                  onPress={() => open('AddDetails', { path: 'cards/create' })}
                >
                   <Text style={{ color: '#fff' }}>Add Card</Text>
                </Button>
@@ -150,9 +150,7 @@ const SelectPaymentMethod = () => {
                padding: 8,
                justifyContent: 'center',
             }}
-            onPress={() =>
-               navigation.navigate('Add Details', { path: 'cards' })
-            }
+            onPress={() => open('AddDetails', { path: 'cards/create' })}
          >
             <Text style={{ color: '#fff' }}>Add Card</Text>
          </Button>

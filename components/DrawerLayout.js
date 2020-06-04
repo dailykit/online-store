@@ -9,9 +9,15 @@ import ProfileScreen from '../screens/ProfileScreen';
 import EditAddress from '../screens/EditAddress';
 import SelectPaymentMethod from '../screens/SelectPaymentMethod';
 import OrderHistory from '../screens/OrderHistory';
+import AddDetails from '../screens/AddDetails';
 
 const DrawerLayout = () => {
-   const { drawerView, isDrawerOpen, setIsDrawerOpen } = useDrawerContext();
+   const {
+      drawerView,
+      isDrawerOpen,
+      setIsDrawerOpen,
+      params,
+   } = useDrawerContext();
 
    const renderScreen = () => {
       console.log(drawerView);
@@ -24,6 +30,8 @@ const DrawerLayout = () => {
             return <SelectPaymentMethod />;
          case 'OrderHistory':
             return <OrderHistory />;
+         case 'AddDetails':
+            return <AddDetails params={params} />;
          default:
             return <Text>Oops!</Text>;
       }

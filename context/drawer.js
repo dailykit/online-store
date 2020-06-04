@@ -5,9 +5,11 @@ const DrawerContext = React.createContext();
 export const DrawerContextProvider = ({ children }) => {
    const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
    const [drawerView, setDrawerView] = React.useState(undefined);
+   const [params, setParams] = React.useState(undefined);
 
-   const open = screen => {
+   const open = (screen, params) => {
       setDrawerView(screen);
+      if (params) setParams(params);
       setIsDrawerOpen(true);
    };
 
@@ -18,6 +20,7 @@ export const DrawerContextProvider = ({ children }) => {
             setIsDrawerOpen,
             drawerView,
             open,
+            params,
          }}
       >
          {children}
