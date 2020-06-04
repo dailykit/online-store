@@ -39,7 +39,7 @@ export default function NavBar({
 }) {
    const { isAuthenticated, login, logout } = useAuth();
    const { brand } = useAppContext();
-   const { setIsDrawerOpen } = useDrawerContext();
+   const { open } = useDrawerContext();
 
    function renderTitle() {
       if (typeof title === 'string') {
@@ -113,10 +113,7 @@ export default function NavBar({
                >
                   Orders
                </Text>
-               <Text
-                  style={styles.navLinks}
-                  onPress={() => setIsDrawerOpen(true)}
-               >
+               <Text style={styles.navLinks} onPress={() => open('Profile')}>
                   Profile
                </Text>
                <Text

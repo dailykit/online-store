@@ -132,13 +132,13 @@ function HomeStack(props) {
                headerShown: false,
             }}
          />
-         <Stack.Screen
+         {/* <Stack.Screen
             name="ProfileScreen"
             component={ProfileScreen}
             options={{
                headerShown: false,
             }}
-         />
+         /> */}
          <Stack.Screen
             name="OrderHistoryScreen"
             component={OrderHistory}

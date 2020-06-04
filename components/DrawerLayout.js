@@ -4,11 +4,17 @@ import { StyleSheet, Text, View } from 'react-native';
 import { useDrawerContext } from '../context/drawer';
 import { height, width } from '../utils/Scalaing';
 
+// Screens
+import ProfileScreen from '../screens/ProfileScreen';
+
 const DrawerLayout = ({ children }) => {
    const { drawerView, isDrawerOpen, setIsDrawerOpen } = useDrawerContext();
 
    const renderScreen = () => {
+      console.log(drawerView);
       switch (drawerView) {
+         case 'Profile':
+            return <ProfileScreen />;
          default:
             return <Text>Oops!</Text>;
       }
@@ -22,7 +28,9 @@ const DrawerLayout = ({ children }) => {
             setIsDrawerOpen(false);
          }}
       >
-         <View>{renderScreen()}</View>
+         <View style={styles.container}>
+            <View style={styles.component}>{renderScreen()}</View>
+         </View>
       </Modal>
    );
 };
@@ -40,5 +48,15 @@ const styles = StyleSheet.create({
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
       overflow: 'hidden',
+   },
+   container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+   },
+   component: {
+      maxWidth: 768,
+      height: '100%',
+      position: 'relative',
    },
 });
