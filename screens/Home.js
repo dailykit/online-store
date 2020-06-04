@@ -347,20 +347,6 @@ const Home = props => {
                   style={styles.cover_image}
                />
             </View>
-            <View
-               style={{
-                  marginHorizontal: 20,
-                  flexDirection: 'row',
-                  marginVertical: 10,
-                  alignItems: 'center',
-               }}
-            >
-               <Image
-                  style={{ width: 50, height: 50, borderRadius: 25 }}
-                  source={{ uri: brand.logo }}
-               />
-               <Text style={styles.title}>{brand.name}</Text>
-            </View>
             <View style={styles.headerContainer}>
                <SafetyBanner {...props} />
             </View>
@@ -476,8 +462,6 @@ const Home = props => {
 const styles = EStyleSheet.create({
    home: {
       flex: 1,
-      // alignItems: 'center',
-      marginTop: 20,
    },
    img_container: {
       height: height * 0.3,
