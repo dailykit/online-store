@@ -4,50 +4,43 @@ import { Button } from 'native-base';
 import argonTheme from '../constants/Theme';
 
 class ArButton extends React.Component {
-   render() {
-      const {
-         small,
-         shadowless,
-         children,
-         color,
-         style,
-         ...props
-      } = this.props;
+  render() {
+    const { small, shadowless, children, color, style, ...props } = this.props;
 
-      const colorStyle = color && argonTheme.COLORS[color.toUpperCase()];
+    const colorStyle = color && argonTheme.COLORS[color.toUpperCase()];
 
-      const buttonStyles = [
-         small && styles.smallButton,
-         color && { backgroundColor: colorStyle },
-         !shadowless && styles.shadow,
-         { ...style },
-      ];
+    const buttonStyles = [
+      small && styles.smallButton,
+      color && { backgroundColor: colorStyle },
+      !shadowless && styles.shadow,
+      { ...style },
+    ];
 
-      return (
-         <Button
-            style={buttonStyles}
-            shadowless
-            textStyle={{ fontSize: 12, fontWeight: '700' }}
-            {...props}
-         >
-            {children}
-         </Button>
-      );
-   }
+    return (
+      <Button
+        style={buttonStyles}
+        shadowless
+        textStyle={{ fontSize: 12, fontWeight: '700' }}
+        {...props}
+      >
+        {children}
+      </Button>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
-   smallButton: {
-      width: 75,
-      height: 28,
-   },
-   shadow: {
-      shadowColor: 'black',
-      shadowOffset: { width: 0, height: 4 },
-      shadowRadius: 4,
-      shadowOpacity: 0.1,
-      elevation: 2,
-   },
+  smallButton: {
+    width: 75,
+    height: 28,
+  },
+  shadow: {
+    shadowColor: 'black',
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 4,
+    shadowOpacity: 0.1,
+    elevation: 2,
+  },
 });
 
 export default ArButton;

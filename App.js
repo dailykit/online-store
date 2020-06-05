@@ -1,5 +1,5 @@
-import "react-native-get-random-values";
-import React, { Suspense } from "react";
+import 'react-native-get-random-values';
+import React, { Suspense } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -7,38 +7,38 @@ import {
   Platform,
   View,
   Dimensions,
-} from "react-native";
-import { AppLoading } from "expo";
-import { Asset } from "expo-asset";
-import Constants from "expo-constants";
+} from 'react-native';
+import { AppLoading } from 'expo';
+import { Asset } from 'expo-asset';
+import Constants from 'expo-constants';
 
-import * as eva from "@eva-design/eva";
-import { ApplicationProvider } from "@ui-kitten/components";
+import * as eva from '@eva-design/eva';
+import { ApplicationProvider } from '@ui-kitten/components';
 
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer } from '@react-navigation/native';
 
-import * as Font from "expo-font";
-import { Ionicons } from "@expo/vector-icons";
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
 
 // Context Providers
-import { AuthProvider } from "./context/auth";
-import { CartContextProvider } from "./context/cart";
-import { AppContextProvider } from "./context/app";
+import { AuthProvider } from './context/auth';
+import { CartContextProvider } from './context/cart';
+import { AppContextProvider } from './context/app';
 
 // Before rendering any navigation stack
-import { enableScreens } from "react-native-screens";
+import { enableScreens } from 'react-native-screens';
 
-import ErrorBoundary from "./components/ErrorBoundary";
+import ErrorBoundary from './components/ErrorBoundary';
 
 // set up apollo client
-import { HASURA_URL, HASURA_WS } from "react-native-dotenv"; //1
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloClient } from "apollo-client";
-import { split } from "apollo-link";
-import { HttpLink } from "apollo-link-http";
-import { WebSocketLink } from "apollo-link-ws";
-import { getMainDefinition } from "apollo-utilities";
-import { ApolloProvider } from "@apollo/react-hooks";
+import { HASURA_URL, HASURA_WS } from 'react-native-dotenv'; //1
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { ApolloClient } from 'apollo-client';
+import { split } from 'apollo-link';
+import { HttpLink } from 'apollo-link-http';
+import { WebSocketLink } from 'apollo-link-ws';
+import { getMainDefinition } from 'apollo-utilities';
+import { ApolloProvider } from '@apollo/react-hooks';
 
 // Majburi
 
@@ -57,8 +57,8 @@ const link = split(
   ({ query }) => {
     const definition = getMainDefinition(query);
     return (
-      definition.kind === "OperationDefinition" &&
-      definition.operation === "subscription"
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
     );
   },
   wsLink,
@@ -74,13 +74,13 @@ enableScreens();
 
 //auth
 
-import Screens from "./navigation/Screens";
-import { Images, articles, argonTheme } from "./constants";
-import FallBack from "./components/FallBack";
+import Screens from './navigation/Screens';
+import { Images, articles, argonTheme } from './constants';
+import FallBack from './components/FallBack';
 
 //enable axios auth (btoa)
 
-import { decode, encode } from "base-64";
+import { decode, encode } from 'base-64';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -91,19 +91,23 @@ if (!global.atob) {
 }
 
 // setup rem
-import EStyleSheet from "react-native-extended-stylesheet";
-import { width, height } from "./utils/Scalaing";
-import { STORE_SETTINGS } from "./graphql";
+import EStyleSheet from 'react-native-extended-stylesheet';
+import { width, height } from './utils/Scalaing';
+import { STORE_SETTINGS } from './graphql';
 
-const BASE_SIZE = 1
+const BASE_SIZE = 0.7;
 
 EStyleSheet.build({
   $rem: width > 340 ? 16 : 13,
+  $xxxl: `${BASE_SIZE + 1.2}rem`,
+  $xxl: `${BASE_SIZE + 1}rem`,
   $xl: `${BASE_SIZE + 0.8}rem`,
-  $l:  `${BASE_SIZE + 0.6}rem`,
-  $m:  `${BASE_SIZE + 0.4}rem`,
-  $s:  `${BASE_SIZE + 0.2}rem`,
-  $xs:  `${BASE_SIZE}rem`,
+  $l: `${BASE_SIZE + 0.6}rem`,
+  $m: `${BASE_SIZE + 0.4}rem`,
+  $s: `${BASE_SIZE + 0.2}rem`,
+  $xs: `${BASE_SIZE}rem`,
+  $xxs: `${BASE_SIZE - 0.2}rem`,
+  $xxxs: `${BASE_SIZE - 0.4}rem`,
 });
 
 // cache app images
@@ -121,7 +125,7 @@ articles.map((article) => assetImages.push(article.image));
 
 function cacheImages(images) {
   return images.map((image) => {
-    if (typeof image === "string") {
+    if (typeof image === 'string') {
       return Image.prefetch(image);
     } else {
       return Asset.fromModule(image).downloadAsync();
@@ -134,8 +138,8 @@ const App = () => {
 
   const _loadResourcesAsync = async () => {
     await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
       ...Ionicons.font,
     });
     return Promise.all([...cacheImages(assetImages)]);
@@ -168,11 +172,11 @@ const App = () => {
               <View
                 style={{
                   marginTop:
-                    Platform.OS == "android" ? Constants.statusBarHeight : 0,
+                    Platform.OS == 'android' ? Constants.statusBarHeight : 0,
                   flex: 1,
                 }}
               >
-                {Platform.OS == "ios" && <StatusBar barStyle="dark-content" />}
+                {Platform.OS == 'ios' && <StatusBar barStyle='dark-content' />}
                 <ApplicationProvider {...eva} theme={eva.light}>
                   <ApolloProvider client={client}>
                     <AuthProvider>
