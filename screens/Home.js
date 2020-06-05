@@ -1,16 +1,30 @@
-import React, { useEffect, useState, useRef } from 'react';
 import {
-   ScrollView,
-   View,
-   Image,
-   Text,
-   SectionList,
-   TouchableOpacity,
-} from 'react-native';
+   useLazyQuery,
+   useMutation,
+   useSubscription,
+} from '@apollo/react-hooks';
 import { Datepicker, Spinner } from '@ui-kitten/components';
+import * as axios from 'axios';
 import moment from 'moment';
+import React, { useRef, useState } from 'react';
+import {
+   Image,
+   ScrollView,
+   SectionList,
+   Text,
+   TouchableOpacity,
+   View,
+} from 'react-native';
+import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
+import { Header } from '../components';
+import Cart from '../components/Cart';
+import { CategoryBanner } from '../components/CategoryBanner';
+import Products from '../components/Products';
+import { SafetyBanner } from '../components/SafetyBanner';
+import { useAppContext } from '../context/app';
+import { useAuth } from '../context/auth';
+import { useCartContext } from '../context/cart';
 import {
    CREATE_CUSTOMER,
    CUSTOMER,
@@ -18,24 +32,6 @@ import {
    STORE_SETTINGS,
 } from '../graphql';
 import { height, width } from '../utils/Scalaing';
-import Cart from '../components/Cart';
-import { SafetyBanner } from '../components/SafetyBanner';
-import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
-
-import {
-   useLazyQuery,
-   useMutation,
-   useSubscription,
-   useQuery,
-} from '@apollo/react-hooks';
-import { useCartContext } from '../context/cart';
-import * as axios from 'axios';
-import { useAuth } from '../context/auth';
-import { useAppContext } from '../context/app';
-import { Header } from '../components';
-import { Drawer } from '../components/Drawer';
-import Products from '../components/Products';
-import { CategoryBanner } from '../components/CategoryBanner';
 
 const Home = props => {
    const [selectedIndex, setSelectedIndex] = useState(0);

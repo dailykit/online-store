@@ -1,16 +1,14 @@
-import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
 import { useSubscription } from '@apollo/react-hooks';
+import React from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 import {
+   COMBO_PRODUCTS,
+   CUSTOMIZABLE_PRODUCTS,
    INVENTORY_PRODUCTS,
    SIMPLE_RECIPE_PRODUCTS,
-   CUSTOMIZABLE_PRODUCTS,
-   COMBO_PRODUCTS,
 } from '../graphql';
-import { Text } from 'native-base';
-import { Spinner } from '@ui-kitten/components';
-import Card from './Card';
 import { width } from '../utils/Scalaing';
+import Card from './Card';
 
 const Products = ({ category }) => {
    console.log(category, 'rendered');

@@ -1,25 +1,15 @@
-import React, { Component, useState, useEffect } from 'react';
-import {
-   Text,
-   View,
-   StyleSheet,
-   TouchableOpacity,
-   Dimensions,
-} from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
+import { useAppContext } from '../context/app';
+import { useAuth } from '../context/auth';
+import { width } from '../utils/Scalaing';
 import ComboProduct from './ComboProduct';
 import CustomizableProductItem from './CustomizableProductItem';
-import SimpleProductItem from './SimpleProductItem';
-import InventoryProductItem from './InventoryProductItem';
-
-import { useCartContext } from '../context/cart';
-
-import { height, width } from '../utils/Scalaing';
-import { useAppContext } from '../context/app';
 import { Drawer } from './Drawer';
-import { useAuth } from '../context/auth';
+import InventoryProductItem from './InventoryProductItem';
+import SimpleProductItem from './SimpleProductItem';
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [price, setPrice] = useState(0);

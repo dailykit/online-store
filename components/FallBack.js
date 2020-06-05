@@ -1,6 +1,5 @@
-import { View, StyleSheet } from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
 import { Spinner } from '@ui-kitten/components';
+import { StyleSheet, View } from 'react-native';
 
 const fallBackComponent = () => {
    return (

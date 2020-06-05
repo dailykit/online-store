@@ -1,62 +1,60 @@
-import React, { Component, useState } from 'react';
+import { AntDesign } from '@expo/vector-icons';
+import React from 'react';
 import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Dimensions,
-  ScrollView,
-  SafeAreaView,
-  Image,
+   Image,
+   SafeAreaView,
+   ScrollView,
+   Text,
+   TouchableOpacity,
+   View,
 } from 'react-native';
-import { Feather, Ionicons, AntDesign } from '@expo/vector-icons';
-
-import Summary from '../components/Summary';
-import { CartSummary } from '../components/Cart';
-import BillingDetails from '../components/BillingDetails';
-import HeaderBack from '../components/HeaderBack';
-import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
-import { height, width } from '../utils/Scalaing';
 import OrderDetails from '../components/OrderDetails';
+import { useCartContext } from '../context/cart';
+import { height, width } from '../utils/Scalaing';
 
 const OrderPlaced = ({ route, navigation }) => {
-  const { cart } = useCartContext();
+   const { cart } = useCartContext();
 
-  const { orderId } = route.params;
+   const { orderId } = route.params;
 
-  const cartItems = cart?.cartInfo?.products;
+   const cartItems = cart?.cartInfo?.products;
 
-  return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <TouchableOpacity
-        onPress={() => navigation.navigate('Home')}
-        style={styles.header}
-      >
-        <AntDesign name='closecircleo' size={24} color='black' />
-      </TouchableOpacity>
-      <ScrollView style={styles.conatiner}>
-        <View style={styles.image_container}>
-          <Image
-            style={styles.image}
-            source={require('../assets/imgs/check-circle.png')}
-          />
-        </View>
-        <Text style={styles.order_placed_title}>Order Placed!</Text>
-        <Text
-          style={[styles.time_text, { textAlign: 'center', marginBottom: 10 }]}
-        >
-          Your order has been place. Your receipt will shortly be emailed to
-          you.
-        </Text>
-        <Text
-          style={[styles.time_text, { textAlign: 'center', marginBottom: 10 }]}
-        >
-          Order ID: {orderId}
-        </Text>
-        <OrderDetails orderId={orderId} />
-        {/* <View style={styles.title_container}>
+   return (
+      <SafeAreaView style={{ flex: 1 }}>
+         <TouchableOpacity
+            onPress={() => navigation.navigate('Home')}
+            style={styles.header}
+         >
+            <AntDesign name="closecircleo" size={24} color="black" />
+         </TouchableOpacity>
+         <ScrollView style={styles.conatiner}>
+            <View style={styles.image_container}>
+               <Image
+                  style={styles.image}
+                  source={require('../assets/imgs/check-circle.png')}
+               />
+            </View>
+            <Text style={styles.order_placed_title}>Order Placed!</Text>
+            <Text
+               style={[
+                  styles.time_text,
+                  { textAlign: 'center', marginBottom: 10 },
+               ]}
+            >
+               Your order has been place. Your receipt will shortly be emailed
+               to you.
+            </Text>
+            <Text
+               style={[
+                  styles.time_text,
+                  { textAlign: 'center', marginBottom: 10 },
+               ]}
+            >
+               Order ID: {orderId}
+            </Text>
+            <OrderDetails orderId={orderId} />
+            {/* <View style={styles.title_container}>
           <View style={styles.title_container_left}>
             <Text style={styles.deliver_on_text}>Deliver on</Text>
             <Text style={styles.time_text}>Monday, Dec 9</Text>
@@ -101,143 +99,143 @@ const OrderPlaced = ({ route, navigation }) => {
             </Text>
           </TouchableOpacity>
         </View> */}
-      </ScrollView>
-    </SafeAreaView>
-  );
+         </ScrollView>
+      </SafeAreaView>
+   );
 };
 
 const styles = EStyleSheet.create({
-  conatiner: {
-    flex: 1,
-  },
-  header: {
-    height: height * 0.07,
-    padding: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  summary_title_conatiner: {
-    flex: 1,
-    flexDirection: 'row',
-    paddingHorizontal: 30,
-    justifyContent: 'center',
-  },
-  picker_container: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  summary_bottom_conatiner: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  summary_title_conatiner_left: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  summary_title_conatiner_right: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  summary_title_text: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  title_container: {
-    height: height * 0.1,
-    width,
-    flexDirection: 'row',
-    backgroundColor: '#ededed',
-    paddingVertical: 10,
-  },
-  title_container_left: {
-    flex: 1,
-    justifyContent: 'space-between',
-    padding: 5,
-    paddingLeft: 20,
-  },
-  title_container_middle: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-    padding: 5,
-    paddingLeft: 20,
-  },
-  title_container_right: {
-    flex: 1,
-    padding: 5,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    paddingRight: 20,
-    justifyContent: 'flex-end',
-  },
-  deliver_on_text: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: 'rgba(0,0,0,0.6)',
-  },
-  edit: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  time_text: {
-    fontSize: 16,
-    color: 'rgba(0,0,0,0.6)',
-  },
-  edit_text: {
-    fontSize: 16,
-  },
-  send_details_container: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    overflow: 'hidden',
-  },
-  send_email_container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 15,
-    borderWidth: 1,
-    borderColor: '#3fa4fd',
-  },
-  download_recpie_card: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 15,
-    backgroundColor: '#3fa4fd',
-    overflow: 'hidden',
-    borderColor: '#3fa4fd',
-    borderWidth: 1,
-  },
-  download_recpie_card_text: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: '$xxs',
-  },
-  send_email_container_text: {
-    fontWeight: 'bold',
-    fontSize: '$xxs',
-  },
-  image_container: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    height: 50,
-    width: 50,
-  },
-  order_placed_title: {
-    color: '#3fa4fd',
-    textAlign: 'center',
-    fontSize: 27,
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 10,
-  },
+   conatiner: {
+      flex: 1,
+   },
+   header: {
+      height: height * 0.07,
+      padding: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+   },
+   summary_title_conatiner: {
+      flex: 1,
+      flexDirection: 'row',
+      paddingHorizontal: 30,
+      justifyContent: 'center',
+   },
+   picker_container: {
+      flex: 1,
+      paddingHorizontal: 20,
+   },
+   summary_bottom_conatiner: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+   },
+   summary_title_conatiner_left: {
+      flex: 1,
+      justifyContent: 'center',
+   },
+   summary_title_conatiner_right: {
+      flex: 1,
+      justifyContent: 'center',
+   },
+   summary_title_text: {
+      fontSize: 16,
+      fontWeight: 'bold',
+   },
+   title_container: {
+      height: height * 0.1,
+      width,
+      flexDirection: 'row',
+      backgroundColor: '#ededed',
+      paddingVertical: 10,
+   },
+   title_container_left: {
+      flex: 1,
+      justifyContent: 'space-between',
+      padding: 5,
+      paddingLeft: 20,
+   },
+   title_container_middle: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-end',
+      padding: 5,
+      paddingLeft: 20,
+   },
+   title_container_right: {
+      flex: 1,
+      padding: 5,
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      paddingRight: 20,
+      justifyContent: 'flex-end',
+   },
+   deliver_on_text: {
+      fontWeight: 'bold',
+      fontSize: 16,
+      color: 'rgba(0,0,0,0.6)',
+   },
+   edit: {
+      flexDirection: 'row',
+      alignItems: 'center',
+   },
+   time_text: {
+      fontSize: 16,
+      color: 'rgba(0,0,0,0.6)',
+   },
+   edit_text: {
+      fontSize: 16,
+   },
+   send_details_container: {
+      width: '100%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      overflow: 'hidden',
+   },
+   send_email_container: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 15,
+      borderWidth: 1,
+      borderColor: '#3fa4fd',
+   },
+   download_recpie_card: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 15,
+      backgroundColor: '#3fa4fd',
+      overflow: 'hidden',
+      borderColor: '#3fa4fd',
+      borderWidth: 1,
+   },
+   download_recpie_card_text: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: '$xxs',
+   },
+   send_email_container_text: {
+      fontWeight: 'bold',
+      fontSize: '$xxs',
+   },
+   image_container: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+   },
+   image: {
+      height: 50,
+      width: 50,
+   },
+   order_placed_title: {
+      color: '#3fa4fd',
+      textAlign: 'center',
+      fontSize: 27,
+      fontWeight: 'bold',
+      marginTop: 10,
+      marginBottom: 10,
+   },
 });
 
 export default OrderPlaced;

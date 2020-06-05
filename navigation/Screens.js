@@ -1,43 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import {
-   View,
-   Dimensions,
-   AsyncStorage,
-   ActivityIndicator,
-} from 'react-native';
-
-import { createStackNavigator } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-
-// screens
-import Home from '../screens/Home';
-import AddToCart from '../screens/AddToCart';
-import OrderSummary from '../screens/OrderSummary';
-import OrderPlaced from '../screens/OrderPlaced';
-import { SafetyScreen } from '../screens/SafetyScreen';
-import { ProfileScreen } from '../screens/ProfileScreen';
-// drawer
-import CustomDrawerContent from './Menu';
+import { createStackNavigator } from '@react-navigation/stack';
+import { Spinner } from '@ui-kitten/components';
+import React, { lazy } from 'react';
+import { View } from 'react-native';
 
 // Auth Context
 import { useAuth } from '../context/auth';
 
-// header for screens
-import { Header } from '../components';
-import ModalContent from '../components/ModalContent';
-import { Delivery } from '../screens/Delivery';
-import { EditAddress } from '../screens/EditAddress';
-import { SelectPaymentMethod } from '../screens/SelectPaymentMethod';
-import { OrderHistory } from '../screens/OrderHistory';
-import { Text } from 'native-base';
+// screens
+import Home from '../screens/Home';
+const OrderHistory = lazy(() => import('../screens/OrderHistory'));
+const OrderPlaced = lazy(() => import('../screens/OrderPlaced'));
+const OrderSummary = lazy(() => import('../screens/OrderSummary'));
+const PaymentProcessing = lazy(() => import('../screens/PaymentProcessing'));
+const ProfileScreen = lazy(() => import('../screens/ProfileScreen'));
+const SafetyScreen = lazy(() => import('../screens/SafetyScreen'));
+const SelectPaymentMethod = lazy(() =>
+   import('../screens/SelectPaymentMethod')
+);
+const ModalContent = lazy(() => import('../components/ModalContent'));
+const AddDetails = lazy(() => import('../screens/AddDetails'));
+const AddToCart = lazy(() => import('../screens/AddToCart'));
+const Delivery = lazy(() => import('../screens/Delivery'));
+const EditAddress = lazy(() => import('../screens/EditAddress'));
 
-import { height, width } from '../utils/Scalaing';
-import PaymentProcessing from '../screens/PaymentProcessing';
-import AddDetails from '../screens/AddDetails';
-import { Spinner } from '@ui-kitten/components';
-import { useLazyQuery, useQuery } from '@apollo/react-hooks';
-import { STORE_SETTINGS } from '../graphql';
-import { useAppContext } from '../context/app';
+import { width } from '../utils/Scalaing';
+// drawer
+import CustomDrawerContent from './Menu';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -170,7 +159,7 @@ export default function OnboardingStack(props) {
    return (
       <>
          <Stack.Navigator mode="card" headerMode="none">
-            {isInitialized ? (
+            {true ? (
                <Stack.Screen name="App" component={AppStack} />
             ) : (
                <Stack.Screen name="Loader" component={LoaderStack} />

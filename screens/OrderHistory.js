@@ -1,20 +1,19 @@
-import React from 'react';
-import * as moment from 'moment';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import HeaderBack from '../components/HeaderBack';
-import { Accordion } from 'native-base';
-import { Divider, Spinner } from '@ui-kitten/components';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import { ScrollView } from 'react-native';
-import { ORDERS } from '../graphql';
 import { useQuery } from '@apollo/react-hooks';
+import { Divider, Spinner } from '@ui-kitten/components';
+import * as moment from 'moment';
+import { Accordion } from 'native-base';
+import React from 'react';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import EStyleSheet from 'react-native-extended-stylesheet';
+import HeaderBack from '../components/HeaderBack';
 import { useCartContext } from '../context/cart';
+import { ORDERS } from '../graphql';
 
 const dataArray = [
    { title: '3 items', content: 'Lorem ipsum dolor sit amet' },
    { title: 'Bill Details', content: 'Lorem ipsum dolor sit amet' },
 ];
-export const OrderHistory = ({ navigation }) => {
+export default ({ navigation }) => {
    const { customer } = useCartContext();
 
    // Query

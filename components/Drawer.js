@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import Modal from 'modal-enhanced-react-native-web';
+import React from 'react';
+import { StyleSheet } from 'react-native';
 import AddToCart from '../screens/AddToCart';
 import { height, width } from '../utils/Scalaing';
 

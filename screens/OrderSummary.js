@@ -1,27 +1,22 @@
-import React, { Component, useState } from 'react';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
 import {
-   Text,
-   View,
-   StyleSheet,
-   TouchableOpacity,
-   Dimensions,
-   ScrollView,
    SafeAreaView,
+   ScrollView,
+   Text,
+   TouchableOpacity,
+   View,
 } from 'react-native';
-import { Feather, Ionicons } from '@expo/vector-icons';
-
-import { useCartContext } from '../context/cart';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
-import Summary from '../components/Summary';
-import { CartSummary } from '../components/Cart';
 import BillingDetails from '../components/BillingDetails';
-import HeaderBack from '../components/HeaderBack';
+import { CartSummary } from '../components/Cart';
 import {
    DefaultAddressFloater,
    DefaultPaymentFloater,
 } from '../components/DefaultFloater';
-
+import HeaderBack from '../components/HeaderBack';
+import Summary from '../components/Summary';
+import { useCartContext } from '../context/cart';
 import { height, width } from '../utils/Scalaing';
 
 const OrderSummary = ({ navigation, ...restProps }) => {
