@@ -1,11 +1,13 @@
-import { withNavigation } from '@react-navigation/compat';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import argonTheme from '../constants/Theme';
-import { width } from '../utils/Scalaing';
-import Icon from './Icon';
+import { withNavigation } from '@react-navigation/compat';
+import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
 import NavBar from './NavBar';
+import EStyleSheet from 'react-native-extended-stylesheet';
+
+import Icon from './Icon';
+import argonTheme from '../constants/Theme';
+
+import { height, width } from '../utils/Scalaing';
 
 const BasketButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity
@@ -57,7 +59,11 @@ class Header extends React.Component {
 
     const headerStyles = [
       transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null,
-      { height: 64 },
+      {
+        height: 64,
+        width: width > 1280 ? 1280 : width,
+        marginHorizontal: 'auto',
+      },
     ];
 
     const navbarStyles = [
@@ -100,14 +106,14 @@ class Header extends React.Component {
   }
 }
 
-const styles = EStyleSheet.create({
+const styles = StyleSheet.create({
   button: {
     padding: 12,
     position: 'relative',
   },
   title: {
     width: '100%',
-    fontSize: '$m',
+    fontSize: 16,
     fontWeight: 'bold',
   },
   navbar: {

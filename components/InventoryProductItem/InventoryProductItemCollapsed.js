@@ -10,7 +10,6 @@ const InventoryProductCollapsed = ({
   setProductOptionId,
   navigation,
 }) => {
-  console.log('THISHISH', inventoryProduct);
   const [servingIndex, setServingIndex] = useState(0);
   if (!inventoryProduct) {
     return <Text>Bad Data</Text>;

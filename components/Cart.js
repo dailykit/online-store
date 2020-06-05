@@ -1,19 +1,23 @@
-import { useMutation } from '@apollo/react-hooks';
-import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Platform,
-  StyleSheet,
   Text,
-  ToastAndroid,
-  TouchableOpacity,
   View,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  ToastAndroid,
+  Platform,
 } from 'react-native';
-import { useAppContext } from '../context/app';
+import { Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
-import { CREATE_CART, UPDATE_CART } from '../graphql/mutations';
 import { uuid } from '../utils';
+import { useMutation } from '@apollo/react-hooks';
+import EStyleSheet, { child } from 'react-native-extended-stylesheet';
+import { CREATE_CART, UPDATE_CART } from '../graphql/mutations';
+
 import { height, width } from '../utils/Scalaing';
+import { useAppContext } from '../context/app';
+import { useDrawerContext } from '../context/drawer';
 
 const Cart = ({
   navigation,
@@ -27,6 +31,7 @@ const Cart = ({
 }) => {
   const { cart, customerDetails, customer } = useCartContext();
   const { visual } = useAppContext();
+  const { open } = useDrawerContext();
 
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
@@ -133,7 +138,7 @@ const Cart = ({
         }
         if (text === 'Checkout') navigation.navigate('OrderSummary');
       } else {
-        navigation.navigate('Add Details', { path: 'profile' });
+        open('AddDetails', { path: 'profile/create' });
       }
       setIsModalVisible(false);
     } catch (error) {
@@ -255,17 +260,18 @@ export const ComboProductItemProceed = ({
 const styles = StyleSheet.create({
   container: {
     height: height * 0.08,
-    width,
+    width: width > 1280 ? 1280 : width,
     backgroundColor: '#3fa4ff',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     flexDirection: 'row',
+    marginHorizontal: 'auto',
   },
   text: {
     color: 'white',
-    fontSize: '$s',
+    fontSize: 16,
   },
   container_left: {
     flex: 3,

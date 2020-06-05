@@ -1,7 +1,7 @@
 import React from 'react';
 import Keycloak from 'keycloak-js';
 
-// No. of times this file had to be editied(cuz this package is garbage): 5
+// No. of times this file had to be editied(cuz this package is garbage): 8
 import { CLIENTID } from 'react-native-dotenv';
 
 const keycloak = new Keycloak({

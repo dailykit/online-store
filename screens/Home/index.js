@@ -19,6 +19,7 @@ import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
 import { Header } from '../../components';
 import Cart from '../../components/Cart';
 import { CategoryBanner } from '../../components/CategoryBanner';
+import DrawerLayout from '../../components/DrawerLayout';
 import Products from '../../components/Products';
 import { SafetyBanner } from '../../components/SafetyBanner';
 import { useAppContext } from '../../context/app';
@@ -32,6 +33,8 @@ import {
 } from '../../graphql';
 import { height, width } from '../../utils/Scalaing';
 import { styles } from './styles';
+
+// ..
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -137,7 +140,6 @@ const Home = (props) => {
       const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
         input: date,
       });
-      console.log(response.data);
       setData(response.data);
       setLoading(false);
     } catch (err) {
@@ -163,19 +165,12 @@ const Home = (props) => {
     }
   }, [user]);
 
-  React.useEffect(() => {
-    if (data) {
-      console.log(data);
-    }
-  }, [data]);
-
   // Query
   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
     variables: {
       keycloakId: user.sub || user.userid,
     },
     onCompleted: (data) => {
-      console.log('platform -> data', data);
       if (data.platform_customerByClients?.length) {
         setCustomerDetails(data.platform_customerByClients[0].customer);
       } else {
@@ -248,6 +243,7 @@ const Home = (props) => {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
+          backgroundColor: '#fff',
         }}
       >
         <Spinner size='large' />
@@ -256,7 +252,7 @@ const Home = (props) => {
   }
   if (availability && !isStoreOpen())
     return (
-      <View>
+      <View style={styles.reallyBigContainer}>
         <ScrollView>
           <View>
             <Header title='Home' search options navigation={props.navigation} />
@@ -329,7 +325,10 @@ const Home = (props) => {
         options
         navigation={props.navigation}
       />
-      <ScrollView ref={scrollViewRef} style={styles.home}>
+      <ScrollView
+        ref={scrollViewRef}
+        style={[styles.home, styles.reallyBigContainer]}
+      >
         {/* <Tabs /> */}
         <View style={styles.img_container}>
           <Image
@@ -339,75 +338,131 @@ const Home = (props) => {
             style={styles.cover_image}
           />
         </View>
+        <View style={styles.headerContainer}>
+          <SafetyBanner {...props} />
+        </View>
+
+        <View style={styles.picker_container}>
+          <Text style={styles.dateTitle}>Order For</Text>
+          <Datepicker
+            date={calendarDate}
+            style={{
+              width: width * 0.5,
+            }}
+            onSelect={(_date) => {
+              setcalendarDate(_date);
+              fetchData({
+                year: moment(_date).year(),
+                month: moment(_date).month(),
+                day: moment(_date).date(),
+              });
+            }}
+          />
+        </View>
         <View style={styles.flexContainerMiddle}>
           <View style={styles.cardContainer}>
             <View style={styles.picker_container}>
-              <Text style={styles.dateTitle}>Order For</Text>
-              <Datepicker
-                date={calendarDate}
-                style={{
-                  width: width * 0.5,
-                }}
-                onSelect={(_date) => {
-                  setcalendarDate(_date);
-                  fetchData({
-                    year: moment(_date).year(),
-                    month: moment(_date).month(),
-                    day: moment(_date).date(),
-                  });
-                }}
-              />
-            </View>
-            <View style={styles.picker_container}>
-              <ScrollView
-                horizontal
-                style={{
-                  flex: 1,
-                }}
-              >
-                {pickerData.map((title, key) => (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setSelectedIndex(key);
-                      scrollViewRef.current.scrollTo({
-                        x: 0,
-                        y: height * 0.8 - 20,
-                        animated: true,
-                      });
-                      sectionListRef.current.scrollToLocation({
-                        animated: true,
-                        itemIndex: 0,
-                        sectionIndex: key,
-                        viewOffset: 60,
-                      });
-                    }}
+              {width > 768 && (
+                <View
+                  style={{
+                    marginHorizontal: 'auto',
+                  }}
+                >
+                  <ScrollView
+                    horizontal
                     style={{
-                      paddingHorizontal: 10,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      height: 80,
-                      flexDirection: 'row',
-                      backgroundColor:
-                        selectedIndex == key ? '#3fa4ff' : '#e3e3e3',
-                      paddingVertical: 30,
-                      marginLeft: 20,
-                      width: width * 0.15,
+                      flex: 1,
                     }}
                   >
-                    <Text
-                      style={[
-                        {
-                          color: selectedIndex == key ? '#fff' : 'black',
-                          fontWeight: selectedIndex == key ? 'bold' : 'normal',
-                        },
-                        styles.optionStyle,
-                      ]}
+                    {pickerData.map((title, key) => (
+                      <TouchableOpacity
+                        onPress={() => {
+                          setSelectedIndex(key);
+                          scrollViewRef.current.scrollTo({
+                            x: 0,
+                            y: height * 0.8 - 20,
+                            animated: true,
+                          });
+                          sectionListRef.current.scrollToLocation({
+                            animated: true,
+                            itemIndex: 0,
+                            sectionIndex: key,
+                            viewOffset: 60,
+                          });
+                        }}
+                        style={{
+                          paddingHorizontal: 10,
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          height: 80,
+                          flexDirection: 'row',
+                          backgroundColor:
+                            selectedIndex == key ? '#3fa4ff' : '#e3e3e3',
+                          paddingVertical: 30,
+                          marginLeft: 20,
+                          width: width * 0.15,
+                        }}
+                      >
+                        <Text
+                          style={[
+                            {
+                              color: selectedIndex == key ? '#fff' : 'black',
+                              fontWeight:
+                                selectedIndex == key ? 'bold' : 'normal',
+                            },
+                            styles.optionStyle,
+                          ]}
+                        >
+                          {title.toUpperCase()}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+              {width <= 768 && (
+                <ScrollView
+                  horizontal
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  {pickerData.map((title, key) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        setSelectedIndex(key);
+                        sectionListRef.current.scrollToLocation({
+                          animated: true,
+                          itemIndex: 0,
+                          sectionIndex: key,
+                          viewOffset: 60,
+                        });
+                      }}
+                      style={{
+                        paddingHorizontal: 10,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: 80,
+                        flexDirection: 'row',
+                      }}
                     >
-                      {title.toUpperCase()}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
+                      <Text
+                        style={{
+                          color: selectedIndex == key ? '#3fa4ff' : 'grey',
+                          borderBottomColor:
+                            selectedIndex == key ? '#3fa4ff' : 'grey',
+                          paddingBottom: 4,
+                          borderBottomWidth: selectedIndex == key ? 3 : 0,
+                          fontWeight: selectedIndex == key ? 'bold' : 'normal',
+                          marginTop: 10,
+                        }}
+                      >
+                        {title}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              )}
             </View>
             <SectionList
               ref={sectionListRef}
@@ -426,17 +481,14 @@ const Home = (props) => {
               )}
             />
           </View>
-          {/* <View style={styles.headerContainer}>
-            <SafetyBanner {...props} />
-          </View> */}
         </View>
-
         <Cart
           label={pickerData[selectedIndex.row]}
           to='OrderSummary'
           {...props}
           text='Checkout'
         />
+        <DrawerLayout />
       </ScrollView>
     </>
   );

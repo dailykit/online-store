@@ -10,6 +10,11 @@ export const styles = EStyleSheet.create({
     height: height * 0.3,
     width,
   },
+  reallyBigContainer: {
+    width: width > 1280 ? 1280 : width,
+    marginHorizontal: 'auto',
+    backgroundColor: '#fff',
+  },
   cover_image: {
     flex: 1,
     resizeMode: 'cover',

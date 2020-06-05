@@ -78,39 +78,39 @@ export const CategoryBanner = ({ category }) => {
         { backgroundColor: categoryType?.backgroundColor },
       ]}
     >
-      <View style={[styles.categoryTextContainer]}>
-        <Text style={[styles.categoryText, { color: categoryType?.color }]}>
-          {category}
-        </Text>
-      </View>
-      <View style={styles.imageContainer}>
-        <Image style={[styles.image]} source={categoryType?.uri} />
-      </View>
+      <Text style={[styles.categoryText, { color: categoryType?.color }]}>
+        {category}
+      </Text>
+      {/* <View style={[styles.categoryTextContainer]}>
+         </View> */}
+      {/* <View style={styles.imageContainer}>
+            <Image style={[styles.image]} source={categoryType?.uri} />
+         </View> */}
     </View>
   );
 };
 
 const styles = EStyleSheet.create({
   conatiner: {
-    width,
-    height: width > height ? height * 0.12 : height * 0.1,
+    width: width > 1280 ? 1285 : width,
+    height: 64,
+    marginLeft: '2rem',
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   categoryTextContainer: {
-    width: width > height ? width * 0.9 : width * 0.7,
-    paddingLeft: '2rem',
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
   },
   categoryText: {
-    fontSize: '$l',
+    fontSize: '$xl',
     fontWeight: 'bold',
   },
   imageContainer: {},
   image: {
-    height: width > height ? height * 0.12 : height * 0.1,
-    width: width > height ? width * 0.1 : width * 0.3,
+    height: 64,
     resizeMode: 'cover',
   },
 });

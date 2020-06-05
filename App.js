@@ -24,6 +24,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AuthProvider } from './context/auth';
 import { CartContextProvider } from './context/cart';
 import { AppContextProvider } from './context/app';
+import { DrawerContextProvider } from './context/drawer';
 
 // Before rendering any navigation stack
 import { enableScreens } from 'react-native-screens';
@@ -168,12 +169,13 @@ const App = () => {
       <Suspense fallback={FallBack}>
         <ErrorBoundary>
           <NavigationContainer>
-            <SafeAreaView style={{ flex: 1 }}>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
               <View
                 style={{
                   marginTop:
                     Platform.OS == 'android' ? Constants.statusBarHeight : 0,
                   flex: 1,
+                  backgroundColor: '#fff',
                 }}
               >
                 {Platform.OS == 'ios' && <StatusBar barStyle='dark-content' />}
@@ -181,9 +183,11 @@ const App = () => {
                   <ApolloProvider client={client}>
                     <AuthProvider>
                       <AppContextProvider>
-                        <CartContextProvider>
-                          <Screens />
-                        </CartContextProvider>
+                        <DrawerContextProvider>
+                          <CartContextProvider>
+                            <Screens />
+                          </CartContextProvider>
+                        </DrawerContextProvider>
                       </AppContextProvider>
                     </AuthProvider>
                   </ApolloProvider>

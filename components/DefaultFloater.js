@@ -3,10 +3,13 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { useCartContext } from '../context/cart';
-import { height } from '../utils/Scalaing';
+
+import { height, width } from '../utils/Scalaing';
+import { useDrawerContext } from '../context/drawer';
 
 export const DefaultPaymentFloater = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
+  const { open } = useDrawerContext();
   const [card, setCard] = React.useState(undefined);
 
   React.useEffect(() => {
@@ -22,9 +25,7 @@ export const DefaultPaymentFloater = ({ navigation }) => {
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        navigation.navigate('SelectPaymentMethodScreen');
-      }}
+      onPress={() => open('SelectPaymentMethod')}
       style={styles.conatiner}
     >
       <View style={styles.cardNumberTextContainer}>
@@ -50,12 +51,11 @@ export const DefaultPaymentFloater = ({ navigation }) => {
 
 export const DefaultAddressFloater = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
+  const { open } = useDrawerContext();
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        navigation.navigate('EditAddressScreen');
-      }}
+      onPress={() => open('EditAddress')}
       style={styles.conatiner}
     >
       <View style={styles.cardNumberTextContainer}>

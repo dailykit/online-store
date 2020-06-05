@@ -3,8 +3,14 @@ import { AntDesign } from '@expo/vector-icons';
 import { Spinner } from '@ui-kitten/components';
 import { Tab, Tabs } from 'native-base';
 import React from 'react';
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import cooking from '../assets/imgs/cooking.png';
 import { SIMPLE_RECIPE } from '../graphql';
 import { height, width } from '../utils/Scalaing';
@@ -133,7 +139,7 @@ const ModalContent = ({ route, navigation }) => {
 
 export default ModalContent;
 
-const styles = EStyleSheet.create({
+const styles = StyleSheet.create({
   center: {
     flex: 1,
     justifyContent: 'center',
@@ -141,11 +147,11 @@ const styles = EStyleSheet.create({
   },
   container: { flex: 1 },
   item_title: {
-    fontSize: '$m',
+    fontSize: 16,
   },
   item_chef: {
     color: 'gray',
-    fontSize: '$xxs',
+    fontSize: 12,
   },
   item_category: {
     backgroundColor: '#56b783',
@@ -155,7 +161,7 @@ const styles = EStyleSheet.create({
     marginTop: 5,
     paddingVertical: 2,
     borderRadius: 2,
-    fontSize: '$xxs',
+    fontSize: 12,
   },
   title_container: {
     height: 100,
@@ -173,7 +179,7 @@ const styles = EStyleSheet.create({
   },
   image_cover_container: {
     height: height * 0.7,
-    width,
+    width: width > 1280 ? 1280 : width,
   },
   image_cover: {
     flex: 1,
@@ -216,14 +222,14 @@ const styles = EStyleSheet.create({
   },
   procedureTitle: {
     fontWeight: 500,
-    fontSize: '$m',
+    fontSize: 18,
   },
   step: {
     marginHorizontal: 8,
   },
   stepTitle: {
     fontWeight: 500,
-    fontSize: '$m',
+    fontSize: 14,
   },
   stepDesc: {
     marginLeft: 14,

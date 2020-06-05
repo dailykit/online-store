@@ -11,7 +11,6 @@ import { width } from '../utils/Scalaing';
 import Card from './Card';
 
 const Products = ({ category, navigation }) => {
-  console.log(category, 'rendered');
   const [products, setProducts] = React.useState([]);
 
   // Subscriptions
@@ -22,7 +21,6 @@ const Products = ({ category, navigation }) => {
         ids: category.inventoryProducts,
       },
       onSubscriptionData: (data) => {
-        console.log(data.subscriptionData.data.inventoryProducts);
         setProducts([
           ...products,
           ...data.subscriptionData.data.inventoryProducts,
@@ -38,7 +36,6 @@ const Products = ({ category, navigation }) => {
         ids: category.simpleRecipeProducts,
       },
       onSubscriptionData: (data) => {
-        console.log(data.subscriptionData.data.simpleRecipeProducts);
         setProducts([
           ...products,
           ...data.subscriptionData.data.simpleRecipeProducts,
@@ -54,7 +51,6 @@ const Products = ({ category, navigation }) => {
         ids: category.customizableProducts,
       },
       onSubscriptionData: (data) => {
-        console.log(data.subscriptionData.data.customizableProducts);
         setProducts([
           ...products,
           ...data.subscriptionData.data.customizableProducts,
@@ -68,7 +64,6 @@ const Products = ({ category, navigation }) => {
       ids: category.comboProducts,
     },
     onSubscriptionData: (data) => {
-      console.log(data.subscriptionData.data.comboProducts);
       setProducts([...products, ...data.subscriptionData.data.comboProducts]);
     },
   });

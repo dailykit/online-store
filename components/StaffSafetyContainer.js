@@ -3,7 +3,6 @@ import { Image, StyleSheet, Text, View } from 'react-native';
 import liquidSoap from '../assets/imgs/liquid-soap.png';
 import patient from '../assets/imgs/patient.png';
 import thermometer from '../assets/imgs/thermometer.png';
-import { width } from '../utils/Scalaing';
 
 export const StaffSafetyContainer = ({ checkup }) => {
   return (
@@ -44,11 +43,10 @@ export const StaffSafetyContainer = ({ checkup }) => {
 
 const styles = StyleSheet.create({
   conatiner: {
-    width: width * 0.9,
+    width: '100%',
     backgroundColor: '#f3f3f3',
     padding: 20,
     marginTop: 10,
-    borderRadius: 20,
   },
   row: {
     flexDirection: 'row',
