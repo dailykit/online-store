@@ -1,11 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
+import React, { lazy } from 'react';
 import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import BillingDetails from '../../components/BillingDetails';
 import { CartSummary } from '../../components/Cart';
 import { DefaultAddressFloater, DefaultPaymentFloater } from '../../components/DefaultFloater';
 import HeaderBack from '../../components/HeaderBack';
-import Summary from '../../components/Summary';
+
+const Summary = lazy(()=>import('../../components/Summary'));
 import { useCartContext } from '../../context/cart';
 import { height } from '../../utils/Scalaing';
 import { styles } from './styles';

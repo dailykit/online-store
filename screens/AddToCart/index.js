@@ -1,11 +1,11 @@
 import { AntDesign } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useState, lazy } from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import Cart, { ComboProductItemProceed } from '../../components/Cart';
-import ComboProduct from '../../components/ComboProduct';
-import CustomizableProductItem from '../../components/CustomizableProductItem';
-import InventoryProductItem from '../../components/InventoryProductItem';
-import SimpleProductItem from '../../components/SimpleProductItem';
+const ComboProduct = lazy(()=> import('../../components/ComboProduct'))
+const CustomizableProductItem = lazy(()=> import('../../components/CustomizableProductItem'))
+const InventoryProductItem = lazy(()=> import('../../components/InventoryProductItem'))
+const SimpleProductItem = lazy(()=> import('../../components/SimpleProductItem'))
 import { height } from '../../utils/Scalaing';
 import {styles} from './styles'
 

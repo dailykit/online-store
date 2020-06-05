@@ -7,7 +7,7 @@ import { View } from 'react-native';
 // Auth Context
 import { useAuth } from '../context/auth';
 
-// screens
+// screens : lazy loaded
 import Home from '../screens/Home';
 const OrderHistory = lazy(() => import('../screens/OrderHistory'));
 const OrderPlaced = lazy(() => import('../screens/OrderPlaced'));

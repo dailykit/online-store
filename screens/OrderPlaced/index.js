@@ -1,7 +1,7 @@
 import { AntDesign } from '@expo/vector-icons';
-import React from 'react';
+import React, {lazy} from 'react';
 import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import OrderDetails from '../../components/OrderDetails';
+const OrderDetails =  lazy(()=>import('../../components/OrderDetails'))
 import { useCartContext } from '../../context/cart';
 import { styles } from './styles';
 
