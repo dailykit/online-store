@@ -1,18 +1,10 @@
-import React, { Component, useState } from 'react';
-import {
-   Text,
-   View,
-   StyleSheet,
-   TouchableOpacity,
-   Dimensions,
-} from 'react-native';
+import { useMutation } from '@apollo/react-hooks';
+import React, { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useAppContext } from '../context/app';
 import { useCartContext } from '../context/cart';
 import { UPDATE_CART } from '../graphql/mutations';
-import { useMutation } from '@apollo/react-hooks';
-import EStyleSheet from 'react-native-extended-stylesheet';
-
-import { height, width } from '../utils/Scalaing';
-import { useAppContext } from '../context/app';
+import { height } from '../utils/Scalaing';
 
 const Summary = ({ useQuantity, item }) => {
    const [quantity, setquantity] = useState(1);

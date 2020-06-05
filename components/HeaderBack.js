@@ -1,15 +1,8 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-  StyleSheet,
-} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-
-import { height, width } from '../utils/Scalaing';
+import { height } from '../utils/Scalaing';
 
 const HeaderBack = ({ title, navigation }) => {
   return (
@@ -19,7 +12,7 @@ const HeaderBack = ({ title, navigation }) => {
     </TouchableOpacity>
   );
 };
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
   header: {
     height: height * 0.07,
     padding: 10,
@@ -27,7 +20,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header_text: {
-    fontSize: 16,
+    fontSize: '$m',
   },
 });
 

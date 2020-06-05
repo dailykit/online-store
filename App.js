@@ -1,12 +1,12 @@
 import 'react-native-get-random-values';
 import React, { Suspense } from 'react';
 import {
-   Image,
-   SafeAreaView,
-   StatusBar,
-   Platform,
-   View,
-   Dimensions,
+  Image,
+  SafeAreaView,
+  StatusBar,
+  Platform,
+  View,
+  Dimensions,
 } from 'react-native';
 import { AppLoading } from 'expo';
 import { Asset } from 'expo-asset';
@@ -24,6 +24,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AuthProvider } from './context/auth';
 import { CartContextProvider } from './context/cart';
 import { AppContextProvider } from './context/app';
+import { DrawerContextProvider } from './context/drawer';
 
 // Before rendering any navigation stack
 import { enableScreens } from 'react-native-screens';
@@ -43,31 +44,31 @@ import { ApolloProvider } from '@apollo/react-hooks';
 // Majburi
 
 const httpLink = new HttpLink({
-   uri: HASURA_URL,
+  uri: HASURA_URL,
 });
 
 const wsLink = new WebSocketLink({
-   uri: HASURA_WS,
-   options: {
-      reconnect: true,
-   },
+  uri: HASURA_WS,
+  options: {
+    reconnect: true,
+  },
 });
 
 const link = split(
-   ({ query }) => {
-      const definition = getMainDefinition(query);
-      return (
-         definition.kind === 'OperationDefinition' &&
-         definition.operation === 'subscription'
-      );
-   },
-   wsLink,
-   httpLink
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === 'OperationDefinition' &&
+      definition.operation === 'subscription'
+    );
+  },
+  wsLink,
+  httpLink
 );
 
 const client = new ApolloClient({
-   link,
-   cache: new InMemoryCache(),
+  link,
+  cache: new InMemoryCache(),
 });
 
 enableScreens();
@@ -83,120 +84,121 @@ import FallBack from './components/FallBack';
 import { decode, encode } from 'base-64';
 
 if (!global.btoa) {
-   global.btoa = encode;
+  global.btoa = encode;
 }
 
 if (!global.atob) {
-   global.atob = decode;
+  global.atob = decode;
 }
 
 // setup rem
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { width, height } from './utils/Scalaing';
 import { STORE_SETTINGS } from './graphql';
-import { DrawerContextProvider } from './context/drawer';
+
+const BASE_SIZE = 0.7;
+
 EStyleSheet.build({
-   $rem: width > 340 ? 16 : 13,
-   $xl: '1.2rem',
-   $l: '1.15rem',
-   $m: '1.05rem',
-   $s: '0.95rem',
-   $xs: '0.85rem',
-   $xxs: '0.75rem',
-   $xxxs: '0.65rem',
+  $rem: width > 340 ? 16 : 13,
+  $xxxl: `${BASE_SIZE + 1.2}rem`,
+  $xxl: `${BASE_SIZE + 1}rem`,
+  $xl: `${BASE_SIZE + 0.8}rem`,
+  $l: `${BASE_SIZE + 0.6}rem`,
+  $m: `${BASE_SIZE + 0.4}rem`,
+  $s: `${BASE_SIZE + 0.2}rem`,
+  $xs: `${BASE_SIZE}rem`,
+  $xxs: `${BASE_SIZE - 0.2}rem`,
+  $xxxs: `${BASE_SIZE - 0.4}rem`,
 });
 
 // cache app images
 const assetImages = [
-   Images.Onboarding,
-   Images.LogoOnboarding,
-   Images.Logo,
-   Images.ArgonLogo,
-   Images.iOSLogo,
-   Images.androidLogo,
+  Images.Onboarding,
+  Images.LogoOnboarding,
+  Images.Logo,
+  Images.ArgonLogo,
+  Images.iOSLogo,
+  Images.androidLogo,
 ];
 
 // cache product images
-articles.map(article => assetImages.push(article.image));
+articles.map((article) => assetImages.push(article.image));
 
 function cacheImages(images) {
-   return images.map(image => {
-      if (typeof image === 'string') {
-         return Image.prefetch(image);
-      } else {
-         return Asset.fromModule(image).downloadAsync();
-      }
-   });
+  return images.map((image) => {
+    if (typeof image === 'string') {
+      return Image.prefetch(image);
+    } else {
+      return Asset.fromModule(image).downloadAsync();
+    }
+  });
 }
 
 const App = () => {
-   const [isLoadingComplete, setIsLoadingComplete] = React.useState(false);
+  const [isLoadingComplete, setIsLoadingComplete] = React.useState(false);
 
-   const _loadResourcesAsync = async () => {
-      await Font.loadAsync({
-         Roboto: require('native-base/Fonts/Roboto.ttf'),
-         Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
-         ...Ionicons.font,
-      });
-      return Promise.all([...cacheImages(assetImages)]);
-   };
+  const _loadResourcesAsync = async () => {
+    await Font.loadAsync({
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+      ...Ionicons.font,
+    });
+    return Promise.all([...cacheImages(assetImages)]);
+  };
 
-   const _handleLoadingError = error => {
-      // In this case, you might want to report the error to your error
-      // reporting service, for example Sentry
-      console.warn(error);
-   };
+  const _handleLoadingError = (error) => {
+    // In this case, you might want to report the error to your error
+    // reporting service, for example Sentry
+    console.warn(error);
+  };
 
-   const _handleFinishLoading = () => {
-      setIsLoadingComplete(true);
-   };
+  const _handleFinishLoading = () => {
+    setIsLoadingComplete(true);
+  };
 
-   if (!isLoadingComplete) {
-      return (
-         <AppLoading
-            startAsync={_loadResourcesAsync}
-            onError={_handleLoadingError}
-            onFinish={_handleFinishLoading}
-         />
-      );
-   } else {
-      return (
-         <Suspense fallback={FallBack}>
-            <ErrorBoundary>
-               <NavigationContainer>
-                  <SafeAreaView style={{ flex: 1 }}>
-                     <View
-                        style={{
-                           marginTop:
-                              Platform.OS == 'android'
-                                 ? Constants.statusBarHeight
-                                 : 0,
-                           flex: 1,
-                        }}
-                     >
-                        {Platform.OS == 'ios' && (
-                           <StatusBar barStyle="dark-content" />
-                        )}
-                        <ApplicationProvider {...eva} theme={eva.light}>
-                           <ApolloProvider client={client}>
-                              <AuthProvider>
-                                 <AppContextProvider>
-                                    <DrawerContextProvider>
-                                       <CartContextProvider>
-                                          <Screens />
-                                       </CartContextProvider>
-                                    </DrawerContextProvider>
-                                 </AppContextProvider>
-                              </AuthProvider>
-                           </ApolloProvider>
-                        </ApplicationProvider>
-                     </View>
-                  </SafeAreaView>
-               </NavigationContainer>
-            </ErrorBoundary>
-         </Suspense>
-      );
-   }
+  if (!isLoadingComplete) {
+    return (
+      <AppLoading
+        startAsync={_loadResourcesAsync}
+        onError={_handleLoadingError}
+        onFinish={_handleFinishLoading}
+      />
+    );
+  } else {
+    return (
+      <Suspense fallback={FallBack}>
+        <ErrorBoundary>
+          <NavigationContainer>
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+              <View
+                style={{
+                  marginTop:
+                    Platform.OS == 'android' ? Constants.statusBarHeight : 0,
+                  flex: 1,
+                  backgroundColor: '#fff',
+                }}
+              >
+                {Platform.OS == 'ios' && <StatusBar barStyle='dark-content' />}
+                <ApplicationProvider {...eva} theme={eva.light}>
+                  <ApolloProvider client={client}>
+                    <AuthProvider>
+                      <AppContextProvider>
+                        <DrawerContextProvider>
+                          <CartContextProvider>
+                            <Screens />
+                          </CartContextProvider>
+                        </DrawerContextProvider>
+                      </AppContextProvider>
+                    </AuthProvider>
+                  </ApolloProvider>
+                </ApplicationProvider>
+              </View>
+            </SafeAreaView>
+          </NavigationContainer>
+        </ErrorBoundary>
+      </Suspense>
+    );
+  }
 };
 
 export default App;

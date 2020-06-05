@@ -1,19 +1,11 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import {
-  View,
-  ImageBackground,
-  Image,
-  Text,
-  StyleSheet,
-  Platform,
-} from 'react-native';
-
+import { Image, ImageBackground, Platform, Text, View } from 'react-native';
 import defaultIcons from './Icons';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 const BASE_SIZE = { width: 300, height: 190 };
 
-const s = StyleSheet.create({
+const s = EStyleSheet.create({
   cardContainer: {},
   cardFace: {},
   icon: {
@@ -36,13 +28,13 @@ const s = StyleSheet.create({
     color: 'rgba(255, 255, 255, 1)',
   },
   number: {
-    fontSize: 21,
+    fontSize: '$l',
     position: 'absolute',
     top: 95,
     left: 28,
   },
   name: {
-    fontSize: 16,
+    fontSize: '$s',
     position: 'absolute',
     bottom: 20,
     left: 25,
@@ -55,19 +47,19 @@ const s = StyleSheet.create({
     left: 218,
   },
   expiry: {
-    fontSize: 16,
+    fontSize: '$m',
     position: 'absolute',
     bottom: 20,
     left: 220,
   },
   amexCVC: {
-    fontSize: 16,
+    fontSize: '$m',
     position: 'absolute',
     top: 73,
     right: 30,
   },
   cvc: {
-    fontSize: 16,
+    fontSize: '$m',
     position: 'absolute',
     top: 80,
     right: 30,

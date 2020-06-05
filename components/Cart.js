@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import {
-   Text,
-   View,
-   StyleSheet,
-   Dimensions,
-   TouchableOpacity,
-   ToastAndroid,
-   Platform,
+  Text,
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  ToastAndroid,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
@@ -20,284 +20,272 @@ import { useAppContext } from '../context/app';
 import { useDrawerContext } from '../context/drawer';
 
 const Cart = ({
-   navigation,
-   text,
-   cartItem,
-   to,
-   tunnelItem,
-   type,
-   comboProductItems,
-   setIsModalVisible,
+  navigation,
+  text,
+  cartItem,
+  to,
+  tunnelItem,
+  type,
+  comboProductItems,
+  setIsModalVisible,
 }) => {
-   const { cart, customerDetails, customer } = useCartContext();
-   const { visual } = useAppContext();
-   const { open } = useDrawerContext();
+  const { cart, customerDetails, customer } = useCartContext();
+  const { visual } = useAppContext();
+  const { open } = useDrawerContext();
 
-   const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
-         console.log('Product added!');
-      },
-      onError: error => {
-         console.log(error);
-      },
-   });
-   const [createCart] = useMutation(CREATE_CART, {
-      onCompleted: () => {
-         console.log('Cart created!');
-      },
-      onError: error => {
-         console.log(error);
-      },
-   });
+  const [updateCart] = useMutation(UPDATE_CART, {
+    onCompleted: () => {
+      console.log('Product added!');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  const [createCart] = useMutation(CREATE_CART, {
+    onCompleted: () => {
+      console.log('Cart created!');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
-   const handleAddToCart = () => {
-      console.log('CART Item:', cartItem);
-      try {
-         if (
-            customerDetails?.firstName &&
-            customerDetails?.lastName &&
-            customerDetails?.email &&
-            customerDetails?.phoneNumber
-         ) {
-            let products = cart?.cartInfo?.products || [];
-            let total = parseFloat(cart?.cartInfo?.total) || 0;
-            if (tunnelItem) {
-               if (type == 'comboProducts') {
-                  let comboItemPrice = 0;
-                  comboProductItems.forEach(product => {
-                     comboItemPrice =
-                        comboItemPrice + parseFloat(product.product.price);
-                  });
-                  total = total + comboItemPrice;
-                  products.push({
-                     cartItemId: uuid(),
-                     products: comboProductItems,
-                     type,
-                     price: comboItemPrice,
-                  });
-               } else {
-                  products.push({
-                     cartItemId: uuid(),
-                     ...cartItem,
-                     type,
-                  });
-                  total = total + parseFloat(cartItem.product.price);
-               }
-               total = parseFloat(total.toFixed(2));
-               // products and total ready
-               if (!customer) throw Error('Customer subscription failed!');
-               if (cart) {
-                  // Update
-                  // cartInfo are your products
-                  const cartInfo = {
-                     products,
-                     total,
-                  }; // you'll have to generate this every time
-                  updateCart({
-                     variables: {
-                        id: cart.id,
-                        set: {
-                           cartInfo: cartInfo,
-                        },
-                     },
-                  });
-               } else {
-                  // Create
-                  // cartInfo are your products
-                  const cartInfo = {
-                     products,
-                     total,
-                  }; // you'll have to generate this every time
-                  createCart({
-                     variables: {
-                        object: {
-                           cartInfo: cartInfo,
-                           customerId: customer.id,
-                           customerInfo: {
-                              customerFirstName: customerDetails.firstName,
-                              customerLastName: customerDetails.lastName,
-                              customerPhone: customerDetails.phoneNumber,
-                              customerEmail: customerDetails.email,
-                           },
-                           fulfillmentInfo: {
-                              type: 'DELIVERY',
-                              time: {
-                                 from: '15:00',
-                                 to: '19:00',
-                              },
-                              date: new Date(
-                                 new Date().getTime() + 24 * 60 * 60 * 1000
-                              ), // tomorrow's date
-                           },
-                           paymentMethodId:
-                              customerDetails?.defaultPaymentMethodId,
-                           address: customerDetails?.defaultCustomerAddress,
-                           stripeCustomerId: customerDetails?.stripeCustomerId,
-                           tip: 0,
-                        },
-                     },
-                  });
-               }
-            }
-            if (text === 'Checkout') navigation.navigate('OrderSummary');
-         } else {
-            open('AddDetails', { path: 'profile/create' });
-         }
-         setIsModalVisible(false);
-      } catch (error) {
-         console.log(error);
+  const handleAddToCart = () => {
+    console.log('CART Item:', cartItem);
+    try {
+      if (
+        customerDetails?.firstName &&
+        customerDetails?.lastName &&
+        customerDetails?.email &&
+        customerDetails?.phoneNumber
+      ) {
+        let products = cart?.cartInfo?.products || [];
+        let total = parseFloat(cart?.cartInfo?.total) || 0;
+        if (tunnelItem) {
+          if (type == 'comboProducts') {
+            let comboItemPrice = 0;
+            comboProductItems.forEach((product) => {
+              comboItemPrice =
+                comboItemPrice + parseFloat(product.product.price);
+            });
+            total = total + comboItemPrice;
+            products.push({
+              cartItemId: uuid(),
+              products: comboProductItems,
+              type,
+              price: comboItemPrice,
+            });
+          } else {
+            products.push({
+              cartItemId: uuid(),
+              ...cartItem,
+              type,
+            });
+            total = total + parseFloat(cartItem.product.price);
+          }
+          total = parseFloat(total.toFixed(2));
+          // products and total ready
+          if (!customer) throw Error('Customer subscription failed!');
+          if (cart) {
+            // Update
+            // cartInfo are your products
+            const cartInfo = {
+              products,
+              total,
+            }; // you'll have to generate this every time
+            updateCart({
+              variables: {
+                id: cart.id,
+                set: {
+                  cartInfo: cartInfo,
+                },
+              },
+            });
+          } else {
+            // Create
+            // cartInfo are your products
+            const cartInfo = {
+              products,
+              total,
+            }; // you'll have to generate this every time
+            createCart({
+              variables: {
+                object: {
+                  cartInfo: cartInfo,
+                  customerId: customer.id,
+                  customerInfo: {
+                    customerFirstName: customerDetails.firstName,
+                    customerLastName: customerDetails.lastName,
+                    customerPhone: customerDetails.phoneNumber,
+                    customerEmail: customerDetails.email,
+                  },
+                  fulfillmentInfo: {
+                    type: 'DELIVERY',
+                    time: {
+                      from: '15:00',
+                      to: '19:00',
+                    },
+                    date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
+                  },
+                  paymentMethodId: customerDetails?.defaultPaymentMethodId,
+                  address: customerDetails?.defaultCustomerAddress,
+                  stripeCustomerId: customerDetails?.stripeCustomerId,
+                  tip: 0,
+                },
+              },
+            });
+          }
+        }
+        if (text === 'Checkout') navigation.navigate('OrderSummary');
+      } else {
+        open('AddDetails', { path: 'profile/create' });
       }
-   };
+      setIsModalVisible(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-   // cart.cartInfo = products
-   let numberOfProducts = cart?.cartInfo?.products?.length;
-   let totalPrice = cart?.cartInfo?.total;
-   if (!tunnelItem && !numberOfProducts) return <></>;
+  // cart.cartInfo = products
+  let numberOfProducts = cart?.cartInfo?.products?.length;
+  let totalPrice = cart?.cartInfo?.total;
+  if (!tunnelItem && !numberOfProducts) return <></>;
 
-   return (
-      <TouchableOpacity
-         onPress={handleAddToCart}
-         style={[
-            styles.container,
-            { backgroundColor: visual.color || '#3fa4ff' },
-         ]}
-      >
-         <View style={styles.container_left}>
-            {!tunnelItem && (
-               <Text style={styles.text}>
-                  $ {cart.itemTotal} | {numberOfProducts} Products
-               </Text>
-            )}
-         </View>
-         <View style={styles.container_right}>
-            <Text style={styles.text}>
-               {text}
-               {'    '}
-            </Text>
-            <Ionicons
-               name="ios-arrow-forward"
-               color="#fff"
-               size={20}
-               style={{ marginTop: 2 }}
-            />
-         </View>
-      </TouchableOpacity>
-   );
+  return (
+    <TouchableOpacity
+      onPress={handleAddToCart}
+      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+    >
+      <View style={styles.container_left}>
+        {!tunnelItem && (
+          <Text style={styles.text}>
+            $ {cart.itemTotal} | {numberOfProducts} Products
+          </Text>
+        )}
+      </View>
+      <View style={styles.container_right}>
+        <Text style={styles.text}>
+          {text}
+          {'    '}
+        </Text>
+        <Ionicons
+          name='ios-arrow-forward'
+          color='#fff'
+          size={20}
+          style={{ marginTop: 2 }}
+        />
+      </View>
+    </TouchableOpacity>
+  );
 };
 
 export const CartSummary = ({ navigation, text }) => {
-   const { cart } = useCartContext();
-   const { visual } = useAppContext();
+  const { cart } = useCartContext();
+  const { visual } = useAppContext();
 
-   const pay = () => {
-      if (cart.isValid.status) {
-         navigation.navigate('PaymentProcessing');
-      } else {
-         if (Platform.OS == 'android')
-            ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
-      }
-   };
-   if (!cart?.cartInfo?.products?.length) return <></>;
+  const pay = () => {
+    if (cart.isValid.status) {
+      navigation.navigate('PaymentProcessing');
+    } else {
+      if (Platform.OS == 'android')
+        ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT);
+    }
+  };
+  if (!cart?.cartInfo?.products?.length) return <></>;
 
-   return (
-      <TouchableOpacity
-         onPress={pay}
-         style={[
-            styles.container,
-            { backgroundColor: visual.color || '#3fa4ff' },
-         ]}
-      >
-         <View style={[styles.container_left, { flex: 3 }]}>
-            <Text style={[styles.text, { fontSize: 18 }]}>
-               {cart?.cartInfo?.products?.length} items | $ {cart.totalPrice}
-            </Text>
-            <Text style={[styles.text, { fontSize: 10 }]}>
-               *extra charges may apply
-            </Text>
-         </View>
-         <View style={styles.container_right}>
-            <Text style={styles.text}>
-               {text}
-               {'    '}
-            </Text>
-            <Ionicons
-               name="ios-arrow-forward"
-               color="#fff"
-               size={20}
-               style={{ marginTop: 2 }}
-            />
-         </View>
-      </TouchableOpacity>
-   );
+  return (
+    <TouchableOpacity
+      onPress={pay}
+      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+    >
+      <View style={[styles.container_left, { flex: 3 }]}>
+        <Text style={[styles.text, { fontSize: 18 }]}>
+          {cart?.cartInfo?.products?.length} items | $ {cart.totalPrice}
+        </Text>
+        <Text style={[styles.text, { fontSize: 10 }]}>
+          *extra charges may apply
+        </Text>
+      </View>
+      <View style={styles.container_right}>
+        <Text style={styles.text}>
+          {text}
+          {'    '}
+        </Text>
+        <Ionicons
+          name='ios-arrow-forward'
+          color='#fff'
+          size={20}
+          style={{ marginTop: 2 }}
+        />
+      </View>
+    </TouchableOpacity>
+  );
 };
 
 export const ComboProductItemProceed = ({
-   navigation,
-   text,
-   setCurrentComboProductIndex,
-   currentComboProductIndex,
+  navigation,
+  text,
+  setCurrentComboProductIndex,
+  currentComboProductIndex,
 }) => {
-   const { visual } = useAppContext();
-   return (
-      <TouchableOpacity
-         onPress={() => {
-            setCurrentComboProductIndex(currentComboProductIndex + 1);
-         }}
-         style={[
-            styles.container,
-            { backgroundColor: visual.color || '#3fa4ff' },
-         ]}
-      >
-         <View style={[styles.container_left, { flex: 4 }]}>
-            <Text style={[styles.text, { fontSize: 14 }]}>
-               Click to select next item
-            </Text>
-         </View>
-         <View style={styles.container_right}>
-            <Text style={styles.text}>
-               {text}
-               {'    '}
-            </Text>
-            <Ionicons
-               name="ios-arrow-forward"
-               color="#fff"
-               size={20}
-               style={{ marginTop: 2 }}
-            />
-         </View>
-      </TouchableOpacity>
-   );
+  const { visual } = useAppContext();
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        setCurrentComboProductIndex(currentComboProductIndex + 1);
+      }}
+      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+    >
+      <View style={[styles.container_left, { flex: 4 }]}>
+        <Text style={[styles.text, { fontSize: 14 }]}>
+          Click to select next item
+        </Text>
+      </View>
+      <View style={styles.container_right}>
+        <Text style={styles.text}>
+          {text}
+          {'    '}
+        </Text>
+        <Ionicons
+          name='ios-arrow-forward'
+          color='#fff'
+          size={20}
+          style={{ marginTop: 2 }}
+        />
+      </View>
+    </TouchableOpacity>
+  );
 };
 
 const styles = StyleSheet.create({
-   container: {
-      height: height * 0.08,
-      width: width > 1280 ? 1280 : width,
-      backgroundColor: '#3fa4ff',
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      flexDirection: 'row',
-      marginHorizontal: 'auto',
-   },
-   text: {
-      color: 'white',
-      fontSize: 16,
-   },
-   container_left: {
-      flex: 3,
-      paddingHorizontal: 20,
-      alignItems: 'flex-start',
-      justifyContent: 'center',
-   },
-   container_right: {
-      flex: 3,
-      paddingHorizontal: 20,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-end',
-   },
+  container: {
+    height: height * 0.08,
+    width: width > 1280 ? 1280 : width,
+    backgroundColor: '#3fa4ff',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    marginHorizontal: 'auto',
+  },
+  text: {
+    color: 'white',
+    fontSize: 16,
+  },
+  container_left: {
+    flex: 3,
+    paddingHorizontal: 20,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+  },
+  container_right: {
+    flex: 3,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
 });
 
 export default Cart;
