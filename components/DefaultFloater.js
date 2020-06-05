@@ -5,9 +5,11 @@ import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
 
 import { height, width } from '../utils/Scalaing';
+import { useDrawerContext } from '../context/drawer';
 
 export const DefaultPaymentFloater = ({ navigation }) => {
    const { cart, customerDetails } = useCartContext();
+   const { open } = useDrawerContext();
    const [card, setCard] = React.useState(undefined);
 
    React.useEffect(() => {
@@ -23,9 +25,7 @@ export const DefaultPaymentFloater = ({ navigation }) => {
 
    return (
       <TouchableOpacity
-         onPress={() => {
-            navigation.navigate('SelectPaymentMethodScreen');
-         }}
+         onPress={() => open('SelectPaymentMethod')}
          style={styles.conatiner}
       >
          <View style={styles.cardNumberTextContainer}>
@@ -51,12 +51,11 @@ export const DefaultPaymentFloater = ({ navigation }) => {
 
 export const DefaultAddressFloater = ({ navigation }) => {
    const { cart, customerDetails } = useCartContext();
+   const { open } = useDrawerContext();
 
    return (
       <TouchableOpacity
-         onPress={() => {
-            navigation.navigate('EditAddressScreen');
-         }}
+         onPress={() => open('EditAddress')}
          style={styles.conatiner}
       >
          <View style={styles.cardNumberTextContainer}>

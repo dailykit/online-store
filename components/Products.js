@@ -1,19 +1,16 @@
-import React from 'react';
-import { View, FlatList, StyleSheet } from 'react-native';
 import { useSubscription } from '@apollo/react-hooks';
+import React from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 import {
+   COMBO_PRODUCTS,
+   CUSTOMIZABLE_PRODUCTS,
    INVENTORY_PRODUCTS,
    SIMPLE_RECIPE_PRODUCTS,
-   CUSTOMIZABLE_PRODUCTS,
-   COMBO_PRODUCTS,
 } from '../graphql';
-import { Text } from 'native-base';
-import { Spinner } from '@ui-kitten/components';
-import Card from './Card';
 import { width } from '../utils/Scalaing';
+import Card from './Card';
 
 const Products = ({ category }) => {
-   console.log(category, 'rendered');
    const [products, setProducts] = React.useState([]);
 
    // Subscriptions
@@ -24,7 +21,6 @@ const Products = ({ category }) => {
             ids: category.inventoryProducts,
          },
          onSubscriptionData: data => {
-            console.log(data.subscriptionData.data.inventoryProducts);
             setProducts([
                ...products,
                ...data.subscriptionData.data.inventoryProducts,
@@ -40,7 +36,6 @@ const Products = ({ category }) => {
             ids: category.simpleRecipeProducts,
          },
          onSubscriptionData: data => {
-            console.log(data.subscriptionData.data.simpleRecipeProducts);
             setProducts([
                ...products,
                ...data.subscriptionData.data.simpleRecipeProducts,
@@ -56,7 +51,6 @@ const Products = ({ category }) => {
             ids: category.customizableProducts,
          },
          onSubscriptionData: data => {
-            console.log(data.subscriptionData.data.customizableProducts);
             setProducts([
                ...products,
                ...data.subscriptionData.data.customizableProducts,
@@ -70,7 +64,6 @@ const Products = ({ category }) => {
          ids: category.comboProducts,
       },
       onSubscriptionData: data => {
-         console.log(data.subscriptionData.data.comboProducts);
          setProducts([
             ...products,
             ...data.subscriptionData.data.comboProducts,

@@ -104,13 +104,13 @@ function HomeStack(props) {
                headerShown: false,
             }}
          />
-         <Stack.Screen
+         {/* <Stack.Screen
             name="SafetyScreen"
             component={SafetyScreen}
             options={{
                headerShown: false,
             }}
-         />
+         /> */}
          <Stack.Screen
             name="DeliveryScreen"
             component={Delivery}
@@ -118,7 +118,7 @@ function HomeStack(props) {
                headerShown: false,
             }}
          />
-         <Stack.Screen
+         {/* <Stack.Screen
             name="EditAddressScreen"
             component={EditAddress}
             options={{
@@ -131,21 +131,21 @@ function HomeStack(props) {
             options={{
                headerShown: false,
             }}
-         />
-         <Stack.Screen
+         /> */}
+         {/* <Stack.Screen
             name="ProfileScreen"
             component={ProfileScreen}
             options={{
                headerShown: false,
             }}
-         />
-         <Stack.Screen
+         /> */}
+         {/* <Stack.Screen
             name="OrderHistoryScreen"
             component={OrderHistory}
             options={{
                headerShown: false,
             }}
-         />
+         /> */}
          <Stack.Screen
             name="PaymentProcessing"
             component={PaymentProcessing}

@@ -159,7 +159,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
 
 const styles = EStyleSheet.create({
    card_container: {
-      width: width > 1000 ? width * 0.3 : width,
+      width: width >= 1280 ? width * 0.26 : width,
       paddingHorizontal: 20,
       elevation: 2,
       borderBottomColor: 'rgba(0,0,0,0.1)',
@@ -168,8 +168,8 @@ const styles = EStyleSheet.create({
       paddingVertical: 10,
       backgroundColor: '#fff',
       marginBottom: 10,
-      marginRight: width > 1000 ? 20 : 0,
-      marginTop: width > 1000 ? 20 : 0,
+      marginRight: width > 1280 ? 20 : 0,
+      marginTop: width > 1280 ? 20 : 0,
       borderRadius: 4,
    },
    card_title: {
