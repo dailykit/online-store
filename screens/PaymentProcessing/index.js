@@ -2,8 +2,9 @@ import { useMutation, useSubscription } from '@apollo/react-hooks';
 import { Spinner } from '@ui-kitten/components';
 import { Text, View } from 'native-base';
 import React from 'react';
-import { useCartContext } from '../context/cart';
-import { CART_BY_PK, UPDATE_CART } from '../graphql';
+import { useCartContext } from '../../context/cart';
+import { CART_BY_PK, UPDATE_CART } from '../../graphql';
+import {styles} from './styles'
 
 const PaymentProcessing = ({ navigation }) => {
    const { cart } = useCartContext();

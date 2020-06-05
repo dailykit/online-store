@@ -1,37 +1,21 @@
-import {
-   useLazyQuery,
-   useMutation,
-   useSubscription,
-} from '@apollo/react-hooks';
+import { useLazyQuery, useMutation, useSubscription } from '@apollo/react-hooks';
 import { Datepicker, Spinner } from '@ui-kitten/components';
 import * as axios from 'axios';
 import moment from 'moment';
 import React, { useRef, useState } from 'react';
-import {
-   Image,
-   ScrollView,
-   SectionList,
-   Text,
-   TouchableOpacity,
-   View,
-} from 'react-native';
+import { Image, ScrollView, SectionList, Text, TouchableOpacity, View } from 'react-native';
 import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import { Header } from '../components';
-import Cart from '../components/Cart';
-import { CategoryBanner } from '../components/CategoryBanner';
-import Products from '../components/Products';
-import { SafetyBanner } from '../components/SafetyBanner';
-import { useAppContext } from '../context/app';
-import { useAuth } from '../context/auth';
-import { useCartContext } from '../context/cart';
-import {
-   CREATE_CUSTOMER,
-   CUSTOMER,
-   CUSTOMER_DETAILS,
-   STORE_SETTINGS,
-} from '../graphql';
-import { height, width } from '../utils/Scalaing';
+import { Header } from '../../components';
+import Cart from '../../components/Cart';
+import { CategoryBanner } from '../../components/CategoryBanner';
+import Products from '../../components/Products';
+import { SafetyBanner } from '../../components/SafetyBanner';
+import { useAppContext } from '../../context/app';
+import { useAuth } from '../../context/auth';
+import { useCartContext } from '../../context/cart';
+import { CREATE_CUSTOMER, CUSTOMER, CUSTOMER_DETAILS, STORE_SETTINGS } from '../../graphql';
+import { height, width } from '../../utils/Scalaing';
+import { styles } from './styles';
 
 const Home = props => {
    const [selectedIndex, setSelectedIndex] = useState(0);
@@ -455,76 +439,5 @@ const Home = props => {
    );
 };
 
-const styles = EStyleSheet.create({
-   home: {
-      flex: 1,
-   },
-   img_container: {
-      height: height * 0.3,
-      width,
-   },
-   cover_image: {
-      flex: 1,
-      resizeMode: 'cover',
-      height: null,
-      width: null,
-      aspectRatio: 3 / 2,
-   },
-   picker_container: {
-      height: 80,
-      flexDirection: 'row',
-      alignItems: 'center',
-      width: width,
-      justifyContent: 'center',
-      backgroundColor: '#fff',
-   },
-   picker_placeholder: {
-      flex: 1,
-      justifyContent: 'center',
-   },
-   flexContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-   title: {
-      fontSize: '1.2rem',
-      padding: 10,
-      fontWeight: 'bold',
-   },
-   cardContainer: {
-      flex: 1,
-      alignItems: 'center',
-   },
-   headerContainer: {
-      alignItems: 'center',
-   },
-   header: {
-      fontSize: '2rem',
-      fontWeight: 'bold',
-      paddingLeft: '2rem',
-      backgroundColor: '#fff',
-      paddingTop: 10,
-      paddingBottom: 10,
-   },
-   selectStyle: {
-      transitionProperty: 'opacity',
-      transitionDuration: '0.15s',
-      userSelect: 'none',
-      cursor: 'pointer',
-      touchAction: 'manipulation',
-      outlineWidth: 0,
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingHorizontal: 8,
-      borderColor: '#E4E9F2',
-      backgroundColor: '#F7F9FC',
-      borderRadius: 4,
-      borderWidth: 1,
-      minHeight: 40,
-      paddingVertical: 7,
-   },
-});
 
 export default Home;

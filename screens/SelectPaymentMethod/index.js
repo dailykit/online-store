@@ -4,13 +4,12 @@ import { Spinner } from '@ui-kitten/components';
 import { Button } from 'native-base';
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import CreditCardInput from '../components/CreditCardInput';
-import HeaderBack from '../components/HeaderBack';
-import { useAppContext } from '../context/app';
-import { useCartContext } from '../context/cart';
-import { UPDATE_CART } from '../graphql';
-import { height, width } from '../utils/Scalaing';
+import CreditCardInput from '../../components/CreditCardInput';
+import HeaderBack from '../../components/HeaderBack';
+import { useAppContext } from '../../context/app';
+import { useCartContext } from '../../context/cart';
+import { UPDATE_CART } from '../../graphql';
+import { styles } from './styles';
 
 export default ({ navigation }) => {
    const { cart, customerDetails } = useCartContext();
@@ -165,72 +164,3 @@ export default ({ navigation }) => {
    );
 };
 
-const styles = EStyleSheet.create({
-   conatiner: {
-      flex: 1,
-      backgroundColor: '#fff',
-   },
-   title: {
-      fontSize: '$xl',
-      padding: 20,
-   },
-   cardNumberConatiner: {
-      flexDirection: 'column',
-      flex: 1,
-   },
-   cardNumberOptionConatiner: {
-      justifyContent: 'center',
-      height: height * 0.12,
-      flexDirection: 'row',
-      borderBottomWidth: 1,
-      borderColor: '#dedede',
-      marginBottom: 4,
-   },
-   cardNumberTextContainer: {
-      flex: 3,
-      justifyContent: 'center',
-   },
-   cardNumberText: {
-      width: width * 0.7,
-      paddingLeft: 20,
-   },
-   cardNumberSelectedContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-   checkContainer: {
-      backgroundColor: '#3fa4ff',
-      height: 24,
-      width: 24,
-      borderRadius: 12,
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-   switch: {
-      alignSelf: 'center',
-      marginTop: 20,
-      marginBottom: 20,
-   },
-
-   label: {
-      color: 'black',
-      fontSize: 12,
-      display: 'none',
-      height: 0,
-      width: 0,
-      margin: 0,
-      padding: 0,
-      borderWidth: 0,
-   },
-   input: {
-      fontSize: 16,
-      color: 'black',
-      display: 'none',
-      height: 0,
-      width: 0,
-      margin: 0,
-      padding: 0,
-      borderWidth: 0,
-   },
-});

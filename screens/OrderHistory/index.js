@@ -4,10 +4,10 @@ import * as moment from 'moment';
 import { Accordion } from 'native-base';
 import React from 'react';
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import HeaderBack from '../components/HeaderBack';
-import { useCartContext } from '../context/cart';
-import { ORDERS } from '../graphql';
+import HeaderBack from '../../components/HeaderBack';
+import { useCartContext } from '../../context/cart';
+import { ORDERS } from '../../graphql';
+import { styles } from './styles';
 
 const dataArray = [
    { title: '3 items', content: 'Lorem ipsum dolor sit amet' },
@@ -102,49 +102,3 @@ export default ({ navigation }) => {
    );
 };
 
-const styles = EStyleSheet.create({
-   center: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-   container: {
-      flex: 1,
-      backgroundColor: '#fff',
-   },
-   card: {
-      padding: 15,
-      borderBottomColor: '#dedede',
-      borderBottomWidth: 1,
-      marginBottom: 10,
-   },
-   title: {
-      fontWeight: 'bold',
-      fontSize: '$l',
-      marginBottom: 10,
-   },
-   muted: {
-      color: 'gray',
-      fontSize: '$s',
-      marginBottom: 10,
-   },
-   bold: {
-      fontWeight: 'bold',
-   },
-   lite: {
-      fontWeight: 'normal',
-   },
-   flexContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingHorizontal: 10,
-   },
-   total: {
-      fontWeight: 'bold',
-      fontSize: '$l',
-      marginTop: 10,
-   },
-   header: {
-      backgroundColor: '#fff',
-   },
-});

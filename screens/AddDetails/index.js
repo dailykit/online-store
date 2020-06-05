@@ -4,10 +4,10 @@ import { Spinner } from '@ui-kitten/components';
 import { Text, View } from 'native-base';
 import React from 'react';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { useAuth } from '../context/auth';
-import { useCartContext } from '../context/cart';
-import { CUSTOMER_DETAILS } from '../graphql';
-import { height, width } from '../utils/Scalaing';
+import { useAuth } from '../../context/auth';
+import { useCartContext } from '../../context/cart';
+import { CUSTOMER_DETAILS } from '../../graphql';
+import { height, width } from '../../utils/Scalaing';
 
 const AddDetails = ({ route, navigation }) => {
    const { path } = route.params;
@@ -48,17 +48,6 @@ const AddDetails = ({ route, navigation }) => {
       );
 
    return (
-      // <WebView
-      //   source={{ uri: `https://dailykey.netlify.app` }}
-      //   javaScriptEnabled={true}
-      //   scalesPageToFit={true}
-      //   style={{
-      //     marginTop: 20,
-      //     borderStyle: 'solid',
-      //     borderWidth: 2,
-      //     borderColor: '#ff0000',
-      //   }}
-      // />
       <React.Fragment>
          <TouchableOpacity
             onPress={fetchDetails}

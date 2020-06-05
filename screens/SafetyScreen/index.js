@@ -1,17 +1,17 @@
 import { useSubscription } from '@apollo/react-hooks';
 import { Spinner } from '@ui-kitten/components';
 import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { Badge } from '../assets/imgs/Badge';
-import flat from '../assets/imgs/flat.png';
-import liquidSoap from '../assets/imgs/liquid-soap.png';
-import patient from '../assets/imgs/patient.png';
-import thermometer from '../assets/imgs/thermometer.png';
-import Cart from '../components/Cart';
-import HeaderBack from '../components/HeaderBack';
-import { StaffSafetyContainer } from '../components/StaffSafetyContainer';
-import { SAFETY_CHECK } from '../graphql';
-import { width } from '../utils/Scalaing';
+import { Image, ScrollView, Text, View } from 'react-native';
+import { Badge } from '../../assets/imgs/Badge';
+import flat from '../../assets/imgs/flat.png';
+import liquidSoap from '../../assets/imgs/liquid-soap.png';
+import patient from '../../assets/imgs/patient.png';
+import thermometer from '../../assets/imgs/thermometer.png';
+import Cart from '../../components/Cart';
+import HeaderBack from '../../components/HeaderBack';
+import { StaffSafetyContainer } from '../../components/StaffSafetyContainer';
+import { SAFETY_CHECK } from '../../graphql';
+import { styles } from './styles';
 
 export default ({ navigation }) => {
    const [check, setCheck] = React.useState(undefined);
@@ -105,68 +105,3 @@ export default ({ navigation }) => {
    );
 };
 
-const styles = StyleSheet.create({
-   container: {
-      flex: 1,
-   },
-   badgeConatiner: {
-      width,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginTop: 20,
-      marginBottom: 20,
-   },
-   staffConatiner: {},
-   desc: {
-      color: 'white',
-      marginTop: 10,
-      textAlign: 'center',
-   },
-   StaffSafetyContainer: {
-      width: width * 0.9,
-      backgroundColor: '#2e2d4d',
-      padding: 20,
-      borderRadius: 20,
-      marginTop: 40,
-   },
-   title: {
-      fontSize: 24,
-      textAlign: 'center',
-      fontWeight: 'bold',
-   },
-   measureConatiner: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-around',
-      height: 120,
-   },
-   measureText: {
-      flex: 5,
-      color: 'white',
-      fontSize: 16,
-      fontWeight: 'bold',
-      textAlign: 'center',
-   },
-   icons: {
-      height: 50,
-      width: 50,
-      flex: 1,
-      marginRight: 10,
-      resizeMode: 'contain',
-   },
-   packagingSafetyConatiner: {
-      width: width * 0.9,
-      backgroundColor: '#eddea4',
-      padding: 20,
-      borderRadius: 20,
-      marginTop: 20,
-      alignItems: 'center',
-   },
-   packagingImage: {
-      resizeMode: 'contain',
-      height: 80,
-      width: 80,
-      marginTop: 30,
-      marginBottom: 30,
-   },
-});
