@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
 import CustomizableProductItem from '../CustomizableProductItem';
 import InventoryProductItem from '../InventoryProductItem';
 import SimpleProductItem from '../SimpleProductItem';
+import {styles} from './styles'
 
 const ComboProduct = ({
    tunnelItem,
@@ -148,29 +148,3 @@ const ComboProduct = ({
 
 export default ComboProduct;
 
-const styles = EStyleSheet.create({
-   container: { backgroundColor: '#fff' },
-
-   card_title: {
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-   },
-   card_title_text: {
-      fontSize: '$m',
-      fontWeight: 'bold',
-   },
-   is_customizable: {
-      fontSize: '$xxxs',
-      color: 'gray',
-   },
-   item_parent_container: {
-      backgroundColor: '#fff',
-   },
-   flexContainer: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-});

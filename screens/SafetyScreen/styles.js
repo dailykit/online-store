@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
+import EStyleSheet from "react-native-extended-stylesheet";
 import { width } from '../../utils/Scalaing';
 
-export const styles = StyleSheet.create({
+export const styles = EStyleSheet.create({
     container: {
         flex: 1,
      },

@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
 import { height, width } from '../../utils/Scalaing';
+import EStyleSheet from "react-native-extended-stylesheet";
 
-export const styles = StyleSheet.create({
+export const styles = EStyleSheet.create({
     container: { flex: 1, backgroundColor: '#fff' },
     item_title: {
        fontSize: 16,

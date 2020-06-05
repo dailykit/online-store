@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
+import EStyleSheet from "react-native-extended-stylesheet";
 
-export const styles = StyleSheet.create({
+export const styles = EStyleSheet.create({
     center: {
         flex: 1,
         justifyContent: 'center',

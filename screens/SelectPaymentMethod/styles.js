@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
+import EStyleSheet from "react-native-extended-stylesheet";
 import { height, width } from '../../utils/Scalaing';
 
-export const styles = StyleSheet.create({
+export const styles = EStyleSheet.create({
     conatiner: {
         flex: 1,
         backgroundColor: '#fff',

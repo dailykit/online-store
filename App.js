@@ -94,15 +94,16 @@ if (!global.atob) {
 import EStyleSheet from "react-native-extended-stylesheet";
 import { width, height } from "./utils/Scalaing";
 import { STORE_SETTINGS } from "./graphql";
+
+const BASE_SIZE = 1
+
 EStyleSheet.build({
   $rem: width > 340 ? 16 : 13,
-  $xl: "1.2rem",
-  $l: "1.15rem",
-  $m: "1.05rem",
-  $s: "0.95rem",
-  $xs: "0.85rem",
-  $xxs: "0.75rem",
-  $xxxs: "0.65rem",
+  $xl: `${BASE_SIZE + 0.8}rem`,
+  $l:  `${BASE_SIZE + 0.6}rem`,
+  $m:  `${BASE_SIZE + 0.4}rem`,
+  $s:  `${BASE_SIZE + 0.2}rem`,
+  $xs:  `${BASE_SIZE}rem`,
 });
 
 // cache app images
