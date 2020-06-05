@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Button } from 'native-base';
 import argonTheme from '../constants/Theme';
 
 class ArButton extends React.Component {
