@@ -58,8 +58,20 @@ const InventoryProductCollapsed = ({
             <Text style={styles.item_title}>{`${inventoryProduct.name} `}</Text>
           </View>
           <View style={styles.item_three_lower}>
-            <Text style={styles.item_details}>
-              {inventoryProduct?.inventoryProductOptions[0]?.label}
+            <Text
+              style={[
+                styles.item_details,
+                { fontWeight: 'normal', fontSize: 18 },
+              ]}
+            >
+              {inventoryProduct?.inventoryProductOptions[0]?.label
+                ?.substr(0, 1)
+                .toUpperCase() +
+                inventoryProduct?.inventoryProductOptions[0]?.label?.substr(
+                  1,
+                  inventoryProduct?.inventoryProductOptions[0]?.label?.length -
+                    1
+                )}
             </Text>
             <Text style={styles.item_chef}>
               {inventoryProduct?.sachetItem?.unitSize &&

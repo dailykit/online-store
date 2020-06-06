@@ -53,7 +53,7 @@ export const styles = EStyleSheet.create({
     fontSize: '$l',
   },
   item_chef: {
-    fontSize: '$s',
+    fontSize: 18,
     color: '#4f4e4e',
     flex: 1,
     textAlign: 'right',
