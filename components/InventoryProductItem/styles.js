@@ -3,7 +3,7 @@ import { height, width } from '../../utils/Scalaing';
 
 export const styles = EStyleSheet.create({
   item_container: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     paddingBottom: 5,
     marginBottom: 2,
     paddingBottom: 20,
@@ -12,15 +12,15 @@ export const styles = EStyleSheet.create({
     borderBottomWidth: 1,
     backgroundColor: '#fff',
     borderBottomColor: '#ececec',
-    height: width < height ? height * 0.15 : height * 0.18,
+    height: width < height ? height * 0.6 : height * 0.5,
   },
   item_container_one: {
-    flex: 2,
+    flex: 4,
     position: 'relative',
     paddingTop: 20,
   },
   item_container_two: {
-    flex: 4,
+    flex: 1.3,
     paddingTop: 15,
     paddingHorizontal: 10,
     justifyContent: 'center',
@@ -28,7 +28,7 @@ export const styles = EStyleSheet.create({
     paddingLeft: 10,
   },
   item_container_three: {
-    flex: 2,
+    flex: 1.3,
     paddingTop: 15,
   },
   bottom_container: {
@@ -52,11 +52,13 @@ export const styles = EStyleSheet.create({
     fontSize: '$m',
   },
   item_chef: {
-    fontSize: '$xxs',
+    fontSize: '$s',
     color: '#4f4e4e',
+    flex: 1,
+    textAlign: 'right',
   },
   something: {
-    fontSize: '$xs',
+    fontSize: '$s',
     color: '#4f4e4e',
     marginVertical: 10,
   },
@@ -67,17 +69,18 @@ export const styles = EStyleSheet.create({
     marginTop: 5,
     paddingVertical: 2,
     borderRadius: 2,
-    fontSize: '$xxs',
+    fontSize: '$s',
   },
   options_text: {
     color: '#3fa4fd',
     textAlign: 'right',
-    fontSize: '$xxs',
+    fontSize: '$s',
   },
   item_details: {
-    textAlign: 'right',
+    textAlign: 'left',
     fontWeight: 'bold',
-    fontSize: '$xxs',
+    fontSize: '$s',
+    flex: 1,
   },
   price: {
     flex: 1,
@@ -140,7 +143,7 @@ export const styles = EStyleSheet.create({
   },
   item_three_lower: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'flex-end',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 });

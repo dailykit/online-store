@@ -131,7 +131,7 @@ export default function NavBar({
 
 const styles = StyleSheet.create({
   navBar: {
-    width: 'auto',
+    width: width,
     height: 16 * 4.125,
     flexDirection: 'row',
     alignItems: 'center',

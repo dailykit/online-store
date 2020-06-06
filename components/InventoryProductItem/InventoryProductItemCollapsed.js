@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View, Platform } from 'react-native';
 import ServingSelect from '../ServingSelect';
 import { styles } from './styles';
 
@@ -14,6 +14,7 @@ const InventoryProductCollapsed = ({
   if (!inventoryProduct) {
     return <Text>Bad Data</Text>;
   }
+
   return (
     <>
       <TouchableOpacity
@@ -22,6 +23,8 @@ const InventoryProductCollapsed = ({
             data: inventoryProduct,
             author: inventoryProduct.author,
             name: inventoryProduct?.name,
+            data: inventoryProduct,
+            recipeId: inventoryProduct.id,
           });
         }}
         style={[
@@ -53,36 +56,20 @@ const InventoryProductCollapsed = ({
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Text style={styles.item_title}>{`${inventoryProduct.name} `}</Text>
-
-            {/* <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Modal', {
-                  data: inventoryProduct,
-                  author: inventoryProduct.author,
-                  name: inventoryProduct?.name,
-                });
-              }}
-            >
-              <Feather size={14} name='info' />
-            </TouchableOpacity> */}
           </View>
-          <Text style={styles.item_category}></Text>
-          <Text style={styles.item_chef}>
-            {inventoryProduct?.sachetItem?.unitSize &&
-              inventoryProduct?.sachetItem?.unitSize +
-                ' ' +
-                inventoryProduct?.sachetItem?.unit}
-            {inventoryProduct?.supplierItem?.unitSize &&
-              inventoryProduct?.supplierItem?.unitSize +
-                ' ' +
-                inventoryProduct?.supplierItem?.unit}
-          </Text>
-        </View>
-        <View style={styles.item_container_three}>
-          <View style={styles.item_three_upper}></View>
           <View style={styles.item_three_lower}>
             <Text style={styles.item_details}>
               {inventoryProduct?.inventoryProductOptions[0]?.label}
+            </Text>
+            <Text style={styles.item_chef}>
+              {inventoryProduct?.sachetItem?.unitSize &&
+                inventoryProduct?.sachetItem?.unitSize +
+                  ' ' +
+                  inventoryProduct?.sachetItem?.unit}
+              {inventoryProduct?.supplierItem?.unitSize &&
+                inventoryProduct?.supplierItem?.unitSize +
+                  ' ' +
+                  inventoryProduct?.supplierItem?.unit}
             </Text>
           </View>
         </View>

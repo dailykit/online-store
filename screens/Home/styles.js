@@ -11,7 +11,7 @@ export const styles = EStyleSheet.create({
     width,
   },
   reallyBigContainer: {
-    width: width > 1280 ? 1280 : width,
+    width: width,
     marginHorizontal: 'auto',
     backgroundColor: '#fff',
   },

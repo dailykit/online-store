@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import React, { Suspense } from 'react';
+import React, { Suspense, useRef, useState, useEffect } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -40,6 +40,9 @@ import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
 import { ApolloProvider } from '@apollo/react-hooks';
+
+// linking
+import useLinking from './navigation/useLinking';
 
 // Majburi
 
@@ -136,7 +139,6 @@ function cacheImages(images) {
 
 const App = () => {
   const [isLoadingComplete, setIsLoadingComplete] = React.useState(false);
-
   const _loadResourcesAsync = async () => {
     await Font.loadAsync({
       Roboto: require('native-base/Fonts/Roboto.ttf'),
@@ -155,6 +157,12 @@ const App = () => {
   const _handleFinishLoading = () => {
     setIsLoadingComplete(true);
   };
+  const [initialNavigationState, setInitialNavigationState] = useState();
+  const containerRef = useRef();
+  const { getInitialState } = useLinking(containerRef);
+  useEffect(() => {
+    (async () => setInitialNavigationState(await getInitialState()))();
+  }, []);
 
   if (!isLoadingComplete) {
     return (
@@ -168,7 +176,10 @@ const App = () => {
     return (
       <Suspense fallback={FallBack}>
         <ErrorBoundary>
-          <NavigationContainer>
+          <NavigationContainer
+            ref={containerRef}
+            initialState={initialNavigationState}
+          >
             <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
               <View
                 style={{

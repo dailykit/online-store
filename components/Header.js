@@ -61,7 +61,7 @@ class Header extends React.Component {
       transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null,
       {
         height: 64,
-        width: width > 1280 ? 1280 : width,
+        width: width,
         marginHorizontal: 'auto',
       },
     ];
