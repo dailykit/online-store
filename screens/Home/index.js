@@ -16,7 +16,7 @@ import {
   View,
 } from 'react-native';
 import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
-import { Header } from '../../components';
+import { Header, Icon } from '../../components';
 import Cart from '../../components/Cart';
 import { CategoryBanner } from '../../components/CategoryBanner';
 import DrawerLayout from '../../components/DrawerLayout';
@@ -33,8 +33,9 @@ import {
 } from '../../graphql';
 import { height, width } from '../../utils/Scalaing';
 import { styles } from './styles';
+import CategoriesButton from '../../components/CategoriesButton';
 
-// ..
+const CalendarIcon = (props) => <Icon size={24} {...props} name='calendar' />;
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -43,7 +44,7 @@ const Home = (props) => {
   const [data, setData] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
-  const { setCustomer, setCustomerDetails } = useCartContext();
+  const { setCustomer, setCustomerDetails, cart } = useCartContext();
   const { user } = useAuth();
 
   const sectionListRef = useRef();
@@ -338,16 +339,43 @@ const Home = (props) => {
             style={styles.cover_image}
           />
         </View>
-        <View style={styles.headerContainer}>
+        {/* <View style={styles.headerContainer}>
           <SafetyBanner {...props} />
-        </View>
+        </View> */}
 
-        <View style={styles.picker_container}>
-          <Text style={styles.dateTitle}>Order For</Text>
+        <View
+          style={{
+            flexDirection: 'column',
+            width: width,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 10,
+            marginBottom: 10,
+            marginTop: 20,
+          }}
+        >
+          <Text
+            style={{
+              opacity: 0.6,
+              width: width * 0.3,
+              textAlign: 'center',
+              fontSize: 24,
+              fontWeight: 'bold',
+              marginBottom: 10,
+            }}
+          >
+            Showing products for
+          </Text>
           <Datepicker
             date={calendarDate}
+            controlStyle={{
+              backgroundColor: 'white',
+              color: '#000',
+            }}
+            placeholder='Wednesday, May 4th'
+            accessoryRight={CalendarIcon}
             style={{
-              width: width * 0.5,
+              width: width * 0.3,
             }}
             onSelect={(_date) => {
               setcalendarDate(_date);
@@ -361,66 +389,17 @@ const Home = (props) => {
         </View>
         <View style={styles.flexContainerMiddle}>
           <View style={styles.cardContainer}>
-            <View style={styles.picker_container}>
-              {width > 768 && (
-                <View
-                  style={{
-                    marginHorizontal: 'auto',
-                  }}
-                >
-                  <ScrollView
-                    horizontal
-                    style={{
-                      flex: 1,
-                    }}
-                  >
-                    {pickerData.map((title, key) => (
-                      <TouchableOpacity
-                        onPress={() => {
-                          setSelectedIndex(key);
-                          scrollViewRef.current.scrollTo({
-                            x: 0,
-                            y: height * 0.8 - 20,
-                            animated: true,
-                          });
-                          sectionListRef.current.scrollToLocation({
-                            animated: true,
-                            itemIndex: 0,
-                            sectionIndex: key,
-                            viewOffset: 60,
-                          });
-                        }}
-                        style={{
-                          paddingHorizontal: 10,
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          height: 80,
-                          flexDirection: 'row',
-                          backgroundColor:
-                            selectedIndex == key ? '#3fa4ff' : '#e3e3e3',
-                          paddingVertical: 30,
-                          marginLeft: 20,
-                          width: width * 0.15,
-                        }}
-                      >
-                        <Text
-                          style={[
-                            {
-                              color: selectedIndex == key ? '#fff' : 'black',
-                              fontWeight:
-                                selectedIndex == key ? 'bold' : 'normal',
-                            },
-                            styles.optionStyle,
-                          ]}
-                        >
-                          {title.toUpperCase()}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
-                </View>
-              )}
-              {width <= 768 && (
+            <View
+              style={[
+                styles.picker_container,
+                { marginBottom: 4, marginTop: 20 },
+              ]}
+            >
+              <View
+                style={{
+                  marginHorizontal: 'auto',
+                }}
+              >
                 <ScrollView
                   horizontal
                   style={{
@@ -428,9 +407,19 @@ const Home = (props) => {
                   }}
                 >
                   {pickerData.map((title, key) => (
-                    <TouchableOpacity
-                      onPress={() => {
+                    <CategoriesButton
+                      title={title}
+                      key={key}
+                      id={key}
+                      selectedIndex={selectedIndex}
+                      setSelectedIndex={setSelectedIndex}
+                      onPress={(key) => {
                         setSelectedIndex(key);
+                        scrollViewRef.current.scrollTo({
+                          x: 0,
+                          y: height * 1.3 - 20,
+                          animated: true,
+                        });
                         sectionListRef.current.scrollToLocation({
                           animated: true,
                           itemIndex: 0,
@@ -438,56 +427,33 @@ const Home = (props) => {
                           viewOffset: 60,
                         });
                       }}
-                      style={{
-                        paddingHorizontal: 10,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        height: 80,
-                        flexDirection: 'row',
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: selectedIndex == key ? '#3fa4ff' : 'grey',
-                          borderBottomColor:
-                            selectedIndex == key ? '#3fa4ff' : 'grey',
-                          paddingBottom: 4,
-                          borderBottomWidth: selectedIndex == key ? 3 : 0,
-                          fontWeight: selectedIndex == key ? 'bold' : 'normal',
-                          marginTop: 10,
-                        }}
-                      >
-                        {title}
-                      </Text>
-                    </TouchableOpacity>
+                    />
                   ))}
                 </ScrollView>
-              )}
+              </View>
             </View>
             <SectionList
+              showsVerticalScrollIndicator={false}
               ref={sectionListRef}
               sections={data}
               style={{
                 height: height - 16 * 4.125 - 80 - 48,
+                width: width > 1280 ? 1280 : width,
               }}
-              stickySectionHeadersEnabled={true}
               keyExtractor={(item, index) => item + index}
               renderSectionHeader={({ section: { title } }) => (
                 <CategoryBanner category={title} />
               )}
-              stickyHeaderIndices={[0]}
               renderItem={({ item: category }) => (
                 <Products navigation={props.navigation} category={category} />
               )}
             />
           </View>
         </View>
-        <Cart
-          label={pickerData[selectedIndex.row]}
-          to='OrderSummary'
-          {...props}
-          text='Checkout'
-        />
+        {cart?.cartInfo?.products?.length && (
+          <View style={{ height: height * 0.08 }} />
+        )}
+        <Cart to='OrderSummary' {...props} text='Checkout' />
         <DrawerLayout />
       </ScrollView>
     </>

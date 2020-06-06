@@ -1,26 +1,46 @@
-import React from 'react';
 import { withNavigation } from '@react-navigation/compat';
-import { TouchableOpacity, StyleSheet, Dimensions, View } from 'react-native';
-import NavBar from './NavBar';
-import EStyleSheet from 'react-native-extended-stylesheet';
-
-import Icon from './Icon';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import argonTheme from '../constants/Theme';
+import { useCartContext } from '../context/cart';
+import { width } from '../utils/Scalaing';
+import Icon from './Icon';
+import NavBar from './NavBar';
 
-import { height, width } from '../utils/Scalaing';
+const BasketButton = ({ isWhite, style, navigation }) => {
+  const { cart } = useCartContext();
+  let numberOfProducts = cart?.cartInfo?.products?.length || 0;
 
-const BasketButton = ({ isWhite, style, navigation }) => (
-  <TouchableOpacity
-    style={[styles.button, style]}
-    onPress={() => navigation.navigate('OrderSummary')}
-  >
-    <Icon
-      size={16}
-      name='shopping-cart'
-      color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
-    />
-  </TouchableOpacity>
-);
+  return (
+    <TouchableOpacity
+      style={[styles.button, style, { position: 'relative' }]}
+      onPress={() => navigation.navigate('OrderSummary')}
+    >
+      <Text
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          backgroundColor: '#e3e3e3',
+          borderRadius: 20,
+          height: 25,
+          width: 25,
+          padding: 2,
+          fontSize: 16,
+          textAlign: 'center',
+          fontWeight: 'bold',
+        }}
+      >
+        {numberOfProducts}
+      </Text>
+      <Icon
+        size={24}
+        name='shopping-cart'
+        color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
+      />
+    </TouchableOpacity>
+  );
+};
 
 class Header extends React.Component {
   handleLeftPress = () => {
@@ -29,19 +49,9 @@ class Header extends React.Component {
   };
   renderRight = () => {
     const { white, title, navigation } = this.props;
-
-    switch (title) {
-      // case 'Home':
-      //   return [
-      //     <BasketButton
-      //       key='basket-home'
-      //       navigation={navigation}
-      //       isWhite={white}
-      //     />,
-      //   ];
-      default:
-        break;
-    }
+    return (
+      <BasketButton key='basket-home' navigation={navigation} isWhite={white} />
+    );
   };
 
   render() {
@@ -61,7 +71,7 @@ class Header extends React.Component {
       transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null,
       {
         height: 64,
-        width: width > 1280 ? 1280 : width,
+        width: width,
         marginHorizontal: 'auto',
       },
     ];

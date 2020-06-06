@@ -69,10 +69,18 @@ const Products = ({ category, navigation }) => {
   });
 
   return (
-    <View>
+    <View
+      style={{
+        width: width,
+        alignItems: 'center',
+        width: width > 1280 ? 1280 : width,
+        margin: 'auto',
+      }}
+    >
       {Boolean(products.length) && (
         <>
           <FlatList
+            showsVerticalScrollIndicator={false}
             style={styles.productList}
             numColumns={width > 1000 ? 3 : 1}
             data={products}

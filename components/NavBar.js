@@ -78,7 +78,7 @@ export default function NavBar({
     return <View style={[styles.left]} />;
   }
 
-  function renderRight() {
+  function renderRight(right) {
     const hasIcons = React.Children.count(right) > 1;
     const rightStyles = [styles.right, rightStyle];
     if (!hideRight) {
@@ -93,7 +93,6 @@ export default function NavBar({
     <View style={navStyles}>
       {width < 768 && renderLeft()}
       {renderTitle()}
-      {renderRight()}
       {width > 768 && (
         <View style={styles.rightNav}>
           <Text style={styles.navLinks} onPress={() => navigation.navigate('')}>
@@ -112,11 +111,13 @@ export default function NavBar({
               </Text>
             </>
           )}
+          {right}
           <Text
             style={[
               styles.authButton,
               {
-                backgroundColor: isAuthenticated ? '#D93025' : '#BB00BB',
+                backgroundColor: isAuthenticated ? '#E74C3C' : '#e3e3e3',
+                color: isAuthenticated ? '#fff' : '#1f1f1f',
               },
             ]}
             onPress={() => (isAuthenticated ? logout() : login())}
@@ -131,7 +132,7 @@ export default function NavBar({
 
 const styles = StyleSheet.create({
   navBar: {
-    width: 'auto',
+    width: width,
     height: 16 * 4.125,
     flexDirection: 'row',
     alignItems: 'center',
@@ -188,10 +189,9 @@ const styles = StyleSheet.create({
   authButton: {
     fontSize: 18,
     marginLeft: 16,
-    borderRadius: 8,
-    color: '#ffffff',
+    color: '#1f1f1f',
     paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 20,
     justifyContent: 'center',
   },
 });

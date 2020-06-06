@@ -78,37 +78,41 @@ export const CategoryBanner = ({ category }) => {
         { backgroundColor: categoryType?.backgroundColor },
       ]}
     >
-      <Text style={[styles.categoryText, { color: categoryType?.color }]}>
-        {category}
-      </Text>
-      {/* <View style={[styles.categoryTextContainer]}>
-         </View> */}
-      {/* <View style={styles.imageContainer}>
-            <Image style={[styles.image]} source={categoryType?.uri} />
-         </View> */}
+      <View style={[styles.categoryTextContainer]}>
+        <Text style={[styles.categoryText, { color: categoryType?.color }]}>
+          {category}
+        </Text>
+      </View>
+      <View style={styles.imageContainer}>
+        <Image style={[styles.image]} source={categoryType?.uri} />
+      </View>
     </View>
   );
 };
 
 const styles = EStyleSheet.create({
   conatiner: {
-    width: width > 1280 ? 1285 : width,
+    width: width > 1280 ? 1280 : width,
     height: 64,
-    marginLeft: '2rem',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
   categoryTextContainer: {
-    width: '100%',
+    flex: 6,
     flexDirection: 'row',
     alignItems: 'center',
   },
   categoryText: {
     fontSize: '$xl',
     fontWeight: 'bold',
+    flex: 1,
+    textAlign: 'left',
+    paddingLeft: 48,
   },
-  imageContainer: {},
+  imageContainer: {
+    flex: 1,
+  },
   image: {
     height: 64,
     resizeMode: 'cover',
