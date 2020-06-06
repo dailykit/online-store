@@ -16,7 +16,7 @@ import {
   View,
 } from 'react-native';
 import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
-import { Header } from '../../components';
+import { Header, Icon } from '../../components';
 import Cart from '../../components/Cart';
 import { CategoryBanner } from '../../components/CategoryBanner';
 import DrawerLayout from '../../components/DrawerLayout';
@@ -35,7 +35,7 @@ import { height, width } from '../../utils/Scalaing';
 import { styles } from './styles';
 import CategoriesButton from '../../components/CategoriesButton';
 
-// ..
+const CalendarIcon = (props) => <Icon size={24} {...props} name='calendar' />;
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -343,12 +343,39 @@ const Home = (props) => {
           <SafetyBanner {...props} />
         </View> */}
 
-        <View style={styles.picker_container}>
-          <Text style={styles.dateTitle}>Order For</Text>
+        <View
+          style={{
+            flexDirection: 'column',
+            width: width,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 10,
+            marginBottom: 10,
+            marginTop: 20,
+          }}
+        >
+          <Text
+            style={{
+              opacity: 0.6,
+              width: width * 0.3,
+              textAlign: 'center',
+              fontSize: 24,
+              fontWeight: 'bold',
+              marginBottom: 10,
+            }}
+          >
+            Showing products for
+          </Text>
           <Datepicker
             date={calendarDate}
+            controlStyle={{
+              backgroundColor: 'white',
+              color: '#000',
+            }}
+            placeholder='Wednesday, May 4th'
+            accessoryRight={CalendarIcon}
             style={{
-              width: width * 0.5,
+              width: width * 0.3,
             }}
             onSelect={(_date) => {
               setcalendarDate(_date);
@@ -362,7 +389,12 @@ const Home = (props) => {
         </View>
         <View style={styles.flexContainerMiddle}>
           <View style={styles.cardContainer}>
-            <View style={[styles.picker_container, { marginBottom: 4 }]}>
+            <View
+              style={[
+                styles.picker_container,
+                { marginBottom: 4, marginTop: 20 },
+              ]}
+            >
               <View
                 style={{
                   marginHorizontal: 'auto',
@@ -385,7 +417,7 @@ const Home = (props) => {
                         setSelectedIndex(key);
                         scrollViewRef.current.scrollTo({
                           x: 0,
-                          y: height * 0.8 - 20,
+                          y: height * 1.3 - 20,
                           animated: true,
                         });
                         sectionListRef.current.scrollToLocation({
@@ -401,6 +433,7 @@ const Home = (props) => {
               </View>
             </View>
             <SectionList
+              showsVerticalScrollIndicator={false}
               ref={sectionListRef}
               sections={data}
               style={{

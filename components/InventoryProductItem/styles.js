@@ -35,6 +35,7 @@ export const styles = EStyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     flexDirection: 'row',
+    paddingHorizontal: 20,
   },
   item_image_title: {
     position: 'absolute',
@@ -49,7 +50,7 @@ export const styles = EStyleSheet.create({
     resizeMode: 'contain',
   },
   item_title: {
-    fontSize: '$m',
+    fontSize: '$l',
   },
   item_chef: {
     fontSize: '$s',

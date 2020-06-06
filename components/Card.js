@@ -131,7 +131,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
               ]}
             >
               <Text style={styles.add_to_card_text}>
-                ADD TO CART <Feather size={14} name='plus' />
+                ADD <Feather size={14} name='plus' />
               </Text>
             </TouchableOpacity>
           </View>
@@ -177,6 +177,7 @@ const styles = EStyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     paddingTop: 20,
+    paddingHorizontal: '1rem',
   },
   item_details: {
     textAlign: 'right',
@@ -197,7 +198,7 @@ const styles = EStyleSheet.create({
     backgroundColor: '#3fa4ff',
     paddingVertical: 5,
     paddingHorizontal: 15,
-    borderRadius: 2,
+    borderRadius: 0,
   },
   add_to_card_text: {
     color: 'white',

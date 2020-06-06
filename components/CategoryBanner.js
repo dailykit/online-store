@@ -107,7 +107,8 @@ const styles = EStyleSheet.create({
     fontSize: '$xl',
     fontWeight: 'bold',
     flex: 1,
-    textAlign: 'center',
+    textAlign: 'left',
+    paddingLeft: 48,
   },
   imageContainer: {
     flex: 1,

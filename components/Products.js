@@ -80,6 +80,7 @@ const Products = ({ category, navigation }) => {
       {Boolean(products.length) && (
         <>
           <FlatList
+            showsVerticalScrollIndicator={false}
             style={styles.productList}
             numColumns={width > 1000 ? 3 : 1}
             data={products}

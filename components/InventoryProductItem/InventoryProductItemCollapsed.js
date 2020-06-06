@@ -62,14 +62,14 @@ const InventoryProductCollapsed = ({
               {inventoryProduct?.inventoryProductOptions[0]?.label}
             </Text>
             <Text style={styles.item_chef}>
-              {inventoryProduct?.sachetItem?.unitSize &&
+              {/* {inventoryProduct?.sachetItem?.unitSize &&
                 inventoryProduct?.sachetItem?.unitSize +
                   ' ' +
                   inventoryProduct?.sachetItem?.unit}
               {inventoryProduct?.supplierItem?.unitSize &&
                 inventoryProduct?.supplierItem?.unitSize +
                   ' ' +
-                  inventoryProduct?.supplierItem?.unit}
+                  inventoryProduct?.supplierItem?.unit} */}
             </Text>
           </View>
         </View>

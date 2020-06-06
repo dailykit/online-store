@@ -12,7 +12,7 @@ export default function (containerRef) {
             path: '/',
             screens: {
               Home: {
-                path: 'products/',
+                path: 'home/',
               },
               Modal: {
                 path: 'product/:name',
