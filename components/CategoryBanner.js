@@ -75,7 +75,12 @@ export const CategoryBanner = ({ category }) => {
     <View
       style={[
         styles.conatiner,
-        { backgroundColor: categoryType?.backgroundColor },
+        {
+          backgroundColor: categoryType?.backgroundColor,
+          width: width > 1280 ? 1280 : width,
+
+          margin: 'auto',
+        },
       ]}
     >
       <View style={[styles.categoryTextContainer]}>

@@ -135,6 +135,7 @@ const Home = (props) => {
     }
   );
 
+  // .
   const fetchData = async (date) => {
     try {
       setLoading(true);
@@ -357,7 +358,8 @@ const Home = (props) => {
           <Text
             style={{
               opacity: 0.6,
-              width: width * 0.3,
+              width: width > height ? width * 0.3 : width,
+              minWidth: 200,
               textAlign: 'center',
               fontSize: 24,
               fontWeight: 'bold',
@@ -375,7 +377,7 @@ const Home = (props) => {
             placeholder='Wednesday, May 4th'
             accessoryRight={CalendarIcon}
             style={{
-              width: width * 0.3,
+              width: width > height ? width * 0.3 : width * 0.9,
             }}
             onSelect={(_date) => {
               setcalendarDate(_date);
@@ -395,42 +397,38 @@ const Home = (props) => {
                 { marginBottom: 4, marginTop: 20 },
               ]}
             >
-              <View
+              <ScrollView
+                horizontal
                 style={{
-                  marginHorizontal: 'auto',
+                  flex: 1,
                 }}
+                showsHorizontalScrollIndicator={false}
               >
-                <ScrollView
-                  horizontal
-                  style={{
-                    flex: 1,
-                  }}
-                >
-                  {pickerData.map((title, key) => (
-                    <CategoriesButton
-                      title={title}
-                      key={key}
-                      id={key}
-                      selectedIndex={selectedIndex}
-                      setSelectedIndex={setSelectedIndex}
-                      onPress={(key) => {
-                        setSelectedIndex(key);
-                        scrollViewRef.current.scrollTo({
-                          x: 0,
-                          y: height * 1.3 - 20,
-                          animated: true,
-                        });
-                        sectionListRef.current.scrollToLocation({
-                          animated: true,
-                          itemIndex: 0,
-                          sectionIndex: key,
-                          viewOffset: 60,
-                        });
-                      }}
-                    />
-                  ))}
-                </ScrollView>
-              </View>
+                {pickerData.map((title, key) => (
+                  <CategoriesButton
+                    title={title}
+                    key={key}
+                    id={key}
+                    length={pickerData?.length}
+                    selectedIndex={selectedIndex}
+                    setSelectedIndex={setSelectedIndex}
+                    onPress={(key) => {
+                      setSelectedIndex(key);
+                      scrollViewRef.current.scrollTo({
+                        x: 0,
+                        y: height * 1.3 - 20,
+                        animated: true,
+                      });
+                      sectionListRef.current.scrollToLocation({
+                        animated: true,
+                        itemIndex: 0,
+                        sectionIndex: key,
+                        viewOffset: 60,
+                      });
+                    }}
+                  />
+                ))}
+              </ScrollView>
             </View>
             <SectionList
               showsVerticalScrollIndicator={false}
@@ -438,7 +436,7 @@ const Home = (props) => {
               sections={data}
               style={{
                 height: height - 16 * 4.125 - 80 - 48,
-                width: width > 1280 ? 1280 : width,
+                width: width > 1280 ? width : width,
               }}
               keyExtractor={(item, index) => item + index}
               renderSectionHeader={({ section: { title } }) => (
