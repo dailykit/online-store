@@ -432,7 +432,7 @@ const Home = (props) => {
                 </ScrollView>
               </View>
             </View>
-            <SectionList
+            {/* <SectionList
               showsVerticalScrollIndicator={false}
               ref={sectionListRef}
               sections={data}
@@ -447,7 +447,7 @@ const Home = (props) => {
               renderItem={({ item: category }) => (
                 <Products navigation={props.navigation} category={category} />
               )}
-            />
+            /> */}
           </View>
         </View>
         {cart?.cartInfo?.products?.length && (
