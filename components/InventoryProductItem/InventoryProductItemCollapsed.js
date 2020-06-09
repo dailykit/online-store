@@ -20,11 +20,11 @@ const InventoryProductCollapsed = ({
       <TouchableOpacity
         onPress={() => {
           navigation.navigate('Modal', {
-            data: inventoryProduct,
             author: inventoryProduct.author,
             name: inventoryProduct?.name,
             data: inventoryProduct,
             recipeId: inventoryProduct.id,
+            type: 'inventory',
           });
         }}
         style={[
