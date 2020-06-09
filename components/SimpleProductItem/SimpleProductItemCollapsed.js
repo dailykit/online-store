@@ -15,7 +15,6 @@ const SimpleProductItemCollapsed = ({
 }) => {
   const [typeSelected, setTypeSelected] = useState('mealKit');
   const [servingIndex, setServingIndex] = useState(0);
-
   return (
     <>
       <TouchableOpacity
@@ -32,55 +31,44 @@ const SimpleProductItemCollapsed = ({
           },
         ]}
       >
-        <View style={[styles.item_container_one, { display: 'flex' }]}>
-          <Text style={styles.item_image_title}>{label}</Text>
-          <Image
-            source={{
-              uri: simpleRecipeProduct?.assets?.images[0]
-                ? simpleRecipeProduct?.assets?.images[0]
-                : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
-            }}
-            style={styles.item_image}
-          />
-        </View>
-        <View
-          style={[
-            styles.item_container_two,
-            {
-              paddingTop: 15,
-              paddingLeft: 10,
-            },
-          ]}
-        >
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text
-              style={styles.item_title}
-            >{`${simpleRecipeProduct?.name} `}</Text>
-
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate('Modal', {
-                  recipeId: simpleRecipeProduct?.simpleRecipe?.id,
-                })
-              }
-            >
-              <Feather size={14} name='info' />
-            </TouchableOpacity>
+        <View style={styles.item_container}>
+          <View style={styles.item_container_one}>
+            <Image
+              source={{
+                uri: simpleRecipeProduct?.assets?.images[0]
+                  ? simpleRecipeProduct?.assets?.images[0]
+                  : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+              }}
+              style={styles.item_image}
+            />
           </View>
-          <Text
-            style={styles.item_chef}
-          >{`${simpleRecipeProduct.simpleRecipe.author} `}</Text>
-          <Text style={styles.item_category}>
-            {simpleRecipeProduct.simpleRecipe.type}
-          </Text>
-        </View>
-        <View style={styles.item_container_three}>
-          <View style={styles.item_three_upper}></View>
-          <View style={styles.item_three_lower}>
-            <Text style={styles.item_details}>
-              Mealkit | <Feather name='user' />{' '}
-              <Text style={{ fontWeight: 'bold' }}>1</Text>
-            </Text>
+          <View
+            style={[
+              styles.item_container_two,
+              {
+                paddingTop: 15,
+                paddingLeft: 10,
+              },
+            ]}
+          >
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text
+                style={styles.item_title}
+              >{`${simpleRecipeProduct.name} `}</Text>
+            </View>
+            <View style={styles.item_three_lower}>
+              <Text
+                style={[
+                  styles.item_details,
+                  { fontWeight: 'normal', fontSize: 18 },
+                ]}
+              >
+                Mealkit
+              </Text>
+              <Text style={styles.item_chef}>
+                {simpleRecipeProduct?.simpleRecipe?.author}
+              </Text>
+            </View>
           </View>
         </View>
       </TouchableOpacity>

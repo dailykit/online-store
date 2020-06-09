@@ -12,12 +12,12 @@ export const styles = EStyleSheet.create({
     borderBottomWidth: 1,
     backgroundColor: '#fff',
     borderBottomColor: '#ececec',
-    height: width < height ? height * 0.6 : height * 0.5,
   },
   item_container_one: {
     flex: 4,
     position: 'relative',
     paddingTop: 20,
+    height: width < height ? height * 0.6 : height * 0.5,
   },
   item_container_two: {
     flex: 1.3,
