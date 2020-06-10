@@ -162,11 +162,11 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
   },
   card_title_text: {
-    fontSize: '$s',
+    fontSize: '$l',
     fontWeight: 'bold',
   },
   is_customizable: {
-    fontSize: '$xxs',
+    fontSize: '$s',
     color: 'gray',
   },
   item_parent_container: {
@@ -193,6 +193,7 @@ const styles = EStyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flexDirection: 'row',
+    marginTop: 20,
   },
   button: {
     backgroundColor: '#3fa4ff',

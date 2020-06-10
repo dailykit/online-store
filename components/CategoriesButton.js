@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { width } from '../utils/Scalaing';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-const CategoriesButton = ({ title, id, onPress, selectedIndex }) => {
+const CategoriesButton = ({ title, id, onPress, selectedIndex, length }) => {
   const [isHovered, setIsHovered] = React.useState(false);
   return (
     <TouchableOpacity
@@ -19,7 +19,8 @@ const CategoriesButton = ({ title, id, onPress, selectedIndex }) => {
         backgroundColor: selectedIndex == id ? '#3fa4ff' : '#e3e3e3',
         paddingVertical: 30,
         marginLeft: 20,
-        width: width * 0.15,
+        width: width / length - 30,
+        minWidth: 120,
         opacity: isHovered ? 0.6 : 1,
       }}
     >
