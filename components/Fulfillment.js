@@ -8,11 +8,29 @@ import {
 } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAppContext } from '../context/app';
+import { useLazyQuery } from '@apollo/react-hooks';
+import { TIME_SLOTS } from '../graphql';
 
 const Fulfillment = () => {
   const { visual } = useAppContext();
   const [type, setType] = React.useState('DELIVERY');
   const [time, setTime] = React.useState('ONDEMAND');
+
+  const [fetchTimeSlots, { data, error, loading }] = useLazyQuery(TIME_SLOTS);
+
+  console.log(data);
+
+  React.useEffect(() => {
+    if (time === 'PREORDER') {
+      console.log(time, type);
+      fetchTimeSlots({
+        variables: {
+          distance: 2,
+          type: time + '_' + type,
+        },
+      });
+    }
+  }, [type, time]);
 
   return (
     <View style={styles.container}>
