@@ -17,7 +17,7 @@ export const styles = EStyleSheet.create({
     flex: 4,
     position: 'relative',
     paddingTop: 20,
-    height: width < height ? height * 0.6 : height * 0.5,
+    height: width < height ? height * 0.3 : height * 0.5,
   },
   item_container_two: {
     flex: 1.3,
