@@ -18,10 +18,10 @@ const SimpleProductItemCollapsed = ({
   return (
     <>
       <TouchableOpacity
-        onPress={() => {
-          if (!tunnelItem) {
-          }
-        }}
+        // onPress={() => {
+        //   if (!tunnelItem) {
+        //   }
+        // }}
         style={[
           styles.item_container,
           {
@@ -51,7 +51,14 @@ const SimpleProductItemCollapsed = ({
               },
             ]}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                minHeight: 68,
+                alignItems: 'flex-start',
+              }}
+            >
               <Text
                 style={styles.item_title}
               >{`${simpleRecipeProduct.name} `}</Text>

@@ -391,16 +391,14 @@ const Home = (props) => {
         </View>
         <View style={styles.flexContainerMiddle}>
           <View style={styles.cardContainer}>
-            <View
-              style={[
-                styles.picker_container,
-                { marginBottom: 4, marginTop: 20 },
-              ]}
-            >
+            <View style={[styles.picker_container, { marginBottom: 4 }]}>
               <ScrollView
                 horizontal
                 style={{
                   flex: 1,
+                }}
+                contentContainerStyle={{
+                  marginHorizontal: width > 768 ? 'auto' : 'none',
                 }}
                 showsHorizontalScrollIndicator={false}
               >
@@ -415,8 +413,7 @@ const Home = (props) => {
                     onPress={(key) => {
                       setSelectedIndex(key);
                       scrollViewRef.current.scrollTo({
-                        x: 0,
-                        y: height * 1.3 - 20,
+                        y: height * 1,
                         animated: true,
                       });
                       sectionListRef.current.scrollToLocation({

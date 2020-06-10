@@ -18,15 +18,15 @@ const InventoryProductCollapsed = ({
   return (
     <>
       <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('Modal', {
-            author: inventoryProduct.author,
-            name: inventoryProduct?.name,
-            data: inventoryProduct,
-            recipeId: inventoryProduct.id,
-            type: 'inventory',
-          });
-        }}
+        // onPress={() => {
+        //   navigation.navigate('Modal', {
+        //     author: inventoryProduct.author,
+        //     name: inventoryProduct?.name,
+        //     data: inventoryProduct,
+        //     recipeId: inventoryProduct.id,
+        //     type: 'inventory',
+        //   });
+        // }}
         style={[
           styles.item_container,
           {
@@ -54,7 +54,14 @@ const InventoryProductCollapsed = ({
             },
           ]}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              minHeight: 68,
+              alignItems: 'flex-start',
+            }}
+          >
             <Text style={styles.item_title}>{`${inventoryProduct.name} `}</Text>
           </View>
           <View style={styles.item_three_lower}>

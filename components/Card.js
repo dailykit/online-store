@@ -175,6 +175,7 @@ const styles = EStyleSheet.create({
   bottom_container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
     paddingTop: 20,
     paddingHorizontal: '1rem',
@@ -193,7 +194,6 @@ const styles = EStyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: 20,
   },
   button: {
     backgroundColor: '#3fa4ff',

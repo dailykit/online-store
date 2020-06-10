@@ -16,7 +16,7 @@ export const styles = EStyleSheet.create({
   item_container_one: {
     flex: 4,
     paddingTop: 20,
-    height: width < height ? height * 0.3 : height * 0.5,
+    height: height * 0.3,
   },
 
   item_container_three: {

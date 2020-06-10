@@ -18,7 +18,7 @@ const CategoriesButton = ({ title, id, onPress, selectedIndex, length }) => {
         flexDirection: 'row',
         backgroundColor: selectedIndex == id ? '#3fa4ff' : '#e3e3e3',
         paddingVertical: 30,
-        marginLeft: 20,
+        marginHorizontal: 10,
         width: width / length - 30,
         minWidth: 120,
         opacity: isHovered ? 0.6 : 1,
