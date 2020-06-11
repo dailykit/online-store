@@ -57,7 +57,8 @@ const Fulfillment = () => {
       switch (time + '_' + type) {
         case 'PREORDER_PICKUP': {
           if (preOrderPickup[0].recurrences.length) {
-            console.log(generatePickUpSlots(preOrderPickup[0].recurrences));
+            const slots = generatePickUpSlots(preOrderPickup[0].recurrences);
+            console.log(slots);
           } else {
             setOops('Sorry! No time slots avaiable.');
           }
@@ -134,11 +135,10 @@ const Fulfillment = () => {
     let data = [];
     recurrences.forEach((rec) => {
       const now = new Date(); // now
-      // const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
-      const start = now;
+      const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
+      // const start = now;
       const end = new Date(now.getTime() + 7 * 1000 * 60 * 60 * 24); // 7 days later
       const dates = rrulestr(rec.rrule).between(start, end);
-      console.log(dates);
       dates.forEach((date) => {
         rec.timeSlots.forEach((timeslot) => {
           const timeslotFromArr = timeslot.from.split(':');
@@ -155,16 +155,14 @@ const Fulfillment = () => {
           );
           // start + lead time < to
           const leadMiliSecs = timeslot.pickUpLeadTime * 60000;
-          if (start.getTime() + leadMiliSecs < toTimeStamp.getTime()) {
+          if (now.getTime() + leadMiliSecs < toTimeStamp.getTime()) {
             // if start + lead time > from -> set new from time
             let slotStart;
             let slotEnd =
               toTimeStamp.getHours() + ':' + toTimeStamp.getMinutes();
-            if (start.getTime() + leadMiliSecs > fromTimeStamp.getTime()) {
+            if (now.getTime() + leadMiliSecs > fromTimeStamp.getTime()) {
               // new start time = lead time + now
-              const newStartTimeStamp = new Date(
-                start.getTime() + leadMiliSecs
-              );
+              const newStartTimeStamp = new Date(now.getTime() + leadMiliSecs);
               slotStart =
                 newStartTimeStamp.getHours() +
                 ':' +
@@ -243,8 +241,8 @@ const Fulfillment = () => {
     let data = [];
     recurrences.forEach((rec) => {
       const now = new Date(); // now
-      // const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
-      const start = now;
+      const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
+      // const start = now;
       const end = new Date(now.getTime() + 7 * 1000 * 60 * 60 * 24); // 7 days later
       const dates = rrulestr(rec.rrule).between(start, end);
       dates.forEach((date) => {
@@ -270,15 +268,15 @@ const Fulfillment = () => {
             );
             // start + lead time < to
             const leadMiliSecs = leadTime * 60000;
-            if (start.getTime() + leadMiliSecs < toTimeStamp.getTime()) {
+            if (now.getTime() + leadMiliSecs < toTimeStamp.getTime()) {
               // if start + lead time > from -> set new from time
               let slotStart;
               let slotEnd =
                 toTimeStamp.getHours() + ':' + toTimeStamp.getMinutes();
-              if (start.getTime() + leadMiliSecs > fromTimeStamp.getTime()) {
+              if (now.getTime() + leadMiliSecs > fromTimeStamp.getTime()) {
                 // new start time = lead time + now
                 const newStartTimeStamp = new Date(
-                  start.getTime() + leadMiliSecs
+                  now.getTime() + leadMiliSecs
                 );
                 slotStart =
                   newStartTimeStamp.getHours() +
