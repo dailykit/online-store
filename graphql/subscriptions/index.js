@@ -78,6 +78,44 @@ export const PREORDER_DELIVERY = gql`
   }
 `;
 
+export const ONDEMAND_DELIVERY = gql`
+  subscription OnDemandDelivery($distance: numeric!) {
+    onDemandDelivery: fulfillmentTypes(
+      where: { isActive: { _eq: true }, value: { _eq: "ONDEMAND_DELIVERY" } }
+    ) {
+      recurrences(where: { isActive: { _eq: true } }) {
+        id
+        type
+        rrule
+        timeSlots(where: { isActive: { _eq: true } }) {
+          id
+          to
+          from
+          mileRanges(
+            where: {
+              isActive: { _eq: true }
+              from: { _lte: $distance }
+              to: { _gte: $distance }
+            }
+          ) {
+            id
+            to
+            from
+            isActive
+            prepTime
+            charges {
+              id
+              charge
+              orderValueFrom
+              orderValueUpto
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const ORDERS = gql`
   subscription Orders($id: Int!) {
     orders(

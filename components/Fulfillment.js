@@ -14,6 +14,7 @@ import {
   PREORDER_PICKUP,
   ONDEMAND_PICKUP,
   PREORDER_DELIVERY,
+  ONDEMAND_DELIVERY,
 } from '../graphql';
 
 const Fulfillment = () => {
@@ -39,7 +40,16 @@ const Fulfillment = () => {
     }
   );
 
-  console.log(preOrderDelivery);
+  const { data: { onDemandDelivery = [] } = {} } = useSubscription(
+    ONDEMAND_DELIVERY,
+    {
+      variables: {
+        distance: 2,
+      },
+    }
+  );
+
+  console.log(onDemandDelivery);
 
   React.useEffect(() => {
     if (time && type) {
@@ -70,6 +80,11 @@ const Fulfillment = () => {
           break;
         }
         case 'ONDEMAND_DELIVERY': {
+          if (onDemandDelivery[0].recurrences.length) {
+            console.log(isDeliveryAvailable(onDemandDelivery[0].recurrences));
+          } else {
+            setOops('Sorry! Option not available currently.');
+          }
           break;
         }
         default: {
@@ -78,26 +93,6 @@ const Fulfillment = () => {
       }
     }
   }, [type, time]);
-
-  // {
-  //   "id": 3,
-  //   "type": "PREORDER_PICKUP",
-  //   "rrule": "RRULE:FREQ=DAILY",
-  //   "timeSlots": [
-  //     {
-  //       "id": 5,
-  //       "to": "17:00:00",
-  //       "from": "13:00:00",
-  //       "pickUpLeadTime": 120
-  //     },
-  //     {
-  //       "id": 7,
-  //       "to": "21:00:00",
-  //       "from": "19:00:00",
-  //       "pickUpLeadTime": 120
-  //     }
-  //   ]
-  // }
 
   const isPickUpAvailable = (recurrences) => {
     for (let rec of recurrences) {
@@ -121,21 +116,16 @@ const Fulfillment = () => {
             timeslotToArr[1],
             timeslotToArr[2]
           );
-          console.log('isPickUpAvailable -> fromTimeStamp', fromTimeStamp);
-          console.log('isPickUpAvailable -> now', now);
-          console.log('isPickUpAvailable -> toTimeStamp', toTimeStamp);
           // check if current time falls within time slot
-
           if (
             now.getTime() > fromTimeStamp.getTime() &&
             now.getTime() < toTimeStamp.getTime()
           ) {
-            console.log('YESSS');
-            return true;
+            return { status: true };
           }
         }
       } else {
-        return false;
+        return { status: false };
       }
     }
   };
@@ -211,6 +201,44 @@ const Fulfillment = () => {
     return data;
   };
 
+  const isDeliveryAvailable = (recurrences) => {
+    for (let rec of recurrences) {
+      const now = new Date(); // now
+      const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
+      const end = new Date(now.getTime() + 1000 * 60 * 60 * 24); // tomorrow
+      const dates = rrulestr(rec.rrule).between(start, now);
+      if (dates.length) {
+        for (let timeslot of rec.timeSlots) {
+          if (timeslot.mileRanges.length) {
+            const timeslotFromArr = timeslot.from.split(':');
+            const timeslotToArr = timeslot.to.split(':');
+            const fromTimeStamp = new Date(now.getTime());
+            fromTimeStamp.setHours(
+              timeslotFromArr[0],
+              timeslotFromArr[1],
+              timeslotFromArr[2]
+            );
+            const toTimeStamp = new Date(now.getTime());
+            toTimeStamp.setHours(
+              timeslotToArr[0],
+              timeslotToArr[1],
+              timeslotToArr[2]
+            );
+            // check if current time falls within time slot
+            if (
+              now.getTime() > fromTimeStamp.getTime() &&
+              now.getTime() < toTimeStamp.getTime()
+            ) {
+              return { status: true, mileRangeId: timeslot.mileRanges[0].id };
+            }
+          }
+        }
+      } else {
+        return { status: false };
+      }
+    }
+  };
+
   const generateDeliverySlots = (recurrences) => {
     let data = [];
     recurrences.forEach((rec) => {
@@ -272,7 +300,7 @@ const Fulfillment = () => {
                     {
                       start: slotStart,
                       end: slotEnd,
-                      slotId: timeslot.id,
+                      mileRangeId: timeslot.mileRanges[0].id,
                     },
                   ],
                 });
@@ -280,7 +308,7 @@ const Fulfillment = () => {
                 data[index].slots.push({
                   start: slotStart,
                   end: slotEnd,
-                  slotId: timeslot.id,
+                  mileRangeId: timeslot.mileRanges[0].id,
                 });
               }
             }
