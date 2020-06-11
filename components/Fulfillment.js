@@ -54,7 +54,7 @@ const Fulfillment = () => {
   );
 
   React.useEffect(() => {
-    if (fulfillment.date) {
+    if (fulfillment.date && time === 'PREORDER') {
       const index = pickerDates.findIndex(
         (data) => data.date === fulfillment.date
       );
@@ -68,7 +68,7 @@ const Fulfillment = () => {
   }, [fulfillment.date]);
 
   React.useEffect(() => {
-    if (fulfillment.time) {
+    if (fulfillment.time && time === 'PREORDER') {
       const index = pickerSlots.findIndex(
         (slot) => slot.time === fulfillment.time
       );
@@ -92,7 +92,6 @@ const Fulfillment = () => {
                     preOrderPickup[0].recurrences
                   );
                   const miniSlots = generateMiniSlots(slots, 15);
-                  console.log(miniSlots);
                   setPickerDates([...miniSlots]);
                   setFulfillment({
                     date: miniSlots[0].date,
