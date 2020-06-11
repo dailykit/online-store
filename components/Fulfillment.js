@@ -49,8 +49,6 @@ const Fulfillment = () => {
     }
   );
 
-  console.log(onDemandDelivery);
-
   React.useEffect(() => {
     if (time && type) {
       setOops('');
@@ -58,7 +56,8 @@ const Fulfillment = () => {
         case 'PREORDER_PICKUP': {
           if (preOrderPickup[0].recurrences.length) {
             const slots = generatePickUpSlots(preOrderPickup[0].recurrences);
-            console.log(slots);
+            const miniSlots = generateMiniSlots(slots, 15);
+            console.log(miniSlots);
           } else {
             setOops('Sorry! No time slots avaiable.');
           }
@@ -74,7 +73,11 @@ const Fulfillment = () => {
         }
         case 'PREORDER_DELIVERY': {
           if (preOrderDelivery[0].recurrences.length) {
-            console.log(generateDeliverySlots(preOrderDelivery[0].recurrences));
+            const slots = generateDeliverySlots(
+              preOrderDelivery[0].recurrences
+            );
+            const miniSlots = generateMiniSlots(slots, 15);
+            console.log(miniSlots);
           } else {
             setOops('Sorry! No time slots avaiable.');
           }
@@ -94,6 +97,53 @@ const Fulfillment = () => {
       }
     }
   }, [type, time]);
+
+  const getMinutes = (time) => {
+    return parseInt(time.split(':')[0]) * 60 + parseInt(time.split(':')[1]);
+  };
+
+  const makeDoubleDigit = (num) => {
+    if (num.toString().length === 1) {
+      return '0' + num;
+    } else {
+      return num;
+    }
+  };
+
+  const getTimeFromMinutes = (num) => {
+    const hours = num / 60;
+    const rhours = Math.floor(hours);
+    const minutes = (hours - rhours) * 60;
+    const rminutes = Math.round(minutes);
+    return rhours + ':' + makeDoubleDigit(rminutes);
+  };
+
+  const generateMiniSlots = (data, size) => {
+    let newData = [];
+    data.forEach((el) => {
+      el.slots.forEach((slot) => {
+        const startMinutes = getMinutes(slot.start);
+        const endMinutes = getMinutes(slot.end);
+        let startPoint = startMinutes;
+        while (startPoint < endMinutes) {
+          const index = newData.findIndex((datum) => datum.date === el.date);
+          if (index === -1) {
+            newData.push({
+              date: el.date,
+              slots: [{ time: getTimeFromMinutes(startPoint), ...slot }],
+            });
+          } else {
+            newData[index].slots.push({
+              time: getTimeFromMinutes(startPoint),
+              ...slot,
+            });
+          }
+          startPoint = startPoint + size;
+        }
+      });
+    });
+    return newData;
+  };
 
   const isPickUpAvailable = (recurrences) => {
     for (let rec of recurrences) {
