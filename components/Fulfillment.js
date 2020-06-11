@@ -6,10 +6,11 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
-import { RRule, RRuleSet, rrulestr } from 'rrule';
+import { Picker } from '@react-native-community/picker';
+import { rrulestr } from 'rrule';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAppContext } from '../context/app';
-import { useLazyQuery, useSubscription } from '@apollo/react-hooks';
+import { useSubscription } from '@apollo/react-hooks';
 import {
   PREORDER_PICKUP,
   ONDEMAND_PICKUP,
@@ -22,6 +23,9 @@ const Fulfillment = () => {
   const [type, setType] = React.useState('');
   const [time, setTime] = React.useState('');
   const [oops, setOops] = React.useState('');
+  const [pickerDates, setPickerDates] = React.useState([]);
+  const [pickerSlots, setPickerSlots] = React.useState([]);
+  const [fulfillment, setFulfillment] = React.useState({});
 
   const { data: { preOrderPickup = [] } = {} } = useSubscription(
     PREORDER_PICKUP
@@ -50,6 +54,32 @@ const Fulfillment = () => {
   );
 
   React.useEffect(() => {
+    if (fulfillment.date) {
+      const index = pickerDates.findIndex(
+        (data) => data.date === fulfillment.date
+      );
+      setPickerSlots([...pickerDates[index].slots]);
+      setFulfillment({
+        ...fulfillment,
+        time: pickerDates[index].slots[0].time,
+        data: { mileRangeId: pickerDates[index].slots[0]?.mileRangeId },
+      });
+    }
+  }, [fulfillment.date]);
+
+  React.useEffect(() => {
+    if (fulfillment.time) {
+      const index = pickerSlots.findIndex(
+        (slot) => slot.time === fulfillment.time
+      );
+      setFulfillment({
+        ...fulfillment,
+        data: { mileRangeId: pickerSlots[index]?.mileRangeId },
+      });
+    }
+  }, [fulfillment.time]);
+
+  React.useEffect(() => {
     if (time && type) {
       setOops('');
       switch (type) {
@@ -63,6 +93,11 @@ const Fulfillment = () => {
                   );
                   const miniSlots = generateMiniSlots(slots, 15);
                   console.log(miniSlots);
+                  setPickerDates([...miniSlots]);
+                  setFulfillment({
+                    date: miniSlots[0].date,
+                    time: miniSlots[0].slots[0].time,
+                  });
                 } else {
                   setOops('Sorry! No time slots available.');
                 }
@@ -95,6 +130,12 @@ const Fulfillment = () => {
                   );
                   const miniSlots = generateMiniSlots(slots, 15);
                   console.log(miniSlots);
+                  setPickerDates([...miniSlots]);
+                  setFulfillment({
+                    date: miniSlots[0].date,
+                    time: miniSlots[0].slots[0].time,
+                    data: { mileRangeId: miniSlots[0].slots[0]?.mileRangeId },
+                  });
                 } else {
                   setOops('Sorry! No time slots available.');
                 }
@@ -467,6 +508,35 @@ const Fulfillment = () => {
             <Text style={[styles.text, { opacity: 0.6, marginTop: 20 }]}>
               Select time slots:
             </Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Picker
+                selectedValue={fulfillment.date}
+                style={{ height: 40, flex: 1 }}
+                onValueChange={(itemValue) => {
+                  setFulfillment({
+                    date: itemValue,
+                  });
+                }}
+              >
+                {pickerDates.map((data) => (
+                  <Picker.Item label={data.date} value={data.date} />
+                ))}
+              </Picker>
+              <Picker
+                selectedValue={fulfillment.time}
+                style={{ height: 40, flex: 1 }}
+                onValueChange={(itemValue) =>
+                  setFulfillment({
+                    ...fulfillment,
+                    time: itemValue,
+                  })
+                }
+              >
+                {pickerSlots.map((data) => (
+                  <Picker.Item label={data.time} value={data.time} />
+                ))}
+              </Picker>
+            </View>
           </>
         )}
       </ScrollView>
