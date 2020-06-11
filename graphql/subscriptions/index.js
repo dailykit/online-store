@@ -40,6 +40,44 @@ export const ONDEMAND_PICKUP = gql`
   }
 `;
 
+export const PREORDER_DELIVERY = gql`
+  subscription PreOrderDelivery($distance: numeric!) {
+    preOrderDelivery: fulfillmentTypes(
+      where: { isActive: { _eq: true }, value: { _eq: "PREORDER_DELIVERY" } }
+    ) {
+      recurrences(where: { isActive: { _eq: true } }) {
+        id
+        type
+        rrule
+        timeSlots(where: { isActive: { _eq: true } }) {
+          id
+          to
+          from
+          mileRanges(
+            where: {
+              isActive: { _eq: true }
+              from: { _lte: $distance }
+              to: { _gte: $distance }
+            }
+          ) {
+            id
+            to
+            from
+            isActive
+            leadTime
+            charges {
+              id
+              charge
+              orderValueFrom
+              orderValueUpto
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const ORDERS = gql`
   subscription Orders($id: Int!) {
     orders(

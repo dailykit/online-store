@@ -10,7 +10,11 @@ import { RRule, RRuleSet, rrulestr } from 'rrule';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAppContext } from '../context/app';
 import { useLazyQuery, useSubscription } from '@apollo/react-hooks';
-import { PREORDER_PICKUP, ONDEMAND_PICKUP } from '../graphql';
+import {
+  PREORDER_PICKUP,
+  ONDEMAND_PICKUP,
+  PREORDER_DELIVERY,
+} from '../graphql';
 
 const Fulfillment = () => {
   const { visual, availability } = useAppContext();
@@ -26,7 +30,16 @@ const Fulfillment = () => {
     ONDEMAND_PICKUP
   );
 
-  console.log(onDemandPickup);
+  const { data: { preOrderDelivery = [] } = {} } = useSubscription(
+    PREORDER_DELIVERY,
+    {
+      variables: {
+        distance: 2,
+      },
+    }
+  );
+
+  console.log(preOrderDelivery);
 
   React.useEffect(() => {
     if (time && type) {
@@ -34,7 +47,7 @@ const Fulfillment = () => {
       switch (time + '_' + type) {
         case 'PREORDER_PICKUP': {
           if (preOrderPickup[0].recurrences.length) {
-            console.log(generateTimeSlots(preOrderPickup[0].recurrences));
+            console.log(generatePickUpSlots(preOrderPickup[0].recurrences));
           } else {
             setOops('Sorry! No time slots avaiable.');
           }
@@ -49,9 +62,14 @@ const Fulfillment = () => {
           break;
         }
         case 'PREORDER_DELIVERY': {
+          if (preOrderDelivery[0].recurrences.length) {
+            console.log(generateDeliverySlots(preOrderDelivery[0].recurrences));
+          } else {
+            setOops('Sorry! No time slots avaiable.');
+          }
           break;
         }
-        case 'ONDEMAND_PICKUP': {
+        case 'ONDEMAND_DELIVERY': {
           break;
         }
         default: {
@@ -122,7 +140,7 @@ const Fulfillment = () => {
     }
   };
 
-  const generateTimeSlots = (recurrences) => {
+  const generatePickUpSlots = (recurrences) => {
     let data = [];
     recurrences.forEach((rec) => {
       const now = new Date(); // now
@@ -185,6 +203,86 @@ const Fulfillment = () => {
                 start: slotStart,
                 end: slotEnd,
               });
+            }
+          }
+        });
+      });
+    });
+    return data;
+  };
+
+  const generateDeliverySlots = (recurrences) => {
+    let data = [];
+    recurrences.forEach((rec) => {
+      const now = new Date(); // now
+      // const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
+      const start = now;
+      const end = new Date(now.getTime() + 7 * 1000 * 60 * 60 * 24); // 7 days later
+      const dates = rrulestr(rec.rrule).between(start, end);
+      dates.forEach((date) => {
+        rec.timeSlots.forEach((timeslot) => {
+          // if multiple mile ranges, only first one will be taken
+          if (timeslot.mileRanges.length) {
+            const leadTime = timeslot.mileRanges[0].leadTime;
+            const timeslotFromArr = timeslot.from.split(':');
+            const timeslotToArr = timeslot.to.split(':');
+            const fromTimeStamp = new Date(
+              date.setHours(
+                timeslotFromArr[0],
+                timeslotFromArr[1],
+                timeslotFromArr[2]
+              )
+            );
+            const toTimeStamp = new Date(
+              date.setHours(
+                timeslotToArr[0],
+                timeslotToArr[1],
+                timeslotToArr[2]
+              )
+            );
+            // start + lead time < to
+            const leadMiliSecs = leadTime * 60000;
+            if (start.getTime() + leadMiliSecs < toTimeStamp.getTime()) {
+              // if start + lead time > from -> set new from time
+              let slotStart;
+              let slotEnd =
+                toTimeStamp.getHours() + ':' + toTimeStamp.getMinutes();
+              if (start.getTime() + leadMiliSecs > fromTimeStamp.getTime()) {
+                // new start time = lead time + now
+                const newStartTimeStamp = new Date(
+                  start.getTime() + leadMiliSecs
+                );
+                slotStart =
+                  newStartTimeStamp.getHours() +
+                  ':' +
+                  newStartTimeStamp.getMinutes();
+              } else {
+                slotStart =
+                  fromTimeStamp.getHours() + ':' + fromTimeStamp.getMinutes();
+              }
+              // check if date already in slots
+              const dateWithoutTime = date.toDateString();
+              const index = data.findIndex(
+                (slot) => slot.date === dateWithoutTime
+              );
+              if (index === -1) {
+                data.push({
+                  date: dateWithoutTime,
+                  slots: [
+                    {
+                      start: slotStart,
+                      end: slotEnd,
+                      slotId: timeslot.id,
+                    },
+                  ],
+                });
+              } else {
+                data[index].slots.push({
+                  start: slotStart,
+                  end: slotEnd,
+                  slotId: timeslot.id,
+                });
+              }
             }
           }
         });

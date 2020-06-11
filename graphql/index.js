@@ -24,6 +24,7 @@ import {
   ORDERS,
   PREORDER_PICKUP,
   ONDEMAND_PICKUP,
+  PREORDER_DELIVERY,
 } from './subscriptions';
 
 export {
@@ -50,4 +51,5 @@ export {
   TIME_SLOTS,
   PREORDER_PICKUP,
   ONDEMAND_PICKUP,
+  PREORDER_DELIVERY,
 };
