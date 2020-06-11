@@ -1,21 +1,21 @@
+import { useSubscription } from '@apollo/react-hooks';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Picker } from '@react-native-community/picker';
 import React from 'react';
 import {
-  View,
+  ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  ScrollView,
+  View,
 } from 'react-native';
-import { Picker } from '@react-native-community/picker';
 import { rrulestr } from 'rrule';
-import { MaterialIcons } from '@expo/vector-icons';
 import { useAppContext } from '../context/app';
-import { useSubscription } from '@apollo/react-hooks';
 import {
-  PREORDER_PICKUP,
+  ONDEMAND_DELIVERY,
   ONDEMAND_PICKUP,
   PREORDER_DELIVERY,
-  ONDEMAND_DELIVERY,
+  PREORDER_PICKUP,
 } from '../graphql';
 
 const Fulfillment = () => {
@@ -105,7 +105,21 @@ const Fulfillment = () => {
               }
               case 'ONDEMAND': {
                 if (onDemandPickup[0].recurrences.length) {
-                  console.log(isPickUpAvailable(onDemandPickup[0].recurrences));
+                  const result = isPickUpAvailable(
+                    onDemandPickup[0].recurrences
+                  );
+                  if (result.status) {
+                    const date = new Date();
+                    setFulfillment({
+                      date: date.toDateString(),
+                      time:
+                        date.getHours() +
+                        ':' +
+                        makeDoubleDigit(date.getMinutes()),
+                    });
+                  } else {
+                    setOops('Sorry! Option not available currently!');
+                  }
                 } else {
                   setOops('Sorry! Option not available currently.');
                 }
@@ -129,7 +143,6 @@ const Fulfillment = () => {
                     preOrderDelivery[0].recurrences
                   );
                   const miniSlots = generateMiniSlots(slots, 15);
-                  console.log(miniSlots);
                   setPickerDates([...miniSlots]);
                   setFulfillment({
                     date: miniSlots[0].date,
@@ -143,9 +156,22 @@ const Fulfillment = () => {
               }
               case 'ONDEMAND': {
                 if (onDemandDelivery[0].recurrences.length) {
-                  console.log(
-                    isDeliveryAvailable(onDemandDelivery[0].recurrences)
+                  const result = isDeliveryAvailable(
+                    onDemandDelivery[0].recurrences
                   );
+                  if (result.status) {
+                    const date = new Date();
+                    setFulfillment({
+                      date: date.toDateString(),
+                      time:
+                        date.getHours() +
+                        ':' +
+                        makeDoubleDigit(date.getMinutes()),
+                      mileRangeId: result.mileRangeId,
+                    });
+                  } else {
+                    setOops('Sorry! Option not available currently!');
+                  }
                 } else {
                   setOops('Sorry! Option not available currently.');
                 }
@@ -440,12 +466,30 @@ const Fulfillment = () => {
     return data;
   };
 
+  const confirm = () => {
+    if (oops || !type || !time) {
+      return console.log('Invalid selections!');
+    }
+    console.log(fulfillment);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.headingContainer}>
         <Text style={styles.heading}>Help us know your preference</Text>
       </View>
-      {!!oops && <Text style={{ marginBottom: 20 }}>{oops}</Text>}
+      {!!oops && (
+        <Text
+          style={{
+            marginBottom: 20,
+            backgroundColor: '#ff5a52',
+            padding: 10,
+            color: '#fff',
+          }}
+        >
+          {oops}
+        </Text>
+      )}
       <ScrollView>
         <Text style={[styles.text, { opacity: 0.6 }]}>Order for:</Text>
         <View style={{ flexDirection: 'row', marginBottom: 20 }}>
@@ -519,7 +563,11 @@ const Fulfillment = () => {
                 }}
               >
                 {pickerDates.map((data) => (
-                  <Picker.Item label={data.date} value={data.date} />
+                  <Picker.Item
+                    key={data.date}
+                    label={data.date}
+                    value={data.date}
+                  />
                 ))}
               </Picker>
               <Picker
@@ -533,13 +581,29 @@ const Fulfillment = () => {
                 }
               >
                 {pickerSlots.map((data) => (
-                  <Picker.Item label={data.time} value={data.time} />
+                  <Picker.Item
+                    key={data.time}
+                    label={data.time}
+                    value={data.time}
+                  />
                 ))}
               </Picker>
             </View>
           </>
         )}
       </ScrollView>
+      <TouchableOpacity
+        style={{
+          marginTop: 20,
+          height: 40,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: visual.color,
+        }}
+        onPress={confirm}
+      >
+        <Text style={{ color: '#fff', fontWeight: 'bold' }}>Confirm</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -547,7 +611,7 @@ const Fulfillment = () => {
 export default Fulfillment;
 
 const styles = StyleSheet.create({
-  container: { padding: 10 },
+  container: { padding: 10, height: '100%', position: 'relative' },
   headingContainer: { justifyContent: 'center', marginBottom: 20 },
   heading: { lineHeight: 24, fontSize: 16, fontWeight: 'bold' },
   text: {
