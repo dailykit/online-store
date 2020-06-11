@@ -52,42 +52,70 @@ const Fulfillment = () => {
   React.useEffect(() => {
     if (time && type) {
       setOops('');
-      switch (time + '_' + type) {
-        case 'PREORDER_PICKUP': {
-          if (preOrderPickup[0].recurrences.length) {
-            const slots = generatePickUpSlots(preOrderPickup[0].recurrences);
-            const miniSlots = generateMiniSlots(slots, 15);
-            console.log(miniSlots);
+      switch (type) {
+        case 'PICKUP': {
+          if (availability.pickup.isAvailable) {
+            switch (time) {
+              case 'PREORDER': {
+                if (preOrderPickup[0].recurrences.length) {
+                  const slots = generatePickUpSlots(
+                    preOrderPickup[0].recurrences
+                  );
+                  const miniSlots = generateMiniSlots(slots, 15);
+                  console.log(miniSlots);
+                } else {
+                  setOops('Sorry! No time slots available.');
+                }
+                break;
+              }
+              case 'ONDEMAND': {
+                if (onDemandPickup[0].recurrences.length) {
+                  console.log(isPickUpAvailable(onDemandPickup[0].recurrences));
+                } else {
+                  setOops('Sorry! Option not available currently.');
+                }
+                break;
+              }
+              default: {
+                return setOops('Unkown error!');
+              }
+            }
           } else {
-            setOops('Sorry! No time slots avaiable.');
+            setOops('Sorry! Pickup not available currently.');
           }
           break;
         }
-        case 'ONDEMAND_PICKUP': {
-          if (onDemandPickup[0].recurrences.length) {
-            console.log(isPickUpAvailable(onDemandPickup[0].recurrences));
+        case 'DELIVERY': {
+          if (availability.delivery.isAvailable) {
+            switch (time) {
+              case 'PREORDER': {
+                if (preOrderDelivery[0].recurrences.length) {
+                  const slots = generateDeliverySlots(
+                    preOrderDelivery[0].recurrences
+                  );
+                  const miniSlots = generateMiniSlots(slots, 15);
+                  console.log(miniSlots);
+                } else {
+                  setOops('Sorry! No time slots available.');
+                }
+                break;
+              }
+              case 'ONDEMAND': {
+                if (onDemandDelivery[0].recurrences.length) {
+                  console.log(
+                    isDeliveryAvailable(onDemandDelivery[0].recurrences)
+                  );
+                } else {
+                  setOops('Sorry! Option not available currently.');
+                }
+                break;
+              }
+              default: {
+                return setOops('Unkown error!');
+              }
+            }
           } else {
-            setOops('Sorry! Option not available currently.');
-          }
-          break;
-        }
-        case 'PREORDER_DELIVERY': {
-          if (preOrderDelivery[0].recurrences.length) {
-            const slots = generateDeliverySlots(
-              preOrderDelivery[0].recurrences
-            );
-            const miniSlots = generateMiniSlots(slots, 15);
-            console.log(miniSlots);
-          } else {
-            setOops('Sorry! No time slots avaiable.');
-          }
-          break;
-        }
-        case 'ONDEMAND_DELIVERY': {
-          if (onDemandDelivery[0].recurrences.length) {
-            console.log(isDeliveryAvailable(onDemandDelivery[0].recurrences));
-          } else {
-            setOops('Sorry! Option not available currently.');
+            setOops('Sorry! Delivery not available currently.');
           }
           break;
         }
@@ -146,7 +174,6 @@ const Fulfillment = () => {
   };
 
   const isPickUpAvailable = (recurrences) => {
-    console.log(recurrences);
     for (let rec of recurrences) {
       const now = new Date(); // now
       const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
@@ -173,7 +200,6 @@ const Fulfillment = () => {
             now.getTime() > fromTimeStamp.getTime() &&
             now.getTime() < toTimeStamp.getTime()
           ) {
-            console.log('YES');
             return { status: true };
           } else {
             return { status: false };
