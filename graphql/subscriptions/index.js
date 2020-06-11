@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export const PREORDER_PICKUP = gql`
-  subscription Pickup {
+  subscription PreOrderPickup {
     preOrderPickup: fulfillmentTypes(
       where: { isActive: { _eq: true }, value: { _eq: "PREORDER_PICKUP" } }
     ) {
@@ -14,6 +14,26 @@ export const PREORDER_PICKUP = gql`
           to
           from
           pickUpLeadTime
+        }
+      }
+    }
+  }
+`;
+
+export const ONDEMAND_PICKUP = gql`
+  subscription OndemandPickup {
+    onDemandPickup: fulfillmentTypes(
+      where: { isActive: { _eq: true }, value: { _eq: "ONDEMAND_PICKUP" } }
+    ) {
+      recurrences(where: { isActive: { _eq: true } }) {
+        id
+        type
+        rrule
+        timeSlots(where: { isActive: { _eq: true } }) {
+          id
+          to
+          from
+          pickUpPrepTime
         }
       }
     }

@@ -10,7 +10,7 @@ import { RRule, RRuleSet, rrulestr } from 'rrule';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAppContext } from '../context/app';
 import { useLazyQuery, useSubscription } from '@apollo/react-hooks';
-import { TIME_SLOTS, PREORDER_PICKUP } from '../graphql';
+import { PREORDER_PICKUP, ONDEMAND_PICKUP } from '../graphql';
 
 const Fulfillment = () => {
   const { visual, availability } = useAppContext();
@@ -18,13 +18,15 @@ const Fulfillment = () => {
   const [time, setTime] = React.useState('');
   const [oops, setOops] = React.useState('');
 
-  const {
-    data: { preOrderPickup = [] } = {},
-    error,
-    loading,
-  } = useSubscription(PREORDER_PICKUP);
+  const { data: { preOrderPickup = [] } = {} } = useSubscription(
+    PREORDER_PICKUP
+  );
 
-  console.log(preOrderPickup);
+  const { data: { onDemandPickup = [] } = {} } = useSubscription(
+    ONDEMAND_PICKUP
+  );
+
+  console.log(onDemandPickup);
 
   React.useEffect(() => {
     if (time && type) {
@@ -39,6 +41,11 @@ const Fulfillment = () => {
           break;
         }
         case 'ONDEMAND_PICKUP': {
+          if (onDemandPickup[0].recurrences.length) {
+            console.log(isPickUpAvailable(onDemandPickup[0].recurrences));
+          } else {
+            setOops('Sorry! Option not available currently.');
+          }
           break;
         }
         case 'PREORDER_DELIVERY': {
@@ -73,6 +80,47 @@ const Fulfillment = () => {
   //     }
   //   ]
   // }
+
+  const isPickUpAvailable = (recurrences) => {
+    for (let rec of recurrences) {
+      const now = new Date(); // now
+      const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
+      const end = new Date(now.getTime() + 1000 * 60 * 60 * 24); // tomorrow
+      const dates = rrulestr(rec.rrule).between(start, now);
+      if (dates.length) {
+        for (let timeslot of rec.timeSlots) {
+          const timeslotFromArr = timeslot.from.split(':');
+          const timeslotToArr = timeslot.to.split(':');
+          const fromTimeStamp = new Date(now.getTime());
+          fromTimeStamp.setHours(
+            timeslotFromArr[0],
+            timeslotFromArr[1],
+            timeslotFromArr[2]
+          );
+          const toTimeStamp = new Date(now.getTime());
+          toTimeStamp.setHours(
+            timeslotToArr[0],
+            timeslotToArr[1],
+            timeslotToArr[2]
+          );
+          console.log('isPickUpAvailable -> fromTimeStamp', fromTimeStamp);
+          console.log('isPickUpAvailable -> now', now);
+          console.log('isPickUpAvailable -> toTimeStamp', toTimeStamp);
+          // check if current time falls within time slot
+
+          if (
+            now.getTime() > fromTimeStamp.getTime() &&
+            now.getTime() < toTimeStamp.getTime()
+          ) {
+            console.log('YESSS');
+            return true;
+          }
+        }
+      } else {
+        return false;
+      }
+    }
+  };
 
   const generateTimeSlots = (recurrences) => {
     let data = [];

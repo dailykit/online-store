@@ -23,6 +23,7 @@ import {
   CUSTOMIZABLE_PRODUCTS,
   ORDERS,
   PREORDER_PICKUP,
+  ONDEMAND_PICKUP,
 } from './subscriptions';
 
 export {
@@ -48,4 +49,5 @@ export {
   CUSTOMIZABLE_PRODUCTS,
   TIME_SLOTS,
   PREORDER_PICKUP,
+  ONDEMAND_PICKUP,
 };
