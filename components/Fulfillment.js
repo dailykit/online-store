@@ -146,6 +146,7 @@ const Fulfillment = () => {
   };
 
   const isPickUpAvailable = (recurrences) => {
+    console.log(recurrences);
     for (let rec of recurrences) {
       const now = new Date(); // now
       const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
@@ -172,7 +173,10 @@ const Fulfillment = () => {
             now.getTime() > fromTimeStamp.getTime() &&
             now.getTime() < toTimeStamp.getTime()
           ) {
+            console.log('YES');
             return { status: true };
+          } else {
+            return { status: false };
           }
         }
       } else {
@@ -278,6 +282,8 @@ const Fulfillment = () => {
               now.getTime() < toTimeStamp.getTime()
             ) {
               return { status: true, mileRangeId: timeslot.mileRanges[0].id };
+            } else {
+              return { status: false };
             }
           }
         }
