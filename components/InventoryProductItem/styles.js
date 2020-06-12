@@ -9,9 +9,9 @@ export const styles = EStyleSheet.create({
     paddingBottom: 20,
     paddingHorizontal: 10,
     marginTop: 4,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0,
     backgroundColor: '#fff',
-    borderBottomColor: '#ececec',
+    borderBottomColor: '#fff',
   },
   item_container_one: {
     flex: 4,

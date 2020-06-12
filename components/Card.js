@@ -166,7 +166,6 @@ const styles = EStyleSheet.create({
     width: width >= 1280 ? width * 0.2 : width,
     padding: 5,
     elevation: 2,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
     shadowColor: '#000',
     shadowOffset: {},
     backgroundColor: '#fff',
