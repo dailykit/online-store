@@ -442,9 +442,9 @@ const Home = (props) => {
             />
           </View>
         </View>
-        {cart?.cartInfo?.products?.length && (
+        {/* {cart?.cartInfo?.products?.length && (
           <View style={{ height: height * 0.08 }} />
-        )}
+        )} */}
         {/* <View style={styles.headerContainer}>
           <SafetyBanner {...props} />
         </View> */}

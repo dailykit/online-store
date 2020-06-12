@@ -51,7 +51,7 @@ const ModalContent = ({ route, navigation }) => {
       <ScrollView style={styles.container}>
         <View
           style={{
-            flexDirection: 'row',
+            flexDirection: width > 768 ? 'row' : 'column',
           }}
         >
           <View
