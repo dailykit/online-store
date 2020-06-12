@@ -202,6 +202,7 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
       name
       default
       id
+      assets
       simpleRecipeProductOptions {
         id
         price

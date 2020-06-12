@@ -25,7 +25,7 @@ const InventoryProductCollapsed = ({
         onPress={() => {
           navigation.navigate('ProductPage', {
             id: inventoryProduct.id,
-            type: 'inventory',
+            type: 'inventoryProduct',
           });
         }}
         style={[

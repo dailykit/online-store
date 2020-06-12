@@ -16,130 +16,139 @@ import { SIMPLE_RECIPE, INVENTORY_PRODUCT } from '../graphql';
 import { height, width } from '../utils/Scalaing';
 import TabsNew from './Tabs';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { Header } from '.';
 
 const ModalContent = ({ route, navigation }) => {
-  let { recipeId, author, name, data, type } = route.params;
+  let { recipeId } = route.params;
 
-  // const { data, loading, error } = useQuery(SIMPLE_RECIPE, {
-  //   variables: {
-  //     id: recipeId,
-  //   },
-  // });
+  const { data: { simpleRecipe = {} } = {}, loading, error } = useQuery(
+    SIMPLE_RECIPE,
+    {
+      variables: {
+        id: recipeId,
+      },
+    }
+  );
 
-  // if (loading) {
-  //   return (
-  //     <View style={styles.center}>
-  //       <Spinner />
-  //     </View>
-  //   );
-  // }
-  console.log(type);
-  if (type !== 'inventory') {
+  if (loading) {
     return (
       <View style={styles.center}>
-        <Text>Oops! We could not get recipe details. Check again later.</Text>
+        <Spinner />
       </View>
     );
   }
+  // console.log(type);
+  // if (type !== 'inventory') {
+  //   return (
+  //     <View style={styles.center}>
+  //       <Text>Oops! We could not get recipe details. Check again later.</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
-    <ScrollView style={styles.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-        }}
-      >
-        <View
-          style={[
-            styles.image_cover_container,
-            {
-              flex: 1,
-            },
-          ]}
-        >
-          <Image
-            source={{
-              uri: data?.assets?.images[0]
-                ? data?.assets?.images[0]
-                : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
-            }}
-            style={styles.image_cover}
-          />
-        </View>
+    <>
+      <ScrollView style={styles.container}>
         <View
           style={{
-            flex: 1,
+            flexDirection: 'row',
           }}
         >
-          <View style={styles.title_container}>
-            <View style={styles.details}>
-              <Text style={styles.item_title}>{name}</Text>
-              <Text style={styles.item_chef}>{author}</Text>
-              <Text style={styles.item_category}>{type}</Text>
-            </View>
-            <View style={styles.close_container}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.goBack();
-                }}
-              >
-                <AntDesign size={30} name='close' />
-              </TouchableOpacity>
-            </View>
+          <View
+            style={[
+              styles.image_cover_container,
+              {
+                flex: 1,
+              },
+            ]}
+          >
+            <Image
+              source={{
+                uri: simpleRecipe?.assets?.images[0]
+                  ? simpleRecipe?.assets?.images[0]
+                  : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+              }}
+              style={styles.image_cover}
+            />
           </View>
-          <View style={styles.desc}>
-            <Text style={styles.desc_content}>{data?.description}.</Text>
-            <View style={styles.cooking_container}>
-              <Image source={cooking} style={styles.cooking_img} />
-              <Text style={styles.desc_time}>
-                Cooking Time: {data?.cookingTime} mins.
-              </Text>
+          <View
+            style={{
+              flex: 1,
+            }}
+          >
+            <View style={styles.title_container}>
+              <View style={styles.details}>
+                <Text style={styles.item_title}>{simpleRecipe?.name}</Text>
+                <Text style={styles.item_chef}>{simpleRecipe?.author}</Text>
+                <Text style={styles.item_category}>{simpleRecipe?.type}</Text>
+              </View>
+              {/* <View style={styles.close_container}>
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
+                >
+                  <AntDesign size={30} name='close' />
+                </TouchableOpacity>
+              </View> */}
             </View>
-            <Text style={styles.desc_equipments}>
-              Equipments needed: {data?.utensils?.join(', ')}
-            </Text>
-            {/* <Text style={styles.desc_allergy}>
+            <View style={styles.desc}>
+              <Text style={styles.desc_content}>
+                {simpleRecipe?.description}.
+              </Text>
+              <View style={styles.cooking_container}>
+                <Image source={cooking} style={styles.cooking_img} />
+                <Text style={styles.desc_time}>
+                  Cooking Time: {simpleRecipe?.cookingTime} mins.
+                </Text>
+              </View>
+              <Text style={styles.desc_equipments}>
+                Equipments needed: {simpleRecipe?.utensils?.join(', ')}
+              </Text>
+              {/* <Text style={styles.desc_allergy}>
             Alergans: Allergan1, Allergan 2
           </Text> */}
-          </View>
-          <Tabs
-            tabBarUnderlineStyle={{
-              backgroundColor: 'white',
-              borderColor: 'black',
-            }}
-            tabBarBackgroundColor='#fff'
-          >
-            <Tab tabBarBackgroundColor='#fff' heading='Ingredients'>
-              {data?.ingredients?.map((ing, key) => (
-                <View style={styles.ing_container} key={key}>
-                  <Image
-                    source={{
-                      uri: ing.image,
-                    }}
-                    style={styles.ing_img}
-                  />
-                  <Text style={styles.ing_text}>
-                    {ing.name} - {ing.ingredientProcessing.processingName}
-                  </Text>
-                </View>
-              ))}
-            </Tab>
-            <Tab heading='Procedure'>
-              {data?.procedures?.map((procedure, key) => (
-                <View style={styles.procedure} key={key}>
-                  <Text style={styles.procedureTitle}>{procedure?.title}</Text>
-                  {procedure?.steps?.map((step, key) => (
-                    <View style={styles.step} key={key}>
-                      <Text style={styles.stepTitle}>
-                        {key + 1}. {step?.title}
-                      </Text>
-                      <Text style={styles.stepDesc}>{step?.description}</Text>
-                    </View>
-                  ))}
-                </View>
-              ))}
-            </Tab>
-            {/* <Tab heading='Nuritional Values'>
+            </View>
+            <Tabs
+              tabBarUnderlineStyle={{
+                backgroundColor: 'white',
+                borderColor: 'black',
+              }}
+              tabBarBackgroundColor='#fff'
+            >
+              <Tab tabBarBackgroundColor='#fff' heading='Ingredients'>
+                {simpleRecipe?.ingredients?.map((ing, key) => (
+                  <View style={styles.ing_container} key={key}>
+                    <Image
+                      source={{
+                        uri: ing.image,
+                      }}
+                      style={styles.ing_img}
+                    />
+                    <Text style={styles.ing_text}>
+                      {ing.name} - {ing.ingredientProcessing.processingName}
+                    </Text>
+                  </View>
+                ))}
+              </Tab>
+              <Tab heading='Procedure'>
+                {simpleRecipe?.procedures?.map((procedure, key) => (
+                  <View style={styles.procedure} key={key}>
+                    <Text style={styles.procedureTitle}>
+                      {procedure?.title}
+                    </Text>
+                    {procedure?.steps?.map((step, key) => (
+                      <View style={styles.step} key={key}>
+                        <Text style={styles.stepTitle}>
+                          {key + 1}. {step?.title}
+                        </Text>
+                        <Text style={styles.stepDesc}>{step?.description}</Text>
+                      </View>
+                    ))}
+                  </View>
+                ))}
+              </Tab>
+              {/* <Tab heading='Nuritional Values'>
             <Text style={styles.procedure}>` 1. Lorem ipsum `</Text>
             <Text style={styles.procedure}>
               ` 2. Lorem ipsum dnbfkj dfiusabdfks dfsudfb skdfsiu dfisgbdf`
@@ -149,10 +158,11 @@ const ModalContent = ({ route, navigation }) => {
             <Text style={styles.procedure}>` 5. Lorem ipsum `</Text>
             <Text style={styles.procedure}>` 6. Lorem ipsum `</Text>
           </Tab> */}
-          </Tabs>
+            </Tabs>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 };
 

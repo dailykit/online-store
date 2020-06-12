@@ -84,10 +84,10 @@ function HomeStack(props) {
         }}
       />
       <Stack.Screen
-        name='Modal'
+        name='Recipe'
         component={ModalContent}
         options={{
-          headerShown: false,
+          headerShown: true,
         }}
       />
       <Stack.Screen
