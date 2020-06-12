@@ -66,19 +66,21 @@ export default function NavBar({
             marginHorizontal: 20,
           }}
         >
-          <View
+          <TouchableOpacity
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               marginRight: 40,
             }}
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => {
+              navigation.navigate('Home');
+            }}
           >
             {width > 768 && (
               <Image source={{ uri: brand.logo }} style={styles.logo} />
             )}
             <Text style={[styles.titleTextStyle]}>{title}</Text>
-          </View>
+          </TouchableOpacity>
           <Text
             style={[styles.titleTextStyle]}
             onPress={() => navigation.navigate('')}

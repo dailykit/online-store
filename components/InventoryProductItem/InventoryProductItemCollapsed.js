@@ -22,15 +22,12 @@ const InventoryProductCollapsed = ({
   return (
     <>
       <TouchableOpacity
-        // onPress={() => {
-        //   navigation.navigate('Modal', {
-        //     author: inventoryProduct.author,
-        //     name: inventoryProduct?.name,
-        //     data: inventoryProduct,
-        //     recipeId: inventoryProduct.id,
-        //     type: 'inventory',
-        //   });
-        // }}
+        onPress={() => {
+          navigation.navigate('ProductPage', {
+            id: inventoryProduct.id,
+            type: 'inventory',
+          });
+        }}
         style={[
           styles.item_container,
           {

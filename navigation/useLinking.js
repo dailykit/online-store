@@ -14,8 +14,8 @@ export default function (containerRef) {
               Home: {
                 path: 'home/',
               },
-              Modal: {
-                path: 'product/:name',
+              ProductPage: {
+                path: 'product',
                 parse: {
                   data: Object,
                   name: String,

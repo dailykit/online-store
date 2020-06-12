@@ -1,36 +1,5 @@
 import gql from 'graphql-tag';
 
-export const TIME_SLOTS = gql`
-  query TimeSlots($distance: numeric!, $type: String!) {
-    timeSlots(
-      where: {
-        isActive: { _eq: true }
-        mileRanges: {
-          from: { _lte: $distance }
-          to: { _gte: $distance }
-          isActive: { _eq: true }
-        }
-        recurrence: { isActive: { _eq: true }, type: { _eq: $type } }
-      }
-    ) {
-      id
-      from
-      to
-      mileRanges {
-        id
-        from
-        to
-        leadTime
-      }
-      recurrence {
-        id
-        rrule
-        type
-      }
-    }
-  }
-`;
-
 export const SIMPLE_RECIPE = gql`
   query SimpleRecipe($id: Int!) {
     simpleRecipe(id: $id) {
@@ -204,12 +173,12 @@ export const CUSTOMIZABLE_PRODUCT = gql`
 export const INVENTORY_PRODUCT = gql`
   query InventoryProduct($id: Int!) {
     inventoryProduct(id: $id) {
-      assets
-      default
-      description
       id
       name
+      description
       tags
+      assets
+      default
       inventoryProductOptions {
         id
         price
