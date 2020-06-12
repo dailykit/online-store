@@ -4,6 +4,7 @@ import { Text, View } from 'native-base';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { ORDER } from '../graphql';
+import { width } from '../utils/Scalaing';
 
 const OrderDetails = ({ orderId }) => {
   // Query

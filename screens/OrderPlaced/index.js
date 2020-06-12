@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useCartContext } from '../../context/cart';
 import { styles } from './styles';
-const OrderDetails = lazy(() => import('../../components/OrderDetails'));
+import OrderDetails from '../../components/OrderDetails';
 
 const OrderPlaced = ({ route, navigation }) => ({ route, navigation }) => {
   const { cart } = useCartContext();
