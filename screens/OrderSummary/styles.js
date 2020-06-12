@@ -7,11 +7,11 @@ export const styles = EStyleSheet.create({
     marginRight: 'auto',
     width: width > 980 ? 980 : width,
     backgroundColor: '#fff',
+    paddingBottom: 40,
   },
   summary_title_conatiner: {
     flex: 1,
     flexDirection: 'row',
-    paddingHorizontal: 30,
     justifyContent: 'center',
     marginBottom: 10,
   },

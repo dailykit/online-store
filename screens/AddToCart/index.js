@@ -136,24 +136,12 @@ const ModalContent = ({
         </View>
         <View style={{ height: height * 0.08 }} />
       </ScrollView>
-      {type !== 'comboProduct' && (
-        <Cart
-          cartItem={cartItem}
-          navigation={navigation}
-          to={'Home'}
-          {...restProps}
-          text='Add to Cart'
-          comboProductItems={comboProductItems}
-          tunnelItem
-          type={type}
-          setIsModalVisible={setIsModalVisible}
-        />
-      )}
-      {type == 'comboProduct' &&
-        numberOfComboProductItem - 1 == currentComboProductIndex && (
+      <View style={{ marginTop: 40 }}>
+        {type !== 'comboProduct' && (
           <Cart
             cartItem={cartItem}
             navigation={navigation}
+            to={'Home'}
             {...restProps}
             text='Add to Cart'
             comboProductItems={comboProductItems}
@@ -162,13 +150,27 @@ const ModalContent = ({
             setIsModalVisible={setIsModalVisible}
           />
         )}
-      {type == 'comboProduct' &&
-        numberOfComboProductItem - 1 != currentComboProductIndex && (
-          <ComboProductItemProceed
-            setCurrentComboProductIndex={setCurrentComboProductIndex}
-            currentComboProductIndex={currentComboProductIndex}
-          />
-        )}
+        {type == 'comboProduct' &&
+          numberOfComboProductItem - 1 == currentComboProductIndex && (
+            <Cart
+              cartItem={cartItem}
+              navigation={navigation}
+              {...restProps}
+              text='Add to Cart'
+              comboProductItems={comboProductItems}
+              tunnelItem
+              type={type}
+              setIsModalVisible={setIsModalVisible}
+            />
+          )}
+        {type == 'comboProduct' &&
+          numberOfComboProductItem - 1 != currentComboProductIndex && (
+            <ComboProductItemProceed
+              setCurrentComboProductIndex={setCurrentComboProductIndex}
+              currentComboProductIndex={currentComboProductIndex}
+            />
+          )}
+      </View>
       {/* )} */}
     </View>
   );

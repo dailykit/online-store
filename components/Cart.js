@@ -152,33 +152,35 @@ const Cart = ({
   if (!tunnelItem && !numberOfProducts) return <></>;
 
   return (
-    <TouchableOpacity
-      onPress={handleAddToCart}
-      style={[
-        styles.container,
-        { backgroundColor: visual.color || '#3fa4ff', width: '100%' },
-      ]}
-    >
-      <View style={styles.container_left}>
-        {!tunnelItem && (
+    <View style={[styles.outerContainer, { width: '100%' }]}>
+      <TouchableOpacity
+        onPress={handleAddToCart}
+        style={[
+          styles.container,
+          { backgroundColor: visual.color || '#3fa4ff' },
+        ]}
+      >
+        <View style={styles.container_left}>
+          {!tunnelItem && (
+            <Text style={styles.text}>
+              $ {cart.itemTotal} | {numberOfProducts} Products
+            </Text>
+          )}
+        </View>
+        <View style={styles.container_right}>
           <Text style={styles.text}>
-            $ {cart.itemTotal} | {numberOfProducts} Products
+            {text}
+            {'    '}
           </Text>
-        )}
-      </View>
-      <View style={styles.container_right}>
-        <Text style={styles.text}>
-          {text}
-          {'    '}
-        </Text>
-        <Ionicons
-          name='ios-arrow-forward'
-          color='#fff'
-          size={20}
-          style={{ marginTop: 2 }}
-        />
-      </View>
-    </TouchableOpacity>
+          <Ionicons
+            name='ios-arrow-forward'
+            color='#fff'
+            size={20}
+            style={{ marginTop: 2 }}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -197,31 +199,41 @@ export const CartSummary = ({ navigation, text }) => {
   if (!cart?.cartInfo?.products?.length) return <></>;
 
   return (
-    <TouchableOpacity
-      onPress={pay}
-      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+    <View
+      style={[
+        styles.outerContainer,
+        { paddingHorizontal: width > 768 ? 120 : 0 },
+      ]}
     >
-      <View style={[styles.container_left, { flex: 3 }]}>
-        <Text style={[styles.text, { fontSize: 18 }]}>
-          {cart?.cartInfo?.products?.length} items | $ {cart.totalPrice}
-        </Text>
-        <Text style={[styles.text, { fontSize: 10 }]}>
-          *extra charges may apply
-        </Text>
-      </View>
-      <View style={styles.container_right}>
-        <Text style={styles.text}>
-          {text}
-          {'    '}
-        </Text>
-        <Ionicons
-          name='ios-arrow-forward'
-          color='#fff'
-          size={20}
-          style={{ marginTop: 2 }}
-        />
-      </View>
-    </TouchableOpacity>
+      <TouchableOpacity
+        onPress={pay}
+        style={[
+          styles.container,
+          { backgroundColor: visual.color || '#3fa4ff' },
+        ]}
+      >
+        <View style={[styles.container_left, { flex: 3 }]}>
+          <Text style={[styles.text, { fontSize: 18 }]}>
+            {cart?.cartInfo?.products?.length} items | $ {cart.totalPrice}
+          </Text>
+          <Text style={[styles.text, { fontSize: 10 }]}>
+            *extra charges may apply
+          </Text>
+        </View>
+        <View style={styles.container_right}>
+          <Text style={styles.text}>
+            {text}
+            {'    '}
+          </Text>
+          <Ionicons
+            name='ios-arrow-forward'
+            color='#fff'
+            size={20}
+            style={{ marginTop: 2 }}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -233,44 +245,59 @@ export const ComboProductItemProceed = ({
 }) => {
   const { visual } = useAppContext();
   return (
-    <TouchableOpacity
-      onPress={() => {
-        setCurrentComboProductIndex(currentComboProductIndex + 1);
-      }}
-      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
-    >
-      <View style={[styles.container_left, { flex: 4 }]}>
-        <Text style={[styles.text, { fontSize: 14 }]}>
-          Click to select next item
-        </Text>
-      </View>
-      <View style={styles.container_right}>
-        <Text style={styles.text}>
-          {text}
-          {'    '}
-        </Text>
-        <Ionicons
-          name='ios-arrow-forward'
-          color='#fff'
-          size={20}
-          style={{ marginTop: 2 }}
-        />
-      </View>
-    </TouchableOpacity>
+    <View style={styles.outerContainer}>
+      <TouchableOpacity
+        onPress={() => {
+          setCurrentComboProductIndex(currentComboProductIndex + 1);
+        }}
+        style={[
+          styles.container,
+          { backgroundColor: visual.color || '#3fa4ff' },
+        ]}
+      >
+        <View style={[styles.container_left, { flex: 4 }]}>
+          <Text style={[styles.text, { fontSize: 14 }]}>
+            Click to select next item
+          </Text>
+        </View>
+        <View style={styles.container_right}>
+          <Text style={styles.text}>
+            {text}
+            {'    '}
+          </Text>
+          <Ionicons
+            name='ios-arrow-forward'
+            color='#fff'
+            size={20}
+            style={{ marginTop: 2 }}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    height: height * 0.08,
+  outerContainer: {
+    height: 100,
     width: width > 1280 ? 1280 : width,
-    backgroundColor: '#3fa4ff',
+    padding: 20,
+    marginHorizontal: 'auto',
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    // height: height * 0.08,
+    // width: width > 1280 ? 1280 : width,
+    height: '80%',
+    width: '100%',
     flexDirection: 'row',
     marginHorizontal: 'auto',
+    borderRadius: 4,
   },
   text: {
     color: 'white',

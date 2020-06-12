@@ -42,7 +42,16 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
             }
           />
         );
-
+      case 'Cart':
+        return (
+          <Icon
+            name='shopping-cart'
+            size={14}
+            color={
+              focused ? 'white' : visual.color || argonTheme.COLORS.PRIMARY
+            }
+          />
+        );
       case 'Log out':
         return (
           <Icon name='log-out' size={14} color={argonTheme.COLORS.WARNING} />
@@ -73,6 +82,8 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
           logout();
         } else if (title === 'Home') {
           navigation.navigate(screen);
+        } else if (title === 'Cart') {
+          navigation.navigate('OrderSummary');
         } else {
           open(screen);
         }

@@ -1,16 +1,53 @@
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useLazyQuery } from '@apollo/react-hooks';
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { useAppContext } from '../context/app';
 import { useCartContext } from '../context/cart';
 import { UPDATE_CART } from '../graphql/mutations';
 import { height } from '../utils/Scalaing';
 import { Feather } from '@expo/vector-icons';
+import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../graphql';
 
 const Summary = ({ useQuantity, item }) => {
   const [quantity, setquantity] = useState(1);
   const { cart } = useCartContext();
   const { visual } = useAppContext();
+
+  const [image, setImage] = React.useState('');
+
+  console.log('Summary -> image', image);
+
+  const [fetchInventoryProduct] = useLazyQuery(INVENTORY_PRODUCT, {
+    variables: {
+      id: item.product.id,
+    },
+    onCompleted: (data) => {
+      setImage(data.inventoryProduct?.assets?.images[0]);
+    },
+  });
+
+  const [fetchSimpleRecipeProduct] = useLazyQuery(SIMPLE_PRODUCT, {
+    variables: {
+      id: item.product.id,
+    },
+    onCompleted: (data) => {
+      setImage(data.simpleRecipeProduct?.assets?.images[0]);
+    },
+  });
+
+  React.useEffect(() => {
+    switch (item.type) {
+      case 'inventoryProduct': {
+        return fetchInventoryProduct();
+      }
+      case 'simpleRecipeProduct': {
+        return fetchSimpleRecipeProduct();
+      }
+      default: {
+        return console.log('NO IMAGE!');
+      }
+    }
+  }, []);
 
   const [isHovered, setIsHovered] = React.useState(false);
 
@@ -58,6 +95,14 @@ const Summary = ({ useQuantity, item }) => {
   if (item.type == 'comboProducts') {
     return (
       <View style={styles.summary_container}>
+        <Image
+          style={{ width: 300, height: 300 }}
+          source={{
+            uri:
+              image ||
+              'https://lh3.googleusercontent.com/proxy/J-eQ8tm1E23exErvEdkMBz9ekZxzzII-RmG_6FZVwW5RTUiMHrv9KY7A_iOVchP0Em1GDVK2oA48pXnPKcdaUkCHl6a814xwJ0cXJkexVWL5yNBIoDylDTcCR_8',
+          }}
+        />
         <View style={styles.picker_container}>
           <Text style={styles.summary_title_text}>{item.products[0].name}</Text>
         </View>
@@ -125,15 +170,40 @@ const Summary = ({ useQuantity, item }) => {
   }
   return (
     <View style={styles.summary_container}>
+      <Image
+        style={{ width: 100, height: 100, resizeMode: 'contain' }}
+        source={{
+          uri:
+            image ||
+            'https://lh3.googleusercontent.com/proxy/J-eQ8tm1E23exErvEdkMBz9ekZxzzII-RmG_6FZVwW5RTUiMHrv9KY7A_iOVchP0Em1GDVK2oA48pXnPKcdaUkCHl6a814xwJ0cXJkexVWL5yNBIoDylDTcCR_8',
+        }}
+      />
       <View style={styles.picker_container}>
         <Text style={styles.summary_title_text}>{item.product.name}</Text>
+        {!useQuantity && (
+          <View
+            style={[
+              styles.button_container,
+              { borderColor: visual.color || '#3fa4ff' },
+            ]}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                removeFromCart(item);
+              }}
+              style={[
+                styles.button_container_left,
+                { backgroundColor: isHovered ? '#ff5a52' : '#fff' },
+              ]}
+            >
+              <Feather color='#ff5a52' name='trash-2' size={14} />
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       <View style={styles.summary_bottom_conatiner}>
-        <View style={styles.summary_bottom_conatiner_left}>
-          <Text style={styles.price_text}>$ {item.product.price}</Text>
-        </View>
-        <View style={styles.summary_bottom_conatiner_right}>
-          {/* {!useQuantity && (
+        {/* <View style={styles.summary_bottom_conatiner_right}>
+           {!useQuantity && (
             <View style={styles.button_container}>
               <TouchableOpacity
                 onPress={() => setquantity(quantity - 1)}
@@ -151,32 +221,16 @@ const Summary = ({ useQuantity, item }) => {
                 <Feather color='#fff' size={16} name='plus' />
               </TouchableOpacity>
             </View>
-          )} */}
-          {!useQuantity && (
-            <View
-              style={[
-                styles.button_container,
-                { borderColor: visual.color || '#3fa4ff' },
-              ]}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  removeFromCart(item);
-                }}
-                style={[
-                  styles.button_container_left,
-                  { backgroundColor: isHovered ? '#ff5a52' : '#fff' },
-                ]}
-              >
-                <Feather color='#ff5a52' name='trash-2' size={14} />
-              </TouchableOpacity>
-            </View>
           )}
+
           {useQuantity && (
             <Text style={{ fontSize: 18 }}>
               Qty: <Text style={{ fontWeight: 'bold' }}>1</Text>
             </Text>
           )}
+        </View> */}
+        <View style={styles.summary_bottom_conatiner_left}>
+          <Text style={styles.price_text}>$ {item.product.price}</Text>
         </View>
       </View>
     </View>
@@ -199,6 +253,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     width: '100%',
     paddingBottom: 20,
+    flexDirection: 'row',
   },
   summary_title_conatiner: {
     flex: 1,
@@ -227,11 +282,11 @@ const styles = StyleSheet.create({
   },
   summary_title_text: {
     fontSize: 16,
-    fontWeight: 'bold',
   },
   summary_bottom_conatiner_left: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'flex-end',
     paddingHorizontal: 30,
   },
   summary_bottom_conatiner_right: {
@@ -242,22 +297,19 @@ const styles = StyleSheet.create({
   },
   button_container: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 0,
     borderColor: '#3fa4ff',
-    width: '80%',
   },
   price_text: {
-    fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 16,
   },
   button_container_left: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff',
-    padding: 8,
     borderRadius: 2,
+    marginTop: 10,
   },
   button_container_middle: {
     flex: 2,
