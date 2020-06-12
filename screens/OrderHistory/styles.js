@@ -6,6 +6,7 @@ export const styles = EStyleSheet.create({
     fontWeight: 500,
     color: '#666',
     paddingVertical: 12,
+    textAlign: 'center',
   },
   center: {
     flex: 1,

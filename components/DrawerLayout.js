@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   },
   container: {
     height: height * 0.8,
-    width: width > 1280 ? 1280 : width,
+    width: width > 1280 ? 640 : width,
     backgroundColor: '#fff',
     alignItems: 'center',
     borderRadius: 5,
