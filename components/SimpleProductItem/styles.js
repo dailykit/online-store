@@ -11,7 +11,7 @@ export const styles = EStyleSheet.create({
     marginTop: 4,
     borderBottomWidth: 1,
     backgroundColor: '#fff',
-    borderBottomColor: '#ececec',
+    borderBottomColor: '#fff',
   },
   item_container_one: {
     flex: 4,

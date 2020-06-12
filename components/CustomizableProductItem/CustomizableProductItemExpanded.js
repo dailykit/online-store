@@ -70,6 +70,7 @@ const Item = ({
                   navigation={navigation}
                   data={simpleRecipeProduct}
                   tunnelItem={tunnelItem}
+                  showInfo={true}
                 />
               </TouchableOpacity>
               {isSelected == _key && tunnelItem && (
@@ -184,6 +185,7 @@ const Item = ({
                   data={inventoryProduct}
                   tunnelItem={tunnelItem}
                   navigation={navigation}
+                  showInfo={true}
                 />
               </TouchableOpacity>
               {isSelected == _key && tunnelItem && (

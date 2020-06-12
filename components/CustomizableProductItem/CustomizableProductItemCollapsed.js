@@ -38,6 +38,7 @@ const CustomizableProductItemCollapsed = ({
           navigation={navigation}
           data={data.simpleRecipeProduct}
           tunnelItem={tunnelItem}
+          showInfo={true}
         />
       </>
     );
@@ -62,6 +63,7 @@ const CustomizableProductItemCollapsed = ({
           navigation={navigation}
           data={data.inventoryProduct}
           tunnelItem={tunnelItem}
+          showInfo={true}
         />
       </>
     );
