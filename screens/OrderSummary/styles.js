@@ -7,7 +7,6 @@ export const styles = EStyleSheet.create({
     marginRight: 'auto',
     width: width > 980 ? 980 : width,
   },
-
   summary_title_conatiner: {
     flex: 1,
     flexDirection: 'row',

@@ -19,6 +19,7 @@ const Summary = lazy(() => import('../../components/Summary'));
 import { useCartContext } from '../../context/cart';
 import { height } from '../../utils/Scalaing';
 import { styles } from './styles';
+import Header from '../../components/Header';
 
 const OrderSummary = ({ navigation, ...restProps }) => {
   const { cart } = useCartContext();
@@ -27,6 +28,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
   console.log('OrderSummary -> cartItems', cartItems);
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <Header title='Home' navigation={navigation} />
       <HeaderBack title='Go Back' navigation={navigation} />
       <ScrollView>
         <View style={styles.wrapper}>

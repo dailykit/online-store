@@ -4,6 +4,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 import { styles } from './styles';
 import ServingSelect from '../ServingSelect';
+import { useAppContext } from '../../context/app';
 
 const SimpleProductItemCollapsed = ({
   navigation,
@@ -15,6 +16,9 @@ const SimpleProductItemCollapsed = ({
 }) => {
   const [typeSelected, setTypeSelected] = useState('mealKit');
   const [servingIndex, setServingIndex] = useState(0);
+
+  const { visual } = useAppContext();
+
   return (
     <>
       <TouchableOpacity
@@ -62,7 +66,7 @@ const SimpleProductItemCollapsed = ({
               }}
             >
               <Text
-                style={styles.item_title}
+                style={[styles.item_title, { color: visual.color }]}
               >{`${simpleRecipeProduct.name} `}</Text>
             </View>
             <View style={styles.item_three_lower}>

@@ -16,6 +16,7 @@ import { height, width } from '../../utils/Scalaing';
 import { Drawer } from '../../components/Drawer';
 import { Feather } from '@expo/vector-icons';
 import { useAppContext } from '../../context/app';
+import HeaderBack from '../../components/HeaderBack';
 
 const ProductPage = ({ navigation, route }) => {
   const { id, type } = route.params;
@@ -85,7 +86,11 @@ const ProductPage = ({ navigation, route }) => {
         setIsModalVisible={setIsModalVisible}
       />
       <SafeAreaView style={styles.safeArea}>
-        <Header title='Home' navigation={navigation} />
+        {width > 768 ? (
+          <Header title='Home' navigation={navigation} />
+        ) : (
+          <HeaderBack title='Go Back' navigation={navigation} />
+        )}
         <ScrollView>
           <View style={styles.container}>
             <View style={{ alignItems: 'center', flex: 1 }}>
@@ -219,11 +224,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     maxWidth: 1280,
     marginHorizontal: 'auto',
-    flexDirection: 'row',
+    flexDirection: width > 768 ? 'row' : 'column',
   },
   image: {
-    width: 400,
-    height: 400,
+    width: width > 768 ? 400 : width * 0.6,
+    height: width > 768 ? 400 : width * 0.6,
     resizeMode: 'contain',
   },
   productName: {
