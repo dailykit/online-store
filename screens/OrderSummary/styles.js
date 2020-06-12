@@ -6,6 +6,7 @@ export const styles = EStyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     width: width > 980 ? 980 : width,
+    backgroundColor: '#fff',
   },
   summary_title_conatiner: {
     flex: 1,
@@ -39,7 +40,7 @@ export const styles = EStyleSheet.create({
     height: height * 0.1,
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: '#ededed',
+    backgroundColor: '#fff',
     paddingVertical: 10,
   },
   title_container_left: {

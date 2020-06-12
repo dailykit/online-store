@@ -39,6 +39,7 @@ import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { STORE_SETTINGS } from '../graphql';
 import { useAppContext } from '../context/app';
 import ProductPage from '../screens/ProductPage';
+import CategoryProductsPage from '../screens/CategoryProductsPage';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -72,6 +73,13 @@ function HomeStack(props) {
       <Stack.Screen
         name='Home'
         component={Home}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='CategoryProductsPage'
+        component={CategoryProductsPage}
         options={{
           headerShown: false,
         }}

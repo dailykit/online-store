@@ -81,7 +81,7 @@ export const DefaultAddressFloater = ({ navigation }) => {
 const styles = EStyleSheet.create({
   conatiner: {
     height: height * 0.07,
-    backgroundColor: '#ededed',
+    backgroundColor: '#fff',
     flexDirection: 'row',
     paddingLeft: 20,
     paddingRight: 20,

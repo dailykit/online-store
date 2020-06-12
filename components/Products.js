@@ -9,8 +9,9 @@ import {
 } from '../graphql';
 import { width } from '../utils/Scalaing';
 import Card from './Card';
+import { Spinner } from '@ui-kitten/components';
 
-const Products = ({ category, navigation }) => {
+const Products = ({ category, navigation, showLess }) => {
   const [products, setProducts] = React.useState([]);
 
   // Subscriptions
@@ -68,6 +69,18 @@ const Products = ({ category, navigation }) => {
     },
   });
 
+  if (
+    inventoryProductsLoading ||
+    simpleRecipeProductsLoading ||
+    customizableProductsLoading ||
+    comboProductsLoading
+  )
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Spinner />
+      </View>
+    );
+
   return (
     <View
       style={{
@@ -83,7 +96,7 @@ const Products = ({ category, navigation }) => {
             showsVerticalScrollIndicator={false}
             style={styles.productList}
             numColumns={width > 1000 ? 4 : 1}
-            data={products}
+            data={showLess ? products.slice(0, 4) : products}
             keyExtractor={(item) => item.id}
             renderItem={({ item: product }) => (
               <Card navigation={navigation} product={product} />

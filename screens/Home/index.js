@@ -14,6 +14,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ListView,
 } from 'react-native';
 import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
 import { Header, Icon } from '../../components';
@@ -34,6 +35,7 @@ import {
 import { height, width } from '../../utils/Scalaing';
 import { styles } from './styles';
 import CategoriesButton from '../../components/CategoriesButton';
+import Footer from '../../components/Footer';
 
 const CalendarIcon = (props) => <Icon size={24} {...props} name='calendar' />;
 
@@ -329,6 +331,7 @@ const Home = (props) => {
       />
       <ScrollView
         ref={scrollViewRef}
+        stickyHeaderIndices={[1]}
         style={[styles.home, styles.reallyBigContainer]}
       >
         {/* <Tabs /> */}
@@ -386,51 +389,45 @@ const Home = (props) => {
             }}
           /> 
         </View>*/}
+        <View style={[styles.picker_container, { marginBottom: 4 }]}>
+          <ScrollView
+            horizontal
+            style={{
+              flex: 1,
+            }}
+            contentContainerStyle={{
+              marginHorizontal: width > 768 ? 'auto' : 'none',
+            }}
+            showsHorizontalScrollIndicator={false}
+          >
+            {data.map((category, key) => (
+              <CategoriesButton
+                title={category.name}
+                key={key}
+                id={key}
+                length={data?.length}
+                selectedIndex={selectedIndex}
+                setSelectedIndex={setSelectedIndex}
+                onPress={() =>
+                  props.navigation.navigate('CategoryProductsPage', {
+                    data,
+                    category,
+                  })
+                }
+              />
+            ))}
+          </ScrollView>
+        </View>
         <View style={styles.flexContainerMiddle}>
           <View style={styles.cardContainer}>
-            <View style={[styles.picker_container, { marginBottom: 4 }]}>
-              <ScrollView
-                horizontal
-                style={{
-                  flex: 1,
-                }}
-                contentContainerStyle={{
-                  marginHorizontal: width > 768 ? 'auto' : 'none',
-                }}
-                showsHorizontalScrollIndicator={false}
-              >
-                {pickerData.map((title, key) => (
-                  <CategoriesButton
-                    title={title}
-                    key={key}
-                    id={key}
-                    length={pickerData?.length}
-                    selectedIndex={selectedIndex}
-                    setSelectedIndex={setSelectedIndex}
-                    onPress={(key) => {
-                      setSelectedIndex(key);
-                      scrollViewRef.current.scrollTo({
-                        y: height,
-                        animated: true,
-                      });
-                      sectionListRef.current.scrollToLocation({
-                        animated: width < 768 ? true : false,
-                        itemIndex: 0,
-                        sectionIndex: key,
-                        viewOffset: 60,
-                      });
-                    }}
-                  />
-                ))}
-              </ScrollView>
-            </View>
-            <SectionList
-              showsVerticalScrollIndicator={false}
+            {/* <SectionList
+              showsVerticalScrollIndicator={true}
               ref={sectionListRef}
               sections={data}
               style={{
                 height: height - 16 * 4.125 - 80 - 48,
                 width: width > 1280 ? width : width,
+                paddingBottom: height * 0.5,
               }}
               keyExtractor={(item, index) => item + index}
               renderSectionHeader={({ section: { title } }) => (
@@ -439,17 +436,53 @@ const Home = (props) => {
               renderItem={({ item: category }) => (
                 <Products navigation={props.navigation} category={category} />
               )}
-            />
+            /> */}
+            <View>
+              {data.map((category) => (
+                <View style={{ marginBottom: 20 }}>
+                  <CategoryBanner category={category.title} />
+                  <Products
+                    navigation={props.navigation}
+                    category={category}
+                    showLess={true}
+                  />
+                  <TouchableOpacity
+                    style={{
+                      marginHorizontal: 'auto',
+                      padding: 10,
+                      marginVertical: 20,
+                      backgroundColor: visual.color,
+                      borderRadius: 4,
+                      minWidth: 150,
+                      textAlign: 'center',
+                    }}
+                    onPress={() =>
+                      props.navigation.navigate('CategoryProductsPage', {
+                        data,
+                        category,
+                      })
+                    }
+                  >
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: '1.1rem',
+                      }}
+                    >
+                      View All
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
           </View>
         </View>
-        {/* {cart?.cartInfo?.products?.length && (
-          <View style={{ height: height * 0.08 }} />
-        )} */}
         {/* <View style={styles.headerContainer}>
           <SafetyBanner {...props} />
         </View> */}
         {width < 768 && <Cart to='OrderSummary' {...props} text='Checkout' />}
         <DrawerLayout />
+        <Footer />
       </ScrollView>
     </>
   );

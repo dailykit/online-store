@@ -27,7 +27,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
   let cartItems = cart?.cartInfo?.products;
   console.log('OrderSummary -> cartItems', cartItems);
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <Header title='Home' navigation={navigation} />
       <HeaderBack title='Go Back' navigation={navigation} />
       <ScrollView>

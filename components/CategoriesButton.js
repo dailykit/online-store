@@ -17,13 +17,13 @@ const CategoriesButton = ({ title, id, onPress, selectedIndex, length }) => {
         paddingHorizontal: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 50,
+        height: width > 768 ? 50 : 40,
         flexDirection: 'row',
-        backgroundColor: selectedIndex == id ? visual.color : '#fff',
-        paddingVertical: 30,
+        backgroundColor: isHovered ? visual.color : '#fff',
+        paddingVertical: width > 768 ? 30 : 10,
         marginHorizontal: 10,
-        width: width / length - 30,
-        minWidth: 120,
+        width: 'auto',
+        minWidth: width > 768 ? 200 : 100,
         borderStyle: 'solid',
         borderWidth: 1,
         borderColor: isHovered ? visual.color : '#333',
@@ -42,9 +42,8 @@ const CategoriesButton = ({ title, id, onPress, selectedIndex, length }) => {
         style={[
           {
             textAlign: 'center',
-            color:
-              selectedIndex == id ? '#fff' : isHovered ? visual.color : '#333',
-            fontWeight: selectedIndex == id || isHovered ? 'bold' : 'normal',
+            color: isHovered ? '#fff' : '#333',
+            fontWeight: isHovered ? 'bold' : 'normal',
           },
           styles.button,
         ]}

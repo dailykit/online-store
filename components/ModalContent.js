@@ -66,7 +66,7 @@ const ModalContent = ({ route, navigation }) => {
               source={{
                 uri: simpleRecipe?.assets?.images[0]
                   ? simpleRecipe?.assets?.images[0]
-                  : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+                  : 'https://lh3.googleusercontent.com/proxy/J-eQ8tm1E23exErvEdkMBz9ekZxzzII-RmG_6FZVwW5RTUiMHrv9KY7A_iOVchP0Em1GDVK2oA48pXnPKcdaUkCHl6a814xwJ0cXJkexVWL5yNBIoDylDTcCR_8',
               }}
               style={styles.image_cover}
             />

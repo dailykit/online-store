@@ -77,8 +77,6 @@ export const CategoryBanner = ({ category }) => {
         styles.conatiner,
         {
           backgroundColor: categoryType?.backgroundColor,
-          width: width > 1280 ? 1280 : width,
-
           margin: 'auto',
         },
       ]}
@@ -97,7 +95,7 @@ export const CategoryBanner = ({ category }) => {
 
 const styles = EStyleSheet.create({
   conatiner: {
-    width: width > 1280 ? 1280 : width,
+    width,
     height: 64,
     flexDirection: 'row',
     justifyContent: 'center',
