@@ -2,8 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { width } from '../utils/Scalaing';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { useAppContext } from '../context/app';
 
 const CategoriesButton = ({ title, id, onPress, selectedIndex, length }) => {
+  const { visual } = useAppContext();
+
   const [isHovered, setIsHovered] = React.useState(false);
   return (
     <TouchableOpacity
@@ -16,17 +19,18 @@ const CategoriesButton = ({ title, id, onPress, selectedIndex, length }) => {
         alignItems: 'center',
         height: 50,
         flexDirection: 'row',
-        backgroundColor: selectedIndex == id ? '#3fa4ff' : '#e3e3e3',
+        backgroundColor: selectedIndex == id ? visual.color : '#e3e3e3',
         paddingVertical: 30,
         marginHorizontal: 10,
         width: width / length - 30,
         minWidth: 120,
-        opacity: isHovered ? 0.6 : 1,
+        // opacity: isHovered ? 0.6 : 1,
       }}
     >
       <Text
         style={[
           {
+            textAlign: 'center',
             color: selectedIndex == id ? '#fff' : 'black',
             fontWeight: selectedIndex == id ? 'bold' : 'normal',
           },

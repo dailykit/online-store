@@ -82,7 +82,7 @@ const Products = ({ category, navigation }) => {
           <FlatList
             showsVerticalScrollIndicator={false}
             style={styles.productList}
-            numColumns={width > 1000 ? 3 : 1}
+            numColumns={width > 1000 ? 4 : 1}
             data={products}
             keyExtractor={(item) => item.id}
             renderItem={({ item: product }) => (
@@ -101,6 +101,6 @@ const styles = StyleSheet.create({
   productList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 48,
+    paddingHorizontal: 32,
   },
 });

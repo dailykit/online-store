@@ -344,7 +344,7 @@ const Home = (props) => {
           <SafetyBanner {...props} />
         </View> */}
 
-        <View
+        {/* <View
           style={{
             flexDirection: 'column',
             width: width,
@@ -387,8 +387,8 @@ const Home = (props) => {
                 day: moment(_date).date(),
               });
             }}
-          />
-        </View>
+          /> 
+        </View>*/}
         <View style={styles.flexContainerMiddle}>
           <View style={styles.cardContainer}>
             <View style={[styles.picker_container, { marginBottom: 4 }]}>
@@ -413,11 +413,11 @@ const Home = (props) => {
                     onPress={(key) => {
                       setSelectedIndex(key);
                       scrollViewRef.current.scrollTo({
-                        y: height * 1,
+                        y: height,
                         animated: true,
                       });
                       sectionListRef.current.scrollToLocation({
-                        animated: true,
+                        animated: width < 768 ? true : false,
                         itemIndex: 0,
                         sectionIndex: key,
                         viewOffset: 60,
@@ -427,7 +427,7 @@ const Home = (props) => {
                 ))}
               </ScrollView>
             </View>
-            {/* <SectionList
+            <SectionList
               showsVerticalScrollIndicator={false}
               ref={sectionListRef}
               sections={data}
@@ -442,7 +442,7 @@ const Home = (props) => {
               renderItem={({ item: category }) => (
                 <Products navigation={props.navigation} category={category} />
               )}
-            /> */}
+            />
           </View>
         </View>
         {cart?.cartInfo?.products?.length && (
