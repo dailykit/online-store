@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   container: {
-    height: height * 0.9,
+    height: height * 0.8,
     width: width > 1280 ? 1280 : width,
     backgroundColor: '#fff',
     alignItems: 'center',

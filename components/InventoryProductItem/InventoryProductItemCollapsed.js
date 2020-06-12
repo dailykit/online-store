@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View, Platform } from 'react-native';
 import ServingSelect from '../ServingSelect';
 import { styles } from './styles';
-import { visit } from 'graphql';
 import { useAppContext } from '../../context/app';
 
 const InventoryProductCollapsed = ({
@@ -11,9 +10,11 @@ const InventoryProductCollapsed = ({
   tunnelItem,
   setProductOptionId,
   navigation,
+  showInfo,
 }) => {
   const { visual } = useAppContext();
 
+  console.log('showInfo', showInfo);
   const [servingIndex, setServingIndex] = useState(0);
   if (!inventoryProduct) {
     return <Text>Bad Data</Text>;
@@ -21,84 +22,86 @@ const InventoryProductCollapsed = ({
 
   return (
     <>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('ProductPage', {
-            id: inventoryProduct.id,
-            type: 'inventoryProduct',
-          });
-        }}
-        style={[
-          styles.item_container,
-          {
-            borderBottomWidth: 1,
-          },
-        ]}
-      >
-        <View style={[styles.item_container_one, { display: 'flex' }]}>
-          <Text style={styles.item_image_title}>{label}</Text>
-          <Image
-            source={{
-              uri: inventoryProduct?.assets?.images[0]
-                ? inventoryProduct?.assets?.images[0]
-                : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
-            }}
-            style={styles.item_image}
-          />
-        </View>
-        <View
+      {showInfo && (
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('ProductPage', {
+              id: inventoryProduct.id,
+              type: 'inventoryProduct',
+            });
+          }}
           style={[
-            styles.item_container_two,
+            styles.item_container,
             {
-              paddingTop: 15,
-              paddingLeft: 10,
+              borderBottomWidth: 1,
             },
           ]}
         >
+          <View style={[styles.item_container_one, { display: 'flex' }]}>
+            <Text style={styles.item_image_title}>{label}</Text>
+            <Image
+              source={{
+                uri: inventoryProduct?.assets?.images[0]
+                  ? inventoryProduct?.assets?.images[0]
+                  : 'https://images.unsplash.com/photo-1466637574441-749b8f19452f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80',
+              }}
+              style={styles.item_image}
+            />
+          </View>
           <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              minHeight: 68,
-              alignItems: 'flex-start',
-            }}
+            style={[
+              styles.item_container_two,
+              {
+                paddingTop: 15,
+                paddingLeft: 10,
+              },
+            ]}
           >
-            <Text
-              style={[styles.item_title, { color: visual.color }]}
-            >{`${inventoryProduct.name} `}</Text>
-          </View>
-          <View style={styles.item_three_lower}>
-            <Text
-              style={[
-                styles.item_details,
-                { fontWeight: 'normal', fontSize: 18 },
-              ]}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                minHeight: 68,
+                alignItems: 'flex-start',
+              }}
             >
-              {inventoryProduct?.inventoryProductOptions[0]?.label
-                ?.substr(0, 1)
-                .toUpperCase() +
-                inventoryProduct?.inventoryProductOptions[0]?.label?.substr(
-                  1,
-                  inventoryProduct?.inventoryProductOptions[0]?.label?.length -
-                    1
-                )}
-            </Text>
-            <Text style={styles.item_chef}>
-              {inventoryProduct?.sachetItem?.unitSize &&
-                inventoryProduct?.sachetItem?.unitSize +
-                  ' ' +
-                  inventoryProduct?.sachetItem?.unit}
-              {inventoryProduct?.supplierItem?.unitSize &&
-                inventoryProduct?.supplierItem?.unitSize +
-                  ' ' +
-                  inventoryProduct?.supplierItem?.unit}
-            </Text>
+              <Text
+                style={[styles.item_title, { color: visual.color }]}
+              >{`${inventoryProduct.name} `}</Text>
+            </View>
+            <View style={styles.item_three_lower}>
+              <Text
+                style={[
+                  styles.item_details,
+                  { fontWeight: 'normal', fontSize: 18 },
+                ]}
+              >
+                {inventoryProduct?.inventoryProductOptions[0]?.label
+                  ?.substr(0, 1)
+                  .toUpperCase() +
+                  inventoryProduct?.inventoryProductOptions[0]?.label?.substr(
+                    1,
+                    inventoryProduct?.inventoryProductOptions[0]?.label
+                      ?.length - 1
+                  )}
+              </Text>
+              <Text style={styles.item_chef}>
+                {inventoryProduct?.sachetItem?.unitSize &&
+                  inventoryProduct?.sachetItem?.unitSize +
+                    ' ' +
+                    inventoryProduct?.sachetItem?.unit}
+                {inventoryProduct?.supplierItem?.unitSize &&
+                  inventoryProduct?.supplierItem?.unitSize +
+                    ' ' +
+                    inventoryProduct?.supplierItem?.unit}
+              </Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      )}
       {tunnelItem && (
         <View style={{ paddingHorizontal: 20 }}>
-          <Text style={styles.something}>Avaliable Servings:</Text>
+          <Text style={styles.something}>Avaliable Options:</Text>
           {inventoryProduct.inventoryProductOptions.map((item_data, key) => {
             return (
               <ServingSelect

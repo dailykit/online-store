@@ -16,6 +16,7 @@ import { height } from '../../utils/Scalaing';
 import { styles } from './styles';
 
 const ModalContent = ({
+  showInfo,
   route,
   navigation,
   setIsModalVisible,
@@ -107,6 +108,7 @@ const ModalContent = ({
             <SimpleProductItem
               setcartItem={(item) => setcartItem(item)}
               navigation={navigation}
+              showInfo={showInfo}
               independantItem
               tunnelItem
               isSelected
@@ -121,6 +123,7 @@ const ModalContent = ({
                 console.log('set cartitem called', item);
                 setcartItem(item);
               }}
+              showInfo={showInfo}
               navigation={navigation}
               independantItem
               tunnelItem

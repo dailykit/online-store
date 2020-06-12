@@ -30,6 +30,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
           type={cardData.__typename.split('_')[1]}
           id={cardData.id}
           setIsModalVisible={setIsModalVisible}
+          showInfo={true}
         />
       )}
       <View
@@ -99,6 +100,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
               <SimpleProductItem
                 label={label}
                 setcardItem={setcardItem}
+                showInfo={true}
                 setcardData={(item) => setcardData(item)}
                 navigation={navigation}
                 independantItem
@@ -119,6 +121,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                      )} */}
               <InventoryProductItem
                 label={label}
+                showInfo={true}
                 setcardItem={setcardItem}
                 setcardData={(item) => setcardData(item)}
                 navigation={navigation}

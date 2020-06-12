@@ -154,7 +154,10 @@ const Cart = ({
   return (
     <TouchableOpacity
       onPress={handleAddToCart}
-      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+      style={[
+        styles.container,
+        { backgroundColor: visual.color || '#3fa4ff', width: '100%' },
+      ]}
     >
       <View style={styles.container_left}>
         {!tunnelItem && (

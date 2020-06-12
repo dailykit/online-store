@@ -17,6 +17,7 @@ import { Drawer } from '../../components/Drawer';
 import { Feather } from '@expo/vector-icons';
 import { useAppContext } from '../../context/app';
 import HeaderBack from '../../components/HeaderBack';
+import AddToCart from '../AddToCart';
 
 const ProductPage = ({ navigation, route }) => {
   const { id, type } = route.params;
@@ -168,7 +169,7 @@ const ProductPage = ({ navigation, route }) => {
                   ? 'Options'
                   : 'Servings'}
               </Text>
-              {product?.__typename?.includes('inventoryProduct')
+              {/* {product?.__typename?.includes('inventoryProduct')
                 ? product.inventoryProductOptions?.map((option) => (
                     <View style={styles.option}>
                       <Text style={styles.text}>{option.label}</Text>
@@ -194,16 +195,25 @@ const ProductPage = ({ navigation, route }) => {
                         $ {option.price[0].value}
                       </Text>
                     </View>
-                  ))}
+                  ))} */}
 
-              <TouchableOpacity
+              <AddToCart
+                showInfo={false}
+                setIsModalVisible={true}
+                navigation={navigation}
+                id={id}
+                type={product?.__typename?.split('_')[1]}
+                data={product}
+              />
+
+              {/* <TouchableOpacity
                 style={[styles.button, { backgroundColor: visual.color }]}
                 onPress={() => setIsModalVisible(true)}
               >
                 <Text style={{ color: '#fff' }}>
                   ADD TO CART <Feather size={14} name='plus' />
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </ScrollView>
