@@ -19,20 +19,32 @@ const CategoriesButton = ({ title, id, onPress, selectedIndex, length }) => {
         alignItems: 'center',
         height: 50,
         flexDirection: 'row',
-        backgroundColor: selectedIndex == id ? visual.color : '#e3e3e3',
+        backgroundColor: selectedIndex == id ? visual.color : '#fff',
         paddingVertical: 30,
         marginHorizontal: 10,
         width: width / length - 30,
         minWidth: 120,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: isHovered ? visual.color : '#333',
         // opacity: isHovered ? 0.6 : 1,
+        shadowColor: isHovered ? '#111' : '#fff',
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+        shadowOpacity: isHovered ? 0.3 : 0.1,
+        shadowRadius: 4.65,
+        elevation: isHovered ? 24 : 4,
       }}
     >
       <Text
         style={[
           {
             textAlign: 'center',
-            color: selectedIndex == id ? '#fff' : 'black',
-            fontWeight: selectedIndex == id ? 'bold' : 'normal',
+            color:
+              selectedIndex == id ? '#fff' : isHovered ? visual.color : '#333',
+            fontWeight: selectedIndex == id || isHovered ? 'bold' : 'normal',
           },
           styles.button,
         ]}

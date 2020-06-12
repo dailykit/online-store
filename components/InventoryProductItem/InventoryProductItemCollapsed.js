@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Image, Text, TouchableOpacity, View, Platform } from 'react-native';
 import ServingSelect from '../ServingSelect';
 import { styles } from './styles';
+import { visit } from 'graphql';
+import { useAppContext } from '../../context/app';
 
 const InventoryProductCollapsed = ({
   data: inventoryProduct,
@@ -10,6 +12,8 @@ const InventoryProductCollapsed = ({
   setProductOptionId,
   navigation,
 }) => {
+  const { visual } = useAppContext();
+
   const [servingIndex, setServingIndex] = useState(0);
   if (!inventoryProduct) {
     return <Text>Bad Data</Text>;
@@ -62,7 +66,9 @@ const InventoryProductCollapsed = ({
               alignItems: 'flex-start',
             }}
           >
-            <Text style={styles.item_title}>{`${inventoryProduct.name} `}</Text>
+            <Text
+              style={[styles.item_title, { color: visual.color }]}
+            >{`${inventoryProduct.name} `}</Text>
           </View>
           <View style={styles.item_three_lower}>
             <Text

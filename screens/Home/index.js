@@ -340,9 +340,6 @@ const Home = (props) => {
             style={styles.cover_image}
           />
         </View>
-        {/* <View style={styles.headerContainer}>
-          <SafetyBanner {...props} />
-        </View> */}
 
         {/* <View
           style={{
@@ -448,7 +445,10 @@ const Home = (props) => {
         {cart?.cartInfo?.products?.length && (
           <View style={{ height: height * 0.08 }} />
         )}
-        <Cart to='OrderSummary' {...props} text='Checkout' />
+        {/* <View style={styles.headerContainer}>
+          <SafetyBanner {...props} />
+        </View> */}
+        {width < 768 && <Cart to='OrderSummary' {...props} text='Checkout' />}
         <DrawerLayout />
       </ScrollView>
     </>

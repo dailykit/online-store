@@ -18,6 +18,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { visual } = useAppContext();
   const { isAuthenticated, login } = useAuth();
+  const [isHovered, setIsHovered] = React.useState(false);
 
   return (
     <>
@@ -31,7 +32,23 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
           setIsModalVisible={setIsModalVisible}
         />
       )}
-      <View style={styles.card_container}>
+      <View
+        style={[
+          styles.card_container,
+          {
+            shadowColor: '#666',
+            shadowOffset: {
+              width: 0,
+              height: 4,
+            },
+            shadowOpacity: isHovered ? 0.3 : 0.1,
+            shadowRadius: 4.65,
+            elevation: isHovered ? 24 : 4,
+          },
+        ]}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <View style={styles.item_parent_container}>
           {product?.__typename.includes('comboProduct') && (
             <>
@@ -199,7 +216,7 @@ const styles = EStyleSheet.create({
     backgroundColor: '#3fa4ff',
     paddingVertical: 5,
     paddingHorizontal: 15,
-    borderRadius: 0,
+    borderRadius: 4,
   },
   add_to_card_text: {
     color: 'white',

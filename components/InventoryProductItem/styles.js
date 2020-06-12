@@ -50,7 +50,7 @@ export const styles = EStyleSheet.create({
     resizeMode: 'contain',
   },
   item_title: {
-    fontSize: '$l',
+    fontSize: '$m',
   },
   item_chef: {
     fontSize: 18,
