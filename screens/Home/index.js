@@ -406,8 +406,6 @@ const Home = (props) => {
                 key={key}
                 id={key}
                 length={data?.length}
-                selectedIndex={selectedIndex}
-                setSelectedIndex={setSelectedIndex}
                 onPress={() =>
                   props.navigation.navigate('CategoryProductsPage', {
                     data,

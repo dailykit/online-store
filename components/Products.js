@@ -14,6 +14,11 @@ import { Spinner } from '@ui-kitten/components';
 const Products = ({ category, navigation, showLess }) => {
   const [products, setProducts] = React.useState([]);
 
+  React.useEffect(() => {
+    // empty products on route change
+    setProducts([]);
+  }, [category]);
+
   // Subscriptions
   const { loading: inventoryProductsLoading } = useSubscription(
     INVENTORY_PRODUCTS,
