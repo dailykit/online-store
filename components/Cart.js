@@ -8,7 +8,7 @@ import {
   ToastAndroid,
   Platform,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
 import { uuid } from '../utils';
 import { useMutation } from '@apollo/react-hooks';
@@ -33,6 +33,8 @@ const Cart = ({
   const { visual } = useAppContext();
   const { open } = useDrawerContext();
 
+  const [quantity, setQuantity] = useState(1);
+
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
       console.log('Product added!');
@@ -50,8 +52,10 @@ const Cart = ({
     },
   });
 
+  console.log('CART Item:', cartItem);
+  console.log(cart);
+
   const handleAddToCart = () => {
-    console.log('CART Item:', cartItem);
     try {
       if (
         customerDetails?.firstName &&
@@ -59,6 +63,16 @@ const Cart = ({
         customerDetails?.email &&
         customerDetails?.phoneNumber
       ) {
+        // modify cartItem based on quantity
+        console.log(quantity);
+        const updatedItem = {
+          product: {
+            ...cartItem.product,
+            quantity,
+            price: cartItem.product.price * quantity,
+          },
+        };
+
         let products = cart?.cartInfo?.products || [];
         let total = parseFloat(cart?.cartInfo?.total) || 0;
         if (tunnelItem) {
@@ -78,10 +92,10 @@ const Cart = ({
           } else {
             products.push({
               cartItemId: uuid(),
-              ...cartItem,
+              ...updatedItem,
               type,
             });
-            total = total + parseFloat(cartItem.product.price);
+            total = total + parseFloat(updatedItem.product.price);
           }
           total = parseFloat(total.toFixed(2));
           // products and total ready
@@ -153,8 +167,7 @@ const Cart = ({
 
   return (
     <View style={[styles.outerContainer, { width: '100%' }]}>
-      <TouchableOpacity
-        onPress={handleAddToCart}
+      <View
         style={[
           styles.container,
           { backgroundColor: visual.color || '#3fa4ff' },
@@ -166,8 +179,44 @@ const Cart = ({
               $ {cart.itemTotal} | {numberOfProducts} Products
             </Text>
           )}
+          {tunnelItem && (
+            <View style={styles.quantity}>
+              <Feather
+                name='minus'
+                color='#fff'
+                size={24}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  if (quantity - 1 === 0) setQuantity(1);
+                  else setQuantity(quantity - 1);
+                }}
+              />
+              <Text
+                style={{
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                  marginHorizontal: 8,
+                }}
+              >
+                {quantity}
+              </Text>
+              <Feather
+                name='plus'
+                color='#fff'
+                size={24}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  setQuantity(quantity + 1);
+                }}
+              />
+            </View>
+          )}
         </View>
-        <View style={styles.container_right}>
+        <TouchableOpacity
+          style={styles.container_right}
+          onPress={handleAddToCart}
+        >
           <Text style={styles.text}>
             {text}
             {'    '}
@@ -178,8 +227,8 @@ const Cart = ({
             size={20}
             style={{ marginTop: 2 }}
           />
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -315,6 +364,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  quantity: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-around',
   },
 });
 

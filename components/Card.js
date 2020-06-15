@@ -20,6 +20,8 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
   const { isAuthenticated, login } = useAuth();
   const [isHovered, setIsHovered] = React.useState(false);
 
+  console.log('Card data:', cardData);
+
   return (
     <>
       {cardData && (

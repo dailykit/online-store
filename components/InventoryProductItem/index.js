@@ -41,7 +41,7 @@ const InventoryProductItem = ({
         option: {
           id: product?.inventoryProductOptions[0]?.id, // product option id
         },
-        type: 'Inventory',
+        type: 'inventoryProduct',
       },
     };
     if (!independantItem) {
