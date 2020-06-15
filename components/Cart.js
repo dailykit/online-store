@@ -69,7 +69,12 @@ const Cart = ({
           product: {
             ...cartItem.product,
             quantity,
-            price: cartItem.product.price * quantity,
+            basePrice: parseFloat(
+              parseFloat(cartItem.product.price).toFixed(2)
+            ),
+            price: parseFloat(
+              (parseFloat(cartItem.product.price) * quantity).toFixed(2)
+            ),
           },
         };
 

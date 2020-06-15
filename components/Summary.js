@@ -53,12 +53,49 @@ const Summary = ({ useQuantity, item }) => {
 
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
-      console.log('Product added!');
+      console.log('Cart updated!');
     },
     onError: (error) => {
       console.log(error);
     },
   });
+
+  const updateQuantity = (quantity) => {
+    try {
+      if (quantity) {
+        let products = cart?.cartInfo?.products;
+        let total = parseFloat(cart?.cartInfo?.total);
+        const index = products.findIndex(
+          (product) => product.cartItemId === item.cartItemId
+        );
+        console.log('PRODUCT: ', products[index]);
+        products[index].product.quantity = quantity;
+        total = total - products[index].product.price;
+        products[index].product.price =
+          products[index].product.basePrice * quantity;
+        const newTotal = parseFloat(
+          total + products[index].product.basePrice * quantity
+        ).toFixed(2);
+        const cartInfo = {
+          products,
+          total: parseFloat(newTotal),
+        };
+        console.log('SEDING:', cartInfo);
+        updateCart({
+          variables: {
+            id: cart.id,
+            set: {
+              cartInfo: cartInfo,
+            },
+          },
+        });
+      } else {
+        removeFromCart(item);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const removeFromCart = (product) => {
     let products = cart?.cartInfo?.products;
@@ -77,8 +114,7 @@ const Summary = ({ useQuantity, item }) => {
     const cartInfo = {
       products: newCartItems,
       total,
-    }; // you'll have to generate this every time
-
+    };
     updateCart({
       variables: {
         id: cart.id,
@@ -180,6 +216,32 @@ const Summary = ({ useQuantity, item }) => {
       />
       <View style={styles.picker_container}>
         <Text style={styles.summary_title_text}>{item.product.name}</Text>
+        {item.product.quantity && (
+          <View style={styles.quantity}>
+            <Feather
+              name='minus'
+              color='#aaa'
+              size={24}
+              onPress={() => updateQuantity(item.product.quantity - 1)}
+            />
+            <Text
+              style={{
+                color: '#333',
+                fontWeight: 'bold',
+                fontSize: 20,
+                marginHorizontal: 8,
+              }}
+            >
+              {item.product.quantity}
+            </Text>
+            <Feather
+              name='plus'
+              color='#aaa'
+              size={24}
+              onPress={() => updateQuantity(item.product.quantity + 1)}
+            />
+          </View>
+        )}
         {!useQuantity && (
           <View
             style={[
@@ -328,6 +390,12 @@ const styles = StyleSheet.create({
   quantity_text: {
     color: 'white',
     fontSize: 16,
+  },
+  quantity: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-around',
+    marginVertical: 5,
   },
 });
 
