@@ -18,7 +18,6 @@ export const styles = EStyleSheet.create({
     paddingTop: 20,
     height: height * 0.3,
   },
-
   item_container_three: {
     flex: 2,
     paddingTop: 15,
@@ -62,5 +61,24 @@ export const styles = EStyleSheet.create({
     color: '#4f4e4e',
     flex: 1,
     textAlign: 'right',
+  },
+  type_container_right: {
+    flexDirection: 'row',
+  },
+  type_button: {
+    backgroundColor: '#fff',
+    padding: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#efefef',
+  },
+  type_text: {
+    fontWeight: 'bold',
+  },
+  done_container: {
+    marginLeft: 8,
+    borderRadius: '50%',
   },
 });

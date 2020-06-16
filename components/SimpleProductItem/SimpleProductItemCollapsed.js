@@ -78,7 +78,7 @@ const SimpleProductItemCollapsed = ({
                     { fontWeight: 'normal', fontSize: 18 },
                   ]}
                 >
-                  Mealkit
+                  {simpleRecipeProduct?.simpleRecipe?.cuisine}
                 </Text>
                 <Text style={styles.item_chef}>
                   {simpleRecipeProduct?.simpleRecipe?.author}
@@ -104,7 +104,12 @@ const SimpleProductItemCollapsed = ({
               >
                 <Text style={styles.type_text}>Meal Kit</Text>
                 {typeSelected === 'mealKit' && (
-                  <View style={styles.done_container}>
+                  <View
+                    style={[
+                      styles.done_container,
+                      { backgroundColor: visual.color },
+                    ]}
+                  >
                     <MaterialIcons name='done' size={16} color='#fff' />
                   </View>
                 )}
@@ -120,7 +125,12 @@ const SimpleProductItemCollapsed = ({
               >
                 <Text style={styles.type_text}>Ready To Eat</Text>
                 {typeSelected === 'readyToEat' && (
-                  <View style={[styles.done_container]}>
+                  <View
+                    style={[
+                      styles.done_container,
+                      { backgroundColor: visual.color },
+                    ]}
+                  >
                     <MaterialIcons name='done' size={16} color='#fff' />
                   </View>
                 )}
