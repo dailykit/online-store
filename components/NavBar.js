@@ -140,11 +140,14 @@ export default function NavBar({
             <>
               <Text
                 style={styles.navLinks}
-                onPress={() => open('OrderHistory')}
+                onPress={() => navigation.navigate('OrderHistory')}
               >
                 Orders
               </Text>
-              <Text style={styles.navLinks} onPress={() => open('Profile')}>
+              <Text
+                style={styles.navLinks}
+                onPress={() => navigation.navigate('ProfileScreen')}
+              >
                 Profile
               </Text>
             </>
