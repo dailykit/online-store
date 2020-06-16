@@ -15,7 +15,8 @@ import AddToCart from '../screens/AddToCart';
 import OrderSummary from '../screens/OrderSummary';
 import OrderPlaced from '../screens/OrderPlaced';
 import { SafetyScreen } from '../screens/SafetyScreen';
-import { ProfileScreen } from '../screens/ProfileScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import OrderHistory from '../screens/OrderHistory';
 // drawer
 import CustomDrawerContent from './Menu';
 
@@ -28,7 +29,6 @@ import ModalContent from '../components/ModalContent';
 import Delivery from '../screens/Delivery';
 import { EditAddress } from '../screens/EditAddress';
 import { SelectPaymentMethod } from '../screens/SelectPaymentMethod';
-import { OrderHistory } from '../screens/OrderHistory';
 import { Text } from 'native-base';
 
 import { height, width } from '../utils/Scalaing';
@@ -147,20 +147,20 @@ function HomeStack(props) {
                headerShown: false,
             }}
          /> */}
-      {/* <Stack.Screen
-            name="ProfileScreen"
-            component={ProfileScreen}
-            options={{
-               headerShown: false,
-            }}
-         /> */}
-      {/* <Stack.Screen
-            name="OrderHistoryScreen"
-            component={OrderHistory}
-            options={{
-               headerShown: false,
-            }}
-         /> */}
+      <Stack.Screen
+        name='ProfileScreen'
+        component={ProfileScreen}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='OrderHistory'
+        component={OrderHistory}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name='PaymentProcessing'
         component={PaymentProcessing}

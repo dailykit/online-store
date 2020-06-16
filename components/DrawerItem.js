@@ -85,7 +85,7 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
         } else if (title === 'Cart') {
           navigation.navigate('OrderSummary');
         } else {
-          open(screen);
+          navigation.navigate(screen);
         }
       }}
     >

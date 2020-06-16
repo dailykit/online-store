@@ -14,6 +14,7 @@ export const styles = EStyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: 10,
+    paddingHorizontal: 8,
   },
   picker_container: {
     flex: 1,

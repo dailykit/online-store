@@ -1,12 +1,16 @@
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { width } from '../../utils/Scalaing';
 
 export const styles = EStyleSheet.create({
   heading: {
     fontSize: '$l',
-    fontWeight: 500,
+    fontWeight: 'bold',
+    padding: 12,
     color: '#666',
-    paddingVertical: 12,
-    textAlign: 'center',
+  },
+  outerContainer: {
+    marginHorizontal: width > 768 ? '20%' : 0,
+    flex: 1,
   },
   center: {
     flex: 1,
@@ -37,7 +41,7 @@ export const styles = EStyleSheet.create({
   },
   title: {
     fontWeight: 'bold',
-    fontSize: '$l',
+    fontSize: '$m',
   },
   muted: {
     color: 'gray',
@@ -57,7 +61,7 @@ export const styles = EStyleSheet.create({
   },
   total: {
     fontWeight: 'bold',
-    fontSize: '$l',
+    fontSize: '$m',
     marginTop: 10,
   },
   header: {

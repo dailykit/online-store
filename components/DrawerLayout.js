@@ -130,12 +130,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   component: {
-    maxWidth: 768,
+    width: '100%',
     height: '100%',
     position: 'relative',
   },
   phoneComponent: {
-    maxWidth: 768,
+    width: '100%',
     height: '100%',
     position: 'relative',
   },
