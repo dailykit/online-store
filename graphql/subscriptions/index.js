@@ -408,7 +408,6 @@ export const CUSTOMER = gql`
         customerInfo
         cartInfo
         customerId
-        id
         isValid
         paymentMethodId
         stripeCustomerId

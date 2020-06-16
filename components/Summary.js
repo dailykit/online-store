@@ -24,6 +24,7 @@ const Summary = ({ useQuantity, item }) => {
     onCompleted: (data) => {
       setImage(data.inventoryProduct?.assets?.images[0]);
     },
+    fetchPolicy: 'cache-and-network',
   });
 
   const [fetchSimpleRecipeProduct] = useLazyQuery(SIMPLE_PRODUCT, {
@@ -33,6 +34,7 @@ const Summary = ({ useQuantity, item }) => {
     onCompleted: (data) => {
       setImage(data.simpleRecipeProduct?.assets?.images[0]);
     },
+    fetchPolicy: 'cache-and-network',
   });
 
   React.useEffect(() => {
