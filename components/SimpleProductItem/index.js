@@ -38,7 +38,7 @@ const SimpleProductItem = ({
             id: product.simpleRecipeProductOptions[0]?.id, // product option id
             type: product.simpleRecipeProductOptions[0]?.type,
           },
-          type: 'Simple Recipe',
+          type: 'simpleRecipeProduct',
         },
       };
       if (!independantItem) {
