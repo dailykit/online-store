@@ -18,6 +18,7 @@ import { CREATE_CART, UPDATE_CART } from '../graphql/mutations';
 import { height, width } from '../utils/Scalaing';
 import { useAppContext } from '../context/app';
 import { useDrawerContext } from '../context/drawer';
+import { useAuth } from '../context/auth';
 
 const Cart = ({
   navigation,
@@ -32,6 +33,7 @@ const Cart = ({
   const { cart, customerDetails, customer } = useCartContext();
   const { visual } = useAppContext();
   const { open } = useDrawerContext();
+  const { isAuthenicated, login } = useAuth();
 
   const [quantity, setQuantity] = useState(1);
 
@@ -52,11 +54,9 @@ const Cart = ({
     },
   });
 
-  console.log('CART Item:', cartItem);
-  console.log(cart);
-
   const handleAddToCart = () => {
     try {
+      if (!isAuthenicated) login();
       if (
         customerDetails?.firstName &&
         customerDetails?.lastName &&
