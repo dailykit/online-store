@@ -55,6 +55,47 @@ export default function NavBar({
     return title;
   }
 
+  const renderTitleWeb = () => {
+    if (typeof title === 'string') {
+      return (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginHorizontal: 20,
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginRight: 40,
+            }}
+            onPress={() => {
+              navigation.navigate('Home');
+            }}
+          >
+            {width > 768 && (
+              <Image source={{ uri: brand.logo }} style={styles.logo} />
+            )}
+            <Text style={[styles.titleTextStyle]}>{title}</Text>
+          </TouchableOpacity>
+          <Text
+            style={[styles.titleTextStyle]}
+            onPress={() => navigation.navigate('')}
+          >
+            About Us
+          </Text>
+        </View>
+      );
+    }
+
+    if (!title) return null;
+
+    return title;
+  };
+
   function renderLeft() {
     if (!hideLeft) {
       if (leftIconName || back) {
@@ -92,12 +133,9 @@ export default function NavBar({
   return (
     <View style={navStyles}>
       {width < 768 && renderLeft()}
-      {renderTitle()}
+      {width < 768 ? renderTitle() : renderTitleWeb()}
       {width > 768 && (
         <View style={styles.rightNav}>
-          <Text style={styles.navLinks} onPress={() => navigation.navigate('')}>
-            About Us
-          </Text>
           {isAuthenticated && (
             <>
               <Text
@@ -141,11 +179,11 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   title: {
-    flex: 2,
+    flex: 1,
     height: height * 0.07,
     marginLeft: width > 768 ? 16 : 0,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     flexDirection: 'row',
   },
   logo: {
@@ -155,7 +193,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   titleTextStyle: {
-    fontWeight: '400',
+    fontWeight: 'bold',
     fontSize: 16 * 0.875,
     color: theme.COLORS.BLACK,
   },
@@ -180,10 +218,10 @@ const styles = StyleSheet.create({
   rightNav: {
     alignItems: 'center',
     flexDirection: 'row',
-    paddingRight: 16,
+    paddingRight: 20,
   },
   navLinks: {
-    marginLeft: 16,
+    marginLeft: 40,
     fontSize: 18,
   },
   authButton: {

@@ -2,8 +2,11 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { width } from '../utils/Scalaing';
 import EStyleSheet from 'react-native-extended-stylesheet';
+import { useAppContext } from '../context/app';
 
 const CategoriesButton = ({ title, id, onPress, selectedIndex, length }) => {
+  const { visual } = useAppContext();
+
   const [isHovered, setIsHovered] = React.useState(false);
   return (
     <TouchableOpacity
@@ -14,21 +17,33 @@ const CategoriesButton = ({ title, id, onPress, selectedIndex, length }) => {
         paddingHorizontal: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 50,
+        height: width > 768 ? 50 : 40,
         flexDirection: 'row',
-        backgroundColor: selectedIndex == id ? '#3fa4ff' : '#e3e3e3',
-        paddingVertical: 30,
-        marginLeft: 20,
-        width: width / length - 30,
-        minWidth: 120,
-        opacity: isHovered ? 0.6 : 1,
+        backgroundColor: isHovered ? visual.color : '#fff',
+        paddingVertical: width > 768 ? 30 : 10,
+        marginHorizontal: 10,
+        width: 'auto',
+        minWidth: width > 768 ? 200 : 100,
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: isHovered ? visual.color : '#333',
+        // opacity: isHovered ? 0.6 : 1,
+        shadowColor: isHovered ? '#111' : '#fff',
+        shadowOffset: {
+          width: 0,
+          height: 4,
+        },
+        shadowOpacity: isHovered ? 0.3 : 0.1,
+        shadowRadius: 4.65,
+        elevation: isHovered ? 24 : 4,
       }}
     >
       <Text
         style={[
           {
-            color: selectedIndex == id ? '#fff' : 'black',
-            fontWeight: selectedIndex == id ? 'bold' : 'normal',
+            textAlign: 'center',
+            color: isHovered ? '#fff' : '#333',
+            fontWeight: isHovered ? 'bold' : 'normal',
           },
           styles.button,
         ]}

@@ -112,6 +112,7 @@ const ComboProduct = ({
                 tunnelItem={tunnelItem}
                 setcartItem={setcartItem}
                 name={el.name}
+                showInfo={true}
               />
             );
           }
@@ -136,6 +137,7 @@ const ComboProduct = ({
                 tunnelItem={tunnelItem}
                 setcartItem={setcartItem}
                 name={el.name}
+                showInfo={true}
               />
             );
           }

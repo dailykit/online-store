@@ -2,6 +2,8 @@ import React from 'react';
 import { Image, Text, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { height, width } from '../utils/Scalaing';
+import { ProgressBarAndroid } from 'react-native-web';
+import { useAppContext } from '../context/app';
 
 const assets = {
   'Alcoholic Beverage': {
@@ -69,6 +71,8 @@ const assets = {
 export const CategoryBanner = ({ category }) => {
   let categoryType = assets[category];
 
+  const { brand } = useAppContext();
+
   if (!categoryType) categoryType = assets['Not Exist'];
 
   return (
@@ -77,8 +81,6 @@ export const CategoryBanner = ({ category }) => {
         styles.conatiner,
         {
           backgroundColor: categoryType?.backgroundColor,
-          width: width > 1280 ? 1280 : width,
-
           margin: 'auto',
         },
       ]}
@@ -89,7 +91,10 @@ export const CategoryBanner = ({ category }) => {
         </Text>
       </View>
       <View style={styles.imageContainer}>
-        <Image style={[styles.image]} source={categoryType?.uri} />
+        <Image
+          style={[styles.image]}
+          source={categoryType?.uri || brand.logo}
+        />
       </View>
     </View>
   );
@@ -97,7 +102,7 @@ export const CategoryBanner = ({ category }) => {
 
 const styles = EStyleSheet.create({
   conatiner: {
-    width: width > 1280 ? 1280 : width,
+    width,
     height: 64,
     flexDirection: 'row',
     justifyContent: 'center',

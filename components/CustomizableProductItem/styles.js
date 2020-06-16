@@ -17,8 +17,8 @@ export const stylesExpanded = EStyleSheet.create({
     marginTop: 4,
     borderBottomWidth: 1,
     backgroundColor: '#fff',
-    borderBottomColor: '#ececec',
-    height: width < height ? height * 0.6 : height * 0.5,
+    borderBottomColor: '#fff',
+    height: height * 0.3,
   },
   item_container_one: {
     flex: 4,

@@ -18,6 +18,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { visual } = useAppContext();
   const { isAuthenticated, login } = useAuth();
+  const [isHovered, setIsHovered] = React.useState(false);
 
   return (
     <>
@@ -29,9 +30,26 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
           type={cardData.__typename.split('_')[1]}
           id={cardData.id}
           setIsModalVisible={setIsModalVisible}
+          showInfo={true}
         />
       )}
-      <View style={styles.card_container}>
+      <View
+        style={[
+          styles.card_container,
+          {
+            shadowColor: '#666',
+            shadowOffset: {
+              width: 0,
+              height: 4,
+            },
+            shadowOpacity: isHovered ? 0.3 : 0.1,
+            shadowRadius: 4.65,
+            elevation: isHovered ? 24 : 4,
+          },
+        ]}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <View style={styles.item_parent_container}>
           {product?.__typename.includes('comboProduct') && (
             <>
@@ -82,6 +100,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
               <SimpleProductItem
                 label={label}
                 setcardItem={setcardItem}
+                showInfo={true}
                 setcardData={(item) => setcardData(item)}
                 navigation={navigation}
                 independantItem
@@ -102,6 +121,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                      )} */}
               <InventoryProductItem
                 label={label}
+                showInfo={true}
                 setcardItem={setcardItem}
                 setcardData={(item) => setcardData(item)}
                 navigation={navigation}
@@ -143,13 +163,11 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
 
 const styles = EStyleSheet.create({
   card_container: {
-    width: width >= 1280 ? width * 0.26 : width,
-    paddingHorizontal: 20,
+    width: width >= 1280 ? width * 0.2 : width,
+    padding: 5,
     elevation: 2,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
     shadowColor: '#000',
     shadowOffset: {},
-    paddingVertical: 10,
     backgroundColor: '#fff',
     marginBottom: 10,
     marginRight: width > 1280 ? 20 : 0,
@@ -175,6 +193,7 @@ const styles = EStyleSheet.create({
   bottom_container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
     paddingTop: 20,
     paddingHorizontal: '1rem',
@@ -193,13 +212,12 @@ const styles = EStyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: 20,
   },
   button: {
     backgroundColor: '#3fa4ff',
     paddingVertical: 5,
     paddingHorizontal: 15,
-    borderRadius: 0,
+    borderRadius: 4,
   },
   add_to_card_text: {
     color: 'white',

@@ -47,13 +47,13 @@ const CustomizableProductItem = ({
         default_product =
           product?.customizableProductOptions[0]?.inventoryProduct;
         _default_option = default_product.inventoryProductOptions[0];
-        _type = 'Inventory';
+        _type = 'inventoryProduct';
       }
       if (product.customizableProductOptions[0]?.simpleRecipeProduct !== null) {
         default_product =
           product?.customizableProductOptions[0]?.simpleRecipeProduct;
         _default_option = default_product.simpleRecipeProductOptions[0];
-        _type = 'Simple Recipe';
+        _type = 'simpleRecipeProduct';
       }
       let objToAddToCart = {
         customizableProductId: product.id,

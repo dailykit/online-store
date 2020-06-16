@@ -19,6 +19,7 @@ const Summary = lazy(() => import('../../components/Summary'));
 import { useCartContext } from '../../context/cart';
 import { height } from '../../utils/Scalaing';
 import { styles } from './styles';
+import Header from '../../components/Header';
 
 const OrderSummary = ({ navigation, ...restProps }) => {
   const { cart } = useCartContext();
@@ -26,10 +27,21 @@ const OrderSummary = ({ navigation, ...restProps }) => {
   let cartItems = cart?.cartInfo?.products;
   console.log('OrderSummary -> cartItems', cartItems);
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <Header title='Home' navigation={navigation} />
       <HeaderBack title='Go Back' navigation={navigation} />
       <ScrollView>
         <View style={styles.wrapper}>
+          <View style={styles.summary_title_conatiner}>
+            <View style={styles.summary_title_conatiner_left}>
+              <Text style={styles.summary_title_text}>Order Summary</Text>
+            </View>
+            <View style={styles.summary_title_conatiner_right}>
+              <Text style={[styles.summary_title_text, { textAlign: 'right' }]}>
+                {cartItems?.length} products
+              </Text>
+            </View>
+          </View>
           <View style={styles.title_container}>
             <View style={styles.title_container_left}>
               <Text style={styles.deliver_on_text}>Deliver on</Text>
@@ -54,16 +66,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                   name='ios-arrow-forward'
                 />
               </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.summary_title_conatiner}>
-            <View style={styles.summary_title_conatiner_left}>
-              <Text style={styles.summary_title_text}>Order Summary</Text>
-            </View>
-            <View style={styles.summary_title_conatiner_right}>
-              <Text style={[styles.summary_title_text, { textAlign: 'right' }]}>
-                {cartItems?.length} products
-              </Text>
             </View>
           </View>
           {cartItems?.map((item, index) => {

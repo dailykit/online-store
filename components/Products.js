@@ -9,9 +9,15 @@ import {
 } from '../graphql';
 import { width } from '../utils/Scalaing';
 import Card from './Card';
+import { Spinner } from '@ui-kitten/components';
 
-const Products = ({ category, navigation }) => {
+const Products = ({ category, navigation, showLess }) => {
   const [products, setProducts] = React.useState([]);
+
+  React.useEffect(() => {
+    // empty products on route change
+    setProducts([]);
+  }, [category]);
 
   // Subscriptions
   const { loading: inventoryProductsLoading } = useSubscription(
@@ -68,6 +74,18 @@ const Products = ({ category, navigation }) => {
     },
   });
 
+  if (
+    inventoryProductsLoading ||
+    simpleRecipeProductsLoading ||
+    customizableProductsLoading ||
+    comboProductsLoading
+  )
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Spinner />
+      </View>
+    );
+
   return (
     <View
       style={{
@@ -82,8 +100,8 @@ const Products = ({ category, navigation }) => {
           <FlatList
             showsVerticalScrollIndicator={false}
             style={styles.productList}
-            numColumns={width > 1000 ? 3 : 1}
-            data={products}
+            numColumns={width > 1000 ? 4 : 1}
+            data={showLess ? products.slice(0, 4) : products}
             keyExtractor={(item) => item.id}
             renderItem={({ item: product }) => (
               <Card navigation={navigation} product={product} />
@@ -101,6 +119,6 @@ const styles = StyleSheet.create({
   productList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 48,
+    paddingHorizontal: 32,
   },
 });

@@ -11,6 +11,7 @@ export const Drawer = ({
   type,
   isVisible,
   setIsModalVisible,
+  showInfo,
 }) => {
   if (!isVisible) return null;
   return (
@@ -25,6 +26,7 @@ export const Drawer = ({
       <View style={width > 1280 ? styles.container : styles.phoneContainer}>
         <View style={width > 1280 ? styles.component : styles.phoneComponent}>
           <AddToCart
+            showInfo={showInfo}
             setIsModalVisible={setIsModalVisible}
             navigation={navigation}
             id={id}
@@ -79,8 +81,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   container: {
-    height: height * 0.9,
-    width: width > 1280 ? 1280 : width,
+    height: height * 0.8,
+    width: width > 1280 ? 640 : width,
     backgroundColor: '#fff',
     // alignItems: 'center',
     borderRadius: 5,
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   component: {
-    width: 1280,
+    width: width > 1280 ? 640 : width,
     height: '100%',
     position: 'relative',
     marginHorizontal: 'auto',

@@ -9,15 +9,15 @@ export const styles = EStyleSheet.create({
     paddingBottom: 20,
     paddingHorizontal: 10,
     marginTop: 4,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0,
     backgroundColor: '#fff',
-    borderBottomColor: '#ececec',
+    borderBottomColor: '#fff',
   },
   item_container_one: {
     flex: 4,
     position: 'relative',
     paddingTop: 20,
-    height: width < height ? height * 0.6 : height * 0.5,
+    height: height * 0.3,
   },
   item_container_two: {
     flex: 1.3,
@@ -50,7 +50,7 @@ export const styles = EStyleSheet.create({
     resizeMode: 'contain',
   },
   item_title: {
-    fontSize: '$l',
+    fontSize: '$m',
   },
   item_chef: {
     fontSize: 18,
