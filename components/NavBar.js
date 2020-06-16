@@ -35,7 +35,7 @@ export default function NavBar({
   navigation,
 }) {
   const { isAuthenticated, login, logout } = useAuth();
-  const { brand } = useAppContext();
+  const { brand, visual } = useAppContext();
   const { open } = useDrawerContext();
 
   function renderTitle() {
@@ -157,8 +157,8 @@ export default function NavBar({
             style={[
               styles.authButton,
               {
-                backgroundColor: isAuthenticated ? '#E74C3C' : '#e3e3e3',
-                color: isAuthenticated ? '#fff' : '#1f1f1f',
+                backgroundColor: isAuthenticated ? '#e3e3e3' : visual.color,
+                color: isAuthenticated ? '#1f1f1f' : '#fff',
               },
             ]}
             onPress={() => (isAuthenticated ? logout() : login())}
@@ -234,5 +234,6 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     justifyContent: 'center',
+    borderRadius: 2,
   },
 });
