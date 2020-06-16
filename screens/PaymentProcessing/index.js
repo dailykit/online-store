@@ -1,9 +1,10 @@
-import React from 'react';
-import { View, Text } from 'native-base';
-import { useCartContext } from '../context/cart';
 import { useMutation, useSubscription } from '@apollo/react-hooks';
-import { UPDATE_CART, CART_BY_PK } from '../graphql';
 import { Spinner } from '@ui-kitten/components';
+import { Text, View } from 'native-base';
+import React from 'react';
+import { useCartContext } from '../../context/cart';
+import { CART_BY_PK, UPDATE_CART } from '../../graphql';
+import { styles } from './styles';
 
 const PaymentProcessing = ({ navigation }) => {
   const { cart } = useCartContext();
@@ -52,9 +53,10 @@ const PaymentProcessing = ({ navigation }) => {
           if (data.cartByPK.status !== 'ORDER_PLACED') {
             return setProgress('Getting order details...');
           } else {
-            return navigation.navigate('OrderPlaced', {
-              orderId: data.cartByPK.orderId,
-            });
+            // return navigation.navigate('OrderPlaced', {
+            //    orderId: data.cartByPK.orderId,
+            // });
+            return navigation.navigate('Home');
           }
         }
         case 'FAILED': {

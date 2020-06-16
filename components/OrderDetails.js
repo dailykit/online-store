@@ -1,9 +1,10 @@
-import React from 'react';
-import { View, Text } from 'native-base';
 import { useQuery } from '@apollo/react-hooks';
-import { ORDER } from '../graphql';
-import { StyleSheet } from 'react-native';
 import { Spinner } from '@ui-kitten/components';
+import { Text, View } from 'native-base';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { ORDER } from '../graphql';
+import { width } from '../utils/Scalaing';
 
 const OrderDetails = ({ orderId }) => {
   // Query
@@ -121,6 +122,8 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 16,
+    width: width > 1280 ? 768 : width,
+    marginHorizontal: 'auto',
   },
   heading: {
     color: '#666',

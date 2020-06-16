@@ -1,19 +1,23 @@
-import React from 'react';
-import { View, FlatList } from 'react-native';
 import { useSubscription } from '@apollo/react-hooks';
+import React from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 import {
+  COMBO_PRODUCTS,
+  CUSTOMIZABLE_PRODUCTS,
   INVENTORY_PRODUCTS,
   SIMPLE_RECIPE_PRODUCTS,
-  CUSTOMIZABLE_PRODUCTS,
-  COMBO_PRODUCTS,
 } from '../graphql';
-import { Spinner, Text } from 'native-base';
-import Card from './Card';
 import { width } from '../utils/Scalaing';
+import Card from './Card';
+import { Spinner } from '@ui-kitten/components';
 
-const Products = ({ category }) => {
-  console.log(category, 'rendered');
+const Products = ({ category, navigation, showLess }) => {
   const [products, setProducts] = React.useState([]);
+
+  React.useEffect(() => {
+    // empty products on route change
+    setProducts([]);
+  }, [category]);
 
   // Subscriptions
   const { loading: inventoryProductsLoading } = useSubscription(
@@ -23,7 +27,6 @@ const Products = ({ category }) => {
         ids: category.inventoryProducts,
       },
       onSubscriptionData: (data) => {
-        console.log(data.subscriptionData.data.inventoryProducts);
         setProducts([
           ...products,
           ...data.subscriptionData.data.inventoryProducts,
@@ -39,7 +42,6 @@ const Products = ({ category }) => {
         ids: category.simpleRecipeProducts,
       },
       onSubscriptionData: (data) => {
-        console.log(data.subscriptionData.data.simpleRecipeProducts);
         setProducts([
           ...products,
           ...data.subscriptionData.data.simpleRecipeProducts,
@@ -55,7 +57,6 @@ const Products = ({ category }) => {
         ids: category.customizableProducts,
       },
       onSubscriptionData: (data) => {
-        console.log(data.subscriptionData.data.customizableProducts);
         setProducts([
           ...products,
           ...data.subscriptionData.data.customizableProducts,
@@ -69,7 +70,6 @@ const Products = ({ category }) => {
       ids: category.comboProducts,
     },
     onSubscriptionData: (data) => {
-      console.log(data.subscriptionData.data.comboProducts);
       setProducts([...products, ...data.subscriptionData.data.comboProducts]);
     },
   });
@@ -87,22 +87,38 @@ const Products = ({ category }) => {
     );
 
   return (
-    <View>
-      {products.length ? (
+    <View
+      style={{
+        width: width,
+        alignItems: 'center',
+        width: width > 1280 ? 1280 : width,
+        margin: 'auto',
+      }}
+    >
+      {Boolean(products.length) && (
         <>
-          <Text>{category.name}</Text>
           <FlatList
-            numColumns={width > 1000 ? 3 : 1}
-            data={products}
+            showsVerticalScrollIndicator={false}
+            style={styles.productList}
+            numColumns={width > 1000 ? 4 : 1}
+            data={showLess ? products.slice(0, 4) : products}
             keyExtractor={(item) => item.id}
-            renderItem={({ item: product }) => <Card product={product} />}
+            renderItem={({ item: product }) => (
+              <Card navigation={navigation} product={product} />
+            )}
           />
         </>
-      ) : (
-        <Text> Oops! </Text>
       )}
     </View>
   );
 };
 
 export default Products;
+
+const styles = StyleSheet.create({
+  productList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 32,
+  },
+});

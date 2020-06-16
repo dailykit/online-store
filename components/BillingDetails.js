@@ -1,20 +1,10 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
-import { Input, Modal } from '@ui-kitten/components';
-
-import { useCartContext } from '../context/cart';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import { Button } from 'native-base';
 import { useMutation } from '@apollo/react-hooks';
+import { Input, Modal } from '@ui-kitten/components';
+import { Button } from 'native-base';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useCartContext } from '../context/cart';
 import { UPDATE_CART } from '../graphql';
-
-import { height, width } from '../utils/Scalaing';
 
 const BillingDetails = () => {
   const { cart } = useCartContext();
@@ -37,7 +27,6 @@ const BillingDetails = () => {
     console.log(tip);
     if (!isNaN(tip)) {
       const tipFloat = parseFloat(tip);
-      console.log(tipFloat);
       updateCart({
         variables: {
           id: cart.id,
@@ -165,15 +154,15 @@ const styles = StyleSheet.create({
   },
   billing_details_right_text: {
     flex: 1,
-    fontSize: 16,
+    fontSize: '$m',
   },
   billing_details_title_text: {
-    fontSize: 16,
+    fontSize: '$m',
     color: 'rgba(0,0,0,0.6)',
     fontWeight: 'bold',
   },
   billing_details_left_text: {
-    fontSize: 16,
+    fontSize: '$m',
   },
   button_container_left: {
     alignItems: 'center',

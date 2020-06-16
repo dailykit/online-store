@@ -1,13 +1,14 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import argonTheme from '../constants/Theme';
+import { useAppContext } from '../context/app';
+import { useDrawerContext } from '../context/drawer';
 import { useAuth } from '../context/auth';
 import Icon from './Icon';
-import argonTheme from '../constants/Theme';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import { useAppContext } from '../context/app';
 
 const DrawerItem = ({ focused, title, navigation, screen }) => {
   const { visual } = useAppContext();
+  const { open } = useDrawerContext();
 
   const renderIcon = () => {
     switch (title) {
@@ -41,7 +42,16 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
             }
           />
         );
-
+      case 'Cart':
+        return (
+          <Icon
+            name='shopping-cart'
+            size={14}
+            color={
+              focused ? 'white' : visual.color || argonTheme.COLORS.PRIMARY
+            }
+          />
+        );
       case 'Log out':
         return (
           <Icon name='log-out' size={14} color={argonTheme.COLORS.WARNING} />
@@ -70,8 +80,12 @@ const DrawerItem = ({ focused, title, navigation, screen }) => {
       onPress={async () => {
         if (title == 'Log out') {
           logout();
-        } else {
+        } else if (title === 'Home') {
           navigation.navigate(screen);
+        } else if (title === 'Cart') {
+          navigation.navigate('OrderSummary');
+        } else {
+          open(screen);
         }
       }}
     >

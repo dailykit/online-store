@@ -1,5 +1,173 @@
 import gql from 'graphql-tag';
 
+export const PREORDER_PICKUP = gql`
+  subscription PreOrderPickup {
+    preOrderPickup: fulfillmentTypes(
+      where: { isActive: { _eq: true }, value: { _eq: "PREORDER_PICKUP" } }
+    ) {
+      recurrences(where: { isActive: { _eq: true } }) {
+        id
+        type
+        rrule
+        timeSlots(where: { isActive: { _eq: true } }) {
+          id
+          to
+          from
+          pickUpLeadTime
+        }
+      }
+    }
+  }
+`;
+
+export const ONDEMAND_PICKUP = gql`
+  subscription OndemandPickup {
+    onDemandPickup: fulfillmentTypes(
+      where: { isActive: { _eq: true }, value: { _eq: "ONDEMAND_PICKUP" } }
+    ) {
+      recurrences(where: { isActive: { _eq: true } }) {
+        id
+        type
+        rrule
+        timeSlots(where: { isActive: { _eq: true } }) {
+          id
+          to
+          from
+          pickUpPrepTime
+        }
+      }
+    }
+  }
+`;
+
+export const PREORDER_DELIVERY = gql`
+  subscription PreOrderDelivery($distance: numeric!) {
+    preOrderDelivery: fulfillmentTypes(
+      where: { isActive: { _eq: true }, value: { _eq: "PREORDER_DELIVERY" } }
+    ) {
+      recurrences(where: { isActive: { _eq: true } }) {
+        id
+        type
+        rrule
+        timeSlots(where: { isActive: { _eq: true } }) {
+          id
+          to
+          from
+          mileRanges(
+            where: {
+              isActive: { _eq: true }
+              from: { _lte: $distance }
+              to: { _gte: $distance }
+            }
+          ) {
+            id
+            to
+            from
+            isActive
+            leadTime
+            charges {
+              id
+              charge
+              orderValueFrom
+              orderValueUpto
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const ONDEMAND_DELIVERY = gql`
+  subscription OnDemandDelivery($distance: numeric!) {
+    onDemandDelivery: fulfillmentTypes(
+      where: { isActive: { _eq: true }, value: { _eq: "ONDEMAND_DELIVERY" } }
+    ) {
+      recurrences(where: { isActive: { _eq: true } }) {
+        id
+        type
+        rrule
+        timeSlots(where: { isActive: { _eq: true } }) {
+          id
+          to
+          from
+          mileRanges(
+            where: {
+              isActive: { _eq: true }
+              from: { _lte: $distance }
+              to: { _gte: $distance }
+            }
+          ) {
+            id
+            to
+            from
+            isActive
+            prepTime
+            charges {
+              id
+              charge
+              orderValueFrom
+              orderValueUpto
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const ORDERS = gql`
+  subscription Orders($id: Int!) {
+    orders(
+      where: { customerId: { _eq: $id } }
+      order_by: { created_at: desc }
+    ) {
+      id
+      orderStatus
+      itemTotal
+      deliveryInfo
+      created_at
+      deliveryPrice
+      discount
+      itemTotal
+      tax
+      tip
+      transactionId
+      orderInventoryProducts {
+        inventoryProduct {
+          name
+        }
+        inventoryProductOption {
+          label
+          price
+        }
+      }
+      orderMealKitProducts {
+        simpleRecipeProduct {
+          name
+        }
+        simpleRecipeProductOption {
+          price
+          simpleRecipeYield {
+            yield
+          }
+        }
+      }
+      orderReadyToEatProducts {
+        simpleRecipeProduct {
+          name
+        }
+        simpleRecipeProductOption {
+          price
+          simpleRecipeYield {
+            yield
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const INVENTORY_PRODUCTS = gql`
   subscription InventoryProducts($ids: [Int!]!) {
     inventoryProducts(where: { id: { _in: $ids } }) {
@@ -9,6 +177,14 @@ export const INVENTORY_PRODUCTS = gql`
       description
       name
       tags
+      sachetItem {
+        unitSize
+        unit
+      }
+      supplierItem {
+        unitSize
+        unit
+      }
       inventoryProductOptions {
         id
         price
@@ -26,6 +202,7 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
       name
       default
       id
+      assets
       simpleRecipeProductOptions {
         id
         price
@@ -61,6 +238,14 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
           description
           name
           tags
+          sachetItem {
+            unitSize
+            unit
+          }
+          supplierItem {
+            unitSize
+            unit
+          }
           inventoryProductOptions {
             id
             price
@@ -119,6 +304,14 @@ export const COMBO_PRODUCTS = gql`
               description
               name
               tags
+              sachetItem {
+                unitSize
+                unit
+              }
+              supplierItem {
+                unitSize
+                unit
+              }
               inventoryProductOptions {
                 id
                 price
@@ -215,7 +408,6 @@ export const CUSTOMER = gql`
         customerInfo
         cartInfo
         customerId
-        id
         isValid
         paymentMethodId
         stripeCustomerId

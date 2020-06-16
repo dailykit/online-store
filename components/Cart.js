@@ -8,7 +8,7 @@ import {
   ToastAndroid,
   Platform,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
 import { uuid } from '../utils';
 import { useMutation } from '@apollo/react-hooks';
@@ -17,6 +17,8 @@ import { CREATE_CART, UPDATE_CART } from '../graphql/mutations';
 
 import { height, width } from '../utils/Scalaing';
 import { useAppContext } from '../context/app';
+import { useDrawerContext } from '../context/drawer';
+import { useAuth } from '../context/auth';
 
 const Cart = ({
   navigation,
@@ -30,6 +32,10 @@ const Cart = ({
 }) => {
   const { cart, customerDetails, customer } = useCartContext();
   const { visual } = useAppContext();
+  const { open } = useDrawerContext();
+  const { isAuthenicated, login } = useAuth();
+
+  const [quantity, setQuantity] = useState(1);
 
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
@@ -49,14 +55,29 @@ const Cart = ({
   });
 
   const handleAddToCart = () => {
-    console.log('CART Item:', cartItem);
     try {
+      if (!isAuthenicated) login();
       if (
         customerDetails?.firstName &&
         customerDetails?.lastName &&
         customerDetails?.email &&
         customerDetails?.phoneNumber
       ) {
+        // modify cartItem based on quantity
+        console.log(quantity);
+        const updatedItem = {
+          product: {
+            ...cartItem.product,
+            quantity,
+            basePrice: parseFloat(
+              parseFloat(cartItem.product.price).toFixed(2)
+            ),
+            price: parseFloat(
+              (parseFloat(cartItem.product.price) * quantity).toFixed(2)
+            ),
+          },
+        };
+
         let products = cart?.cartInfo?.products || [];
         let total = parseFloat(cart?.cartInfo?.total) || 0;
         if (tunnelItem) {
@@ -76,10 +97,10 @@ const Cart = ({
           } else {
             products.push({
               cartItemId: uuid(),
-              ...cartItem,
+              ...updatedItem,
               type,
             });
-            total = total + parseFloat(cartItem.product.price);
+            total = total + parseFloat(updatedItem.product.price);
           }
           total = parseFloat(total.toFixed(2));
           // products and total ready
@@ -136,7 +157,7 @@ const Cart = ({
         }
         if (text === 'Checkout') navigation.navigate('OrderSummary');
       } else {
-        navigation.navigate('Add Details', { path: 'profile' });
+        open('AddDetails', { path: 'profile/create' });
       }
       setIsModalVisible(false);
     } catch (error) {
@@ -150,30 +171,70 @@ const Cart = ({
   if (!tunnelItem && !numberOfProducts) return <></>;
 
   return (
-    <TouchableOpacity
-      onPress={handleAddToCart}
-      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
-    >
-      <View style={styles.container_left}>
-        {!tunnelItem && (
+    <View style={[styles.outerContainer, { width: '100%' }]}>
+      <View
+        style={[
+          styles.container,
+          { backgroundColor: visual.color || '#3fa4ff' },
+        ]}
+      >
+        <View style={styles.container_left}>
+          {!tunnelItem && (
+            <Text style={styles.text}>
+              $ {cart.itemTotal} | {numberOfProducts} Products
+            </Text>
+          )}
+          {tunnelItem && (
+            <View style={styles.quantity}>
+              <Feather
+                name='minus'
+                color='#fff'
+                size={24}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  if (quantity - 1 === 0) setQuantity(1);
+                  else setQuantity(quantity - 1);
+                }}
+              />
+              <Text
+                style={{
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  fontSize: 20,
+                  marginHorizontal: 8,
+                }}
+              >
+                {quantity}
+              </Text>
+              <Feather
+                name='plus'
+                color='#fff'
+                size={24}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  setQuantity(quantity + 1);
+                }}
+              />
+            </View>
+          )}
+        </View>
+        <TouchableOpacity
+          style={styles.container_right}
+          onPress={handleAddToCart}
+        >
           <Text style={styles.text}>
-            $ {cart.itemTotal} | {numberOfProducts} Products
+            {text}
+            {'    '}
           </Text>
-        )}
+          <Ionicons
+            name='ios-arrow-forward'
+            color='#fff'
+            size={20}
+            style={{ marginTop: 2 }}
+          />
+        </TouchableOpacity>
       </View>
-      <View style={styles.container_right}>
-        <Text style={styles.text}>
-          {text}
-          {'    '}
-        </Text>
-        <Ionicons
-          name='ios-arrow-forward'
-          color='#fff'
-          size={20}
-          style={{ marginTop: 2 }}
-        />
-      </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -192,31 +253,41 @@ export const CartSummary = ({ navigation, text }) => {
   if (!cart?.cartInfo?.products?.length) return <></>;
 
   return (
-    <TouchableOpacity
-      onPress={pay}
-      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
+    <View
+      style={[
+        styles.outerContainer,
+        { paddingHorizontal: width > 768 ? 120 : 0 },
+      ]}
     >
-      <View style={[styles.container_left, { flex: 3 }]}>
-        <Text style={[styles.text, { fontSize: 18 }]}>
-          {cart?.cartInfo?.products?.length} items | $ {cart.totalPrice}
-        </Text>
-        <Text style={[styles.text, { fontSize: 10 }]}>
-          *extra charges may apply
-        </Text>
-      </View>
-      <View style={styles.container_right}>
-        <Text style={styles.text}>
-          {text}
-          {'    '}
-        </Text>
-        <Ionicons
-          name='ios-arrow-forward'
-          color='#fff'
-          size={20}
-          style={{ marginTop: 2 }}
-        />
-      </View>
-    </TouchableOpacity>
+      <TouchableOpacity
+        onPress={pay}
+        style={[
+          styles.container,
+          { backgroundColor: visual.color || '#3fa4ff' },
+        ]}
+      >
+        <View style={[styles.container_left, { flex: 3 }]}>
+          <Text style={[styles.text, { fontSize: 18 }]}>
+            {cart?.cartInfo?.products?.length} items | $ {cart.totalPrice}
+          </Text>
+          <Text style={[styles.text, { fontSize: 10 }]}>
+            *extra charges may apply
+          </Text>
+        </View>
+        <View style={styles.container_right}>
+          <Text style={styles.text}>
+            {text}
+            {'    '}
+          </Text>
+          <Ionicons
+            name='ios-arrow-forward'
+            color='#fff'
+            size={20}
+            style={{ marginTop: 2 }}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -228,43 +299,59 @@ export const ComboProductItemProceed = ({
 }) => {
   const { visual } = useAppContext();
   return (
-    <TouchableOpacity
-      onPress={() => {
-        setCurrentComboProductIndex(currentComboProductIndex + 1);
-      }}
-      style={[styles.container, { backgroundColor: visual.color || '#3fa4ff' }]}
-    >
-      <View style={[styles.container_left, { flex: 4 }]}>
-        <Text style={[styles.text, { fontSize: 14 }]}>
-          Click to select next item
-        </Text>
-      </View>
-      <View style={styles.container_right}>
-        <Text style={styles.text}>
-          {text}
-          {'    '}
-        </Text>
-        <Ionicons
-          name='ios-arrow-forward'
-          color='#fff'
-          size={20}
-          style={{ marginTop: 2 }}
-        />
-      </View>
-    </TouchableOpacity>
+    <View style={styles.outerContainer}>
+      <TouchableOpacity
+        onPress={() => {
+          setCurrentComboProductIndex(currentComboProductIndex + 1);
+        }}
+        style={[
+          styles.container,
+          { backgroundColor: visual.color || '#3fa4ff' },
+        ]}
+      >
+        <View style={[styles.container_left, { flex: 4 }]}>
+          <Text style={[styles.text, { fontSize: 14 }]}>
+            Click to select next item
+          </Text>
+        </View>
+        <View style={styles.container_right}>
+          <Text style={styles.text}>
+            {text}
+            {'    '}
+          </Text>
+          <Ionicons
+            name='ios-arrow-forward'
+            color='#fff'
+            size={20}
+            style={{ marginTop: 2 }}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    height: height * 0.08,
-    width,
-    backgroundColor: '#3fa4ff',
-    position: 'fixed',
+  outerContainer: {
+    height: 100,
+    width: width > 1280 ? 1280 : width,
+    padding: 20,
+    marginHorizontal: 'auto',
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    // height: height * 0.08,
+    // width: width > 1280 ? 1280 : width,
+    height: '80%',
+    width: '100%',
     flexDirection: 'row',
+    marginHorizontal: 'auto',
+    borderRadius: 4,
   },
   text: {
     color: 'white',
@@ -282,6 +369,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  quantity: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    justifyContent: 'space-around',
   },
 });
 

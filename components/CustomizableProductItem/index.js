@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
-
+import React, { useEffect, useState } from 'react';
+import { Text } from 'react-native';
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed';
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded';
-import { CUSTOMIZABLE_PRODUCT } from '../../graphql';
-import { useQuery } from '@apollo/react-hooks';
-import EStyleSheet from 'react-native-extended-stylesheet';
 
 const CustomizableProductItem = ({
   isSelected,
@@ -37,51 +33,59 @@ const CustomizableProductItem = ({
   };
 
   useEffect(() => {
-    if (tunnelItem && isSelected && !loading) {
+    if (tunnelItem && isSelected) {
       setcartItem(objToAdd);
     }
   }, [isSelected]);
 
-  if (product.customizableProductOptions[0]) {
-    let default_product = item?.customizableProductOptions[0];
-    let objToAddToCart = {
-      customizableProductId: item.id,
-      customizableProductOptionId: default_product?.id,
-      product: {
-        id: default_product.simpleRecipeProduct?.id,
-        name: default_product.simpleRecipeProduct?.name,
-        price:
-          default_product.simpleRecipeProduct?.simpleRecipeProductOptions[0]
-            ?.price[0]?.value,
-        option: {
-          id:
-            default_product.simpleRecipeProduct?.simpleRecipeProductOptions[0]
-              ?.id, // product option id
-          type:
-            default_product.simpleRecipeProduct?.simpleRecipeProductOptions[0]
-              ?.type,
+  useEffect(() => {
+    if (product.customizableProductOptions[0]) {
+      let default_product;
+      let _default_option;
+      let _type;
+      if (product.customizableProductOptions[0]?.inventoryProduct !== null) {
+        default_product =
+          product?.customizableProductOptions[0]?.inventoryProduct;
+        _default_option = default_product.inventoryProductOptions[0];
+        _type = 'inventoryProduct';
+      }
+      if (product.customizableProductOptions[0]?.simpleRecipeProduct !== null) {
+        default_product =
+          product?.customizableProductOptions[0]?.simpleRecipeProduct;
+        _default_option = default_product.simpleRecipeProductOptions[0];
+        _type = 'simpleRecipeProduct';
+      }
+      let objToAddToCart = {
+        customizableProductId: product.id,
+        customizableProductOptionId: default_product?.id,
+        product: {
+          id: default_product.id,
+          name: default_product.name,
+          price: _default_option?.price[0]?.value,
+          option: {
+            id: _default_option?.id, // product option id
+            type: _default_option?.type,
+          },
+          type: _type,
         },
-        type: 'Simple Recipe',
-      },
-    };
-    if (!independantItem) {
-      objToAddToCart['name'] = name;
+      };
+      if (!independantItem) {
+        objToAddToCart['name'] = name;
+      }
+      setobjToAdd(objToAddToCart);
+      if (!tunnelItem && independantItem) {
+        setPrice(_default_option?.price[0]?.value);
+        setcardData(product);
+      }
+      if (tunnelItem && isSelected) {
+        setcartItem(objToAddToCart);
+      }
+      if (tunnelItem && independantItem) {
+        setcartItem(objToAddToCart);
+      }
     }
-    setobjToAdd(objToAddToCart);
-    if (!tunnelItem && independantItem) {
-      setPrice(
-        item.customizableProductOptions[0].simpleRecipeProduct
-          .simpleRecipeProductOptions[0].price[0].value
-      );
-      setcardData(item);
-    }
-    if (tunnelItem && isSelected) {
-      setcartItem(objToAddToCart);
-    }
-    if (tunnelItem && independantItem) {
-      setcartItem(objToAddToCart);
-    }
-  }
+    setnumberOfOptions(product.customizableProductOptions?.length);
+  }, []);
 
   const customizableProduct = product;
   let default_first_product =
@@ -124,7 +128,7 @@ const CustomizableProductItem = ({
       openModal={openModal}
       navigation={navigation}
       setExpanded={setExpanded}
-      label={independantItem ? '' : data.label}
+      label={''}
       independantItem={independantItem ? true : false}
       numberOfOptions={numberOfOptions}
       tunnelItem={tunnelItem}

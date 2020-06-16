@@ -1,26 +1,17 @@
-import React from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import HeaderBack from '../components/HeaderBack';
-import { ScrollView } from 'react-native';
 import { AntDesign, Ionicons } from '@expo/vector-icons';
+import React from 'react';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import HeaderBack from '../../components/HeaderBack';
+import { useCartContext } from '../../context/cart';
+import { useDrawerContext } from '../../context/drawer';
+import { styles } from './styles';
 
-import { height, width } from '../utils/Scalaing';
-import { useCartContext } from '../context/cart';
-
-export const ProfileScreen = ({ navigation }) => {
+export default ({ navigation }) => {
   const { customerDetails } = useCartContext();
+  const { open } = useDrawerContext();
 
   return (
     <View style={styles.container}>
-      <HeaderBack navigation={navigation} title='Go Back' />
       <View style={styles.userDetailsContainer}>
         <View style={styles.avatar}>
           <Image
@@ -35,7 +26,7 @@ export const ProfileScreen = ({ navigation }) => {
       <ScrollView style={styles.container}>
         {/* Address card */}
         <TouchableOpacity
-          onPress={() => navigation.navigate('EditAddressScreen')}
+          onPress={() => open('EditAddress')}
           style={styles.card}
         >
           <Text style={styles.cardTitle}>My Addresses</Text>
@@ -69,7 +60,7 @@ export const ProfileScreen = ({ navigation }) => {
         </TouchableOpacity>
         {/* Payment Card */}
         <TouchableOpacity
-          onPress={() => navigation.navigate('SelectPaymentMethodScreen')}
+          onPress={() => open('SelectPaymentMethod')}
           style={styles.card}
         >
           <Text style={styles.cardTitle}>My Payment cards</Text>
@@ -113,68 +104,3 @@ export const ProfileScreen = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = EStyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  cardNumberTextContainer: {
-    flex: 3,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cardNumberText: {
-    width: width * 0.7,
-    paddingLeft: 20,
-    fontSize: '$s',
-  },
-  cardNumberSelectedContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  userDetailsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingLeft: 20,
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  avatar: {
-    height: 60,
-    width: 60,
-    borderRadius: 30,
-    overflow: 'hidden',
-    marginRight: 10,
-  },
-  image: {
-    flex: 1,
-    height: null,
-    width: null,
-  },
-  userName: {
-    fontSize: '$xl',
-    fontWeight: 'bold',
-  },
-  phone: {
-    fontSize: 16,
-    fontWeight: 'normal',
-  },
-  card: {
-    padding: '1rem',
-    borderBottomWidth: 1,
-    borderBottomColor: '#dedede',
-    marginBottom: 10,
-  },
-  cardTitle: {
-    fontSize: '$l',
-  },
-  default: {
-    fontSize: '$xs',
-    color: 'gray',
-  },
-  content: {
-    flexDirection: 'row',
-  },
-});

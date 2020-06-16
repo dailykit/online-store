@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Dimensions, FlatList, Animated, View } from 'react-native';
+import { Animated, Dimensions, FlatList, StyleSheet, View } from 'react-native';
+import argonTheme from '../constants/Theme';
 import { uuid } from '../utils';
 const { width } = Dimensions.get('screen');
-import argonTheme from '../constants/Theme';
 
 const defaultMenu = [
   { id: 'popular', title: 'Popular' },
@@ -114,7 +114,7 @@ export default class Tabs extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    width: width,
+    width: width > 1280 ? 1280 : width,
     backgroundColor: argonTheme.COLORS.WHITE,
     zIndex: 2,
   },

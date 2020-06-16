@@ -1,36 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet,
-  View,
-  Dimensions,
-  Text,
-  ActivityIndicator,
-} from 'react-native';
-import EStyleSheet from 'react-native-extended-stylesheet';
-
+import React, { useState } from 'react';
+import { View } from 'react-native';
 import CustomizableProductItem from '../CustomizableProductItem';
-import SimpleProductItem from '../SimpleProductItem';
 import InventoryProductItem from '../InventoryProductItem';
-import { COMBO_PRODUCT } from '../../graphql';
-import { useQuery } from '@apollo/react-hooks';
-
-import { height, width } from '../../utils/Scalaing';
+import SimpleProductItem from '../SimpleProductItem';
+import { styles } from './styles';
 
 const ComboProduct = ({
   tunnelItem,
   navigation,
-  setcardData,
   setcartItem,
   setIsLastComboItem,
-  setCurrentComboProductIndex,
-  setnumberOfComboProductItem,
+
   currentComboProductIndex,
   setPrice,
   product,
 }) => {
   const [selected, setSelected] = useState(0);
-
-  const [comboProductsArray, setcomboProductsArray] = useState([]);
 
   React.useEffect(() => {
     let price = 0;
@@ -103,7 +88,6 @@ const ComboProduct = ({
                 tunnelItem={tunnelItem}
                 id={el.customizableProductId}
                 setcartItem={setcartItem}
-                setDefault={(item) => setcomboProductsArray(item)}
                 name={el.name}
               />
             );
@@ -128,6 +112,7 @@ const ComboProduct = ({
                 tunnelItem={tunnelItem}
                 setcartItem={setcartItem}
                 name={el.name}
+                showInfo={true}
               />
             );
           }
@@ -152,6 +137,7 @@ const ComboProduct = ({
                 tunnelItem={tunnelItem}
                 setcartItem={setcartItem}
                 name={el.name}
+                showInfo={true}
               />
             );
           }
@@ -162,30 +148,3 @@ const ComboProduct = ({
 };
 
 export default ComboProduct;
-
-const styles = EStyleSheet.create({
-  container: { backgroundColor: '#fff' },
-
-  card_title: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  card_title_text: {
-    fontSize: '$m',
-    fontWeight: 'bold',
-  },
-  is_customizable: {
-    fontSize: '$xxxs',
-    color: 'gray',
-  },
-  item_parent_container: {
-    backgroundColor: '#fff',
-  },
-  flexContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

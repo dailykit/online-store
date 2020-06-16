@@ -27,17 +27,6 @@ export const ORDER = gql`
   }
 `;
 
-export const ORDERS = gql`
-  query Orders($id: Int!) {
-    orders(where: { customerId: { _eq: $id } }) {
-      id
-      itemTotal
-      deliveryInfo
-      created_at
-    }
-  }
-`;
-
 export const CUSTOMERS = gql`
   query Customers($dailyKeyID: String!, $email: String!) {
     customers(
@@ -58,6 +47,7 @@ export const CUSTOMER_DETAILS = gql`
         phoneNumber
         stripeCustomerId
         customerAddresses {
+          id
           line1
           line2
           state
@@ -67,6 +57,7 @@ export const CUSTOMER_DETAILS = gql`
           notes
         }
         defaultCustomerAddress {
+          id
           line1
           line2
           state
@@ -182,12 +173,12 @@ export const CUSTOMIZABLE_PRODUCT = gql`
 export const INVENTORY_PRODUCT = gql`
   query InventoryProduct($id: Int!) {
     inventoryProduct(id: $id) {
-      assets
-      default
-      description
       id
       name
+      description
       tags
+      assets
+      default
       inventoryProductOptions {
         id
         price
@@ -205,6 +196,9 @@ export const SIMPLE_PRODUCT = gql`
       name
       default
       id
+      tags
+      description
+      assets
       simpleRecipeProductOptions {
         id
         price

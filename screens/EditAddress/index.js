@@ -1,26 +1,20 @@
-import React, { useState } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
-import HeaderBack from '../components/HeaderBack';
-import { useCartContext } from '../context/cart';
-import EStyleSheet from 'react-native-extended-stylesheet';
-import { Feather } from '@expo/vector-icons';
 import { useMutation } from '@apollo/react-hooks';
-import { UPDATE_CART } from '../graphql';
+import { Feather } from '@expo/vector-icons';
 import { Spinner } from '@ui-kitten/components';
-
-import { height, width } from '../utils/Scalaing';
 import { Button } from 'native-base';
-import { useAppContext } from '../context/app';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useAppContext } from '../../context/app';
+import { useCartContext } from '../../context/cart';
+import { useDrawerContext } from '../../context/drawer';
+import { UPDATE_CART } from '../../graphql';
+import { styles } from './styles';
 
-export const EditAddress = ({ navigation }) => {
+export default ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
   const { visual } = useAppContext();
+  const { open } = useDrawerContext();
 
   const [loading, setLoading] = React.useState(false);
 
@@ -58,11 +52,14 @@ export const EditAddress = ({ navigation }) => {
 
   if (!customerDetails)
     return (
-      <View style={styles.conatiner}>
-        <HeaderBack navigation={navigation} title='Go Back' />
+      <ScrollView style={styles.conatiner}>
         <Text style={styles.title}>Addresses</Text>
         <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
           onPress={() => navigation.goBack()}
         >
           <Button
@@ -74,14 +71,12 @@ export const EditAddress = ({ navigation }) => {
               padding: 8,
               justifyContent: 'center',
             }}
-            onPress={() =>
-              navigation.navigate('Add Details', { path: 'address' })
-            }
+            onPress={() => open('AddDetails', { path: 'address/create' })}
           >
             <Text style={{ color: '#fff' }}>Add Address</Text>
           </Button>
         </View>
-      </View>
+      </ScrollView>
     );
 
   if (loading)
@@ -95,8 +90,7 @@ export const EditAddress = ({ navigation }) => {
     );
 
   return (
-    <View style={styles.conatiner}>
-      <HeaderBack navigation={navigation} title='Go Back' />
+    <ScrollView style={styles.conatiner}>
       <Text style={styles.title}>Addresses</Text>
       <View style={styles.addressConatiner}>
         {customerDetails?.customerAddresses.map((address) => (
@@ -119,24 +113,26 @@ export const EditAddress = ({ navigation }) => {
               <Text style={styles.addressText}>{address.country}</Text>
               <Text style={styles.addressText}>{address.zipcode}</Text>
             </View>
-            {/* <View style={styles.addressSelectedContainer}>
+            <View style={styles.addressSelectedContainer}>
               <View
                 style={[
                   styles.checkContainer,
                   {
                     borderWidth: 1,
                     borderColor:
-                      address.id === cart.addressId ? '#3fa4ff' : '#dedede',
+                      address?.id === cart?.address?.id
+                        ? visual.color
+                        : '#dedede',
                     backgroundColor:
-                      address.id === cart.addressId ? '#3fa4ff' : '#fff',
+                      address?.id === cart?.address?.id ? visual.color : '#fff',
                   },
                 ]}
               >
-                {address.id === cart.addressId && (
+                {address?.id === cart?.address?.id && (
                   <Feather color='#fff' name='check' />
                 )}
               </View>
-            </View> */}
+            </View>
           </TouchableOpacity>
         ))}
       </View>
@@ -149,55 +145,10 @@ export const EditAddress = ({ navigation }) => {
           padding: 8,
           justifyContent: 'center',
         }}
-        onPress={() => navigation.navigate('Add Details', { path: 'address' })}
+        onPress={() => open('AddDetails', { path: 'address/create' })}
       >
         <Text style={{ color: '#fff' }}>Add Address</Text>
       </Button>
-    </View>
+    </ScrollView>
   );
 };
-
-const styles = EStyleSheet.create({
-  conatiner: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: '$xl',
-    padding: 20,
-  },
-  addressConatiner: {
-    flexDirection: 'column',
-    flex: 1,
-  },
-  addressOptionConatiner: {
-    justifyContent: 'center',
-    height: height * 0.12,
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderColor: '#dedede',
-    marginBottom: 4,
-    padding: 8,
-  },
-  addressTextContainer: {
-    flex: 3,
-    justifyContent: 'center',
-  },
-  addressText: {
-    width: width * 0.7,
-    paddingLeft: 20,
-  },
-  addressSelectedContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkContainer: {
-    backgroundColor: '#3fa4ff',
-    height: 24,
-    width: 24,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

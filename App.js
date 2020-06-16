@@ -1,5 +1,5 @@
 import 'react-native-get-random-values';
-import React, { Suspense } from 'react';
+import React, { Suspense, useRef, useState, useEffect } from 'react';
 import {
   Image,
   SafeAreaView,
@@ -24,6 +24,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AuthProvider } from './context/auth';
 import { CartContextProvider } from './context/cart';
 import { AppContextProvider } from './context/app';
+import { DrawerContextProvider } from './context/drawer';
 
 // Before rendering any navigation stack
 import { enableScreens } from 'react-native-screens';
@@ -31,14 +32,17 @@ import { enableScreens } from 'react-native-screens';
 import ErrorBoundary from './components/ErrorBoundary';
 
 // set up apollo client
-import { HASURA_URL, HASURA_WS } from 'react-native-dotenv';
+import { HASURA_URL, HASURA_WS } from 'react-native-dotenv'; //1
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { split } from 'apollo-link';
 import { HttpLink } from 'apollo-link-http';
 import { WebSocketLink } from 'apollo-link-ws';
 import { getMainDefinition } from 'apollo-utilities';
-import { ApolloProvider, useLazyQuery } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/react-hooks';
+
+// linking
+import useLinking from './navigation/useLinking';
 
 // Majburi
 
@@ -94,15 +98,20 @@ if (!global.atob) {
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { width, height } from './utils/Scalaing';
 import { STORE_SETTINGS } from './graphql';
+
+const BASE_SIZE = 0.7;
+
 EStyleSheet.build({
   $rem: width > 340 ? 16 : 13,
-  $xl: '1.2rem',
-  $l: '1.15rem',
-  $m: '1.05rem',
-  $s: '0.95rem',
-  $xs: '0.85rem',
-  $xxs: '0.75rem',
-  $xxxs: '0.65rem',
+  $xxxl: `${BASE_SIZE + 1.2}rem`,
+  $xxl: `${BASE_SIZE + 1}rem`,
+  $xl: `${BASE_SIZE + 0.8}rem`,
+  $l: `${BASE_SIZE + 0.6}rem`,
+  $m: `${BASE_SIZE + 0.4}rem`,
+  $s: `${BASE_SIZE + 0.2}rem`,
+  $xs: `${BASE_SIZE}rem`,
+  $xxs: `${BASE_SIZE - 0.2}rem`,
+  $xxxs: `${BASE_SIZE - 0.4}rem`,
 });
 
 // cache app images
@@ -130,7 +139,6 @@ function cacheImages(images) {
 
 const App = () => {
   const [isLoadingComplete, setIsLoadingComplete] = React.useState(false);
-
   const _loadResourcesAsync = async () => {
     await Font.loadAsync({
       Roboto: require('native-base/Fonts/Roboto.ttf'),
@@ -149,6 +157,12 @@ const App = () => {
   const _handleFinishLoading = () => {
     setIsLoadingComplete(true);
   };
+  const [initialNavigationState, setInitialNavigationState] = useState();
+  const containerRef = useRef();
+  const { getInitialState } = useLinking(containerRef);
+  useEffect(() => {
+    (async () => setInitialNavigationState(await getInitialState()))();
+  }, []);
 
   if (!isLoadingComplete) {
     return (
@@ -162,13 +176,17 @@ const App = () => {
     return (
       <Suspense fallback={FallBack}>
         <ErrorBoundary>
-          <NavigationContainer>
-            <SafeAreaView style={{ flex: 1 }}>
+          <NavigationContainer
+            ref={containerRef}
+            initialState={initialNavigationState}
+          >
+            <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
               <View
                 style={{
                   marginTop:
                     Platform.OS == 'android' ? Constants.statusBarHeight : 0,
                   flex: 1,
+                  backgroundColor: '#fff',
                 }}
               >
                 {Platform.OS == 'ios' && <StatusBar barStyle='dark-content' />}
@@ -176,9 +194,11 @@ const App = () => {
                   <ApolloProvider client={client}>
                     <AuthProvider>
                       <AppContextProvider>
-                        <CartContextProvider>
-                          <Screens />
-                        </CartContextProvider>
+                        <DrawerContextProvider>
+                          <CartContextProvider>
+                            <Screens />
+                          </CartContextProvider>
+                        </DrawerContextProvider>
                       </AppContextProvider>
                     </AuthProvider>
                   </ApolloProvider>

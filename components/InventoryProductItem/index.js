@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import InventoryProductCollapsed from './InventoryProductItemCollapsed';
-import { INVENTORY_PRODUCT } from '../../graphql';
-import { useQuery } from '@apollo/react-hooks';
 
 const InventoryProductItem = ({
   _id,
   openModal,
+  showInfo,
   navigation,
-  id,
   setPrice,
   tunnelItem,
   independantItem,
@@ -44,7 +41,7 @@ const InventoryProductItem = ({
         option: {
           id: product?.inventoryProductOptions[0]?.id, // product option id
         },
-        type: 'Inventory',
+        type: 'inventoryProduct',
       },
     };
     if (!independantItem) {
@@ -71,6 +68,7 @@ const InventoryProductItem = ({
 
   return (
     <InventoryProductCollapsed
+      showInfo={showInfo}
       _id={_id}
       data={product}
       openModal={openModal}

@@ -1,28 +1,17 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-  Dimensions,
-} from 'react-native';
-import HeaderBack from '../components/HeaderBack';
-import { Badge } from '../assets/imgs/Badge';
-import { StaffSafetyContainer } from '../components/StaffSafetyContainer';
-import Cart from '../components/Cart';
-import { Spinner } from '@ui-kitten/components';
-
-import thermometer from '../assets/imgs/thermometer.png';
-import patient from '../assets/imgs/patient.png';
-import flat from '../assets/imgs/flat.png';
-import liquidSoap from '../assets/imgs/liquid-soap.png';
 import { useSubscription } from '@apollo/react-hooks';
-import { SAFETY_CHECK } from '../graphql';
+import { Spinner } from '@ui-kitten/components';
+import React from 'react';
+import { Image, ScrollView, Text, View } from 'react-native';
+import { Badge } from '../../assets/imgs/Badge';
+import flat from '../../assets/imgs/flat.png';
+import liquidSoap from '../../assets/imgs/liquid-soap.png';
+import patient from '../../assets/imgs/patient.png';
+import thermometer from '../../assets/imgs/thermometer.png';
+import { StaffSafetyContainer } from '../../components/StaffSafetyContainer';
+import { SAFETY_CHECK } from '../../graphql';
+import { styles } from './styles';
 
-import { height, width } from '../utils/Scalaing';
-
-export const SafetyScreen = ({ navigation }) => {
+export default ({ navigation }) => {
   const [check, setCheck] = React.useState(undefined);
 
   const { loading, error } = useSubscription(SAFETY_CHECK, {
@@ -42,10 +31,13 @@ export const SafetyScreen = ({ navigation }) => {
 
   return (
     <>
-      <HeaderBack title='Go Back' navigation={navigation} />
       <ScrollView style={styles.container}>
         <View
-          style={{ flex: 1, alignItems: 'center', backgroundColor: '#fff' }}
+          style={{
+            flex: 1,
+            alignItems: 'center',
+            backgroundColor: '#fff',
+          }}
         >
           <View style={styles.badgeConatiner}>
             <Badge style={{ width: 80, height: 80 }} />
@@ -94,73 +86,6 @@ export const SafetyScreen = ({ navigation }) => {
         </View>
         <View style={{ padding: 40 }} />
       </ScrollView>
-      <Cart to='' navigation={navigation} text='Checkout' />
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  badgeConatiner: {
-    width,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 20,
-  },
-  staffConatiner: {},
-  desc: {
-    color: 'white',
-    marginTop: 10,
-    textAlign: 'center',
-  },
-  StaffSafetyContainer: {
-    width: width * 0.9,
-    backgroundColor: '#2e2d4d',
-    padding: 20,
-    borderRadius: 20,
-    marginTop: 40,
-  },
-  title: {
-    fontSize: 24,
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  measureConatiner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    height: 120,
-  },
-  measureText: {
-    flex: 5,
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  icons: {
-    height: 50,
-    width: 50,
-    flex: 1,
-    marginRight: 10,
-    resizeMode: 'contain',
-  },
-  packagingSafetyConatiner: {
-    width: width * 0.9,
-    backgroundColor: '#eddea4',
-    padding: 20,
-    borderRadius: 20,
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  packagingImage: {
-    resizeMode: 'contain',
-    height: 80,
-    width: 80,
-    marginTop: 30,
-    marginBottom: 30,
-  },
-});

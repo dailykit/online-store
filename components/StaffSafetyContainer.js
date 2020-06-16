@@ -1,12 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
-import thermometer from '../assets/imgs/thermometer.png';
-import patient from '../assets/imgs/patient.png';
-import flat from '../assets/imgs/flat.png';
+import { Image, StyleSheet, Text, View } from 'react-native';
 import liquidSoap from '../assets/imgs/liquid-soap.png';
-import EStyleSheet from 'react-native-extended-stylesheet';
-
-import { height, width } from '../utils/Scalaing';
+import patient from '../assets/imgs/patient.png';
+import thermometer from '../assets/imgs/thermometer.png';
 
 export const StaffSafetyContainer = ({ checkup }) => {
   return (
@@ -47,11 +43,10 @@ export const StaffSafetyContainer = ({ checkup }) => {
 
 const styles = StyleSheet.create({
   conatiner: {
-    width: width * 0.9,
+    width: '100%',
     backgroundColor: '#f3f3f3',
     padding: 20,
     marginTop: 10,
-    borderRadius: 20,
   },
   row: {
     flexDirection: 'row',
@@ -64,7 +59,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   name: {
-    fontSize: 14,
+    fontSize: '$s',
     fontWeight: 'bold',
   },
   col1: {},

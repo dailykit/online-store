@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import React, { useState } from 'react';
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed';
-import { SIMPLE_PRODUCT } from '../../graphql';
-import { useQuery } from '@apollo/react-hooks';
 
 const SimpleProductItem = ({
   _id,
@@ -18,6 +15,7 @@ const SimpleProductItem = ({
   name,
   label,
   product,
+  showInfo,
 }) => {
   const [objToAdd, setobjToAdd] = useState({});
 
@@ -40,7 +38,7 @@ const SimpleProductItem = ({
             id: product.simpleRecipeProductOptions[0]?.id, // product option id
             type: product.simpleRecipeProductOptions[0]?.type,
           },
-          type: 'Simple Recipe',
+          type: 'simpleRecipeProduct',
         },
       };
       if (!independantItem) {
@@ -62,6 +60,7 @@ const SimpleProductItem = ({
 
   return (
     <SimpleProductItemCollapsed
+      showInfo={showInfo}
       _id={_id}
       data={product}
       openModal={openModal}

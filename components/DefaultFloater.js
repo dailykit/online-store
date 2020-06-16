@@ -1,13 +1,15 @@
+import { AntDesign, Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Text, View, Dimensions, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { Feather, AntDesign, Ionicons } from '@expo/vector-icons';
 import { useCartContext } from '../context/cart';
 
 import { height, width } from '../utils/Scalaing';
+import { useDrawerContext } from '../context/drawer';
 
 export const DefaultPaymentFloater = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
+  const { open } = useDrawerContext();
   const [card, setCard] = React.useState(undefined);
 
   React.useEffect(() => {
@@ -23,9 +25,7 @@ export const DefaultPaymentFloater = ({ navigation }) => {
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        navigation.navigate('SelectPaymentMethodScreen');
-      }}
+      onPress={() => open('SelectPaymentMethod')}
       style={styles.conatiner}
     >
       <View style={styles.cardNumberTextContainer}>
@@ -51,12 +51,11 @@ export const DefaultPaymentFloater = ({ navigation }) => {
 
 export const DefaultAddressFloater = ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
+  const { open } = useDrawerContext();
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        navigation.navigate('EditAddressScreen');
-      }}
+      onPress={() => open('EditAddress')}
       style={styles.conatiner}
     >
       <View style={styles.cardNumberTextContainer}>
@@ -82,16 +81,18 @@ export const DefaultAddressFloater = ({ navigation }) => {
 const styles = EStyleSheet.create({
   conatiner: {
     height: height * 0.07,
-    backgroundColor: '#ededed',
+    backgroundColor: '#fff',
     flexDirection: 'row',
+    paddingLeft: 20,
+    paddingRight: 20,
+    justifyContent: 'space-between',
   },
   title: {
-    fontSize: '$xl',
+    fontSize: '$m',
     padding: 20,
   },
   cardNumberConatiner: {
     flexDirection: 'column',
-    flex: 1,
   },
   cardNumberOptionConatiner: {
     justifyContent: 'center',
@@ -102,16 +103,13 @@ const styles = EStyleSheet.create({
     marginBottom: 4,
   },
   cardNumberTextContainer: {
-    flex: 3,
     justifyContent: 'center',
     alignItems: 'center',
   },
   cardNumberText: {
-    width: width * 0.7,
-    paddingLeft: 20,
+    width: 'auto',
   },
   cardNumberSelectedContainer: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

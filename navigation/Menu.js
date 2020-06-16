@@ -1,8 +1,7 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Image, Text, View } from 'react-native';
-
-import Images from '../constants/Images';
+import { Image, ScrollView, StyleSheet, View } from 'react-native';
 import { DrawerItem as DrawerCustomItem } from '../components';
+import Images from '../constants/Images';
 
 function CustomDrawerContent({
   drawerPosition,
@@ -14,8 +13,9 @@ function CustomDrawerContent({
 }) {
   const screens = [
     { title: 'Home', screen: 'Home' },
-    { title: 'Profile', screen: 'ProfileScreen' },
-    { title: 'Orders', screen: 'OrderHistoryScreen' },
+    { title: 'Cart', screen: 'OrderSummary' },
+    { title: 'Profile', screen: 'Profile' },
+    { title: 'Orders', screen: 'OrderHistory' },
     { title: 'Log out', screen: 'DeliveryScreen' },
   ];
   return (

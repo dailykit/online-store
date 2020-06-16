@@ -25,7 +25,7 @@ import { useAuth } from '../context/auth';
 // header for screens
 import { Header } from '../components';
 import ModalContent from '../components/ModalContent';
-import { Delivery } from '../screens/Delivery';
+import Delivery from '../screens/Delivery';
 import { EditAddress } from '../screens/EditAddress';
 import { SelectPaymentMethod } from '../screens/SelectPaymentMethod';
 import { OrderHistory } from '../screens/OrderHistory';
@@ -38,13 +38,15 @@ import { Spinner } from '@ui-kitten/components';
 import { useLazyQuery, useQuery } from '@apollo/react-hooks';
 import { STORE_SETTINGS } from '../graphql';
 import { useAppContext } from '../context/app';
+import ProductPage from '../screens/ProductPage';
+import CategoryProductsPage from '../screens/CategoryProductsPage';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 const Loader = () => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Spinner status='warning' size='large' />
+    <Spinner size='large' />
   </View>
 );
 
@@ -75,12 +77,25 @@ function HomeStack(props) {
           headerShown: false,
         }}
       />
-
       <Stack.Screen
-        name='Modal'
-        component={ModalContent}
+        name='CategoryProductsPage'
+        component={CategoryProductsPage}
         options={{
           headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='ProductPage'
+        component={ProductPage}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name='Recipe'
+        component={ModalContent}
+        options={{
+          headerShown: true,
         }}
       />
       <Stack.Screen
@@ -104,13 +119,13 @@ function HomeStack(props) {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name='SafetyScreen'
-        component={SafetyScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
+      {/* <Stack.Screen
+            name="SafetyScreen"
+            component={SafetyScreen}
+            options={{
+               headerShown: false,
+            }}
+         /> */}
       <Stack.Screen
         name='DeliveryScreen'
         component={Delivery}
@@ -118,34 +133,34 @@ function HomeStack(props) {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name='EditAddressScreen'
-        component={EditAddress}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name='SelectPaymentMethodScreen'
-        component={SelectPaymentMethod}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name='ProfileScreen'
-        component={ProfileScreen}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name='OrderHistoryScreen'
-        component={OrderHistory}
-        options={{
-          headerShown: false,
-        }}
-      />
+      {/* <Stack.Screen
+            name="EditAddressScreen"
+            component={EditAddress}
+            options={{
+               headerShown: false,
+            }}
+         />
+         <Stack.Screen
+            name="SelectPaymentMethodScreen"
+            component={SelectPaymentMethod}
+            options={{
+               headerShown: false,
+            }}
+         /> */}
+      {/* <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
+            options={{
+               headerShown: false,
+            }}
+         /> */}
+      {/* <Stack.Screen
+            name="OrderHistoryScreen"
+            component={OrderHistory}
+            options={{
+               headerShown: false,
+            }}
+         /> */}
       <Stack.Screen
         name='PaymentProcessing'
         component={PaymentProcessing}
@@ -153,13 +168,13 @@ function HomeStack(props) {
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name='Add Details'
-        component={AddDetails}
-        options={{
-          headerShown: false,
-        }}
-      />
+      {/* <Stack.Screen
+            name="Add Details"
+            component={AddDetails}
+            options={{
+               headerShown: false,
+            }}
+         /> */}
     </Stack.Navigator>
   );
 }
