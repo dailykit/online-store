@@ -94,18 +94,24 @@ export default ({ navigation }) => {
     );
 
   return (
-    <ScrollView style={styles.conatiner}>
+    <View style={styles.conatiner}>
       <Text style={styles.title}>Payment Cards</Text>
-      <View style={styles.cardNumberConatiner}>
+      <ScrollView style={styles.cardNumberConatiner}>
         {customerDetails.stripePaymentMethods.map((card) => (
           <TouchableOpacity
             key={card?.stripePaymentMethodId}
             onPress={() => select(card)}
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
           >
             <CreditCardInput
               number={`XXXX XXXX XXXX ${card?.last4}`}
-              expiry='12/23'
-              brand='visa'
+              expiry={`${card?.expMonth}/${card?.expYear}`}
+              brand={card?.brand}
             />
             <View style={styles.cardNumberSelectedContainer}>
               <View
@@ -135,7 +141,7 @@ export default ({ navigation }) => {
             </View>
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
 
       <Button
         style={{
@@ -150,6 +156,6 @@ export default ({ navigation }) => {
       >
         <Text style={{ color: '#fff' }}>Add Card</Text>
       </Button>
-    </ScrollView>
+    </View>
   );
 };
