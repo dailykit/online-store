@@ -90,9 +90,9 @@ export default ({ navigation }) => {
     );
 
   return (
-    <ScrollView style={styles.conatiner}>
+    <View style={styles.conatiner}>
       <Text style={styles.title}>Addresses</Text>
-      <View style={styles.addressConatiner}>
+      <ScrollView style={styles.addressConatiner}>
         {customerDetails?.customerAddresses.map((address) => (
           <TouchableOpacity
             key={address.id}
@@ -135,7 +135,7 @@ export default ({ navigation }) => {
             </View>
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
       <Button
         style={{
           marginBottom: 20,
@@ -149,6 +149,6 @@ export default ({ navigation }) => {
       >
         <Text style={{ color: '#fff' }}>Add Address</Text>
       </Button>
-    </ScrollView>
+    </View>
   );
 };
