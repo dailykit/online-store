@@ -31,7 +31,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <Header title='Home' navigation={navigation} />
-      <HeaderBack title='Go Back' navigation={navigation} />
+      {/* <HeaderBack title='Go Back' navigation={navigation} /> */}
       <ScrollView>
         <View style={styles.wrapper}>
           <View style={styles.summary_title_conatiner}>
@@ -49,7 +49,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
               <>
                 <View style={styles.title_container_left}>
                   <Text style={styles.deliver_on_text}>
-                    {cart?.fulfillmentInfo?.type}
+                    {cart?.fulfillmentInfo?.type?.replace('_', ' ')}
                   </Text>
                   <Text style={styles.time_text}>
                     {cart?.fulfillmentInfo?.date}
