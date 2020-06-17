@@ -45,21 +45,27 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             </View>
           </View>
           <View style={styles.title_container}>
-            <View style={styles.title_container_left}>
-              <Text style={styles.deliver_on_text}>
-                {cart?.fulfillmentInfo?.type}
-              </Text>
-              <Text style={styles.time_text}>
-                {cart?.fulfillmentInfo?.date}
-              </Text>
-            </View>
-            <View style={styles.title_container_middle}>
-              <Text
-                style={[styles.time_text, { textAlign: 'center', flex: 1 }]}
-              >
-                {cart?.fulfillmentInfo?.slot?.time}
-              </Text>
-            </View>
+            {cart?.fulfillmentInfo ? (
+              <>
+                <View style={styles.title_container_left}>
+                  <Text style={styles.deliver_on_text}>
+                    {cart?.fulfillmentInfo?.type}
+                  </Text>
+                  <Text style={styles.time_text}>
+                    {cart?.fulfillmentInfo?.date}
+                  </Text>
+                </View>
+                <View style={styles.title_container_middle}>
+                  <Text
+                    style={[styles.time_text, { textAlign: 'center', flex: 1 }]}
+                  >
+                    {cart?.fulfillmentInfo?.slot?.time}
+                  </Text>
+                </View>
+              </>
+            ) : (
+              <Text>Oops! We couldn't set default preference for you. </Text>
+            )}
             <View style={styles.title_container_right}>
               <TouchableOpacity
                 onPress={() => open('Fulfillment')}

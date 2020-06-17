@@ -1,4 +1,4 @@
-import { useSubscription } from '@apollo/react-hooks';
+import { useSubscription, useMutation } from '@apollo/react-hooks';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Picker } from '@react-native-community/picker';
 import React from 'react';
@@ -15,6 +15,7 @@ import {
   ONDEMAND_PICKUP,
   PREORDER_DELIVERY,
   PREORDER_PICKUP,
+  UPDATE_CART,
 } from '../graphql';
 
 import {
@@ -25,15 +26,30 @@ import {
   generateMiniSlots,
   makeDoubleDigit,
 } from '../utils/fulfillment';
+import { useCartContext } from '../context/cart';
+import { useDrawerContext } from '../context/drawer';
 
 const Fulfillment = () => {
   const { visual, availability } = useAppContext();
+  const { cart } = useCartContext();
+  const { setIsDrawerOpen } = useDrawerContext();
   const [type, setType] = React.useState('');
   const [time, setTime] = React.useState('');
   const [oops, setOops] = React.useState('');
   const [pickerDates, setPickerDates] = React.useState([]);
   const [pickerSlots, setPickerSlots] = React.useState([]);
   const [fulfillment, setFulfillment] = React.useState({});
+
+  // Mutation
+  const [updateCart] = useMutation(UPDATE_CART, {
+    onCompleted: () => {
+      console.log('Cart updated!');
+      setIsDrawerOpen(false);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const { data: { preOrderPickup = [] } = {} } = useSubscription(
     PREORDER_PICKUP
@@ -69,8 +85,7 @@ const Fulfillment = () => {
       setPickerSlots([...pickerDates[index].slots]);
       setFulfillment({
         ...fulfillment,
-        time: pickerDates[index].slots[0].time,
-        data: { mileRangeId: pickerDates[index].slots[0]?.mileRangeId },
+        slot: pickerDates[index].slots[0],
       });
     }
   }, [fulfillment.date]);
@@ -82,7 +97,7 @@ const Fulfillment = () => {
       );
       setFulfillment({
         ...fulfillment,
-        data: { mileRangeId: pickerSlots[index]?.mileRangeId },
+        slot: pickerSlots[index],
       });
     }
   }, [fulfillment.time]);
@@ -119,10 +134,12 @@ const Fulfillment = () => {
                     const date = new Date();
                     setFulfillment({
                       date: date.toDateString(),
-                      time:
-                        date.getHours() +
-                        ':' +
-                        makeDoubleDigit(date.getMinutes()),
+                      slot: {
+                        time:
+                          date.getHours() +
+                          ':' +
+                          makeDoubleDigit(date.getMinutes()),
+                      },
                     });
                   } else {
                     setOops('Sorry! Option not available currently!');
@@ -170,11 +187,13 @@ const Fulfillment = () => {
                     const date = new Date();
                     setFulfillment({
                       date: date.toDateString(),
-                      time:
-                        date.getHours() +
-                        ':' +
-                        makeDoubleDigit(date.getMinutes()),
-                      mileRangeId: result.mileRangeId,
+                      slot: {
+                        time:
+                          date.getHours() +
+                          ':' +
+                          makeDoubleDigit(date.getMinutes()),
+                        mileRangeId: result.mileRangeId,
+                      },
                     });
                   } else {
                     setOops('Sorry! Option not available currently!');
@@ -204,7 +223,20 @@ const Fulfillment = () => {
     if (oops || !type || !time) {
       return console.log('Invalid selections!');
     }
-    console.log(fulfillment);
+    const fulfillmentInfo = {
+      type: time + '_' + type,
+      date: fulfillment.date,
+      slot: fulfillment.slot,
+    };
+    console.log(fulfillmentInfo);
+    updateCart({
+      variables: {
+        id: cart.id,
+        set: {
+          fulfillmentInfo,
+        },
+      },
+    });
   };
 
   return (
@@ -296,9 +328,9 @@ const Fulfillment = () => {
                   });
                 }}
               >
-                {pickerDates.map((data) => (
+                {pickerDates.map((data, index) => (
                   <Picker.Item
-                    key={data.date}
+                    key={index}
                     label={data.date}
                     value={data.date}
                   />
@@ -314,9 +346,9 @@ const Fulfillment = () => {
                   })
                 }
               >
-                {pickerSlots.map((data) => (
+                {pickerSlots.map((data, index) => (
                   <Picker.Item
-                    key={data.time}
+                    key={index}
                     label={data.time}
                     value={data.time}
                   />
