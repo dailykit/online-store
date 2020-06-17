@@ -63,7 +63,6 @@ const ModalContent = ({
             <ComboProduct
               setcartItem={(item) => {
                 let auxArray = comboProductItems;
-                console.log(item);
                 if (!Array.isArray(item) && Object.keys(item).length >= 1) {
                   if (item.customizableProductOptionId) {
                     auxArray = auxArray.filter(
@@ -120,7 +119,6 @@ const ModalContent = ({
           {type == 'inventoryProduct' && (
             <InventoryProductItem
               setcartItem={(item) => {
-                console.log('set cartitem called', item);
                 setcartItem(item);
               }}
               showInfo={showInfo}

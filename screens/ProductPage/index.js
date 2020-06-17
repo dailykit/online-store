@@ -45,8 +45,6 @@ const ProductPage = ({ navigation, route }) => {
     }
   );
 
-  console.log(product);
-
   React.useEffect(() => {
     switch (type) {
       case 'inventoryProduct': {

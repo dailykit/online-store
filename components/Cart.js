@@ -60,7 +60,6 @@ const Cart = ({
         console.log('No logged in!');
         login();
       }
-      console.log('Check check :', customerDetails);
       if (
         customerDetails?.firstName &&
         customerDetails?.lastName &&
@@ -68,7 +67,6 @@ const Cart = ({
         customerDetails?.phoneNumber
       ) {
         // modify cartItem based on quantity
-        console.log(quantity);
         const updatedItem = {
           product: {
             ...cartItem.product,

@@ -24,7 +24,6 @@ const BillingDetails = () => {
 
   // Handler
   const addTip = () => {
-    console.log(tip);
     if (!isNaN(tip)) {
       const tipFloat = parseFloat(tip);
       updateCart({

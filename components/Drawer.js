@@ -19,7 +19,6 @@ export const Drawer = ({
       style={width > 1280 ? styles.modal : styles.phoneModal}
       isVisible={isVisible}
       onBackdropPress={() => {
-        console.log('here');
         setIsModalVisible(false);
       }}
     >

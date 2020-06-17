@@ -27,7 +27,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
   const { open } = useDrawerContext();
 
   let cartItems = cart?.cartInfo?.products;
-  console.log('OrderSummary -> cartItems', cartItems);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <Header title='Home' navigation={navigation} />

@@ -68,7 +68,6 @@ const Summary = ({ useQuantity, item }) => {
         const index = products.findIndex(
           (product) => product.cartItemId === item.cartItemId
         );
-        console.log('PRODUCT: ', products[index]);
         products[index].product.quantity = quantity;
         total = total - products[index].product.price;
         products[index].product.price =
@@ -80,7 +79,6 @@ const Summary = ({ useQuantity, item }) => {
           products,
           total: parseFloat(newTotal),
         };
-        console.log('SEDING:', cartInfo);
         updateCart({
           variables: {
             id: cart.id,

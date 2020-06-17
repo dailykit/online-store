@@ -125,7 +125,6 @@ const ComboProduct = ({
                 setSelected={(index) => {
                   selectedArr[index] = true;
                   setSelected(index);
-                  console.log(selectedArr);
                   if (selectedArr.every((item) => item == true)) {
                     setIsLastComboItem(true);
                   }

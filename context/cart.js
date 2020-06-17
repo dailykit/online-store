@@ -99,7 +99,6 @@ export const CartContextProvider = ({ children }) => {
         const slots = generateDeliverySlots(preOrderDelivery[0].recurrences);
         if (slots) {
           const miniSlots = generateMiniSlots(slots, 15);
-          console.log(miniSlots);
           const fulfillmentInfo = {
             date: miniSlots[0].date,
             slot: miniSlots[0].slots[0],

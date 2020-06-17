@@ -382,6 +382,7 @@ const Fulfillment = () => {
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: visual.color,
+          borderRadius: 4,
         }}
         onPress={confirm}
       >
