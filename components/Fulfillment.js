@@ -25,6 +25,7 @@ import {
   isPickUpAvailable,
   generateMiniSlots,
   makeDoubleDigit,
+  getDistance,
 } from '../utils/fulfillment';
 import { useCartContext } from '../context/cart';
 import { useDrawerContext } from '../context/drawer';
@@ -33,6 +34,7 @@ const Fulfillment = () => {
   const { visual, availability } = useAppContext();
   const { cart } = useCartContext();
   const { setIsDrawerOpen } = useDrawerContext();
+  const [distance, setDistance] = React.useState(0);
   const [type, setType] = React.useState('');
   const [time, setTime] = React.useState('');
   const [oops, setOops] = React.useState('');
@@ -63,7 +65,7 @@ const Fulfillment = () => {
     PREORDER_DELIVERY,
     {
       variables: {
-        distance: 2,
+        distance,
       },
     }
   );
@@ -72,10 +74,22 @@ const Fulfillment = () => {
     ONDEMAND_DELIVERY,
     {
       variables: {
-        distance: 2,
+        distance,
       },
     }
   );
+
+  React.useEffect(() => {
+    if (cart?.address?.lat && cart?.address?.lng) {
+      const distance = getDistance(
+        cart?.address?.lat,
+        cart?.address?.lng,
+        33.8039712,
+        -118.1722264
+      );
+      setDistance(distance);
+    }
+  }, []);
 
   React.useEffect(() => {
     if (fulfillment.date && time === 'PREORDER') {
@@ -159,6 +173,9 @@ const Fulfillment = () => {
           break;
         }
         case 'DELIVERY': {
+          if (!distance) {
+            return setOops('Please add an address first!');
+          }
           if (availability.delivery.isAvailable) {
             switch (time) {
               case 'PREORDER': {

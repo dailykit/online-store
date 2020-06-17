@@ -60,7 +60,7 @@ const Cart = ({
         console.log('No logged in!');
         login();
       }
-      console.log(customerDetails);
+      console.log('Check check :', customerDetails);
       if (
         customerDetails?.firstName &&
         customerDetails?.lastName &&

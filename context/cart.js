@@ -194,6 +194,16 @@ export const CartContextProvider = ({ children }) => {
     }
   }, [cart]);
 
+  React.useEffect(() => {
+    try {
+      if (cart?.address) {
+        generateDefaultFulfillment();
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }, [cart?.address]);
+
   return (
     <CartContext.Provider
       value={{
