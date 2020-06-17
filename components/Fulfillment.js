@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { rrulestr } from 'rrule';
 import { useAppContext } from '../context/app';
 import {
   ONDEMAND_DELIVERY,
@@ -24,6 +23,7 @@ import {
   generatePickUpSlots,
   isPickUpAvailable,
   generateMiniSlots,
+  makeDoubleDigit,
 } from '../utils/fulfillment';
 
 const Fulfillment = () => {

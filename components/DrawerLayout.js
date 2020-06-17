@@ -57,15 +57,10 @@ const DrawerLayout = () => {
   const renderScreen = () => {
     console.log(drawerView);
     switch (drawerView) {
-      case 'Profile':
-        //   return <ProfileScreen />;
-        return <Fulfillment />;
       case 'EditAddress':
         return <EditAddress />;
       case 'SelectPaymentMethod':
         return <SelectPaymentMethod />;
-      case 'OrderHistory':
-        return <OrderHistory />;
       case 'AddDetails':
         return <AddDetails params={params} />;
       case 'Safety':
@@ -73,7 +68,7 @@ const DrawerLayout = () => {
       case 'Fulfillment':
         return <Fulfillment />;
       default:
-        return <Text>Oops!</Text>;
+        return <Text>Oops! No such component.</Text>;
     }
   };
 

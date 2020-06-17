@@ -55,6 +55,8 @@ export const CUSTOMER_DETAILS = gql`
           city
           country
           notes
+          lat
+          lng
         }
         defaultCustomerAddress {
           id
@@ -65,6 +67,8 @@ export const CUSTOMER_DETAILS = gql`
           city
           country
           notes
+          lat
+          lng
         }
         stripePaymentMethods {
           stripePaymentMethodId

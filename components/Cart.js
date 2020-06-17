@@ -33,7 +33,7 @@ const Cart = ({
   const { cart, customerDetails, customer } = useCartContext();
   const { visual } = useAppContext();
   const { open } = useDrawerContext();
-  const { isAuthenicated, login } = useAuth();
+  const { isAuthenticated, login } = useAuth();
 
   const [quantity, setQuantity] = useState(1);
 
@@ -56,7 +56,11 @@ const Cart = ({
 
   const handleAddToCart = () => {
     try {
-      if (!isAuthenicated) login();
+      if (!isAuthenticated) {
+        console.log('No logged in!');
+        login();
+      }
+      console.log(customerDetails);
       if (
         customerDetails?.firstName &&
         customerDetails?.lastName &&
@@ -138,14 +142,7 @@ const Cart = ({
                     customerPhone: customerDetails.phoneNumber,
                     customerEmail: customerDetails.email,
                   },
-                  fulfillmentInfo: {
-                    type: 'DELIVERY',
-                    time: {
-                      from: '15:00',
-                      to: '19:00',
-                    },
-                    date: new Date(new Date().getTime() + 24 * 60 * 60 * 1000), // tomorrow's date
-                  },
+                  fulfillmentInfo: null,
                   paymentMethodId: customerDetails?.defaultPaymentMethodId,
                   address: customerDetails?.defaultCustomerAddress,
                   stripeCustomerId: customerDetails?.stripeCustomerId,

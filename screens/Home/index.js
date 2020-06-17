@@ -37,6 +37,15 @@ import { styles } from './styles';
 import CategoriesButton from '../../components/CategoriesButton';
 import Footer from '../../components/Footer';
 
+import {
+  generateDeliverySlots,
+  isDeliveryAvailable,
+  generatePickUpSlots,
+  isPickUpAvailable,
+  generateMiniSlots,
+  makeDoubleDigit,
+} from '../../utils/fulfillment';
+
 const CalendarIcon = (props) => <Icon size={24} {...props} name='calendar' />;
 
 const Home = (props) => {

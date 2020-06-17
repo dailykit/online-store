@@ -20,9 +20,11 @@ import { useCartContext } from '../../context/cart';
 import { height } from '../../utils/Scalaing';
 import { styles } from './styles';
 import Header from '../../components/Header';
+import { useDrawerContext } from '../../context/drawer';
 
 const OrderSummary = ({ navigation, ...restProps }) => {
   const { cart } = useCartContext();
+  const { open } = useDrawerContext();
 
   let cartItems = cart?.cartInfo?.products;
   console.log('OrderSummary -> cartItems', cartItems);
@@ -44,19 +46,23 @@ const OrderSummary = ({ navigation, ...restProps }) => {
           </View>
           <View style={styles.title_container}>
             <View style={styles.title_container_left}>
-              <Text style={styles.deliver_on_text}>Deliver on</Text>
-              <Text style={styles.time_text}>Monday, Dec 9</Text>
+              <Text style={styles.deliver_on_text}>
+                {cart?.fulfillmentInfo?.type}
+              </Text>
+              <Text style={styles.time_text}>
+                {cart?.fulfillmentInfo?.date}
+              </Text>
             </View>
             <View style={styles.title_container_middle}>
               <Text
                 style={[styles.time_text, { textAlign: 'center', flex: 1 }]}
               >
-                9am - 10am
+                {cart?.fulfillmentInfo?.slot?.time}
               </Text>
             </View>
             <View style={styles.title_container_right}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('EditAddressScreen')}
+                onPress={() => open('Fulfillment')}
                 style={styles.edit}
               >
                 <Text style={styles.edit_text}>edit{'  '}</Text>
