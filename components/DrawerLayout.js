@@ -55,7 +55,6 @@ const DrawerLayout = () => {
 
   // Handlers
   const renderScreen = () => {
-    console.log(drawerView);
     switch (drawerView) {
       case 'EditAddress':
         return <EditAddress />;

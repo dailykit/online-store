@@ -77,7 +77,6 @@ export const CartContextProvider = ({ children }) => {
   }, [customer]);
 
   React.useEffect(() => {
-    console.log('CartContextProvider -> customerDetails', customerDetails);
     if (
       customerDetails?.defaultCustomerAddress?.lat &&
       customerDetails?.defaultCustomerAddress?.lng
@@ -185,7 +184,6 @@ export const CartContextProvider = ({ children }) => {
 
   React.useEffect(() => {
     try {
-      console.log('CartContextProvider -> cart', cart);
       if (cart && !cart.fulfillmentInfo) {
         generateDefaultFulfillment();
       }
@@ -202,7 +200,7 @@ export const CartContextProvider = ({ children }) => {
     } catch (e) {
       console.log(e);
     }
-  }, [cart?.address]);
+  }, [cart?.address?.id]);
 
   return (
     <CartContext.Provider
