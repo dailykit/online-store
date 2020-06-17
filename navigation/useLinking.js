@@ -3,10 +3,10 @@ import { Linking } from 'expo';
 
 export default function (containerRef) {
   return useLinking(containerRef, {
-    prefixes: [Linking.makeUrl('/store')],
+    prefixes: [Linking.makeUrl('/')],
     config: {
       App: {
-        path: '/',
+        path: '/store',
         screens: {
           Home: {
             path: '/',
