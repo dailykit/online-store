@@ -56,7 +56,7 @@ const Cart = ({
 
   const handleAddToCart = () => {
     try {
-      if (!isAuthenicated) login();
+      if (!isAuthenticated) login();
       if (
         customerDetails?.firstName &&
         customerDetails?.lastName &&
