@@ -1,6 +1,7 @@
 {
   "name": "dailykit-online-store",
   "version": "1.4.0",
+  "homepage": "/store",
   "description": "DailyKit Online Ordering",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {

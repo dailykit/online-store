@@ -33,7 +33,7 @@ const Cart = ({
   const { cart, customerDetails, customer } = useCartContext();
   const { visual } = useAppContext();
   const { open } = useDrawerContext();
-  const { isAuthenicated, login } = useAuth();
+  const { isAuthenticated, login } = useAuth();
 
   const [quantity, setQuantity] = useState(1);
 
@@ -56,7 +56,7 @@ const Cart = ({
 
   const handleAddToCart = () => {
     try {
-      if (!isAuthenicated) login();
+      if (!isAuthenticated) login();
       if (
         customerDetails?.firstName &&
         customerDetails?.lastName &&

@@ -6,7 +6,7 @@ export default function (containerRef) {
     prefixes: [Linking.makeUrl('/')],
     config: {
       App: {
-        path: '/',
+        path: '/store',
         screens: {
           Home: {
             path: '/',
