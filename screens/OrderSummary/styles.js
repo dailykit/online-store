@@ -6,8 +6,10 @@ export const styles = EStyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     width: width > 980 ? 980 : width,
+    marginVertical: width > 768 ? 20 : 5,
     backgroundColor: '#fff',
     paddingBottom: 40,
+    zIndex: 1,
   },
   summary_title_conatiner: {
     flex: 1,

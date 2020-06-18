@@ -6,6 +6,7 @@ export const styles = EStyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     marginHorizontal: width > 768 ? '20%' : 0,
+    marginVertical: width > 768 ? 20 : 5,
   },
   cardNumberTextContainer: {
     flex: 3,
