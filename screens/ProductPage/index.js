@@ -109,8 +109,12 @@ const ProductPage = ({ navigation, route }) => {
                   <Text style={styles.tag}>{tag.toUpperCase()}</Text>
                 ))}
               </View>
-              <Text style={styles.sectionTitle}>Description</Text>
-              <Text style={styles.text}>{product?.description}</Text>
+              {product?.description && (
+                <>
+                  <Text style={styles.sectionTitle}>Description</Text>
+                  <Text style={styles.text}>{product?.description}</Text>
+                </>
+              )}
               {product?.__typename?.includes('simpleRecipeProduct') && (
                 <View style={{ marginBottom: 10 }}>
                   <View style={{ flexDirection: 'row', width: 250 }}>
