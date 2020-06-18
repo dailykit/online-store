@@ -57,7 +57,7 @@ const Cart = ({
   const handleAddToCart = () => {
     try {
       if (!isAuthenticated) {
-        console.log('No logged in!');
+        console.log('Not logged in!');
         login();
       }
       if (

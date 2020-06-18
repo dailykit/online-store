@@ -6,7 +6,7 @@ export default function (containerRef) {
     prefixes: [Linking.makeUrl('/')],
     config: {
       App: {
-        path: '/',
+        path: '/store',
         screens: {
           Home: {
             path: '/',
@@ -17,8 +17,8 @@ export default function (containerRef) {
               ProductPage: {
                 path: 'product',
                 parse: {
-                  data: Object,
-                  name: String,
+                  id: Number,
+                  type: String,
                 },
                 stringify: {
                   data: (data) => '',
