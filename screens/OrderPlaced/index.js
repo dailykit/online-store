@@ -1,4 +1,4 @@
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather } from '@expo/vector-icons';
 import React, { lazy } from 'react';
 import {
   Image,
@@ -11,9 +11,11 @@ import {
 import { useCartContext } from '../../context/cart';
 import { styles } from './styles';
 import OrderDetails from '../../components/OrderDetails';
+import { useAppContext } from '../../context/app';
 
-const OrderPlaced = ({ route, navigation }) => ({ route, navigation }) => {
+const OrderPlaced = ({ route, navigation }) => {
   const { cart } = useCartContext();
+  const { visual } = useAppContext();
 
   const { orderId } = route.params;
 
@@ -29,12 +31,11 @@ const OrderPlaced = ({ route, navigation }) => ({ route, navigation }) => {
       </TouchableOpacity>
       <ScrollView style={styles.conatiner}>
         <View style={styles.image_container}>
-          <Image
-            style={styles.image}
-            source={require('../../assets/imgs/check-circle.png')}
-          />
+          <Feather name='check-circle' size={48} color={visual.color} />
         </View>
-        <Text style={styles.order_placed_title}>Order Placed!</Text>
+        <Text style={[styles.order_placed_title, { color: visual.color }]}>
+          Order Placed!
+        </Text>
         <Text
           style={[styles.time_text, { textAlign: 'center', marginBottom: 10 }]}
         >
