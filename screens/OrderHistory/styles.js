@@ -10,6 +10,7 @@ export const styles = EStyleSheet.create({
   },
   outerContainer: {
     marginHorizontal: width > 768 ? '20%' : 0,
+    marginTop: width > 768 ? 20 : 5,
     flex: 1,
   },
   center: {
@@ -85,11 +86,11 @@ export const styles = EStyleSheet.create({
     width: '100%',
   },
   productInfo: {
-    fontSize: '$xs',
+    fontSize: '$s',
     flex: 1,
   },
   productOption: {
-    fontSize: '$xxs',
+    fontSize: '$xs',
     color: '#666',
   },
   productPrice: {
