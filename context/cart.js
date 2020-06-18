@@ -96,22 +96,24 @@ export const CartContextProvider = ({ children }) => {
     if (distance) {
       // check for pre-order delivery
       if (preOrderDelivery[0].recurrences.length) {
-        const slots = generateDeliverySlots(preOrderDelivery[0].recurrences);
-        if (slots) {
-          const miniSlots = generateMiniSlots(slots, 15);
-          const fulfillmentInfo = {
-            date: miniSlots[0].date,
-            slot: miniSlots[0].slots[0],
-            type: 'PREORDER_DELIVERY',
-          };
-          return updateCart({
-            variables: {
-              id: cart.id,
-              set: {
-                fulfillmentInfo,
+        const result = generateDeliverySlots(preOrderDelivery[0].recurrences);
+        if (result.status) {
+          const miniSlots = generateMiniSlots(result.data, 15);
+          if (miniSlots.length) {
+            const fulfillmentInfo = {
+              date: miniSlots[0].date,
+              slot: miniSlots[0].slots[0],
+              type: 'PREORDER_DELIVERY',
+            };
+            return updateCart({
+              variables: {
+                id: cart.id,
+                set: {
+                  fulfillmentInfo,
+                },
               },
-            },
-          });
+            });
+          }
         }
       }
       // check for on-demand delivery
@@ -140,22 +142,24 @@ export const CartContextProvider = ({ children }) => {
     }
     // delivery not possible, then look for pickup options
     if (preOrderPickup[0].recurrences.length) {
-      const slots = generatePickUpSlots(preOrderPickup[0].recurrences);
-      if (slots) {
-        const miniSlots = generateMiniSlots(slots, 15);
-        const fulfillmentInfo = {
-          date: miniSlots[0].date,
-          slot: miniSlots[0].slots[0],
-          type: 'PREORDER_PICKUP',
-        };
-        return updateCart({
-          variables: {
-            id: cart.id,
-            set: {
-              fulfillmentInfo,
+      const result = generatePickUpSlots(preOrderPickup[0].recurrences);
+      if (result.status) {
+        const miniSlots = generateMiniSlots(result.data, 15);
+        if (miniSlots.length) {
+          const fulfillmentInfo = {
+            date: miniSlots[0].date,
+            slot: miniSlots[0].slots[0],
+            type: 'PREORDER_PICKUP',
+          };
+          return updateCart({
+            variables: {
+              id: cart.id,
+              set: {
+                fulfillmentInfo,
+              },
             },
-          },
-        });
+          });
+        }
       }
     }
     if (onDemandPickup[0].recurrences.length) {
