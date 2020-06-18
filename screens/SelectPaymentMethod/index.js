@@ -14,7 +14,7 @@ import { styles } from './styles';
 export default ({ navigation }) => {
   const { cart, customerDetails } = useCartContext();
   const { visual } = useAppContext();
-  const { open } = useDrawerContext();
+  const { open, setIsDrawerOpen } = useDrawerContext();
 
   const [loading, setLoading] = React.useState(false);
 
@@ -27,7 +27,8 @@ export default ({ navigation }) => {
   const [updateCart] = useMutation(UPDATE_CART, {
     onCompleted: () => {
       console.log('Payment method updated!');
-      navigation.goBack();
+      setLoading(false);
+      setIsDrawerOpen(false);
     },
     onError: (error) => {
       console.log(error);
