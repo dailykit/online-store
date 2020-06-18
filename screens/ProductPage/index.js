@@ -160,11 +160,6 @@ const ProductPage = ({ navigation, route }) => {
                   </TouchableOpacity>
                 </View>
               )}
-              <Text style={styles.sectionTitle}>
-                {product?.__typename?.includes('inventoryProduct')
-                  ? 'Options'
-                  : 'Servings'}
-              </Text>
               {/* {product?.__typename?.includes('inventoryProduct')
                 ? product.inventoryProductOptions?.map((option) => (
                     <View style={styles.option}>
