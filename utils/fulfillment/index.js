@@ -73,111 +73,8 @@ export const isPickUpAvailable = (recurrences) => {
     const end = new Date(now.getTime() + 1000 * 60 * 60 * 24); // tomorrow
     const dates = rrulestr(rec.rrule).between(start, now);
     if (dates.length) {
-      for (let timeslot of rec.timeSlots) {
-        const timeslotFromArr = timeslot.from.split(':');
-        const timeslotToArr = timeslot.to.split(':');
-        const fromTimeStamp = new Date(now.getTime());
-        fromTimeStamp.setHours(
-          timeslotFromArr[0],
-          timeslotFromArr[1],
-          timeslotFromArr[2]
-        );
-        const toTimeStamp = new Date(now.getTime());
-        toTimeStamp.setHours(
-          timeslotToArr[0],
-          timeslotToArr[1],
-          timeslotToArr[2]
-        );
-        // check if current time falls within time slot
-        if (
-          now.getTime() > fromTimeStamp.getTime() &&
-          now.getTime() < toTimeStamp.getTime()
-        ) {
-          return { status: true };
-        } else {
-          return { status: false };
-        }
-      }
-    } else {
-      return { status: false };
-    }
-  }
-};
-
-export const generatePickUpSlots = (recurrences) => {
-  let data = [];
-  recurrences.forEach((rec) => {
-    const now = new Date(); // now
-    const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
-    // const start = now;
-    const end = new Date(now.getTime() + 7 * 1000 * 60 * 60 * 24); // 7 days later
-    const dates = rrulestr(rec.rrule).between(start, end);
-    dates.forEach((date) => {
-      rec.timeSlots.forEach((timeslot) => {
-        const timeslotFromArr = timeslot.from.split(':');
-        const timeslotToArr = timeslot.to.split(':');
-        const fromTimeStamp = new Date(
-          date.setHours(
-            timeslotFromArr[0],
-            timeslotFromArr[1],
-            timeslotFromArr[2]
-          )
-        );
-        const toTimeStamp = new Date(
-          date.setHours(timeslotToArr[0], timeslotToArr[1], timeslotToArr[2])
-        );
-        // start + lead time < to
-        const leadMiliSecs = timeslot.pickUpLeadTime * 60000;
-        if (now.getTime() + leadMiliSecs < toTimeStamp.getTime()) {
-          // if start + lead time > from -> set new from time
-          let slotStart;
-          let slotEnd = toTimeStamp.getHours() + ':' + toTimeStamp.getMinutes();
-          if (now.getTime() + leadMiliSecs > fromTimeStamp.getTime()) {
-            // new start time = lead time + now
-            const newStartTimeStamp = new Date(now.getTime() + leadMiliSecs);
-            slotStart =
-              newStartTimeStamp.getHours() +
-              ':' +
-              newStartTimeStamp.getMinutes();
-          } else {
-            slotStart =
-              fromTimeStamp.getHours() + ':' + fromTimeStamp.getMinutes();
-          }
-          // check if date already in slots
-          const dateWithoutTime = date.toDateString();
-          const index = data.findIndex((slot) => slot.date === dateWithoutTime);
-          if (index === -1) {
-            data.push({
-              date: dateWithoutTime,
-              slots: [
-                {
-                  start: slotStart,
-                  end: slotEnd,
-                },
-              ],
-            });
-          } else {
-            data[index].slots.push({
-              start: slotStart,
-              end: slotEnd,
-            });
-          }
-        }
-      });
-    });
-  });
-  return data;
-};
-
-export const isDeliveryAvailable = (recurrences) => {
-  for (let rec of recurrences) {
-    const now = new Date(); // now
-    const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
-    const end = new Date(now.getTime() + 1000 * 60 * 60 * 24); // tomorrow
-    const dates = rrulestr(rec.rrule).between(start, now);
-    if (dates.length) {
-      for (let timeslot of rec.timeSlots) {
-        if (timeslot.mileRanges.length) {
+      if (rec.timeSlots.length) {
+        for (let timeslot of rec.timeSlots) {
           const timeslotFromArr = timeslot.from.split(':');
           const timeslotToArr = timeslot.to.split(':');
           const fromTimeStamp = new Date(now.getTime());
@@ -197,11 +94,13 @@ export const isDeliveryAvailable = (recurrences) => {
             now.getTime() > fromTimeStamp.getTime() &&
             now.getTime() < toTimeStamp.getTime()
           ) {
-            return { status: true, mileRangeId: timeslot.mileRanges[0].id };
+            return { status: true };
           } else {
             return { status: false };
           }
         }
+      } else {
+        return { status: false };
       }
     } else {
       return { status: false };
@@ -209,7 +108,7 @@ export const isDeliveryAvailable = (recurrences) => {
   }
 };
 
-export const generateDeliverySlots = (recurrences) => {
+export const generatePickUpSlots = (recurrences) => {
   let data = [];
   recurrences.forEach((rec) => {
     const now = new Date(); // now
@@ -218,10 +117,8 @@ export const generateDeliverySlots = (recurrences) => {
     const end = new Date(now.getTime() + 7 * 1000 * 60 * 60 * 24); // 7 days later
     const dates = rrulestr(rec.rrule).between(start, end);
     dates.forEach((date) => {
-      rec.timeSlots.forEach((timeslot) => {
-        // if multiple mile ranges, only first one will be taken
-        if (timeslot.mileRanges.length) {
-          const leadTime = timeslot.mileRanges[0].leadTime;
+      if (rec.timeSlots.length) {
+        rec.timeSlots.forEach((timeslot) => {
           const timeslotFromArr = timeslot.from.split(':');
           const timeslotToArr = timeslot.to.split(':');
           const fromTimeStamp = new Date(
@@ -235,7 +132,7 @@ export const generateDeliverySlots = (recurrences) => {
             date.setHours(timeslotToArr[0], timeslotToArr[1], timeslotToArr[2])
           );
           // start + lead time < to
-          const leadMiliSecs = leadTime * 60000;
+          const leadMiliSecs = timeslot.pickUpLeadTime * 60000;
           if (now.getTime() + leadMiliSecs < toTimeStamp.getTime()) {
             // if start + lead time > from -> set new from time
             let slotStart;
@@ -264,7 +161,6 @@ export const generateDeliverySlots = (recurrences) => {
                   {
                     start: slotStart,
                     end: slotEnd,
-                    mileRangeId: timeslot.mileRanges[0].id,
                   },
                 ],
               });
@@ -272,13 +168,142 @@ export const generateDeliverySlots = (recurrences) => {
               data[index].slots.push({
                 start: slotStart,
                 end: slotEnd,
-                mileRangeId: timeslot.mileRanges[0].id,
               });
             }
           }
-        }
-      });
+        });
+      } else {
+        return { status: false };
+      }
     });
   });
-  return data;
+  return { status: true, data };
+};
+
+export const isDeliveryAvailable = (recurrences) => {
+  for (let rec of recurrences) {
+    const now = new Date(); // now
+    const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
+    const end = new Date(now.getTime() + 1000 * 60 * 60 * 24); // tomorrow
+    const dates = rrulestr(rec.rrule).between(start, now);
+    if (dates.length) {
+      if (rec.timeSlots.length) {
+        for (let timeslot of rec.timeSlots) {
+          if (timeslot.mileRanges.length) {
+            const timeslotFromArr = timeslot.from.split(':');
+            const timeslotToArr = timeslot.to.split(':');
+            const fromTimeStamp = new Date(now.getTime());
+            fromTimeStamp.setHours(
+              timeslotFromArr[0],
+              timeslotFromArr[1],
+              timeslotFromArr[2]
+            );
+            const toTimeStamp = new Date(now.getTime());
+            toTimeStamp.setHours(
+              timeslotToArr[0],
+              timeslotToArr[1],
+              timeslotToArr[2]
+            );
+            // check if current time falls within time slot
+            if (
+              now.getTime() > fromTimeStamp.getTime() &&
+              now.getTime() < toTimeStamp.getTime()
+            ) {
+              return { status: true, mileRangeId: timeslot.mileRanges[0].id };
+            } else {
+              return { status: false };
+            }
+          }
+        }
+      } else {
+        return { status: false };
+      }
+    } else {
+      return { status: false };
+    }
+  }
+};
+
+export const generateDeliverySlots = (recurrences) => {
+  let data = [];
+  recurrences.forEach((rec) => {
+    const now = new Date(); // now
+    const start = new Date(now.getTime() - 1000 * 60 * 60 * 24); // yesterday
+    // const start = now;
+    const end = new Date(now.getTime() + 7 * 1000 * 60 * 60 * 24); // 7 days later
+    const dates = rrulestr(rec.rrule).between(start, end);
+    dates.forEach((date) => {
+      if (rec.timeSlots.length) {
+        rec.timeSlots.forEach((timeslot) => {
+          // if multiple mile ranges, only first one will be taken
+          if (timeslot.mileRanges.length) {
+            const leadTime = timeslot.mileRanges[0].leadTime;
+            const timeslotFromArr = timeslot.from.split(':');
+            const timeslotToArr = timeslot.to.split(':');
+            const fromTimeStamp = new Date(
+              date.setHours(
+                timeslotFromArr[0],
+                timeslotFromArr[1],
+                timeslotFromArr[2]
+              )
+            );
+            const toTimeStamp = new Date(
+              date.setHours(
+                timeslotToArr[0],
+                timeslotToArr[1],
+                timeslotToArr[2]
+              )
+            );
+            // start + lead time < to
+            const leadMiliSecs = leadTime * 60000;
+            if (now.getTime() + leadMiliSecs < toTimeStamp.getTime()) {
+              // if start + lead time > from -> set new from time
+              let slotStart;
+              let slotEnd =
+                toTimeStamp.getHours() + ':' + toTimeStamp.getMinutes();
+              if (now.getTime() + leadMiliSecs > fromTimeStamp.getTime()) {
+                // new start time = lead time + now
+                const newStartTimeStamp = new Date(
+                  now.getTime() + leadMiliSecs
+                );
+                slotStart =
+                  newStartTimeStamp.getHours() +
+                  ':' +
+                  newStartTimeStamp.getMinutes();
+              } else {
+                slotStart =
+                  fromTimeStamp.getHours() + ':' + fromTimeStamp.getMinutes();
+              }
+              // check if date already in slots
+              const dateWithoutTime = date.toDateString();
+              const index = data.findIndex(
+                (slot) => slot.date === dateWithoutTime
+              );
+              if (index === -1) {
+                data.push({
+                  date: dateWithoutTime,
+                  slots: [
+                    {
+                      start: slotStart,
+                      end: slotEnd,
+                      mileRangeId: timeslot.mileRanges[0].id,
+                    },
+                  ],
+                });
+              } else {
+                data[index].slots.push({
+                  start: slotStart,
+                  end: slotEnd,
+                  mileRangeId: timeslot.mileRanges[0].id,
+                });
+              }
+            }
+          }
+        });
+      } else {
+        return { status: false };
+      }
+    });
+  });
+  return { status: true, data };
 };

@@ -80,6 +80,7 @@ const Fulfillment = () => {
   );
 
   React.useEffect(() => {
+    console.log('Fulfillment -> cart address', cart?.address);
     if (cart?.address?.lat && cart?.address?.lng) {
       const distance = getDistance(
         cart?.address?.lat,
@@ -125,15 +126,23 @@ const Fulfillment = () => {
             switch (time) {
               case 'PREORDER': {
                 if (preOrderPickup[0].recurrences.length) {
-                  const slots = generatePickUpSlots(
+                  const result = generatePickUpSlots(
                     preOrderPickup[0].recurrences
                   );
-                  const miniSlots = generateMiniSlots(slots, 15);
-                  setPickerDates([...miniSlots]);
-                  setFulfillment({
-                    date: miniSlots[0].date,
-                    time: miniSlots[0].slots[0].time,
-                  });
+                  if (result.status) {
+                    const miniSlots = generateMiniSlots(result.data, 15);
+                    if (miniSlots.length) {
+                      setPickerDates([...miniSlots]);
+                      setFulfillment({
+                        date: miniSlots[0].date,
+                        time: miniSlots[0].slots[0].time,
+                      });
+                    } else {
+                      setOops('Sorry! No time slots available.');
+                    }
+                  } else {
+                    setOops('Sorry! No time slots available.');
+                  }
                 } else {
                   setOops('Sorry! No time slots available.');
                 }
@@ -173,6 +182,7 @@ const Fulfillment = () => {
           break;
         }
         case 'DELIVERY': {
+          console.log('Fulfillment -> distance', distance);
           if (!distance) {
             return setOops('Please add an address first!');
           }
@@ -180,16 +190,26 @@ const Fulfillment = () => {
             switch (time) {
               case 'PREORDER': {
                 if (preOrderDelivery[0].recurrences.length) {
-                  const slots = generateDeliverySlots(
+                  const result = generateDeliverySlots(
                     preOrderDelivery[0].recurrences
                   );
-                  const miniSlots = generateMiniSlots(slots, 15);
-                  setPickerDates([...miniSlots]);
-                  setFulfillment({
-                    date: miniSlots[0].date,
-                    time: miniSlots[0].slots[0].time,
-                    data: { mileRangeId: miniSlots[0].slots[0]?.mileRangeId },
-                  });
+                  if (result.status) {
+                    const miniSlots = generateMiniSlots(result.data, 15);
+                    if (miniSlots.length) {
+                      setPickerDates([...miniSlots]);
+                      setFulfillment({
+                        date: miniSlots[0].date,
+                        time: miniSlots[0].slots[0].time,
+                        data: {
+                          mileRangeId: miniSlots[0].slots[0]?.mileRangeId,
+                        },
+                      });
+                    } else {
+                      setOops('Sorry! No time slots available.');
+                    }
+                  } else {
+                    setOops('Sorry! No time slots available.');
+                  }
                 } else {
                   setOops('Sorry! No time slots available.');
                 }
@@ -197,6 +217,10 @@ const Fulfillment = () => {
               }
               case 'ONDEMAND': {
                 if (onDemandDelivery[0].recurrences.length) {
+                  console.log(
+                    'Fulfillment -> onDemandDelivery[0].recurrences',
+                    onDemandDelivery[0].recurrences
+                  );
                   const result = isDeliveryAvailable(
                     onDemandDelivery[0].recurrences
                   );
@@ -330,7 +354,7 @@ const Fulfillment = () => {
             </View>
           )}
         </TouchableOpacity>
-        {time === 'PREORDER' && (
+        {time === 'PREORDER' && !oops && (
           <>
             <Text style={[styles.text, { opacity: 0.6, marginTop: 20 }]}>
               Select time slots:

@@ -176,6 +176,10 @@ const Home = (props) => {
     },
     onCompleted: (data) => {
       if (data.platform_customerByClients?.length) {
+        console.log(
+          'platform -> data',
+          data.platform_customerByClients[0].customer
+        );
         setCustomerDetails(data.platform_customerByClients[0].customer);
       } else {
         console.log('No customer data found!');
