@@ -73,7 +73,6 @@ class Header extends React.Component {
     } = this.props;
 
     const headerStyles = [
-      transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null,
       {
         height: 64,
         width: width,

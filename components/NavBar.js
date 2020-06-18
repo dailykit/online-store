@@ -180,6 +180,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     backgroundColor: theme.COLORS.WHITE,
     paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 7,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 9.11,
+    elevation: 14,
   },
   title: {
     flex: 1,
