@@ -17,7 +17,7 @@ import HeaderBack from '../../components/HeaderBack';
 
 const Summary = lazy(() => import('../../components/Summary'));
 import { useCartContext } from '../../context/cart';
-import { height } from '../../utils/Scalaing';
+import { height, width } from '../../utils/Scalaing';
 import { styles } from './styles';
 import Header from '../../components/Header';
 import { useDrawerContext } from '../../context/drawer';
@@ -98,14 +98,20 @@ const OrderSummary = ({ navigation, ...restProps }) => {
         </ScrollView>
       ) : (
         <View
-          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            padding: 20,
+          }}
         >
           <Text
             style={{
               marginBottom: 10,
               fontWeight: 'bold',
-              fontSize: 24,
+              fontSize: width > 768 ? 24 : 16,
               color: '#666',
+              textAlign: 'center',
             }}
           >
             Awww... This feels so light. Oh wait! It's empty.
