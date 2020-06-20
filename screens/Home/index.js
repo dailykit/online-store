@@ -2,11 +2,11 @@ import {
   useLazyQuery,
   useMutation,
   useSubscription,
-} from '@apollo/react-hooks';
-import { Datepicker, Spinner } from '@ui-kitten/components';
-import * as axios from 'axios';
-import moment from 'moment';
-import React, { useRef, useState } from 'react';
+} from "@apollo/react-hooks";
+import { Datepicker, Spinner } from "@ui-kitten/components";
+import * as axios from "axios";
+import moment from "moment";
+import React, { useRef, useState } from "react";
 import {
   Image,
   ScrollView,
@@ -15,29 +15,29 @@ import {
   TouchableOpacity,
   View,
   ListView,
-} from 'react-native';
-import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
-import { Header, Icon } from '../../components';
-import Cart from '../../components/Cart';
-import { CategoryBanner } from '../../components/CategoryBanner';
-import DrawerLayout from '../../components/DrawerLayout';
-import Products from '../../components/Products';
-import { SafetyBanner } from '../../components/SafetyBanner';
-import { useAppContext } from '../../context/app';
-import { useAuth } from '../../context/auth';
-import { useCartContext } from '../../context/cart';
+} from "react-native";
+import { CLIENTID, DAILYOS_SERVER_URL } from "react-native-dotenv";
+import { Header, Icon } from "../../components";
+import Cart from "../../components/Cart";
+import { CategoryBanner } from "../../components/CategoryBanner";
+import DrawerLayout from "../../components/DrawerLayout";
+import Products from "../../components/Products";
+import { SafetyBanner } from "../../components/SafetyBanner";
+import { useAppContext } from "../../context/app";
+import { useAuth } from "../../context/auth";
+import { useCartContext } from "../../context/cart";
 import {
   CREATE_CUSTOMER,
   CUSTOMER,
   CUSTOMER_DETAILS,
   STORE_SETTINGS,
-} from '../../graphql';
-import { height, width } from '../../utils/Scalaing';
-import { styles } from './styles';
-import CategoriesButton from '../../components/CategoriesButton';
-import Footer from '../../components/Footer';
+} from "../../graphql";
+import { height, width } from "../../utils/Scalaing";
+import { styles } from "./styles";
+import CategoriesButton from "../../components/CategoriesButton";
+import Footer from "../../components/Footer";
 
-const CalendarIcon = (props) => <Icon size={24} {...props} name='calendar' />;
+const CalendarIcon = (props) => <Icon size={24} {...props} name="calendar" />;
 
 const Home = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -67,23 +67,23 @@ const Home = (props) => {
     {
       onSubscriptionData: (data) => {
         const brandSettings = data.subscriptionData.data.storeSettings.filter(
-          (setting) => setting.type === 'brand'
+          (setting) => setting.type === "brand"
         );
         const visualSettings = data.subscriptionData.data.storeSettings.filter(
-          (setting) => setting.type === 'visual'
+          (setting) => setting.type === "visual"
         );
         const availabilitySettings = data.subscriptionData.data.storeSettings.filter(
-          (setting) => setting.type === 'availability'
+          (setting) => setting.type === "availability"
         );
 
         let brandState = {};
         brandSettings.forEach(({ identifier, value }) => {
           switch (identifier) {
-            case 'Brand Logo': {
+            case "Brand Logo": {
               brandState.logo = value.url;
               return;
             }
-            case 'Brand Name': {
+            case "Brand Name": {
               brandState.name = value.name;
               return;
             }
@@ -97,11 +97,11 @@ const Home = (props) => {
         let visualState = {};
         visualSettings.forEach(({ identifier, value }) => {
           switch (identifier) {
-            case 'Primary Color': {
+            case "Primary Color": {
               visualState.color = value.color;
               return;
             }
-            case 'Cover': {
+            case "Cover": {
               visualState.cover = value.url;
               return;
             }
@@ -115,15 +115,15 @@ const Home = (props) => {
         let availabilityState = {};
         availabilitySettings.forEach(({ identifier, value }) => {
           switch (identifier) {
-            case 'Store Availability': {
+            case "Store Availability": {
               availabilityState.store = value;
               return;
             }
-            case 'Pickup Availability': {
+            case "Pickup Availability": {
               availabilityState.pickup = value;
               return;
             }
-            case 'Delivery Availability': {
+            case "Delivery Availability": {
               availabilityState.delivery = value;
               return;
             }
@@ -141,13 +141,16 @@ const Home = (props) => {
   const fetchData = async (date) => {
     try {
       setLoading(true);
+      console.log("-------- fetching menu start --------");
       const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
         input: date,
       });
+      console.log("-------- fetching menu finished --------");
       setData(response.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
+      console.log("-------- fetching menu error --------");
       console.log(err);
     }
   };
@@ -155,6 +158,7 @@ const Home = (props) => {
   // Effects
   React.useEffect(() => {
     if (availability && isStoreOpen()) {
+      console.log("-------- store is open --------");
       fetchData({
         year: moment().year(),
         month: moment().month(),
@@ -177,21 +181,21 @@ const Home = (props) => {
     onCompleted: (data) => {
       if (data.platform_customerByClients?.length) {
         console.log(
-          'platform -> data',
+          "platform -> data",
           data.platform_customerByClients[0].customer
         );
         setCustomerDetails(data.platform_customerByClients[0].customer);
       } else {
-        console.log('No customer data found!');
+        console.log("No customer data found!");
       }
     },
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: "cache-and-network",
   });
 
   // Mutations
   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
     onCompleted: () => {
-      console.log('Customer created');
+      console.log("Customer created");
     },
     onError: (error) => {
       console.log(error);
@@ -214,7 +218,7 @@ const Home = (props) => {
             object: {
               keycloakId: user.sub || user.userid,
               email: user.email,
-              source: 'online store',
+              source: "online store",
               clientId: CLIENTID,
             },
           },
@@ -227,8 +231,8 @@ const Home = (props) => {
     const current = new Date();
     if (availability.store.isOpen) {
       const minutes = current.getMinutes() + current.getHours() * 60;
-      const from = availability.store.from.split(':');
-      const to = availability.store.to.split(':');
+      const from = availability.store.from.split(":");
+      const to = availability.store.to.split(":");
       const fromMinutes = parseInt(from[1]) + parseInt(from[0]) * 60;
       const toMinutes = parseInt(to[1]) + parseInt(to[0]) * 60;
 
@@ -242,19 +246,19 @@ const Home = (props) => {
     }
   };
 
-  if (error) console.log('Subscription error: ', error);
+  if (error) console.log("Subscription error: ", error);
 
   if (settingsLoading) {
     return (
       <View
         style={{
           flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#fff",
         }}
       >
-        <Spinner size='large' />
+        <Spinner size="large" />
       </View>
     );
   }
@@ -263,12 +267,12 @@ const Home = (props) => {
       <View style={styles.reallyBigContainer}>
         <ScrollView>
           <View>
-            <Header title='Home' search options navigation={props.navigation} />
+            <Header title="Home" search options navigation={props.navigation} />
             <View
               style={{
                 flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <Text
@@ -290,7 +294,7 @@ const Home = (props) => {
           </View>
           <View style={{ height: height * 0.08 }} />
         </ScrollView>
-        <Cart to='OrderSummary' {...props} text='Checkout' />
+        <Cart to="OrderSummary" {...props} text="Checkout" />
       </View>
     );
   let pickerData = [];
@@ -302,10 +306,10 @@ const Home = (props) => {
       let dataItems = [];
       Object.keys(category)?.forEach((key) => {
         if (
-          key != 'name' &&
-          key != '__typename' &&
-          key != 'title' &&
-          key != 'data'
+          key != "name" &&
+          key != "__typename" &&
+          key != "title" &&
+          key != "data"
         ) {
           category[key]?.forEach((el) =>
             dataItems.push({
@@ -328,7 +332,7 @@ const Home = (props) => {
   return (
     <>
       <Header
-        title={brand?.name ? brand?.name : 'Home'}
+        title={brand?.name ? brand?.name : "Home"}
         search
         options
         navigation={props.navigation}
@@ -400,7 +404,7 @@ const Home = (props) => {
               flex: 1,
             }}
             contentContainerStyle={{
-              marginHorizontal: width > 768 ? 'auto' : 'none',
+              marginHorizontal: width > 768 ? "auto" : "none",
             }}
             showsHorizontalScrollIndicator={false}
           >
@@ -411,7 +415,7 @@ const Home = (props) => {
                 id={key}
                 length={data?.length}
                 onPress={() =>
-                  props.navigation.navigate('CategoryProductsPage', {
+                  props.navigation.navigate("CategoryProductsPage", {
                     data,
                     category,
                   })
@@ -450,16 +454,16 @@ const Home = (props) => {
                   />
                   <TouchableOpacity
                     style={{
-                      marginHorizontal: 'auto',
+                      marginHorizontal: "auto",
                       padding: 10,
                       marginVertical: 20,
                       backgroundColor: visual.color,
                       borderRadius: 4,
                       minWidth: 150,
-                      textAlign: 'center',
+                      textAlign: "center",
                     }}
                     onPress={() =>
-                      props.navigation.navigate('CategoryProductsPage', {
+                      props.navigation.navigate("CategoryProductsPage", {
                         data,
                         category,
                       })
@@ -467,8 +471,8 @@ const Home = (props) => {
                   >
                     <Text
                       style={{
-                        color: '#fff',
-                        fontSize: '1.1rem',
+                        color: "#fff",
+                        fontSize: "1.1rem",
                       }}
                     >
                       View All
@@ -482,7 +486,7 @@ const Home = (props) => {
         {/* <View style={styles.headerContainer}>
           <SafetyBanner {...props} />
         </View> */}
-        {width < 768 && <Cart to='OrderSummary' {...props} text='Checkout' />}
+        {width < 768 && <Cart to="OrderSummary" {...props} text="Checkout" />}
         <DrawerLayout />
         <Footer />
       </ScrollView>
