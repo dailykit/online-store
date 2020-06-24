@@ -504,6 +504,7 @@ const Home = (props) => {
                 fontWeight: 'bold',
                 color: '#666',
                 marginTop: 10,
+                textAlign: 'center',
               }}
             >
               Sorry! No products available at this moment.
