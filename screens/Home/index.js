@@ -144,7 +144,7 @@ const Home = (props) => {
       setLoading(true);
       console.log('-------- fetching menu start --------');
       const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
-        input: date,
+        date,
       });
       console.log('-------- fetching menu finished --------');
       setData(response.data);
@@ -160,11 +160,8 @@ const Home = (props) => {
   React.useEffect(() => {
     if (availability && isStoreOpen()) {
       console.log('-------- store is open --------');
-      fetchData({
-        year: moment().year(),
-        month: moment().month(),
-        day: moment().date(),
-      });
+      const date = new Date(Date.now()).toISOString();
+      fetchData(date);
     }
   }, [availability]);
 
