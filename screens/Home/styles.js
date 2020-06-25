@@ -7,7 +7,7 @@ export const styles = EStyleSheet.create({
     backgroundColor: '#fff',
   },
   img_container: {
-    height: height * 0.5,
+    height: width > 768 ? height * 0.6 : height * 0.2,
     width,
   },
   reallyBigContainer: {
