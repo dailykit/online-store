@@ -112,10 +112,10 @@ const styles = EStyleSheet.create({
     justifyContent: 'space-between',
     borderBottomColor: '#eaeded',
     borderBottomWidth: 1,
-    marginHorizontal: 20,
+    marginHorizontal: width > 768 ? 20 : 5,
   },
   title: {
-    fontSize: '1.3rem',
+    fontSize: width > 768 ? '1.3rem' : '1.1rem',
     fontWeight: 'bold',
   },
 });

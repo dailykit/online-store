@@ -87,7 +87,7 @@ const Products = ({ category, navigation, horizontal }) => {
     );
 
   return (
-    <SafeAreaView style={{ margin: 20 }}>
+    <SafeAreaView style={{ margin: width > 768 ? 20 : 5 }}>
       {Boolean(products.length) &&
         (horizontal ? (
           <FlatList

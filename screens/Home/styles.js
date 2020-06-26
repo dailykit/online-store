@@ -85,7 +85,8 @@ export const styles = EStyleSheet.create({
   },
   category: {
     backgroundColor: '#fff',
-    margin: 20,
+    marginHorizontal: width > 768 ? 20 : 0,
+    marginVertical: width > 768 ? 20 : 5,
     borderRadius: 2,
   },
   sections: {
