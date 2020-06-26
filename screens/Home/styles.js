@@ -90,6 +90,6 @@ export const styles = EStyleSheet.create({
     borderRadius: 2,
   },
   sections: {
-    marginBottom: height * 0.3,
+    marginBottom: height * 0.1,
   },
 });

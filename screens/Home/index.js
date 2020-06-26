@@ -51,8 +51,8 @@ const Home = (props) => {
   const { setCustomer, setCustomerDetails, cart } = useCartContext();
   const { user } = useAuth();
 
-  const sectionListRef = useRef();
-  const scrollViewRef = useRef();
+  // const sectionListRef = useRef();
+  // const scrollViewRef = useRef();
 
   const {
     brand,
@@ -336,11 +336,7 @@ const Home = (props) => {
         options
         navigation={props.navigation}
       />
-      <ScrollView
-        ref={scrollViewRef}
-        stickyHeaderIndices={[1]}
-        style={[styles.reallyBigContainer]}
-      >
+      <ScrollView stickyHeaderIndices={[1]} style={[styles.reallyBigContainer]}>
         {/* <Tabs /> */}
         <View style={styles.img_container}>
           <Image
@@ -396,35 +392,37 @@ const Home = (props) => {
             }}
           /> 
         </View>*/}
+        {Boolean(data.length) && (
+          <View style={[styles.picker_container, { marginBottom: 4 }]}>
+            <ScrollView
+              horizontal
+              style={{
+                flex: 1,
+              }}
+              contentContainerStyle={{
+                marginHorizontal: 10,
+              }}
+              showsHorizontalScrollIndicator={false}
+            >
+              {data.map((category, key) => (
+                <CategoriesButton
+                  title={category.name}
+                  key={key}
+                  id={key}
+                  length={data?.length}
+                  onPress={() =>
+                    props.navigation.navigate('CategoryProductsPage', {
+                      data,
+                      category,
+                    })
+                  }
+                />
+              ))}
+            </ScrollView>
+          </View>
+        )}
         {Boolean(data.length) ? (
           <>
-            <View style={[styles.picker_container, { marginBottom: 4 }]}>
-              <ScrollView
-                horizontal
-                style={{
-                  flex: 1,
-                }}
-                contentContainerStyle={{
-                  marginHorizontal: 10,
-                }}
-                showsHorizontalScrollIndicator={false}
-              >
-                {data.map((category, key) => (
-                  <CategoriesButton
-                    title={category.name}
-                    key={key}
-                    id={key}
-                    length={data?.length}
-                    onPress={() =>
-                      props.navigation.navigate('CategoryProductsPage', {
-                        data,
-                        category,
-                      })
-                    }
-                  />
-                ))}
-              </ScrollView>
-            </View>
             {/* <SectionList
               showsVerticalScrollIndicator={true}
               ref={sectionListRef}
