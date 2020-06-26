@@ -50,10 +50,10 @@ const InventoryProductCollapsed = ({
           <View
             style={[
               styles.item_container_two,
-              {
-                paddingTop: 15,
-                paddingLeft: 10,
-              },
+              // {
+              //   paddingTop: 15,
+              //   paddingLeft: 10,
+              // },
             ]}
           >
             <View

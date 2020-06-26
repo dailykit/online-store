@@ -7,9 +7,9 @@ export const styles = EStyleSheet.create({
     fontWeight: 'bold',
     padding: 12,
     color: '#666',
+    paddingHorizontal: width > 768 ? '20%' : 12,
   },
   outerContainer: {
-    marginHorizontal: width > 768 ? '20%' : 0,
     marginTop: width > 768 ? 20 : 5,
     flex: 1,
   },
@@ -21,9 +21,10 @@ export const styles = EStyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingHorizontal: width > 768 ? '20%' : 0,
   },
   card: {
-    padding: 15,
+    padding: width > 768 ? 0 : 12,
     borderBottomColor: '#dedede',
     borderBottomWidth: 1,
     marginBottom: 10,
@@ -86,14 +87,14 @@ export const styles = EStyleSheet.create({
     width: '100%',
   },
   productInfo: {
-    fontSize: '$s',
+    fontSize: '$m',
     flex: 1,
   },
   productOption: {
-    fontSize: '$xs',
+    fontSize: '$s',
     color: '#666',
   },
   productPrice: {
-    fontSize: '$s',
+    fontSize: '$m',
   },
 });

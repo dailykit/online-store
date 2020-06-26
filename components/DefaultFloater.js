@@ -83,8 +83,6 @@ const styles = EStyleSheet.create({
     height: height * 0.07,
     backgroundColor: '#fff',
     flexDirection: 'row',
-    paddingLeft: 20,
-    paddingRight: 20,
     justifyContent: 'space-between',
   },
   title: {

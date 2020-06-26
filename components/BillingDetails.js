@@ -137,7 +137,7 @@ const BillingDetails = () => {
 
 const styles = StyleSheet.create({
   billing_details: {
-    paddingHorizontal: 30,
+    // paddingHorizontal: 30,
   },
   bill_child_container: {
     flexDirection: 'row',

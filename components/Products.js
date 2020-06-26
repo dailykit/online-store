@@ -1,6 +1,6 @@
 import { useSubscription } from '@apollo/react-hooks';
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, SafeAreaView } from 'react-native';
 import {
   COMBO_PRODUCTS,
   CUSTOMIZABLE_PRODUCTS,
@@ -11,7 +11,7 @@ import { width } from '../utils/Scalaing';
 import Card from './Card';
 import { Spinner } from '@ui-kitten/components';
 
-const Products = ({ category, navigation, showLess }) => {
+const Products = ({ category, navigation, horizontal }) => {
   const [products, setProducts] = React.useState([]);
 
   React.useEffect(() => {
@@ -87,29 +87,31 @@ const Products = ({ category, navigation, showLess }) => {
     );
 
   return (
-    <View
-      style={{
-        width: width,
-        alignItems: 'center',
-        width: width > 1280 ? 1280 : width,
-        margin: 'auto',
-      }}
-    >
-      {Boolean(products.length) && (
-        <>
+    <SafeAreaView style={{ margin: width > 768 ? 20 : 5 }}>
+      {Boolean(products.length) &&
+        (horizontal ? (
           <FlatList
-            showsVerticalScrollIndicator={false}
-            style={styles.productList}
-            numColumns={width > 1000 ? 4 : 1}
-            data={showLess ? products.slice(0, 4) : products}
-            keyExtractor={(item) => item.id}
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            data={products}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item: product }) => (
               <Card navigation={navigation} product={product} />
             )}
           />
-        </>
-      )}
-    </View>
+        ) : (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            style={styles.productList}
+            data={products}
+            numColumns={width > 768 ? 4 : 1}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item: product }) => (
+              <Card navigation={navigation} product={product} />
+            )}
+          />
+        ))}
+    </SafeAreaView>
   );
 };
 
@@ -119,6 +121,6 @@ const styles = StyleSheet.create({
   productList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    paddingHorizontal: 32,
+    marginHorizontal: 'auto',
   },
 });

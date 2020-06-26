@@ -21,7 +21,6 @@ const CategoryProductsPage = ({ navigation, route }) => {
           width: width,
           justifyContent: 'center',
           backgroundColor: '#fff',
-          marginBottom: 20,
         }}
       >
         <ScrollView
@@ -30,7 +29,7 @@ const CategoryProductsPage = ({ navigation, route }) => {
             flex: 1,
           }}
           contentContainerStyle={{
-            marginHorizontal: width > 768 ? 'auto' : 'none',
+            marginHorizontal: 10,
           }}
           showsHorizontalScrollIndicator={false}
         >
@@ -49,12 +48,12 @@ const CategoryProductsPage = ({ navigation, route }) => {
           ))}
         </ScrollView>
       </View>
-      <CategoryBanner category={category.title} />
+      <CategoryBanner title={category.title} showLink={false} />
       <ScrollView>
         <Products
           navigation={navigation}
           category={category}
-          showLess={false}
+          horizontal={false}
         />
         <Footer />
       </ScrollView>

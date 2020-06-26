@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, View, TouchableOpacity } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { height, width } from '../utils/Scalaing';
 import { ProgressBarAndroid } from 'react-native-web';
@@ -68,63 +68,54 @@ const assets = {
   },
 };
 
-export const CategoryBanner = ({ category }) => {
-  let categoryType = assets[category];
+export const CategoryBanner = ({
+  navigation,
+  title,
+  category,
+  data,
+  showLink,
+}) => {
+  let categoryType = assets[title];
 
-  const { brand } = useAppContext();
+  const { visual } = useAppContext();
 
   if (!categoryType) categoryType = assets['Not Exist'];
 
   return (
-    <View
-      style={[
-        styles.conatiner,
-        {
-          backgroundColor: categoryType?.backgroundColor,
-          margin: 'auto',
-        },
-      ]}
-    >
-      <View style={[styles.categoryTextContainer]}>
-        <Text style={[styles.categoryText, { color: categoryType?.color }]}>
-          {category}
-        </Text>
-      </View>
-      <View style={styles.imageContainer}>
-        <Image
-          style={[styles.image]}
-          source={categoryType?.uri || brand.logo}
-        />
-      </View>
+    <View style={styles.container}>
+      <Text style={styles.title}>{title}</Text>
+      {showLink && (
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate('CategoryProductsPage', {
+              data,
+              category,
+            })
+          }
+        >
+          <Text
+            style={{ color: visual.color, textDecorationLine: 'underline' }}
+          >
+            See {title}
+          </Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
 
 const styles = EStyleSheet.create({
-  conatiner: {
-    width,
-    height: 64,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  categoryTextContainer: {
-    flex: 6,
+  container: {
+    height: 60,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomColor: '#eaeded',
+    borderBottomWidth: 1,
+    marginHorizontal: width > 768 ? 20 : 5,
   },
-  categoryText: {
-    fontSize: '$xl',
+  title: {
+    fontSize: width > 768 ? '1.3rem' : '1.1rem',
     fontWeight: 'bold',
-    flex: 1,
-    textAlign: 'left',
-    paddingLeft: 48,
-  },
-  imageContainer: {
-    flex: 1,
-  },
-  image: {
-    height: 64,
-    resizeMode: 'cover',
   },
 });

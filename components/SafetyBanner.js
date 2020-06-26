@@ -62,10 +62,11 @@ export const SafetyBanner = ({ navigation }) => {
 const styles = EStyleSheet.create({
   desktopContainer: {
     backgroundColor: '#2e2d4d',
-    width: width > 1280 ? 1280 : width,
+    width: '100%',
     alignItems: 'center',
     flexDirection: 'row',
     height: 120,
+    marginHorizontal: width > 768 ? 20 : 0,
   },
   desktopTextContainer: {
     flexDirection: 'row',
