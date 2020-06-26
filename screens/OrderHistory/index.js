@@ -117,7 +117,14 @@ export default ({ navigation }) => {
                           order.orderInventoryProducts.length +
                           order.orderMealKitProducts.length +
                           order.orderReadyToEatProducts.length
-                        }  Item(s)`,
+                        }  Item${
+                          order.orderInventoryProducts.length +
+                            order.orderMealKitProducts.length +
+                            order.orderReadyToEatProducts.length >
+                          1
+                            ? 's'
+                            : ''
+                        }`,
                         content: (
                           <View style={{ width: '100%' }}>
                             {order.orderInventoryProducts.map((product) => (

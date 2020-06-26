@@ -11,33 +11,14 @@ export const styles = EStyleSheet.create({
     paddingBottom: 40,
     zIndex: 1,
   },
-  summary_title_conatiner: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 10,
-    paddingHorizontal: 8,
-  },
   picker_container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   summary_bottom_conatiner: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
-  },
-  summary_title_conatiner_left: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  summary_title_conatiner_right: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  summary_title_text: {
-    fontSize: '$l',
-    fontWeight: 'bold',
   },
   title_container: {
     height: height * 0.1,
@@ -45,27 +26,22 @@ export const styles = EStyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#fff',
     paddingVertical: 10,
+    marginBottom: 20,
   },
   title_container_left: {
     flex: 1,
     justifyContent: 'space-between',
-    padding: 5,
-    paddingLeft: 20,
   },
   title_container_middle: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'flex-end',
-    padding: 5,
-    paddingLeft: 20,
   },
   title_container_right: {
     flex: 1,
-    padding: 5,
     flexDirection: 'row',
     alignItems: 'flex-start',
-    paddingRight: 20,
     justifyContent: 'flex-end',
   },
   deliver_on_text: {
@@ -83,5 +59,25 @@ export const styles = EStyleSheet.create({
   },
   edit_text: {
     fontSize: '$s',
+  },
+  topBar: {
+    height: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 12,
+    paddingHorizontal: width > 768 ? '20%' : 12,
+  },
+  heading: {
+    fontSize: '$l',
+    fontWeight: 'bold',
+    color: '#666',
+  },
+  count: {
+    fontSize: '$m',
+    color: '#666',
+  },
+  scrollView: {
+    paddingHorizontal: width > 768 ? '20%' : 10,
   },
 });

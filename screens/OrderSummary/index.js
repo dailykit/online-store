@@ -34,20 +34,14 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       <Header title='Home' navigation={navigation} />
       {/* <HeaderBack title='Go Back' navigation={navigation} /> */}
       {cartItems?.length ? (
-        <ScrollView>
-          <View style={styles.wrapper}>
-            <View style={styles.summary_title_conatiner}>
-              <View style={styles.summary_title_conatiner_left}>
-                <Text style={styles.summary_title_text}>Order Summary</Text>
-              </View>
-              <View style={styles.summary_title_conatiner_right}>
-                <Text
-                  style={[styles.summary_title_text, { textAlign: 'right' }]}
-                >
-                  {cartItems?.length} products
-                </Text>
-              </View>
-            </View>
+        <>
+          <View style={styles.topBar}>
+            <Text style={styles.heading}>Cart</Text>
+            <Text style={styles.count}>{`${cartItems?.length} Item${
+              cartItems?.length > 1 ? 's' : ''
+            }`}</Text>
+          </View>
+          <ScrollView style={styles.scrollView}>
             <View style={styles.title_container}>
               {cart?.fulfillmentInfo ? (
                 <>
@@ -87,15 +81,17 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                 </TouchableOpacity>
               </View>
             </View>
-            {cartItems?.map((item, index) => {
-              return <Summary item={item} key={index} />;
-            })}
+            <View style={{ marginBottom: 20 }}>
+              {cartItems?.map((item, index) => {
+                return <Summary item={item} key={index} />;
+              })}
+            </View>
             <BillingDetails />
             <DefaultPaymentFloater navigation={navigation} />
             <DefaultAddressFloater navigation={navigation} />
-            <View style={{ height: height * 0.08 }} />
-          </View>
-        </ScrollView>
+            <View style={{ height: height * 0.1 }} />
+          </ScrollView>
+        </>
       ) : (
         <View
           style={{

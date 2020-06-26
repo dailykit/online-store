@@ -300,20 +300,12 @@ const Summary = ({ useQuantity, item }) => {
 const styles = StyleSheet.create({
   summary_container: {
     height: height * 0.22,
-    marginBottom: 20,
-    // shadowColor: "#000",
-    // shadowOffset: { width: 1, height: 1 },
-    // shadowOpacity: 0.8,
-    // shadowRadius: 2,
-    // // elevation: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
+    borderBottomColor: '#eaeded',
     borderBottomWidth: 1,
-    borderTopWidth: 0,
-    borderTopColor: '#fff',
     backgroundColor: '#fff',
     width: '100%',
-    paddingBottom: 20,
     flexDirection: 'row',
+    alignItems: 'center',
   },
   summary_title_conatiner: {
     flex: 1,
@@ -347,7 +339,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-end',
-    paddingHorizontal: 30,
   },
   summary_bottom_conatiner_right: {
     flex: 1,

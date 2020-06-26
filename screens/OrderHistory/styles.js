@@ -87,14 +87,14 @@ export const styles = EStyleSheet.create({
     width: '100%',
   },
   productInfo: {
-    fontSize: '$s',
+    fontSize: '$m',
     flex: 1,
   },
   productOption: {
-    fontSize: '$xs',
+    fontSize: '$s',
     color: '#666',
   },
   productPrice: {
-    fontSize: '$s',
+    fontSize: '$m',
   },
 });
