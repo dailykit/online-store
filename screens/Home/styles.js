@@ -88,4 +88,7 @@ export const styles = EStyleSheet.create({
     margin: 20,
     borderRadius: 2,
   },
+  sections: {
+    marginBottom: height * 0.3,
+  },
 });

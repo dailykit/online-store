@@ -442,7 +442,7 @@ const Home = (props) => {
                 <Products navigation={props.navigation} category={category} />
               )}
             /> */}
-            <View>
+            <View style={styles.sections}>
               {data.map((category) => (
                 <View style={styles.category}>
                   <CategoryBanner
