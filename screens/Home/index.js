@@ -16,6 +16,7 @@ import {
   View,
   ListView,
 } from 'react-native';
+// Change number to edit: 3 (shit package)
 import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
 import { Header, Icon } from '../../components';
 import Cart from '../../components/Cart';
@@ -424,9 +425,7 @@ const Home = (props) => {
                 ))}
               </ScrollView>
             </View>
-            <View style={styles.flexContainerMiddle}>
-              <View style={styles.cardContainer}>
-                {/* <SectionList
+            {/* <SectionList
               showsVerticalScrollIndicator={true}
               ref={sectionListRef}
               sections={data}
@@ -443,45 +442,49 @@ const Home = (props) => {
                 <Products navigation={props.navigation} category={category} />
               )}
             /> */}
-                <View>
-                  {data.map((category) => (
-                    <View style={{ marginBottom: 20 }}>
-                      <CategoryBanner category={category.title} />
-                      <Products
-                        navigation={props.navigation}
-                        category={category}
-                        showLess={true}
-                      />
-                      <TouchableOpacity
-                        style={{
-                          marginHorizontal: 'auto',
-                          padding: 10,
-                          marginVertical: 20,
-                          backgroundColor: visual.color,
-                          borderRadius: 4,
-                          minWidth: 150,
-                          textAlign: 'center',
-                        }}
-                        onPress={() =>
-                          props.navigation.navigate('CategoryProductsPage', {
-                            data,
-                            category,
-                          })
-                        }
-                      >
-                        <Text
-                          style={{
-                            color: '#fff',
-                            fontSize: '1.1rem',
-                          }}
-                        >
-                          View All
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  ))}
+            <View>
+              {data.map((category) => (
+                <View style={styles.category}>
+                  <CategoryBanner
+                    navigation={props.navigation}
+                    title={category.name}
+                    category={category}
+                    data={data}
+                    showLink={true}
+                  />
+                  <Products
+                    navigation={props.navigation}
+                    category={category}
+                    showLess={true}
+                  />
+                  {/* <TouchableOpacity
+                    style={{
+                      marginHorizontal: 'auto',
+                      padding: 10,
+                      marginVertical: 20,
+                      backgroundColor: visual.color,
+                      borderRadius: 4,
+                      minWidth: 150,
+                      textAlign: 'center',
+                    }}
+                    onPress={() =>
+                      props.navigation.navigate('CategoryProductsPage', {
+                        data,
+                        category,
+                      })
+                    }
+                  >
+                    <Text
+                      style={{
+                        color: '#fff',
+                        fontSize: '1.1rem',
+                      }}
+                    >
+                      View All
+                    </Text>
+                  </TouchableOpacity> */}
                 </View>
-              </View>
+              ))}
             </View>
           </>
         ) : (

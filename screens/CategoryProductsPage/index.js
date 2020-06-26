@@ -49,7 +49,7 @@ const CategoryProductsPage = ({ navigation, route }) => {
           ))}
         </ScrollView>
       </View>
-      <CategoryBanner category={category.title} />
+      <CategoryBanner title={category.title} showLink={false} />
       <ScrollView>
         <Products
           navigation={navigation}

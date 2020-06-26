@@ -44,7 +44,7 @@ import { ApolloProvider } from '@apollo/react-hooks';
 // linking
 import useLinking from './navigation/useLinking';
 
-// Majburi
+// Majburi 1
 
 const httpLink = new HttpLink({
   uri: HASURA_URL,

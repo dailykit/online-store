@@ -4,7 +4,7 @@ import { height, width } from '../../utils/Scalaing';
 export const styles = EStyleSheet.create({
   home: {
     flex: 1,
-    backgroundColor: '#fff',
+    // backgroundColor: '#efefef',
   },
   img_container: {
     height: width > 768 ? height * 0.6 : height * 0.25,
@@ -13,7 +13,7 @@ export const styles = EStyleSheet.create({
   reallyBigContainer: {
     width: width,
     marginHorizontal: 'auto',
-    backgroundColor: '#fff',
+    backgroundColor: '#eaeded',
   },
   cover_image: {
     flex: 1,
@@ -86,5 +86,10 @@ export const styles = EStyleSheet.create({
     borderWidth: 1,
     minHeight: 40,
     paddingVertical: 7,
+  },
+  category: {
+    backgroundColor: '#fff',
+    margin: 20,
+    borderRadius: 2,
   },
 });

@@ -1,6 +1,6 @@
 import { useSubscription } from '@apollo/react-hooks';
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, SafeAreaView } from 'react-native';
 import {
   COMBO_PRODUCTS,
   CUSTOMIZABLE_PRODUCTS,
@@ -99,6 +99,7 @@ const Products = ({ category, navigation, showLess }) => {
         <>
           <FlatList
             showsVerticalScrollIndicator={false}
+            // horizontal={true}
             style={styles.productList}
             numColumns={width > 1000 ? 4 : 1}
             data={showLess ? products.slice(0, 4) : products}
