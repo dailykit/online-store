@@ -405,7 +405,7 @@ const Home = (props) => {
                   flex: 1,
                 }}
                 contentContainerStyle={{
-                  marginHorizontal: width > 768 ? 'auto' : 'none',
+                  marginHorizontal: 10,
                 }}
                 showsHorizontalScrollIndicator={false}
               >
