@@ -339,7 +339,7 @@ const Home = (props) => {
       <ScrollView
         ref={scrollViewRef}
         stickyHeaderIndices={[1]}
-        style={[styles.home, styles.reallyBigContainer]}
+        style={[styles.reallyBigContainer]}
       >
         {/* <Tabs /> */}
         <View style={styles.img_container}>
@@ -455,7 +455,7 @@ const Home = (props) => {
                   <Products
                     navigation={props.navigation}
                     category={category}
-                    showLess={true}
+                    horizontal={true}
                   />
                   {/* <TouchableOpacity
                     style={{

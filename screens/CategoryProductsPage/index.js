@@ -54,7 +54,7 @@ const CategoryProductsPage = ({ navigation, route }) => {
         <Products
           navigation={navigation}
           category={category}
-          showLess={false}
+          horizontal={false}
         />
         <Footer />
       </ScrollView>

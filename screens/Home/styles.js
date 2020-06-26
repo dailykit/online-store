@@ -2,10 +2,6 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { height, width } from '../../utils/Scalaing';
 
 export const styles = EStyleSheet.create({
-  home: {
-    flex: 1,
-    // backgroundColor: '#efefef',
-  },
   img_container: {
     height: width > 768 ? height * 0.6 : height * 0.25,
     width,
