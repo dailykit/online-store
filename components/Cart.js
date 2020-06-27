@@ -58,7 +58,7 @@ const Cart = ({
     try {
       if (!isAuthenticated) {
         console.log('Not logged in!');
-        login();
+        open('Login');
       }
       if (
         customerDetails?.firstName &&

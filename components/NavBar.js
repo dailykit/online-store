@@ -120,6 +120,8 @@ export default function NavBar({
   }
 
   function renderRight(right) {
+    const { open } = useDrawerContext();
+
     const hasIcons = React.Children.count(right) > 1;
     const rightStyles = [styles.right, rightStyle];
     if (!hideRight) {
@@ -161,7 +163,7 @@ export default function NavBar({
                 color: isAuthenticated ? '#1f1f1f' : '#fff',
               },
             ]}
-            onPress={() => (isAuthenticated ? logout() : login())}
+            onPress={() => (isAuthenticated ? logout() : open('Login'))}
           >
             {isAuthenticated ? 'Logout' : 'Login'}
           </Text>

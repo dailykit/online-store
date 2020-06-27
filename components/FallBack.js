@@ -1,13 +1,13 @@
-import { Spinner } from '@ui-kitten/components';
-import { StyleSheet, View } from 'react-native';
+import { Spinner } from 'native-base'
+import { StyleSheet, View } from 'react-native'
 
 const fallBackComponent = () => {
    return (
       <View style={styles.containerFlex}>
          <Spinner size="large" />
       </View>
-   );
-};
+   )
+}
 
 const styles = StyleSheet.create({
    containerFlex: {
@@ -15,6 +15,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
    },
-});
+})
 
-export default fallBackComponent;
+export default fallBackComponent

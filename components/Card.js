@@ -10,6 +10,7 @@ import CustomizableProductItem from './CustomizableProductItem';
 import { Drawer } from './Drawer';
 import InventoryProductItem from './InventoryProductItem';
 import SimpleProductItem from './SimpleProductItem';
+import { useDrawerContext } from '../context/drawer';
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
   const [price, setPrice] = useState(0);
@@ -18,6 +19,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { visual } = useAppContext();
   const { isAuthenticated, login } = useAuth();
+  const { open } = useDrawerContext();
   const [isHovered, setIsHovered] = React.useState(false);
 
   return (
@@ -141,7 +143,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
           <View style={styles.add_to_cart_container}>
             <TouchableOpacity
               onPress={() => {
-                !isAuthenticated ? login() : setIsModalVisible(true);
+                !isAuthenticated ? open('Login') : setIsModalVisible(true);
                 // navigation.navigate('AddToCart', { data: cardData, type, id });
               }}
               style={[

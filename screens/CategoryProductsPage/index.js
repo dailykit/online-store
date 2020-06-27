@@ -41,6 +41,7 @@ const CategoryProductsPage = ({ navigation, route }) => {
               length={data?.length}
               onPress={() =>
                 navigation.navigate('CategoryProductsPage', {
+                  data,
                   category,
                 })
               }

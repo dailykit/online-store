@@ -223,3 +223,221 @@ export const SIMPLE_PRODUCT = gql`
     }
   }
 `;
+
+export const INVENTORY_PRODUCTS = gql`
+  query InventoryProducts($ids: [Int!]!) {
+    inventoryProducts(where: { id: { _in: $ids } }) {
+      id
+      assets
+      default
+      description
+      name
+      tags
+      sachetItem {
+        unitSize
+        unit
+      }
+      supplierItem {
+        unitSize
+        unit
+      }
+      inventoryProductOptions {
+        id
+        price
+        quantity
+        label
+        inventoryProductId
+      }
+    }
+  }
+`;
+
+export const SIMPLE_RECIPE_PRODUCTS = gql`
+  query SimpleRecipeProducts($ids: [Int!]!) {
+    simpleRecipeProducts(where: { id: { _in: $ids } }) {
+      name
+      default
+      id
+      assets
+      simpleRecipeProductOptions {
+        id
+        price
+        type
+        simpleRecipeYield {
+          yield
+        }
+        simpleRecipeYieldId
+      }
+      simpleRecipe {
+        author
+        cuisine
+        id
+        name
+        show
+        type
+      }
+    }
+  }
+`;
+
+export const CUSTOMIZABLE_PRODUCTS = gql`
+  query CustomizableProducts($ids: [Int!]!) {
+    customizableProducts(where: { id: { _in: $ids } }) {
+      name
+      id
+      customizableProductOptions {
+        id
+        inventoryProduct {
+          id
+          assets
+          default
+          description
+          name
+          tags
+          sachetItem {
+            unitSize
+            unit
+          }
+          supplierItem {
+            unitSize
+            unit
+          }
+          inventoryProductOptions {
+            id
+            price
+            quantity
+            label
+            inventoryProductId
+          }
+        }
+        simpleRecipeProduct {
+          name
+          default
+          id
+          simpleRecipeProductOptions {
+            id
+            price
+            type
+            simpleRecipeYield {
+              yield
+            }
+            simpleRecipeYieldId
+          }
+          simpleRecipe {
+            author
+            cuisine
+            id
+            name
+            show
+            type
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const COMBO_PRODUCTS = gql`
+  query ComboProducts($ids: [Int!]!) {
+    comboProducts(where: { id: { _in: $ids } }) {
+      name
+      id
+      comboProductComponents {
+        id
+        label
+        customizableProductId
+        inventoryProductId
+        simpleRecipeProductId
+        customizableProduct {
+          id
+          name
+          customizableProductOptions {
+            id
+            inventoryProduct {
+              id
+              assets
+              default
+              description
+              name
+              tags
+              sachetItem {
+                unitSize
+                unit
+              }
+              supplierItem {
+                unitSize
+                unit
+              }
+              inventoryProductOptions {
+                id
+                price
+                quantity
+                label
+                inventoryProductId
+              }
+            }
+            simpleRecipeProduct {
+              name
+              default
+              id
+              simpleRecipeProductOptions {
+                id
+                price
+                type
+                simpleRecipeYield {
+                  yield
+                }
+                simpleRecipeYieldId
+              }
+              simpleRecipe {
+                author
+                cuisine
+                id
+                name
+                show
+                type
+              }
+            }
+          }
+        }
+        inventoryProduct {
+          id
+          assets
+          default
+          description
+          name
+          tags
+          inventoryProductOptions {
+            id
+            price
+            quantity
+            label
+            inventoryProductId
+          }
+        }
+        simpleRecipeProduct {
+          name
+          default
+          id
+          simpleRecipeProductOptions {
+            id
+            price
+            type
+            simpleRecipeYield {
+              yield
+            }
+            simpleRecipeYieldId
+          }
+          simpleRecipe {
+            author
+            cuisine
+            id
+            name
+            show
+            type
+          }
+        }
+      }
+    }
+  }
+`;
