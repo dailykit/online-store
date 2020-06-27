@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [user, setUser] = React.useState({});
   const [isInitialized, setIsInitialized] = React.useState(false);
+  const [loginUrl, setLoginUrl] = React.useState('');
 
   const initialize = async () => {
     const authenticated = await keycloak.init({
@@ -38,6 +39,7 @@ export const AuthProvider = ({ children }) => {
 
   React.useEffect(() => {
     initialize();
+    setLoginUrl(keycloak.createLoginUrl());
   }, []);
 
   const login = () => keycloak.login();
@@ -53,6 +55,7 @@ export const AuthProvider = ({ children }) => {
         register,
         isInitialized,
         isAuthenticated,
+        loginUrl,
       }}
     >
       {children}

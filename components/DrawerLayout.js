@@ -16,6 +16,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { CUSTOMER_DETAILS } from '../graphql';
 import { useAuth } from '../context/auth';
 import Fulfillment from './Fulfillment';
+import Login from '../screens/Login';
 
 const DrawerLayout = () => {
   const {
@@ -66,6 +67,8 @@ const DrawerLayout = () => {
         return <SafetyScreen />;
       case 'Fulfillment':
         return <Fulfillment />;
+      case 'Login':
+        return <Login />;
       default:
         return <Text>Oops! No such component.</Text>;
     }

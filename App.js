@@ -161,7 +161,10 @@ const App = () => {
   const containerRef = useRef();
   const { getInitialState } = useLinking(containerRef);
   useEffect(() => {
-    (async () => setInitialNavigationState(await getInitialState()))();
+    (async () => {
+      console.log('App -> getInitialState', await getInitialState());
+      setInitialNavigationState(await getInitialState());
+    })();
   }, []);
 
   if (!isLoadingComplete) {

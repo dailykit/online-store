@@ -1,4 +1,4 @@
-import { useSubscription } from '@apollo/react-hooks';
+import { useSubscription, useLazyQuery } from '@apollo/react-hooks';
 import React from 'react';
 import { FlatList, StyleSheet, View, SafeAreaView } from 'react-native';
 import {
@@ -10,6 +10,7 @@ import {
 import { width } from '../utils/Scalaing';
 import Card from './Card';
 import { Spinner } from '@ui-kitten/components';
+import CardSkeleton from './skeletons/card';
 
 const Products = ({ category, navigation, horizontal }) => {
   const [products, setProducts] = React.useState([]);
@@ -17,73 +18,94 @@ const Products = ({ category, navigation, horizontal }) => {
   React.useEffect(() => {
     // empty products on route change
     setProducts([]);
+    fetchInventoryProduts();
+    fetchSimpleRecipeProducts();
+    fetchCustomizableProducts();
+    fetchComboProducts();
   }, [category]);
 
   // Subscriptions
-  const { loading: inventoryProductsLoading } = useSubscription(
-    INVENTORY_PRODUCTS,
-    {
-      variables: {
-        ids: category.inventoryProducts,
-      },
-      onSubscriptionData: (data) => {
-        setProducts([
-          ...products,
-          ...data.subscriptionData.data.inventoryProducts,
-        ]);
-      },
-    }
-  );
-
-  const { loading: simpleRecipeProductsLoading } = useSubscription(
-    SIMPLE_RECIPE_PRODUCTS,
-    {
-      variables: {
-        ids: category.simpleRecipeProducts,
-      },
-      onSubscriptionData: (data) => {
-        setProducts([
-          ...products,
-          ...data.subscriptionData.data.simpleRecipeProducts,
-        ]);
-      },
-    }
-  );
-
-  const { loading: customizableProductsLoading } = useSubscription(
-    CUSTOMIZABLE_PRODUCTS,
-    {
-      variables: {
-        ids: category.customizableProducts,
-      },
-      onSubscriptionData: (data) => {
-        setProducts([
-          ...products,
-          ...data.subscriptionData.data.customizableProducts,
-        ]);
-      },
-    }
-  );
-
-  const { loading: comboProductsLoading } = useSubscription(COMBO_PRODUCTS, {
+  const [
+    fetchInventoryProduts,
+    { loading: inventoryProductsLoading },
+  ] = useLazyQuery(INVENTORY_PRODUCTS, {
     variables: {
-      ids: category.comboProducts,
+      ids: category.inventoryProducts,
     },
-    onSubscriptionData: (data) => {
-      setProducts([...products, ...data.subscriptionData.data.comboProducts]);
+    onCompleted: (data) => {
+      setProducts([...products, ...data.inventoryProducts]);
     },
+    fetchPolicy: 'cache-and-network',
   });
 
+  const [
+    fetchSimpleRecipeProducts,
+    { loading: simpleRecipeProductsLoading },
+  ] = useLazyQuery(SIMPLE_RECIPE_PRODUCTS, {
+    variables: {
+      ids: category.simpleRecipeProducts,
+    },
+    onCompleted: (data) => {
+      setProducts([...products, ...data.simpleRecipeProducts]);
+    },
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const [
+    fetchCustomizableProducts,
+    { loading: customizableProductsLoading },
+  ] = useLazyQuery(CUSTOMIZABLE_PRODUCTS, {
+    variables: {
+      ids: category.customizableProducts,
+    },
+    onCompleted: (data) => {
+      setProducts([...products, ...data.customizableProducts]);
+    },
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const [fetchComboProducts, { loading: comboProductsLoading }] = useLazyQuery(
+    COMBO_PRODUCTS,
+    {
+      variables: {
+        ids: category.comboProducts,
+      },
+      onCompleted: (data) => {
+        setProducts([...products, ...data.comboProducts]);
+      },
+      fetchPolicy: 'cache-and-network',
+    }
+  );
+
   if (
-    inventoryProductsLoading ||
-    simpleRecipeProductsLoading ||
-    customizableProductsLoading ||
-    comboProductsLoading
+    [
+      inventoryProductsLoading,
+      simpleRecipeProductsLoading,
+      customizableProductsLoading,
+      comboProductsLoading,
+    ].some((item) => item)
   )
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Spinner />
-      </View>
+      <SafeAreaView style={{ margin: width > 768 ? 20 : 5 }}>
+        {horizontal ? (
+          <FlatList
+            showsHorizontalScrollIndicator={true}
+            horizontal={true}
+            data={[1, 2, 3]}
+            keyExtractor={(item) => item.toString()}
+            renderItem={() => <CardSkeleton />}
+          />
+        ) : (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            style={styles.productList}
+            numColumns={width > 768 ? 4 : 1}
+            data={[1, 2, 3]}
+            keyExtractor={(item) => item.toString()}
+            renderItem={() => <CardSkeleton />}
+          />
+        )}
+      </SafeAreaView>
     );
 
   return (
@@ -91,7 +113,7 @@ const Products = ({ category, navigation, horizontal }) => {
       {Boolean(products.length) &&
         (horizontal ? (
           <FlatList
-            showsHorizontalScrollIndicator={false}
+            showsHorizontalScrollIndicator={true}
             horizontal={true}
             data={products}
             keyExtractor={(item) => item.id.toString()}

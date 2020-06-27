@@ -24,6 +24,19 @@ export default function (containerRef) {
                   data: (data) => '',
                 },
               },
+              CategoryProductsPage: {
+                path: 'CategoryProductsPage',
+                parse: {
+                  data: (data) => JSON.parse(decodeURIComponent(data)),
+                  category: (category) =>
+                    JSON.parse(decodeURIComponent(category)),
+                },
+                stringify: {
+                  data: (data) => encodeURIComponent(JSON.stringify(data)),
+                  category: (category) =>
+                    encodeURIComponent(JSON.stringify(category)),
+                },
+              },
             },
           },
         },

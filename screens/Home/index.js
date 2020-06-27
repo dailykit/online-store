@@ -143,16 +143,14 @@ const Home = (props) => {
   const fetchData = async (date) => {
     try {
       setLoading(true);
-      console.log('-------- fetching menu start --------');
       const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
         date,
       });
-      console.log('-------- fetching menu finished --------');
       setData(response.data);
+      console.log(response.data);
       setLoading(false);
     } catch (err) {
       setLoading(false);
-      console.log('-------- fetching menu error --------');
       console.log(err);
     }
   };
@@ -247,7 +245,7 @@ const Home = (props) => {
 
   if (error) console.log('Subscription error: ', error);
 
-  if (settingsLoading || loading) {
+  if (settingsLoading) {
     return (
       <View
         style={{
@@ -392,6 +390,19 @@ const Home = (props) => {
             }}
           /> 
         </View>*/}
+        {loading && (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#fff',
+            }}
+          >
+            <Spinner size='large' />
+          </View>
+        )}
+
         {Boolean(data.length) && (
           <View style={[styles.picker_container, { marginBottom: 4 }]}>
             <ScrollView
@@ -421,71 +432,27 @@ const Home = (props) => {
             </ScrollView>
           </View>
         )}
-        {Boolean(data.length) ? (
-          <>
-            {/* <SectionList
-              showsVerticalScrollIndicator={true}
-              ref={sectionListRef}
-              sections={data}
-              style={{
-                height: height - 16 * 4.125 - 80 - 48,
-                width: width > 1280 ? width : width,
-                paddingBottom: height * 0.5,
-              }}
-              keyExtractor={(item, index) => item + index}
-              renderSectionHeader={({ section: { title } }) => (
-                <CategoryBanner category={title} />
-              )}
-              renderItem={({ item: category }) => (
-                <Products navigation={props.navigation} category={category} />
-              )}
-            /> */}
-            <View style={styles.sections}>
-              {data.map((category) => (
-                <View style={styles.category}>
-                  <CategoryBanner
-                    navigation={props.navigation}
-                    title={category.name}
-                    category={category}
-                    data={data}
-                    showLink={true}
-                  />
-                  <Products
-                    navigation={props.navigation}
-                    category={category}
-                    horizontal={true}
-                  />
-                  {/* <TouchableOpacity
-                    style={{
-                      marginHorizontal: 'auto',
-                      padding: 10,
-                      marginVertical: 20,
-                      backgroundColor: visual.color,
-                      borderRadius: 4,
-                      minWidth: 150,
-                      textAlign: 'center',
-                    }}
-                    onPress={() =>
-                      props.navigation.navigate('CategoryProductsPage', {
-                        data,
-                        category,
-                      })
-                    }
-                  >
-                    <Text
-                      style={{
-                        color: '#fff',
-                        fontSize: '1.1rem',
-                      }}
-                    >
-                      View All
-                    </Text>
-                  </TouchableOpacity> */}
-                </View>
-              ))}
-            </View>
-          </>
-        ) : (
+        {Boolean(data.length) && (
+          <View style={styles.sections}>
+            {data.map((category) => (
+              <View style={styles.category}>
+                <CategoryBanner
+                  navigation={props.navigation}
+                  title={category.name}
+                  category={category}
+                  data={data}
+                  showLink={true}
+                />
+                <Products
+                  navigation={props.navigation}
+                  category={category}
+                  horizontal={true}
+                />
+              </View>
+            ))}
+          </View>
+        )}
+        {!loading && Boolean(!data.length) && (
           <View
             style={{
               flex: 1,
