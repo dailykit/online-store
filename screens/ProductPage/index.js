@@ -65,7 +65,7 @@ const ProductPage = ({ navigation, route }) => {
             return console.log('Invalid type')
          }
       }
-   }, [])
+   }, [id, type])
 
    if (IPLoading || SRPLoading)
       return (
@@ -94,7 +94,13 @@ const ProductPage = ({ navigation, route }) => {
             )}
             <ScrollView>
                <View style={styles.container}>
-                  <View style={{ alignItems: 'center', flex: 1 }}>
+                  <View
+                     style={{
+                        alignItems: 'center',
+                        flex: 1,
+                        marginBottom: width > 768 ? 5 : 20,
+                     }}
+                  >
                      <Image
                         source={{
                            uri:
@@ -230,6 +236,7 @@ const styles = StyleSheet.create({
       paddingVertical: width > 768 ? 40 : 10,
       paddingHorizontal: 10,
       maxWidth: 1280,
+      width: '100%',
       marginHorizontal: 'auto',
       flexDirection: width > 768 ? 'row' : 'column',
    },
