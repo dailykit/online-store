@@ -69,9 +69,9 @@ export const styles = EStyleSheet.create({
       fontSize: '$s',
    },
    options_text: {
-      color: '#3fa4fd',
-      textAlign: 'right',
+      color: '#4f4e4e',
       fontSize: '$s',
+      marginBottom: 8,
    },
    item_details: {
       textAlign: 'left',
@@ -114,7 +114,6 @@ export const styles = EStyleSheet.create({
    type_container_right: {
       flex: 1,
       flexDirection: 'row',
-      justifyContent: 'center',
       paddingVertical: 15,
    },
    type_button: {

@@ -114,7 +114,6 @@ const SimpleProductItemCollapsed = ({
          {tunnelItem && isSelected && (
             <View style={{ paddingHorizontal: 20 }}>
                <View style={styles.type_container}>
-                  <View style={{ flex: 1 }}></View>
                   <View style={styles.type_container_right}>
                      <TouchableOpacity
                         style={[
@@ -168,7 +167,7 @@ const SimpleProductItemCollapsed = ({
                      </TouchableOpacity>
                   </View>
                </View>
-               <Text style={styles.item_chef}>Avaliable Servings:</Text>
+               <Text style={styles.options_text}>Avaliable Servings:</Text>
                {simpleRecipeProduct.simpleRecipeProductOptions
                   .filter(serving => serving.type === typeSelected)
                   .map((item_data, key) => {
