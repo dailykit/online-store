@@ -98,7 +98,7 @@ const Products = ({ category, navigation, horizontal }) => {
                <FlatList
                   showsVerticalScrollIndicator={false}
                   style={styles.productList}
-                  numColumns={width > 768 ? 4 : 1}
+                  numColumns={width > 768 ? 4 : 2}
                   data={[1, 2, 3]}
                   keyExtractor={item => item.toString()}
                   renderItem={() => <CardSkeleton />}
@@ -125,7 +125,7 @@ const Products = ({ category, navigation, horizontal }) => {
                   showsVerticalScrollIndicator={false}
                   style={styles.productList}
                   data={products}
-                  numColumns={width > 768 ? 4 : 1}
+                  numColumns={width > 768 ? 4 : 2}
                   keyExtractor={item => item.id.toString()}
                   renderItem={({ item: product }) => (
                      <Card navigation={navigation} product={product} />
