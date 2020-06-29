@@ -1,9 +1,11 @@
 import { useLazyQuery, useMutation, useSubscription } from '@apollo/react-hooks'
 import { Spinner } from 'native-base'
+import { Dimensions } from 'react-native'
 import { Datepicker } from '@ui-kitten/components'
 import * as axios from 'axios'
 import moment from 'moment'
 import React, { useRef, useState } from 'react'
+import Carousel from 'react-native-banner-carousel'
 import {
    Image,
    ScrollView,
@@ -35,6 +37,15 @@ import { styles } from './styles'
 import CategoriesButton from '../../components/CategoriesButton'
 import Footer from '../../components/Footer'
 import { Feather } from '@expo/vector-icons'
+
+const BannerWidth = Dimensions.get('window').width
+const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
+
+const images = [
+   'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+   'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+   'https://images.pexels.com/photos/1640775/pexels-photo-1640775.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+]
 
 const CalendarIcon = props => <Icon size={24} {...props} name="calendar" />
 
@@ -337,17 +348,37 @@ const Home = props => {
             navigation={props.navigation}
          />
          <ScrollView
-            stickyHeaderIndices={[1]}
+            stickyHeaderIndices={[2]}
             style={[styles.reallyBigContainer]}
          >
             {/* <Tabs /> */}
             <View style={styles.img_container}>
-               <Image
+               {/* <Image
                   source={{
                      uri: visual.cover,
                   }}
                   style={styles.cover_image}
-               />
+               /> */}
+               <Carousel
+                  autoplay
+                  autoplayTimeout={5000}
+                  loop
+                  index={0}
+                  pageSize={BannerWidth}
+               >
+                  {images.map((image, index) => (
+                     <View key={index}>
+                        <Image
+                           style={{
+                              width: BannerWidth,
+                              height: BannerHeight,
+                              size: 'cover',
+                           }}
+                           source={{ uri: image }}
+                        />
+                     </View>
+                  ))}
+               </Carousel>
             </View>
 
             {/* <View
