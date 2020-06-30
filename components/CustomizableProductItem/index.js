@@ -22,12 +22,14 @@ const CustomizableProductItem = ({
    const [numberOfOptions, setnumberOfOptions] = useState(0)
    const [objToAdd, setobjToAdd] = useState({})
 
-   const setproductOptionId = (id, price, simpleRecipeProductId, name) => {
+   const setproductOptionId = (id, price, componentProductId, name) => {
+      console.log('Adding: ', componentProductId, name)
       let newItem = objToAdd
       newItem.product.option.id = id
       newItem.product.price = price
-      newItem.product.id = simpleRecipeProductId
-      newItem.product.name = name
+      newItem.product.id = componentProductId
+      newItem.product.customizableProductId = product.id
+      newItem.product.name = `[${product.name}] ${name}`
       setobjToAdd(newItem)
       setcartItem(newItem)
    }

@@ -12,6 +12,7 @@ const InventoryProductCollapsed = ({
    setProductOptionId,
    navigation,
    showInfo,
+   isSelected,
 }) => {
    const { visual } = useAppContext()
 
@@ -24,12 +25,12 @@ const InventoryProductCollapsed = ({
       <>
          {showInfo && (
             <TouchableOpacity
-               onPress={() => {
+               onPress={() =>
                   navigation.navigate('ProductPage', {
                      id: inventoryProduct.id,
                      type: 'inventoryProduct',
                   })
-               }}
+               }
                style={[
                   styles.item_container,
                   {
@@ -125,7 +126,7 @@ const InventoryProductCollapsed = ({
                </View>
             </TouchableOpacity>
          )}
-         {tunnelItem && (
+         {tunnelItem && isSelected && (
             <View style={{ paddingHorizontal: 20 }}>
                <Text style={styles.something}>Avaliable Options:</Text>
                {inventoryProduct.inventoryProductOptions.map(
