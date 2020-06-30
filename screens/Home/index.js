@@ -111,8 +111,8 @@ const Home = props => {
                      visualState.color = value.color
                      return
                   }
-                  case 'Cover': {
-                     visualState.cover = value.url
+                  case 'Slides': {
+                     visualState.slides = value
                      return
                   }
                   default: {
@@ -352,34 +352,30 @@ const Home = props => {
             style={[styles.reallyBigContainer]}
          >
             {/* <Tabs /> */}
-            <View style={styles.img_container}>
-               {/* <Image
-                  source={{
-                     uri: visual.cover,
-                  }}
-                  style={styles.cover_image}
-               /> */}
-               <Carousel
-                  autoplay
-                  autoplayTimeout={5000}
-                  loop
-                  index={0}
-                  pageSize={BannerWidth}
-               >
-                  {images.map((image, index) => (
-                     <View key={index}>
-                        <Image
-                           style={{
-                              width: BannerWidth,
-                              height: BannerHeight,
-                              size: 'cover',
-                           }}
-                           source={{ uri: image }}
-                        />
-                     </View>
-                  ))}
-               </Carousel>
-            </View>
+            {Boolean(visual.slides.length) && (
+               <View style={styles.img_container}>
+                  <Carousel
+                     autoplay
+                     autoplayTimeout={3000}
+                     loop
+                     index={0}
+                     pageSize={BannerWidth}
+                  >
+                     {visual.slides.map((slide, index) => (
+                        <View key={index}>
+                           <Image
+                              style={{
+                                 width: BannerWidth,
+                                 height: BannerHeight,
+                                 size: 'cover',
+                              }}
+                              source={{ uri: slide.url }}
+                           />
+                        </View>
+                     ))}
+                  </Carousel>
+               </View>
+            )}
 
             {/* <View
           style={{
