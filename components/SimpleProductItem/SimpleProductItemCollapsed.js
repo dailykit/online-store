@@ -25,12 +25,12 @@ const SimpleProductItemCollapsed = ({
       <>
          {showInfo && (
             <TouchableOpacity
-               onPress={() => {
+               onPress={() =>
                   navigation.navigate('ProductPage', {
                      id: simpleRecipeProduct.id,
                      type: 'simpleRecipeProduct',
                   })
-               }}
+               }
                style={[
                   styles.item_container,
                   {
