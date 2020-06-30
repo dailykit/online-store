@@ -75,10 +75,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                {product?.__typename.includes('customizableProduct') && (
                   <>
                      {cardData && (
-                        <View style={styles.card_title}>
-                           <Text style={styles.card_title_text}>
-                              {product.name}
-                           </Text>
+                        <View>
                            <Text style={styles.is_customizable}>
                               Customizable
                            </Text>
@@ -143,9 +140,11 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
             </View>
 
             <View style={styles.bottom_container}>
-               <View style={styles.price}>
-                  <Text style={styles.price_text}>$ {price}</Text>
-               </View>
+               {!product?.__typename.includes('customizableProduct') && (
+                  <View style={styles.price}>
+                     <Text style={styles.price_text}>$ {price}</Text>
+                  </View>
+               )}
                <View style={styles.add_to_cart_container}>
                   <TouchableOpacity
                      onPress={() => {
@@ -196,6 +195,7 @@ const styles = EStyleSheet.create({
    is_customizable: {
       fontSize: '$s',
       color: 'gray',
+      textAlign: 'right',
    },
    item_parent_container: {
       flex: 5,
