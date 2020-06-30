@@ -22,10 +22,13 @@ const CustomizableProductItem = ({
    const [numberOfOptions, setnumberOfOptions] = useState(0)
    const [objToAdd, setobjToAdd] = useState({})
 
-   const setproductOptionId = (id, price, componentProductId, name) => {
-      console.log('Adding: ', componentProductId, name)
+   const setproductOptionId = (id, price, componentProductId, name, type) => {
+      console.log('Adding Customizable: ', componentProductId, name, type)
       let newItem = objToAdd
       newItem.product.option.id = id
+      if (type) {
+         newItem.product.option.type = type
+      }
       newItem.product.price = price
       newItem.product.id = componentProductId
       newItem.product.customizableProductId = product.id

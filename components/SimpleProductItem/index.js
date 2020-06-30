@@ -18,11 +18,11 @@ const SimpleProductItem = ({
    showInfo,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
-   console.log('isSelected', isSelected)
 
-   const setProductOptionId = (id, price) => {
+   const setProductOptionId = (id, price, type) => {
       let newItem = objToAdd
       newItem.product.option.id = id
+      newItem.product.option.type = type
       newItem.product.price = price
       setobjToAdd(newItem)
       setcartItem(newItem)

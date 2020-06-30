@@ -24,8 +24,25 @@ const Item = ({
    const [isSelected, setisSelected] = useState(0)
 
    React.useEffect(() => {
-      console.log(isSelected)
-   }, [isSelected])
+      const component = data[isSelected]
+      const option = component.simpleRecipeProduct.simpleRecipeProductOptions.filter(
+         serving => serving.type === typeSelected
+      )[servingIndex]
+      console.log(
+         option.id,
+         parseFloat(option.price[0].value).toFixed(2),
+         component.id,
+         component.simpleRecipeProduct.name,
+         option.type
+      )
+      // setproductOptionId(
+      //    option.id,
+      //    parseFloat(option.price[0].value).toFixed(2),
+      //    component.id,
+      //    component.simpleRecipeProduct.name,
+      //    option.type
+      // )
+   }, [typeSelected])
 
    return (
       <View key={_id} style={styles.container}>
@@ -63,7 +80,9 @@ const Item = ({
                               simpleRecipeProduct?.simpleRecipeProductOptions[0]
                                  ?.price[0]?.value,
                               simpleRecipeProduct?.id,
-                              simpleRecipeProduct?.name
+                              simpleRecipeProduct?.name,
+                              simpleRecipeProduct?.simpleRecipeProductOptions[0]
+                                 ?.type
                            )
                         }}
                         style={[
@@ -250,13 +269,15 @@ const Item = ({
                                           id,
                                           price,
                                           simpleRecipeProductId,
-                                          name
+                                          name,
+                                          type
                                        ) =>
                                           setproductOptionId(
                                              id,
                                              price,
                                              simpleRecipeProductId,
-                                             name
+                                             name,
+                                             type
                                           )
                                        }
                                        id={simpleRecipeProduct?.id}
