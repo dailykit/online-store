@@ -24,9 +24,9 @@ const ServingSelect = ({
          onPress={() => {
             setServingIndex(index - 1)
             if (customizableProduct) {
-               setproductOptionId(id, price, simpleRecipeProductId, name, type)
+               setproductOptionId(id, price, simpleRecipeProductId, name)
             } else {
-               setproductOptionId(id, price, type)
+               setproductOptionId(id, price)
             }
          }}
          style={[

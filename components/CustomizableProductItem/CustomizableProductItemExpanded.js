@@ -23,27 +23,6 @@ const Item = ({
    const [servingIndex, setServingIndex] = useState(0)
    const [isSelected, setisSelected] = useState(0)
 
-   React.useEffect(() => {
-      const component = data[isSelected]
-      const option = component.simpleRecipeProduct.simpleRecipeProductOptions.filter(
-         serving => serving.type === typeSelected
-      )[servingIndex]
-      console.log(
-         option.id,
-         parseFloat(option.price[0].value).toFixed(2),
-         component.id,
-         component.simpleRecipeProduct.name,
-         option.type
-      )
-      // setproductOptionId(
-      //    option.id,
-      //    parseFloat(option.price[0].value).toFixed(2),
-      //    component.id,
-      //    component.simpleRecipeProduct.name,
-      //    option.type
-      // )
-   }, [typeSelected])
-
    return (
       <View key={_id} style={styles.container}>
          {/* <View style={styles.item_three_upper}>
@@ -81,8 +60,7 @@ const Item = ({
                                  ?.price[0]?.value,
                               simpleRecipeProduct?.id,
                               simpleRecipeProduct?.name,
-                              simpleRecipeProduct?.simpleRecipeProductOptions[0]
-                                 ?.type
+                              'simpleRecipeProduct'
                            )
                         }}
                         style={[
@@ -269,18 +247,16 @@ const Item = ({
                                           id,
                                           price,
                                           simpleRecipeProductId,
-                                          name,
-                                          type
+                                          name
                                        ) =>
                                           setproductOptionId(
                                              id,
                                              price,
                                              simpleRecipeProductId,
-                                             name,
-                                             type
+                                             name
                                           )
                                        }
-                                       id={simpleRecipeProduct?.id}
+                                       id={item_data?.id}
                                     />
                                  )
                               })}
@@ -303,7 +279,8 @@ const Item = ({
                               inventoryProduct?.inventoryProductOptions[0]
                                  ?.price[0]?.value,
                               inventoryProduct?.id,
-                              inventoryProduct?.name
+                              inventoryProduct?.name,
+                              'inventoryProduct'
                            )
                         }}
                         style={[

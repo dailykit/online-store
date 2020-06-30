@@ -26,13 +26,13 @@ const CustomizableProductItem = ({
       console.log('Adding Customizable: ', componentProductId, name, type)
       let newItem = objToAdd
       newItem.product.option.id = id
-      if (type) {
-         newItem.product.option.type = type
-      }
       newItem.product.price = price
       newItem.product.id = componentProductId
       newItem.product.customizableProductId = product.id
       newItem.product.name = `[${product.name}] ${name}`
+      if (type) {
+         newItem.product.type = type
+      }
       setobjToAdd(newItem)
       setcartItem(newItem)
    }
@@ -48,6 +48,7 @@ const CustomizableProductItem = ({
          let default_product
          let _default_option
          let _type
+         console.log('PRODUCT:', product)
          if (product.customizableProductOptions[0]?.inventoryProduct !== null) {
             default_product =
                product?.customizableProductOptions[0]?.inventoryProduct
@@ -71,7 +72,6 @@ const CustomizableProductItem = ({
                price: _default_option?.price[0]?.value,
                option: {
                   id: _default_option?.id, // product option id
-                  type: _default_option?.type,
                },
                type: _type,
             },
@@ -79,6 +79,7 @@ const CustomizableProductItem = ({
          if (!independantItem) {
             objToAddToCart['name'] = name
          }
+         console.log('objToAddToCart', objToAddToCart)
          setobjToAdd(objToAddToCart)
          if (!tunnelItem && independantItem) {
             setPrice(_default_option?.price[0]?.value)

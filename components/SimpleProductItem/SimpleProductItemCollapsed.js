@@ -21,14 +21,6 @@ const SimpleProductItemCollapsed = ({
 
    const { visual } = useAppContext()
 
-   React.useEffect(() => {
-      const option = simpleRecipeProduct.simpleRecipeProductOptions.filter(
-         serving => serving.type === typeSelected
-      )[servingIndex]
-      console.log(option.id, option.price[0].value, option.type)
-      // setProductOptionId(option.id, option.price[0].value, option.type)
-   }, [typeSelected])
-
    return (
       <>
          {showInfo && (
