@@ -352,7 +352,7 @@ const Home = props => {
             style={[styles.reallyBigContainer]}
          >
             {/* <Tabs /> */}
-            {Boolean(visual.slides.length) && (
+            {Boolean(visual?.slides?.length) && (
                <View style={styles.img_container}>
                   <Carousel
                      autoplay
