@@ -62,21 +62,13 @@ const ModalContent = ({ route, navigation }) => {
                {/* Name */}
                <Text
                   style={{
-                     fontSize: width > 768 ? 32 : 24,
+                     fontSize: width > 768 ? 48 : 24,
                      fontWeight: 'bold',
                      marginBottom: 16,
                   }}
                >
                   {simpleRecipe.name}
                </Text>
-               {/* Tags */}
-               {Boolean(simpleRecipe?.tags?.length) && (
-                  <View style={styles.section}>
-                     {simpleRecipe.tags.map(tag => (
-                        <View style={styles.tag}>{tag}</View>
-                     ))}
-                  </View>
-               )}
                {/* Description */}
                {Boolean(simpleRecipe?.description) && (
                   <View style={styles.section}>
@@ -85,7 +77,16 @@ const ModalContent = ({ route, navigation }) => {
                   </View>
                )}
                {/* Basic Info */}
-               <View style={[styles.section, { flexDirection: 'row' }]}>
+               <View
+                  style={[
+                     styles.section,
+                     {
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        marginBottom: 0,
+                     },
+                  ]}
+               >
                   <View style={styles.tile}>
                      <Text style={styles.sectionTitle}>Type</Text>
                      <Text
@@ -222,6 +223,50 @@ const ModalContent = ({ route, navigation }) => {
                      </View>
                   </>
                )}
+               {/* Procedure */}
+               {Boolean(simpleRecipe?.procedures?.length) && (
+                  <View style={styles.section}>
+                     <Text style={styles.sectionTitle}>Cooking Steps</Text>
+                     {simpleRecipe.procedures.map(procedure => (
+                        <View style={styles.procedure}>
+                           <Text style={styles.procedureTitle}>
+                              {procedure.title}
+                           </Text>
+                           {procedure.steps
+                              .filter(step => step.isVisible)
+                              .map(step => (
+                                 <View style={styles.step}>
+                                    {step.assets?.images[0] && (
+                                       <Image
+                                          style={{
+                                             height: 100,
+                                             width: 100,
+                                             margin: 8,
+                                          }}
+                                          source={{
+                                             uri: step.assets?.images[0].url,
+                                          }}
+                                       />
+                                    )}
+                                    <View style={styles.stepInfo}>
+                                       <Text
+                                          style={[
+                                             styles.text,
+                                             { fontWeight: 'bold' },
+                                          ]}
+                                       >
+                                          {step.title}
+                                       </Text>
+                                       <Text style={styles.text}>
+                                          {step.description}
+                                       </Text>
+                                    </View>
+                                 </View>
+                              ))}
+                        </View>
+                     ))}
+                  </View>
+               )}
             </View>
          </ScrollView>
       </>
@@ -231,14 +276,16 @@ const ModalContent = ({ route, navigation }) => {
 export default ModalContent
 
 const styles = EStyleSheet.create({
-   container: {},
+   container: {
+      backgroundColor: '#fff',
+   },
    image: {
       width: width,
       height: height * 0.5,
       resizeMode: 'cover',
    },
    info: {
-      margin: width > 768 ? 20 : 8,
+      margin: width > 768 ? 40 : 8,
    },
    section: {
       marginBottom: width > 768 ? 32 : 16,
@@ -259,5 +306,33 @@ const styles = EStyleSheet.create({
    },
    tile: {
       marginRight: 32,
+      marginBottom: width > 768 ? 32 : 16,
+   },
+   procedure: {
+      padding: width > 768 ? 16 : 8,
+   },
+   procedureTitle: {
+      fontWeight: 'bold',
+      color: '#666',
+      marginBottom: 8,
+      fontSize: 16,
+   },
+   step: {
+      backgroundColor: '#fff',
+      borderRadius: 4,
+      marginBottom: 8,
+      padding: width > 768 ? 16 : 8,
+      flexDirection: width > 768 ? 'row' : 'column',
+      shadowColor: '#000',
+      shadowOffset: {
+         width: 0,
+         height: 1,
+      },
+      shadowOpacity: 0.2,
+      shadowRadius: 1.41,
+      elevation: 2,
+   },
+   stepInfo: {
+      margin: 8,
    },
 })
