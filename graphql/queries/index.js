@@ -162,7 +162,9 @@ export const COMBO_PRODUCT = gql`
                      name
                      default
                      id
-                     simpleRecipeProductOptions {
+                     simpleRecipeProductOptions(
+                        where: { isActive: { _eq: true } }
+                     ) {
                         id
                         price
                         type
@@ -201,7 +203,7 @@ export const COMBO_PRODUCT = gql`
                name
                default
                id
-               simpleRecipeProductOptions {
+               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
                   id
                   price
                   type
@@ -259,7 +261,7 @@ export const CUSTOMIZABLE_PRODUCT = gql`
                default
                assets
                id
-               simpleRecipeProductOptions {
+               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
                   id
                   price
                   type
@@ -311,7 +313,7 @@ export const SIMPLE_PRODUCT = gql`
          tags
          description
          assets
-         simpleRecipeProductOptions {
+         simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
             id
             price
             type
@@ -367,7 +369,7 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
          default
          id
          assets
-         simpleRecipeProductOptions {
+         simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
             id
             price
             type
