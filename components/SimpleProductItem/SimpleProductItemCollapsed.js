@@ -19,6 +19,23 @@ const SimpleProductItemCollapsed = ({
    const [typeSelected, setTypeSelected] = useState('mealKit')
    const [servingIndex, setServingIndex] = useState(0)
 
+   React.useEffect(() => {
+      setTypeSelected(simpleRecipeProduct.defaultSimpleRecipeProductOption.type)
+      const index = simpleRecipeProduct.simpleRecipeProductOptions
+         .filter(
+            option =>
+               option.type ===
+               simpleRecipeProduct.defaultSimpleRecipeProductOption.type
+         )
+         .findIndex(
+            option =>
+               option.id ===
+               simpleRecipeProduct.defaultSimpleRecipeProductOption.id
+         )
+      console.log('Found index: ', index)
+      setServingIndex(index)
+   }, [])
+
    const { visual } = useAppContext()
 
    return (
