@@ -350,6 +350,7 @@ const Home = props => {
          <ScrollView
             stickyHeaderIndices={[2]}
             style={[styles.reallyBigContainer]}
+            showsVerticalScrollIndicator={false}
          >
             {/* <Tabs /> */}
             {Boolean(visual?.slides?.length) && (

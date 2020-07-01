@@ -43,7 +43,7 @@ export const styles = EStyleSheet.create({
       flex: 1,
       height: null,
       width: null,
-      resizeMode: 'contain',
+      resizeMode: 'cover',
    },
    item_title: {
       fontSize: '$m',

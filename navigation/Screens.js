@@ -20,7 +20,6 @@ import { useAuth } from '../context/auth'
 
 // header for screens
 import { Header } from '../components'
-import ModalContent from '../components/ModalContent'
 import Delivery from '../screens/Delivery'
 import { EditAddress } from '../screens/EditAddress'
 import { SelectPaymentMethod } from '../screens/SelectPaymentMethod'
@@ -35,6 +34,7 @@ import { STORE_SETTINGS } from '../graphql'
 import { useAppContext } from '../context/app'
 import ProductPage from '../screens/ProductPage'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
+import Recipe from '../screens/Recipe'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -111,7 +111,7 @@ function AppStack(props) {
          />
          <Stack.Screen
             name="Recipe"
-            component={ModalContent}
+            component={Recipe}
             options={{
                headerShown: true,
             }}

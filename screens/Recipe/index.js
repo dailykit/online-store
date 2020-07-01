@@ -3,33 +3,25 @@ import { Spinner, Tab, Tabs } from 'native-base'
 import React from 'react'
 import { Image, ScrollView, Text, View, TouchableOpacity } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
-import { SIMPLE_RECIPE } from '../graphql'
-import { height, width } from '../utils/Scalaing'
+import { SIMPLE_RECIPE } from '../../graphql'
+import { height, width } from '../../utils/Scalaing'
 import { FlatList } from 'react-native'
-import { useAppContext } from '../context/app'
-import Header from './Header'
+import { useAppContext } from '../../context/app'
+import Header from '../../components/Header'
+import { Drawer } from '../../components/Drawer'
 
-const ModalContent = ({ route, navigation }) => {
-   let { recipeId } = route.params
+const Recipe = ({ route, navigation }) => {
+   let { recipeId, refId, refType } = route.params
 
    const { visual } = useAppContext()
 
    const [option, setOption] = React.useState(undefined)
+   const [fetching, setFetching] = React.useState(false)
    const [selected, setSelected] = React.useState(new Map())
 
    React.useEffect(() => {
       console.log(option)
    }, [option])
-
-   const onSelect = React.useCallback(
-      id => {
-         const newSelected = new Map(selected)
-         newSelected.set(id, !selected.get(id))
-
-         setSelected(newSelected)
-      },
-      [selected]
-   )
 
    const { data: { simpleRecipe = {} } = {}, loading, error } = useQuery(
       SIMPLE_RECIPE,
@@ -293,7 +285,7 @@ const ModalContent = ({ route, navigation }) => {
    )
 }
 
-export default ModalContent
+export default Recipe
 
 const styles = EStyleSheet.create({
    container: {
