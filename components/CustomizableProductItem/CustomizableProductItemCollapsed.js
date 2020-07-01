@@ -60,13 +60,14 @@ const CustomizableProductItemCollapsed = ({
                         flex: 1,
                         position: 'relative',
                         paddingTop: 20,
+                        width: width > 768 ? 150 : 120,
                      }}
                   >
                      <Image
                         style={{
                            flex: 1,
                            height: width > 768 ? 150 : 120,
-                           width: width > 768 ? 150 : 120,
+                           width: '100%',
                            resizeMode: 'contain',
                            marginHorizontal: 'auto',
                         }}

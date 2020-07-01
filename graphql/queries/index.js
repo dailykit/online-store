@@ -131,22 +131,112 @@ export const COMBO_PRODUCT = gql`
             inventoryProductId
             simpleRecipeProductId
             customizableProduct {
+               id
+               name
                customizableProductOptions {
-                  simpleRecipeProduct {
-                     simpleRecipeProductOptions {
+                  id
+                  inventoryProduct {
+                     id
+                     assets
+                     default
+                     description
+                     name
+                     tags
+                     sachetItem {
+                        unitSize
+                        unit
+                     }
+                     supplierItem {
+                        unitSize
+                        unit
+                     }
+                     inventoryProductOptions {
+                        id
                         price
+                        quantity
+                        label
+                        inventoryProductId
+                     }
+                  }
+                  simpleRecipeProduct {
+                     name
+                     default
+                     id
+                     defaultSimpleRecipeProductOption {
+                        id
+                        price
+                        type
+                        simpleRecipeYield {
+                           yield
+                        }
+                        simpleRecipeYieldId
+                     }
+                     simpleRecipeProductOptions(
+                        where: { isActive: { _eq: true } }
+                     ) {
+                        id
+                        price
+                        type
+                        simpleRecipeYield {
+                           yield
+                        }
+                        simpleRecipeYieldId
+                     }
+                     simpleRecipe {
+                        author
+                        cuisine
+                        id
+                        name
+                        show
+                        type
                      }
                   }
                }
             }
             inventoryProduct {
+               id
+               assets
+               default
+               description
+               name
+               tags
                inventoryProductOptions {
+                  id
                   price
+                  quantity
+                  label
+                  inventoryProductId
                }
             }
             simpleRecipeProduct {
-               simpleRecipeProductOptions {
+               name
+               default
+               id
+               defaultSimpleRecipeProductOption {
+                  id
                   price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+               }
+               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+               }
+               simpleRecipe {
+                  author
+                  cuisine
+                  id
+                  name
+                  show
+                  type
                }
             }
          }
@@ -161,11 +251,45 @@ export const CUSTOMIZABLE_PRODUCT = gql`
          id
          customizableProductOptions {
             id
+            inventoryProduct {
+               id
+               assets
+               default
+               description
+               name
+               tags
+               sachetItem {
+                  unitSize
+                  unit
+               }
+               supplierItem {
+                  unitSize
+                  unit
+               }
+               inventoryProductOptions {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+               }
+            }
             simpleRecipeProduct {
                name
                default
+               assets
                id
-               simpleRecipeProductOptions {
+               defaultSimpleRecipeProductOption {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+               }
+               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+                  id
                   price
                   type
                   simpleRecipeYield {
@@ -175,16 +299,11 @@ export const CUSTOMIZABLE_PRODUCT = gql`
                }
                simpleRecipe {
                   author
-                  cookingTime
-                  assets
                   cuisine
-                  description
                   id
-                  image
                   name
-                  procedures
                   show
-                  utensils
+                  type
                }
             }
          }
@@ -221,7 +340,16 @@ export const SIMPLE_PRODUCT = gql`
          tags
          description
          assets
-         simpleRecipeProductOptions {
+         defaultSimpleRecipeProductOption {
+            id
+            price
+            type
+            simpleRecipeYield {
+               yield
+            }
+            simpleRecipeYieldId
+         }
+         simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
             id
             price
             type
@@ -277,7 +405,16 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
          default
          id
          assets
-         simpleRecipeProductOptions {
+         defaultSimpleRecipeProductOption {
+            id
+            price
+            type
+            simpleRecipeYield {
+               yield
+            }
+            simpleRecipeYieldId
+         }
+         simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
             id
             price
             type
@@ -333,6 +470,15 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
                default
                assets
                id
+               defaultSimpleRecipeProductOption {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+               }
                simpleRecipeProductOptions {
                   id
                   price
@@ -399,6 +545,15 @@ export const COMBO_PRODUCTS = gql`
                      name
                      default
                      id
+                     defaultSimpleRecipeProductOption {
+                        id
+                        price
+                        type
+                        simpleRecipeYield {
+                           yield
+                        }
+                        simpleRecipeYieldId
+                     }
                      simpleRecipeProductOptions {
                         id
                         price
@@ -438,6 +593,15 @@ export const COMBO_PRODUCTS = gql`
                name
                default
                id
+               defaultSimpleRecipeProductOption {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+               }
                simpleRecipeProductOptions {
                   id
                   price

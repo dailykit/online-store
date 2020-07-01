@@ -20,7 +20,6 @@ export const styles = EStyleSheet.create({
    item_container_two: {
       flex: 1.3,
       paddingTop: width > 768 ? 16 : 8,
-      paddingHorizontal: width > 768 ? 10 : 5,
       justifyContent: 'center',
    },
    item_container_three: {
@@ -43,7 +42,7 @@ export const styles = EStyleSheet.create({
       flex: 1,
       height: null,
       width: null,
-      resizeMode: 'contain',
+      resizeMode: 'cover',
    },
    item_title: {
       fontSize: '$m',
@@ -51,8 +50,6 @@ export const styles = EStyleSheet.create({
    item_chef: {
       fontSize: 18,
       color: '#4f4e4e',
-      flex: 1,
-      textAlign: 'right',
    },
    something: {
       fontSize: '$s',
@@ -139,7 +136,7 @@ export const styles = EStyleSheet.create({
    },
    item_three_lower: {
       flex: 1,
-      alignItems: 'center',
       flexDirection: 'row',
+      justifyContent: 'space-between',
    },
 })

@@ -23,6 +23,29 @@ const Item = ({
    const [servingIndex, setServingIndex] = useState(0)
    const [isSelected, setisSelected] = useState(0)
 
+   React.useEffect(() => {
+      const component = data.customizableProductOptions[isSelected]
+      if (component.simpleRecipeProduct) {
+         setTypeSelected(
+            component.simpleRecipeProduct.defaultSimpleRecipeProductOption.type
+         )
+         const index = component.simpleRecipeProduct.simpleRecipeProductOptions
+            .filter(
+               option =>
+                  option.type ===
+                  component.simpleRecipeProduct.defaultSimpleRecipeProductOption
+                     .type
+            )
+            .findIndex(
+               option =>
+                  option.id ===
+                  component.simpleRecipeProduct.defaultSimpleRecipeProductOption
+                     .id
+            )
+         setServingIndex(index)
+      }
+   }, [isSelected])
+
    return (
       <View key={_id} style={styles.container}>
          {/* <View style={styles.item_three_upper}>
@@ -43,7 +66,7 @@ const Item = ({
             </TouchableOpacity>
          </View> */}
 
-         {data.map((item, _key) => {
+         {data.customizableProductOptions.map((item, _key) => {
             let simpleRecipeProduct = item?.simpleRecipeProduct
             if (simpleRecipeProduct !== null) {
                return (
@@ -102,9 +125,9 @@ const Item = ({
                               <View
                                  style={{
                                     flexDirection: 'row',
-                                    alignItems: 'center',
                                     minHeight: width > 768 ? 68 : 56,
-                                    alignItems: 'flex-start',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
                                  }}
                               >
                                  <Text
@@ -118,6 +141,27 @@ const Item = ({
                                     numberOfLines={tunnelItem ? 4 : 2}
                                     ellipsizeMode="tail"
                                  >{`${simpleRecipeProduct.name} `}</Text>
+                                 <TouchableOpacity
+                                    onPress={() =>
+                                       navigation.navigate('Recipe', {
+                                          recipeId:
+                                             simpleRecipeProduct.simpleRecipe
+                                                .id,
+                                          refId: data.id,
+                                          refType: 'customizableProduct',
+                                       })
+                                    }
+                                 >
+                                    <Text
+                                       style={{
+                                          color: visual.color,
+                                          textDecorationLine: 'underline',
+                                          fontSize: 16,
+                                       }}
+                                    >
+                                       See Recipe
+                                    </Text>
+                                 </TouchableOpacity>
                               </View>
                               <View style={styles.item_three_lower}>
                                  <Text
