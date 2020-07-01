@@ -7,6 +7,7 @@ import { SIMPLE_RECIPE } from '../graphql'
 import { height, width } from '../utils/Scalaing'
 import { FlatList } from 'react-native'
 import { useAppContext } from '../context/app'
+import Header from './Header'
 
 const ModalContent = ({ route, navigation }) => {
    let { recipeId } = route.params
@@ -56,6 +57,7 @@ const ModalContent = ({ route, navigation }) => {
 
    return (
       <>
+         <Header title="Home" navigation={navigation} />
          <ScrollView style={styles.container}>
             <Image source={{ uri: simpleRecipe?.image }} style={styles.image} />
             <View style={styles.info}>
@@ -242,6 +244,7 @@ const ModalContent = ({ route, navigation }) => {
                                              height: 100,
                                              width: 100,
                                              margin: 8,
+                                             borderRadius: 2,
                                           }}
                                           source={{
                                              uri: step.assets?.images[0].url,
@@ -309,7 +312,7 @@ const styles = EStyleSheet.create({
       marginBottom: width > 768 ? 32 : 16,
    },
    procedure: {
-      padding: width > 768 ? 16 : 8,
+      paddingVertical: width > 768 ? 16 : 8,
    },
    procedureTitle: {
       fontWeight: 'bold',
