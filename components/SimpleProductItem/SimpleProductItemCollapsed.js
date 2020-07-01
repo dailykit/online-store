@@ -32,7 +32,6 @@ const SimpleProductItemCollapsed = ({
                option.id ===
                simpleRecipeProduct.defaultSimpleRecipeProductOption.id
          )
-      console.log('Found index: ', index)
       setServingIndex(index)
    }, [])
 

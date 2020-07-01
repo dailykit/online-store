@@ -23,6 +23,29 @@ const Item = ({
    const [servingIndex, setServingIndex] = useState(0)
    const [isSelected, setisSelected] = useState(0)
 
+   React.useEffect(() => {
+      const component = data.customizableProductOptions[isSelected]
+      if (component.simpleRecipeProduct) {
+         setTypeSelected(
+            component.simpleRecipeProduct.defaultSimpleRecipeProductOption.type
+         )
+         const index = component.simpleRecipeProduct.simpleRecipeProductOptions
+            .filter(
+               option =>
+                  option.type ===
+                  component.simpleRecipeProduct.defaultSimpleRecipeProductOption
+                     .type
+            )
+            .findIndex(
+               option =>
+                  option.id ===
+                  component.simpleRecipeProduct.defaultSimpleRecipeProductOption
+                     .id
+            )
+         setServingIndex(index)
+      }
+   }, [isSelected])
+
    return (
       <View key={_id} style={styles.container}>
          {/* <View style={styles.item_three_upper}>
