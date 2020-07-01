@@ -110,7 +110,13 @@ const SimpleProductItemCollapsed = ({
                               },
                            ]}
                         >
-                           {simpleRecipeProduct?.simpleRecipe?.cuisine}
+                           {tunnelItem
+                              ? simpleRecipeProduct.simpleRecipe.cuisine
+                              : simpleRecipeProduct
+                                   ?.defaultSimpleRecipeProductOption.type ===
+                                'mealKit'
+                              ? 'Meal Kit'
+                              : 'Ready to Eat'}
                         </Text>
                         <Text
                            style={[
@@ -121,7 +127,12 @@ const SimpleProductItemCollapsed = ({
                               },
                            ]}
                         >
-                           {simpleRecipeProduct?.simpleRecipe?.author}
+                           {tunnelItem
+                              ? simpleRecipeProduct.simpleRecipe.author
+                              : 'x' +
+                                simpleRecipeProduct
+                                   ?.defaultSimpleRecipeProductOption
+                                   .simpleRecipeYield.yield.serving}
                         </Text>
                      </View>
                   </View>
