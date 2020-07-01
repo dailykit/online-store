@@ -3,6 +3,9 @@ import gql from 'graphql-tag'
 export const SIMPLE_RECIPE = gql`
    query SimpleRecipe($id: Int!) {
       simpleRecipe(id: $id) {
+         simpleRecipeProducts {
+            id
+         }
          id
          name
          image

@@ -45,6 +45,17 @@ const ModalContent = ({ route, navigation }) => {
       }
    )
 
+   const buy = () => {
+      if (simpleRecipe.simpleRecipeProducts.length) {
+         navigation.navigate('ProductPage', {
+            id: simpleRecipe.simpleRecipeProducts[0].id,
+            type: 'simpleRecipeProduct',
+         })
+      } else {
+         console.log('No products found!')
+      }
+   }
+
    if (loading) {
       return (
          <View style={styles.center}>
@@ -61,6 +72,12 @@ const ModalContent = ({ route, navigation }) => {
          <ScrollView style={styles.container}>
             <Image source={{ uri: simpleRecipe?.image }} style={styles.image} />
             <View style={styles.info}>
+               <TouchableOpacity
+                  style={[styles.buyBtn, { backgroundColor: visual.color }]}
+                  onPress={buy}
+               >
+                  <Text style={{ color: '#fff' }}>Buy Now</Text>
+               </TouchableOpacity>
                {/* Name */}
                <Text
                   style={{
@@ -289,6 +306,14 @@ const styles = EStyleSheet.create({
    },
    info: {
       margin: width > 768 ? 40 : 8,
+      position: 'relative',
+   },
+   buyBtn: {
+      position: 'absolute',
+      top: -65,
+      right: 0,
+      padding: 16,
+      borderRadius: 4,
    },
    section: {
       marginBottom: width > 768 ? 32 : 16,
