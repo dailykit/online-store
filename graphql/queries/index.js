@@ -3,6 +3,9 @@ import gql from 'graphql-tag'
 export const SIMPLE_RECIPE = gql`
    query SimpleRecipe($id: Int!) {
       simpleRecipe(id: $id) {
+         simpleRecipeProducts {
+            id
+         }
          id
          name
          image
@@ -11,9 +14,24 @@ export const SIMPLE_RECIPE = gql`
          cookingTime
          cuisine
          description
-         ingredients
          utensils
          procedures
+         simpleRecipeYields {
+            id
+            yield
+            ingredientSachets(where: { isVisible: { _eq: true } }) {
+               ingredientSachetId
+               slipName
+               isVisible
+               ingredientSachet {
+                  unit
+                  quantity
+                  ingredient {
+                     image
+                  }
+               }
+            }
+         }
       }
    }
 `

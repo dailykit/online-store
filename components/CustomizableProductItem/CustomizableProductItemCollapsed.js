@@ -39,6 +39,7 @@ const CustomizableProductItemCollapsed = ({
             )
          }
       })
+      console.log(images)
       setOptionImages(images)
    }, [])
 
@@ -59,15 +60,15 @@ const CustomizableProductItemCollapsed = ({
                         flex: 1,
                         position: 'relative',
                         paddingTop: 20,
-                        height: width > 768 ? 150 : 120,
                      }}
                   >
                      <Image
                         style={{
                            flex: 1,
-                           height: null,
-                           width: null,
+                           height: width > 768 ? 150 : 120,
+                           width: width > 768 ? 150 : 120,
                            resizeMode: 'contain',
+                           marginHorizontal: 'auto',
                         }}
                         source={{ uri: slide }}
                      />
