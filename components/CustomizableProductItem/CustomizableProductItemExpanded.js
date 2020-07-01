@@ -43,7 +43,7 @@ const Item = ({
             </TouchableOpacity>
          </View> */}
 
-         {data.map((item, _key) => {
+         {data.customizableProductOptions.map((item, _key) => {
             let simpleRecipeProduct = item?.simpleRecipeProduct
             if (simpleRecipeProduct !== null) {
                return (
@@ -102,9 +102,9 @@ const Item = ({
                               <View
                                  style={{
                                     flexDirection: 'row',
-                                    alignItems: 'center',
                                     minHeight: width > 768 ? 68 : 56,
-                                    alignItems: 'flex-start',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
                                  }}
                               >
                                  <Text
@@ -118,6 +118,27 @@ const Item = ({
                                     numberOfLines={tunnelItem ? 4 : 2}
                                     ellipsizeMode="tail"
                                  >{`${simpleRecipeProduct.name} `}</Text>
+                                 <TouchableOpacity
+                                    onPress={() =>
+                                       navigation.navigate('Recipe', {
+                                          recipeId:
+                                             simpleRecipeProduct.simpleRecipe
+                                                .id,
+                                          refId: data.id,
+                                          refType: 'customizableProduct',
+                                       })
+                                    }
+                                 >
+                                    <Text
+                                       style={{
+                                          color: visual.color,
+                                          textDecorationLine: 'underline',
+                                          fontSize: 16,
+                                       }}
+                                    >
+                                       See Recipe
+                                    </Text>
+                                 </TouchableOpacity>
                               </View>
                               <View style={styles.item_three_lower}>
                                  <Text

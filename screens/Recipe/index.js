@@ -1,9 +1,13 @@
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useLazyQuery } from '@apollo/react-hooks'
 import { Spinner, Tab, Tabs } from 'native-base'
 import React from 'react'
 import { Image, ScrollView, Text, View, TouchableOpacity } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
-import { SIMPLE_RECIPE } from '../../graphql'
+import {
+   SIMPLE_RECIPE,
+   SIMPLE_PRODUCT,
+   CUSTOMIZABLE_PRODUCT,
+} from '../../graphql'
 import { height, width } from '../../utils/Scalaing'
 import { FlatList } from 'react-native'
 import { useAppContext } from '../../context/app'
@@ -19,9 +23,9 @@ const Recipe = ({ route, navigation }) => {
    const [fetching, setFetching] = React.useState(false)
    const [selected, setSelected] = React.useState(new Map())
 
-   React.useEffect(() => {
-      console.log(option)
-   }, [option])
+   // For Drawer
+   const [isModalVisible, setIsModalVisible] = React.useState(false)
+   const [refProduct, setRefProduct] = React.useState({})
 
    const { data: { simpleRecipe = {} } = {}, loading, error } = useQuery(
       SIMPLE_RECIPE,
@@ -37,14 +41,44 @@ const Recipe = ({ route, navigation }) => {
       }
    )
 
+   const [fetchSimpleRecipeProduct] = useLazyQuery(SIMPLE_PRODUCT, {
+      onCompleted: data => {
+         setRefProduct(data.simpleRecipeProduct)
+         setIsModalVisible(true)
+         setFetching(false)
+      },
+      onError: error => {
+         console.log(error)
+         setFetching(false)
+      },
+      fetchPolicy: 'cache-and-network',
+   })
+
+   const [fetchCustomizableProduct] = useLazyQuery(CUSTOMIZABLE_PRODUCT, {
+      onCompleted: data => {
+         setRefProduct(data.customizableProduct)
+         setIsModalVisible(true)
+         setFetching(false)
+      },
+      onError: error => {
+         console.log(error)
+         setFetching(false)
+      },
+      fetchPolicy: 'cache-and-network',
+   })
+
    const buy = () => {
-      if (simpleRecipe.simpleRecipeProducts.length) {
-         navigation.navigate('ProductPage', {
-            id: simpleRecipe.simpleRecipeProducts[0].id,
-            type: 'simpleRecipeProduct',
-         })
-      } else {
-         console.log('No products found!')
+      if (fetching) return
+      else {
+         setFetching(true)
+         switch (refType) {
+            case 'simpleRecipeProduct':
+               return fetchSimpleRecipeProduct({ variables: { id: refId } })
+            case 'customizableProduct':
+               return fetchCustomizableProduct({ variables: { id: refId } })
+            default:
+               return console.log('No type matched for fetching!')
+         }
       }
    }
 
@@ -60,6 +94,15 @@ const Recipe = ({ route, navigation }) => {
 
    return (
       <>
+         <Drawer
+            isVisible={isModalVisible}
+            setIsModalVisible={setIsModalVisible}
+            navigation={navigation}
+            data={refProduct}
+            type={refType}
+            id={refId}
+            showInfo={true}
+         />
          <Header title="Home" navigation={navigation} />
          <ScrollView style={styles.container}>
             <Image source={{ uri: simpleRecipe?.image }} style={styles.image} />
@@ -68,7 +111,9 @@ const Recipe = ({ route, navigation }) => {
                   style={[styles.buyBtn, { backgroundColor: visual.color }]}
                   onPress={buy}
                >
-                  <Text style={{ color: '#fff' }}>Buy Now</Text>
+                  <Text style={{ color: '#fff' }}>
+                     {fetching ? 'Wait...' : 'Buy Now'}
+                  </Text>
                </TouchableOpacity>
                {/* Name */}
                <Text

@@ -131,22 +131,92 @@ export const COMBO_PRODUCT = gql`
             inventoryProductId
             simpleRecipeProductId
             customizableProduct {
+               id
+               name
                customizableProductOptions {
-                  simpleRecipeProduct {
-                     simpleRecipeProductOptions {
+                  id
+                  inventoryProduct {
+                     id
+                     assets
+                     default
+                     description
+                     name
+                     tags
+                     sachetItem {
+                        unitSize
+                        unit
+                     }
+                     supplierItem {
+                        unitSize
+                        unit
+                     }
+                     inventoryProductOptions {
+                        id
                         price
+                        quantity
+                        label
+                        inventoryProductId
+                     }
+                  }
+                  simpleRecipeProduct {
+                     name
+                     default
+                     id
+                     simpleRecipeProductOptions {
+                        id
+                        price
+                        type
+                        simpleRecipeYield {
+                           yield
+                        }
+                        simpleRecipeYieldId
+                     }
+                     simpleRecipe {
+                        author
+                        cuisine
+                        id
+                        name
+                        show
+                        type
                      }
                   }
                }
             }
             inventoryProduct {
+               id
+               assets
+               default
+               description
+               name
+               tags
                inventoryProductOptions {
+                  id
                   price
+                  quantity
+                  label
+                  inventoryProductId
                }
             }
             simpleRecipeProduct {
+               name
+               default
+               id
                simpleRecipeProductOptions {
+                  id
                   price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+               }
+               simpleRecipe {
+                  author
+                  cuisine
+                  id
+                  name
+                  show
+                  type
                }
             }
          }
@@ -161,11 +231,36 @@ export const CUSTOMIZABLE_PRODUCT = gql`
          id
          customizableProductOptions {
             id
+            inventoryProduct {
+               id
+               assets
+               default
+               description
+               name
+               tags
+               sachetItem {
+                  unitSize
+                  unit
+               }
+               supplierItem {
+                  unitSize
+                  unit
+               }
+               inventoryProductOptions {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+               }
+            }
             simpleRecipeProduct {
                name
                default
+               assets
                id
                simpleRecipeProductOptions {
+                  id
                   price
                   type
                   simpleRecipeYield {
@@ -175,16 +270,11 @@ export const CUSTOMIZABLE_PRODUCT = gql`
                }
                simpleRecipe {
                   author
-                  cookingTime
-                  assets
                   cuisine
-                  description
                   id
-                  image
                   name
-                  procedures
                   show
-                  utensils
+                  type
                }
             }
          }

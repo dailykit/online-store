@@ -112,7 +112,7 @@ const CustomizableProductItem = ({
          <CustomizableProductItemExpanded
             isSelected={isSelected}
             _id={_id}
-            data={customizableProduct.customizableProductOptions}
+            data={customizableProduct}
             setSelected={setSelected}
             isLast={isLast}
             openModal={openModal}
