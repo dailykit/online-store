@@ -35,14 +35,13 @@ const Summary = ({ useQuantity, item }) => {
          id: item.product.id,
       },
       onCompleted: data => {
-         if (data.simpleRecipeProduct?.assets?.images[0]) {
+         if (data.simpleRecipeProduct) {
             setImage(data.simpleRecipeProduct?.assets?.images[0])
+            const option = data.simpleRecipeProduct.simpleRecipeProductOptions.find(
+               option => option.id === item.product.option.id
+            )
+            setOption(option)
          }
-         const option = data.simpleRecipeProduct.simpleRecipeProductOptions.find(
-            option => option.id === item.product.option.id
-         )
-         console.log(option)
-         setOption(option)
       },
       fetchPolicy: 'cache-and-network',
    })
@@ -121,7 +120,7 @@ const Summary = ({ useQuantity, item }) => {
          item => item.cartItemId !== product.cartItemId
       )
       if (newCartItems.length) {
-         total = products.reduce(
+         total = newCartItems.reduce(
             (acc, cartItem) => acc + parseFloat(cartItem.product.price),
             0
          )
