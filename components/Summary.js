@@ -84,20 +84,19 @@ const Summary = ({ useQuantity, item }) => {
       try {
          if (quantity) {
             let products = cart?.cartInfo?.products
-            let total = parseFloat(cart?.cartInfo?.total)
             const index = products.findIndex(
                product => product.cartItemId === item.cartItemId
             )
             products[index].product.quantity = quantity
-            total = total - products[index].product.price
             products[index].product.price =
                products[index].product.basePrice * quantity
-            const newTotal = parseFloat(
-               total + products[index].product.basePrice * quantity
-            ).toFixed(2)
+            const total = products.reduce(
+               (acc, cartItem) => acc + parseFloat(cartItem.product.price),
+               0
+            )
             const cartInfo = {
                products,
-               total: parseFloat(newTotal),
+               total,
             }
             updateCart({
                variables: {
@@ -117,18 +116,25 @@ const Summary = ({ useQuantity, item }) => {
 
    const removeFromCart = product => {
       let products = cart?.cartInfo?.products
-      let total = parseFloat(cart?.cartInfo?.total)
-      if (product.type === 'comboProducts') {
-         product.products.forEach(
-            item => (total = total - parseFloat(item.product.price))
-         )
-      } else {
-         total = total - parseFloat(product.product.price)
-      }
+      let total
       let newCartItems = products?.filter(
          item => item.cartItemId !== product.cartItemId
       )
-      total = isNaN(total) ? 0 : total < 0 ? 0 : total
+      if (newCartItems.length) {
+         total = products.reduce(
+            (acc, cartItem) => acc + parseFloat(cartItem.product.price),
+            0
+         )
+      } else {
+         total = 0
+      }
+      // if (product.type === 'comboProducts') {
+      //    product.products.forEach(
+      //       item => (total = total - parseFloat(item.product.price))
+      //    )
+      // } else {
+      //    total = total - parseFloat(product.product.price)
+      // }
       const cartInfo = {
          products: newCartItems,
          total,
