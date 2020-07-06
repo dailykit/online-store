@@ -7,6 +7,7 @@ import {
    SIMPLE_RECIPE,
    SIMPLE_PRODUCT,
    CUSTOMIZABLE_PRODUCT,
+   COMBO_PRODUCT,
 } from '../../graphql'
 import { height, width } from '../../utils/Scalaing'
 import { FlatList } from 'react-native'
@@ -67,6 +68,19 @@ const Recipe = ({ route, navigation }) => {
       fetchPolicy: 'cache-and-network',
    })
 
+   const [fetchComboProduct] = useLazyQuery(COMBO_PRODUCT, {
+      onCompleted: data => {
+         setRefProduct(data.comboProduct)
+         setIsModalVisible(true)
+         setFetching(false)
+      },
+      onError: error => {
+         console.log(error)
+         setFetching(false)
+      },
+      fetchPolicy: 'cache-and-network',
+   })
+
    const buy = () => {
       if (fetching) return
       else {
@@ -76,6 +90,8 @@ const Recipe = ({ route, navigation }) => {
                return fetchSimpleRecipeProduct({ variables: { id: refId } })
             case 'customizableProduct':
                return fetchCustomizableProduct({ variables: { id: refId } })
+            case 'comboProduct':
+               return fetchComboProduct({ variables: { id: refId } })
             default:
                return console.log('No type matched for fetching!')
          }

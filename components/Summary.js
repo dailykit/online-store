@@ -19,21 +19,18 @@ const Summary = ({ useQuantity, item }) => {
    const [option, setOption] = React.useState(undefined)
 
    const [fetchInventoryProduct] = useLazyQuery(INVENTORY_PRODUCT, {
-      variables: {
-         id: item.product.id,
-      },
       onCompleted: data => {
          if (data.inventoryProduct?.assets?.images[0]) {
             setImage(data.inventoryProduct?.assets?.images[0])
          }
       },
+      onError: error => {
+         console.log(error)
+      },
       fetchPolicy: 'cache-and-network',
    })
 
    const [fetchSimpleRecipeProduct] = useLazyQuery(SIMPLE_PRODUCT, {
-      variables: {
-         id: item.product.id,
-      },
       onCompleted: data => {
          if (data.simpleRecipeProduct) {
             setImage(data.simpleRecipeProduct?.assets?.images[0])
@@ -43,6 +40,9 @@ const Summary = ({ useQuantity, item }) => {
             setOption(option)
          }
       },
+      onError: error => {
+         console.log(error)
+      },
       fetchPolicy: 'cache-and-network',
    })
 
@@ -50,17 +50,36 @@ const Summary = ({ useQuantity, item }) => {
       console.log(item)
       switch (item.type) {
          case 'inventoryProduct': {
-            return fetchInventoryProduct()
+            return fetchInventoryProduct({
+               variables: {
+                  id: item.product.id,
+               },
+            })
          }
          case 'simpleRecipeProduct': {
-            return fetchSimpleRecipeProduct()
+            return fetchSimpleRecipeProduct({
+               variables: {
+                  id: item.product.id,
+               },
+            })
          }
          case 'customizableProduct': {
             if (item.product.type === 'simpleRecipeProduct') {
-               return fetchSimpleRecipeProduct()
+               return fetchSimpleRecipeProduct({
+                  variables: {
+                     id: item.product.id,
+                  },
+               })
             } else {
-               return fetchInventoryProduct()
+               return fetchInventoryProduct({
+                  variables: {
+                     id: item.product.id,
+                  },
+               })
             }
+         }
+         case 'comboProduct': {
+            console.log('Combo product:', item)
          }
          default: {
             return console.log('NO IMAGE!')

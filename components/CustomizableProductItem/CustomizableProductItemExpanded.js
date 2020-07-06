@@ -16,6 +16,8 @@ const Item = ({
    numberOfOptions,
    tunnelItem,
    setproductOptionId,
+   refId,
+   refType,
 }) => {
    const { visual } = useAppContext()
 
@@ -142,15 +144,16 @@ const Item = ({
                                     ellipsizeMode="tail"
                                  >{`${simpleRecipeProduct.name} `}</Text>
                                  <TouchableOpacity
-                                    onPress={() =>
+                                    onPress={() => {
                                        navigation.navigate('Recipe', {
                                           recipeId:
                                              simpleRecipeProduct.simpleRecipe
                                                 .id,
-                                          refId: data.id,
-                                          refType: 'customizableProduct',
+                                          refId: refId || data.id,
+                                          refType:
+                                             refType || 'customizableProduct',
                                        })
-                                    }
+                                    }}
                                  >
                                     <Text
                                        style={{

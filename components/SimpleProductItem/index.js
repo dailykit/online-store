@@ -16,6 +16,8 @@ const SimpleProductItem = ({
    label,
    product,
    showInfo,
+   refId,
+   refType,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
@@ -69,6 +71,8 @@ const SimpleProductItem = ({
          setProductOptionId={setProductOptionId}
          setSelected={setSelected}
          isSelected={isSelected}
+         refId={refId}
+         refType={refType}
       />
    )
 }

@@ -29,6 +29,7 @@ const Cart = ({
    type,
    comboProductItems,
    setIsModalVisible,
+   product,
 }) => {
    const { cart, customerDetails, customer } = useCartContext()
    const { visual } = useAppContext()
@@ -66,37 +67,42 @@ const Cart = ({
             customerDetails?.email &&
             customerDetails?.phoneNumber
          ) {
-            // modify cartItem based on quantity
-            const updatedItem = {
-               product: {
-                  ...cartItem.product,
-                  quantity,
-                  basePrice: parseFloat(
-                     parseFloat(cartItem.product.price).toFixed(2)
-                  ),
-                  price: parseFloat(
-                     (parseFloat(cartItem.product.price) * quantity).toFixed(2)
-                  ),
-               },
-            }
-
             let products = cart?.cartInfo?.products || []
             let total = parseFloat(cart?.cartInfo?.total) || 0
             if (tunnelItem) {
-               if (type == 'comboProducts') {
-                  let comboItemPrice = 0
-                  comboProductItems.forEach(product => {
-                     comboItemPrice =
-                        comboItemPrice + parseFloat(product.product.price)
-                  })
-                  total = total + comboItemPrice
+               if (type === 'comboProduct') {
+                  const basePrice = comboProductItems.reduce(
+                     (acc, product) => acc + parseFloat(product.product.price),
+                     0
+                  )
+                  const price = parseFloat((basePrice * quantity).toFixed(2))
+                  total = total + price
                   products.push({
                      cartItemId: uuid(),
-                     products: comboProductItems,
+                     product: {
+                        name: product.name,
+                        components: comboProductItems,
+                        price,
+                        basePrice,
+                        quantity,
+                     },
                      type,
-                     price: comboItemPrice,
                   })
                } else {
+                  const updatedItem = {
+                     product: {
+                        ...cartItem.product,
+                        quantity,
+                        basePrice: parseFloat(
+                           parseFloat(cartItem.product.price).toFixed(2)
+                        ),
+                        price: parseFloat(
+                           (
+                              parseFloat(cartItem.product.price) * quantity
+                           ).toFixed(2)
+                        ),
+                     },
+                  }
                   products.push({
                      cartItemId: uuid(),
                      ...updatedItem,
@@ -225,7 +231,19 @@ const Cart = ({
                               fontSize: 16,
                            }}
                         >
-                           ${(cartItem?.product?.price * quantity).toFixed(2)}
+                           $
+                           {type === 'comboProduct'
+                              ? (
+                                   comboProductItems.reduce(
+                                      (acc, product) =>
+                                         acc +
+                                         parseFloat(product.product.price),
+                                      0
+                                   ) * quantity
+                                ).toFixed(2)
+                              : (cartItem?.product?.price * quantity).toFixed(
+                                   2
+                                )}
                         </Text>
                      </View>
                   </View>
