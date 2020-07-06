@@ -516,6 +516,14 @@ export const COMBO_PRODUCTS = gql`
             customizableProduct {
                id
                name
+               defaultCustomizableProductOption {
+                  inventoryProduct {
+                     assets
+                  }
+                  simpleRecipeProduct {
+                     assets
+                  }
+               }
                customizableProductOptions {
                   id
                   inventoryProduct {
@@ -543,6 +551,7 @@ export const COMBO_PRODUCTS = gql`
                   }
                   simpleRecipeProduct {
                      name
+                     assets
                      default
                      id
                      defaultSimpleRecipeProductOption {
@@ -593,6 +602,7 @@ export const COMBO_PRODUCTS = gql`
                name
                default
                id
+               assets
                defaultSimpleRecipeProductOption {
                   id
                   price

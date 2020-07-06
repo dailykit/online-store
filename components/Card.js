@@ -59,10 +59,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
             <View style={styles.item_parent_container}>
                {product?.__typename.includes('comboProduct') && (
                   <>
-                     <View style={styles.card_title}>
-                        <Text style={styles.card_title_text}>
-                           {product.name}
-                        </Text>
+                     <View>
                         <Text style={styles.is_customizable}>Combo</Text>
                      </View>
                      <ComboProduct
@@ -144,7 +141,9 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
             </View>
 
             <View style={styles.bottom_container}>
-               {!product?.__typename.includes('customizableProduct') && (
+               {!['comboProduct', 'customizableProduct'].includes(
+                  product?.__typename.split('_')[1]
+               ) && (
                   <View style={styles.price}>
                      <Text style={styles.price_text}>$ {price}</Text>
                   </View>
