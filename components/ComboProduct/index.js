@@ -7,6 +7,8 @@ import { styles } from './styles'
 import { width } from '../../utils/Scalaing'
 import { useAppContext } from '../../context/app'
 import Carousel from 'react-native-banner-carousel'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Feather } from '@expo/vector-icons'
 
 const ComboProduct = ({
    tunnelItem,
@@ -15,6 +17,7 @@ const ComboProduct = ({
    setIsLastComboItem,
    setcardData,
    currentComboProductIndex,
+   setCurrentComboProductIndex,
    setPrice,
    product,
 }) => {
@@ -103,101 +106,141 @@ const ComboProduct = ({
    return (
       <View style={styles.container}>
          {tunnelItem ? (
-            <View style={styles.item_parent_container}>
-               {product.comboProductComponents.map((el, _id) => {
-                  let last = false
-                  let isSelected = false
-                  if (!tunnelItem) {
-                     isSelected = selected == _id
-                     if (_id == product.comboProductComponents.length - 1) {
-                        last = true
+            <>
+               <View
+                  style={{
+                     flexDirection: 'row',
+                     alignItems: 'center',
+                     justifyContent: 'space-between',
+                     height: 40,
+                     paddingHorizontal: 5,
+                  }}
+               >
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                     {Boolean(currentComboProductIndex) && (
+                        <TouchableOpacity
+                           onPress={() =>
+                              setCurrentComboProductIndex(
+                                 currentComboProductIndex - 1
+                              )
+                           }
+                           style={{ marginRight: 8 }}
+                        >
+                           <Feather
+                              name="chevron-left"
+                              size={24}
+                              color="#666"
+                           />
+                        </TouchableOpacity>
+                     )}
+                     <Text
+                        style={{
+                           fontSize: 18,
+                           color: '#666',
+                           fontWeight: 'bold',
+                        }}
+                     >{`Selecting ${product.comboProductComponents[currentComboProductIndex].label}`}</Text>
+                  </View>
+                  <Text style={{ fontSize: 18, color: '#666' }}>{`${
+                     currentComboProductIndex + 1
+                  }/${product.comboProductComponents.length}`}</Text>
+               </View>
+               <View style={styles.item_parent_container}>
+                  {product.comboProductComponents.map((el, _id) => {
+                     let last = false
+                     let isSelected = false
+                     if (!tunnelItem) {
+                        isSelected = selected == _id
+                        if (_id == product.comboProductComponents.length - 1) {
+                           last = true
+                        }
+                     } else {
+                        last = false
+                        isSelected = currentComboProductIndex == _id
+                        if (_id == product.comboProductComponents.length - 1) {
+                           last = true
+                        }
                      }
-                  } else {
-                     last = false
-                     isSelected = currentComboProductIndex == _id
-                     if (_id == product.comboProductComponents.length - 1) {
-                        last = true
+                     if (el.customizableProductId !== null && isSelected) {
+                        return (
+                           <CustomizableProductItem
+                              isSelected={isSelected}
+                              _id={_id}
+                              product={el.customizableProduct}
+                              setSelected={index => {
+                                 selectedArr[index] = true
+                                 setSelected(index)
+                                 if (selectedArr.every(item => item == true)) {
+                                    setIsLastComboItem(true)
+                                 }
+                              }}
+                              isLast={last}
+                              key={_id}
+                              navigation={navigation}
+                              tunnelItem={tunnelItem}
+                              id={el.customizableProductId}
+                              setcartItem={setcartItem}
+                              name={el.name}
+                              refId={product.id}
+                              refType="comboProduct"
+                           />
+                        )
                      }
-                  }
-                  if (el.customizableProductId !== null && isSelected) {
-                     return (
-                        <CustomizableProductItem
-                           isSelected={isSelected}
-                           _id={_id}
-                           product={el.customizableProduct}
-                           setSelected={index => {
-                              selectedArr[index] = true
-                              setSelected(index)
-                              if (selectedArr.every(item => item == true)) {
-                                 setIsLastComboItem(true)
-                              }
-                           }}
-                           isLast={last}
-                           key={_id}
-                           navigation={navigation}
-                           tunnelItem={tunnelItem}
-                           id={el.customizableProductId}
-                           setcartItem={setcartItem}
-                           name={el.name}
-                           refId={product.id}
-                           refType="comboProduct"
-                        />
-                     )
-                  }
-                  if (el.simpleRecipeProductId !== null && isSelected) {
-                     return (
-                        <SimpleProductItem
-                           isSelected={isSelected}
-                           _id={_id}
-                           product={el.simpleRecipeProduct}
-                           setSelected={index => {
-                              selectedArr[index] = true
-                              setSelected(index)
-                              if (selectedArr.every(item => item == true)) {
-                                 setIsLastComboItem(true)
-                              }
-                           }}
-                           isLast={last}
-                           key={_id}
-                           navigation={navigation}
-                           id={el.simpleRecipeProductId}
-                           tunnelItem={tunnelItem}
-                           setcartItem={setcartItem}
-                           name={el.name}
-                           showInfo={true}
-                           refId={product.id}
-                           refType="comboProduct"
-                        />
-                     )
-                  }
-                  if (el.inventoryProductId !== null && isSelected) {
-                     return (
-                        <InventoryProductItem
-                           isSelected={isSelected}
-                           _id={_id}
-                           product={el.inventoryProduct}
-                           setSelected={index => {
-                              selectedArr[index] = true
-                              setSelected(index)
-                              if (selectedArr.every(item => item == true)) {
-                                 setIsLastComboItem(true)
-                              }
-                           }}
-                           isLast={last}
-                           key={_id}
-                           navigation={navigation}
-                           id={el.inventoryProductId}
-                           tunnelItem={tunnelItem}
-                           setcartItem={setcartItem}
-                           name={el.name}
-                           showInfo={true}
-                           // -1 means no navigation
-                           refId={-1}
-                        />
-                     )
-                  }
-               })}
-            </View>
+                     if (el.simpleRecipeProductId !== null && isSelected) {
+                        return (
+                           <SimpleProductItem
+                              isSelected={isSelected}
+                              _id={_id}
+                              product={el.simpleRecipeProduct}
+                              setSelected={index => {
+                                 selectedArr[index] = true
+                                 setSelected(index)
+                                 if (selectedArr.every(item => item == true)) {
+                                    setIsLastComboItem(true)
+                                 }
+                              }}
+                              isLast={last}
+                              key={_id}
+                              navigation={navigation}
+                              id={el.simpleRecipeProductId}
+                              tunnelItem={tunnelItem}
+                              setcartItem={setcartItem}
+                              name={el.name}
+                              showInfo={true}
+                              refId={product.id}
+                              refType="comboProduct"
+                           />
+                        )
+                     }
+                     if (el.inventoryProductId !== null && isSelected) {
+                        return (
+                           <InventoryProductItem
+                              isSelected={isSelected}
+                              _id={_id}
+                              product={el.inventoryProduct}
+                              setSelected={index => {
+                                 selectedArr[index] = true
+                                 setSelected(index)
+                                 if (selectedArr.every(item => item == true)) {
+                                    setIsLastComboItem(true)
+                                 }
+                              }}
+                              isLast={last}
+                              key={_id}
+                              navigation={navigation}
+                              id={el.inventoryProductId}
+                              tunnelItem={tunnelItem}
+                              setcartItem={setcartItem}
+                              name={el.name}
+                              showInfo={true}
+                              // -1 means no navigation
+                              refId={-1}
+                           />
+                        )
+                     }
+                  })}
+               </View>
+            </>
          ) : (
             <View>
                <Carousel

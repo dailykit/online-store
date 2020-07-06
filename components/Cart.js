@@ -330,7 +330,7 @@ export const ComboProductItemProceed = ({
 }) => {
    const { visual } = useAppContext()
    return (
-      <View style={styles.outerContainer}>
+      <View style={[styles.outerContainer, { width: '100%' }]}>
          <TouchableOpacity
             onPress={() => {
                setCurrentComboProductIndex(currentComboProductIndex + 1)

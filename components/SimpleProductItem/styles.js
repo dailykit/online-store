@@ -6,7 +6,7 @@ export const styles = EStyleSheet.create({
       flexDirection: 'column',
       paddingBottom: 5,
       marginBottom: 2,
-      paddingHorizontal: 10,
+      // paddingHorizontal: 10,
       marginTop: 4,
       borderBottomWidth: 0,
       backgroundColor: '#fff',
@@ -15,11 +15,12 @@ export const styles = EStyleSheet.create({
    item_container_one: {
       flex: 4,
       position: 'relative',
-      paddingTop: 20,
+      // paddingTop: 20,
    },
    item_container_two: {
       flex: 1.3,
       paddingTop: width > 768 ? 16 : 8,
+      paddingHorizontal: 20,
       justifyContent: 'center',
    },
    item_container_three: {
