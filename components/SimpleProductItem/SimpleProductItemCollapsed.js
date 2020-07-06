@@ -46,7 +46,7 @@ const SimpleProductItemCollapsed = ({
                onPress={() => {
                   navigation.navigate('Recipe', {
                      recipeId: simpleRecipeProduct.simpleRecipe.id,
-                     refId: refId || data.id,
+                     refId: refId || simpleRecipeProduct.id,
                      refType: refType || 'simpleRecipeProduct',
                   })
                }}
