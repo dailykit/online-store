@@ -133,6 +133,14 @@ export const COMBO_PRODUCT = gql`
             customizableProduct {
                id
                name
+               defaultCustomizableProductOption {
+                  inventoryProduct {
+                     assets
+                  }
+                  simpleRecipeProduct {
+                     assets
+                  }
+               }
                customizableProductOptions {
                   id
                   inventoryProduct {
