@@ -176,7 +176,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
 const styles = EStyleSheet.create({
    card_container: {
       width: width >= 768 ? width * 0.2 : width * 0.45,
-      padding: width >= 768 ? 5 : 2,
+      padding: width >= 768 ? 0 : 2,
       elevation: 2,
       shadowColor: '#000',
       shadowOffset: {},
