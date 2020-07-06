@@ -119,7 +119,7 @@ const ComboProduct = ({
                         last = true
                      }
                   }
-                  if (el.customizableProductId !== null) {
+                  if (el.customizableProductId !== null && isSelected) {
                      return (
                         <CustomizableProductItem
                            isSelected={isSelected}
@@ -144,7 +144,7 @@ const ComboProduct = ({
                         />
                      )
                   }
-                  if (el.simpleRecipeProductId !== null) {
+                  if (el.simpleRecipeProductId !== null && isSelected) {
                      return (
                         <SimpleProductItem
                            isSelected={isSelected}
@@ -170,7 +170,7 @@ const ComboProduct = ({
                         />
                      )
                   }
-                  if (el.inventoryProductId !== null) {
+                  if (el.inventoryProductId !== null && isSelected) {
                      return (
                         <InventoryProductItem
                            isSelected={isSelected}
