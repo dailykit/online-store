@@ -16,6 +16,7 @@ const InventoryProductItem = ({
    name,
    label,
    product,
+   refId,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
@@ -78,6 +79,7 @@ const InventoryProductItem = ({
          setProductOptionId={setProductOptionId}
          setSelected={setSelected}
          isSelected={isSelected}
+         refId={refId}
       />
    )
 }

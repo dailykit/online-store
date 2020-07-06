@@ -24,6 +24,11 @@ const ComboProduct = ({
 
    const [optionImages, setOptionImages] = React.useState([])
 
+   const REF = {
+      id: product.id,
+      type: 'comboProduct',
+   }
+
    React.useEffect(() => {
       const images = product.comboProductComponents.map(component => {
          if (component.inventoryProduct) {
@@ -134,6 +139,8 @@ const ComboProduct = ({
                            id={el.customizableProductId}
                            setcartItem={setcartItem}
                            name={el.name}
+                           refId={product.id}
+                           refType="comboProduct"
                         />
                      )
                   }
@@ -158,6 +165,8 @@ const ComboProduct = ({
                            setcartItem={setcartItem}
                            name={el.name}
                            showInfo={true}
+                           refId={product.id}
+                           refType="comboProduct"
                         />
                      )
                   }
@@ -182,6 +191,8 @@ const ComboProduct = ({
                            setcartItem={setcartItem}
                            name={el.name}
                            showInfo={true}
+                           // -1 means no navigation
+                           refId={-1}
                         />
                      )
                   }

@@ -13,6 +13,7 @@ const InventoryProductCollapsed = ({
    navigation,
    showInfo,
    isSelected,
+   refId,
 }) => {
    const { visual } = useAppContext()
 
@@ -26,6 +27,7 @@ const InventoryProductCollapsed = ({
          {showInfo && (
             <TouchableOpacity
                onPress={() =>
+                  refId !== -1 &&
                   navigation.navigate('ProductPage', {
                      id: inventoryProduct.id,
                      type: 'inventoryProduct',

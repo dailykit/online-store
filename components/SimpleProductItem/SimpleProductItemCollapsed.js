@@ -15,6 +15,8 @@ const SimpleProductItemCollapsed = ({
    setProductOptionId,
    isSelected,
    showInfo,
+   refId,
+   refType,
 }) => {
    const [typeSelected, setTypeSelected] = useState('mealKit')
    const [servingIndex, setServingIndex] = useState(0)
@@ -41,13 +43,13 @@ const SimpleProductItemCollapsed = ({
       <>
          {showInfo && (
             <TouchableOpacity
-               onPress={() =>
+               onPress={() => {
                   navigation.navigate('Recipe', {
                      recipeId: simpleRecipeProduct.simpleRecipe.id,
-                     refId: simpleRecipeProduct.id,
-                     refType: 'simpleRecipeProduct',
+                     refId: refId || data.id,
+                     refType: refType || 'simpleRecipeProduct',
                   })
-               }
+               }}
                style={[
                   styles.item_container,
                   {

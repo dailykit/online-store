@@ -17,6 +17,8 @@ const CustomizableProductItem = ({
    setPrice,
    name,
    product,
+   refId,
+   refType,
 }) => {
    const [expanded, setExpanded] = useState(false)
    const [numberOfOptions, setnumberOfOptions] = useState(0)
@@ -123,6 +125,8 @@ const CustomizableProductItem = ({
             numberOfOptions={numberOfOptions}
             tunnelItem={tunnelItem && isSelected}
             setproductOptionId={setproductOptionId}
+            refId={refId}
+            refType={refType}
          />
       )
    }
