@@ -3,7 +3,7 @@ import { Spinner } from 'native-base'
 import * as moment from 'moment'
 import { Accordion } from 'native-base'
 import React from 'react'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View, Image } from 'react-native'
 import { useCartContext } from '../../context/cart'
 import { ORDERS } from '../../graphql'
 import { styles } from './styles'
@@ -136,26 +136,49 @@ export default ({ navigation }) => {
                                              product => (
                                                 <View style={styles.product}>
                                                    <View
-                                                      style={styles.productInfo}
+                                                      style={{
+                                                         flexDirection: 'row',
+                                                         alignItems: 'center',
+                                                      }}
                                                    >
-                                                      <Text>
-                                                         {
-                                                            product
-                                                               .inventoryProduct
-                                                               .name
-                                                         }
-                                                      </Text>
-                                                      <Text
+                                                      <Image
+                                                         source={{
+                                                            uri:
+                                                               product
+                                                                  .inventoryProduct
+                                                                  .image,
+                                                         }}
+                                                         style={{
+                                                            height: 60,
+                                                            width: 60,
+                                                            resizeMode: 'cover',
+                                                            marginRight: 8,
+                                                         }}
+                                                      />
+                                                      <View
                                                          style={
-                                                            styles.productOption
+                                                            styles.productInfo
                                                          }
                                                       >
-                                                         {
-                                                            product
-                                                               .inventoryProductOption
-                                                               .label
-                                                         }
-                                                      </Text>
+                                                         <Text>
+                                                            {
+                                                               product
+                                                                  .inventoryProduct
+                                                                  .name
+                                                            }
+                                                         </Text>
+                                                         <Text
+                                                            style={
+                                                               styles.productOption
+                                                            }
+                                                         >
+                                                            {
+                                                               product
+                                                                  .inventoryProductOption
+                                                                  .label
+                                                            }
+                                                         </Text>
+                                                      </View>
                                                    </View>
                                                    <Text
                                                       style={
@@ -176,28 +199,51 @@ export default ({ navigation }) => {
                                              product => (
                                                 <View style={styles.product}>
                                                    <View
-                                                      style={styles.productInfo}
+                                                      style={{
+                                                         flexDirection: 'row',
+                                                         alignItems: 'center',
+                                                      }}
                                                    >
-                                                      <Text>
-                                                         {
-                                                            product
-                                                               .simpleRecipeProduct
-                                                               .name
-                                                         }
-                                                      </Text>
-                                                      <Text
+                                                      <Image
+                                                         source={{
+                                                            uri:
+                                                               product
+                                                                  .simpleRecipeProduct
+                                                                  .image,
+                                                         }}
+                                                         style={{
+                                                            height: 60,
+                                                            width: 60,
+                                                            resizeMode: 'cover',
+                                                            marginRight: 8,
+                                                         }}
+                                                      />
+                                                      <View
                                                          style={
-                                                            styles.productOption
+                                                            styles.productInfo
                                                          }
                                                       >
-                                                         Meal Kit Serving:{' '}
-                                                         {
-                                                            product
-                                                               .simpleRecipeProductOption
-                                                               .simpleRecipeYield
-                                                               .yield.serving
-                                                         }
-                                                      </Text>
+                                                         <Text>
+                                                            {
+                                                               product
+                                                                  .simpleRecipeProduct
+                                                                  .name
+                                                            }
+                                                         </Text>
+                                                         <Text
+                                                            style={
+                                                               styles.productOption
+                                                            }
+                                                         >
+                                                            Meal Kit Serving:{' '}
+                                                            {
+                                                               product
+                                                                  .simpleRecipeProductOption
+                                                                  .simpleRecipeYield
+                                                                  .yield.serving
+                                                            }
+                                                         </Text>
+                                                      </View>
                                                    </View>
                                                    <Text
                                                       style={
@@ -218,41 +264,65 @@ export default ({ navigation }) => {
                                              product => (
                                                 <View style={styles.product}>
                                                    <View
-                                                      style={styles.productInfo}
+                                                      style={{
+                                                         flexDirection: 'row',
+                                                         alignItems: 'center',
+                                                      }}
                                                    >
-                                                      <Text>
-                                                         {
-                                                            product
-                                                               .simpleRecipeProduct
-                                                               .name
-                                                         }
-                                                      </Text>
-                                                      <Text
+                                                      <Image
+                                                         source={{
+                                                            uri:
+                                                               product
+                                                                  .simpleRecipeProduct
+                                                                  .image,
+                                                         }}
+                                                         style={{
+                                                            height: 60,
+                                                            width: 60,
+                                                            resizeMode: 'cover',
+                                                            marginRight: 8,
+                                                         }}
+                                                      />
+                                                      <View
                                                          style={
-                                                            styles.productOption
+                                                            styles.productInfo
                                                          }
                                                       >
-                                                         Ready to Eat Serving:{' '}
+                                                         <Text>
+                                                            {
+                                                               product
+                                                                  .simpleRecipeProduct
+                                                                  .name
+                                                            }
+                                                         </Text>
+                                                         <Text
+                                                            style={
+                                                               styles.productOption
+                                                            }
+                                                         >
+                                                            Ready to Eat
+                                                            Serving:{' '}
+                                                            {
+                                                               product
+                                                                  .simpleRecipeProductOption
+                                                                  .simpleRecipeYield
+                                                                  .yield.serving
+                                                            }
+                                                         </Text>
+                                                      </View>
+                                                      <Text
+                                                         style={
+                                                            styles.productPrice
+                                                         }
+                                                      >
+                                                         ${' '}
                                                          {
                                                             product
                                                                .simpleRecipeProductOption
-                                                               .simpleRecipeYield
-                                                               .yield.serving
+                                                               .price[0].value
                                                          }
                                                       </Text>
                                                    </View>
-                                                   <Text
-                                                      style={
-                                                         styles.productPrice
-                                                      }
-                                                   >
-                                                      ${' '}
-                                                      {
-                                                         product
-                                                            .simpleRecipeProductOption
-                                                            .price[0].value
-                                                      }
-                                                   </Text>
                                                 </View>
                                              )
                                           )}
@@ -299,7 +369,6 @@ export default ({ navigation }) => {
                               </Text>
                            </View>
                         </TouchableOpacity>
-                        <Divider />
                      </>
                   ))}
             </ScrollView>
