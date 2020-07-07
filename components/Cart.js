@@ -62,10 +62,12 @@ const Cart = ({
             open('Login')
          }
          if (
-            customerDetails?.firstName &&
-            customerDetails?.lastName &&
-            customerDetails?.email &&
-            customerDetails?.phoneNumber
+            [
+               customerDetails?.firstName,
+               customerDetails?.lastName,
+               customerDetails?.email,
+               customerDetails?.phoneNumber,
+            ].every(exists => exists)
          ) {
             let products = cart?.cartInfo?.products || []
             let total = parseFloat(cart?.cartInfo?.total) || 0
