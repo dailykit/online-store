@@ -30,9 +30,16 @@ const CustomizableProductItem = ({
       componentProductId,
       name,
       type,
-      typeSelected
+      typeSelected,
+      customizableProductOptionId
    ) => {
-      console.log('Adding Customizable: ', componentProductId, name, type)
+      console.log(
+         'Adding Customizable: ',
+         componentProductId,
+         name,
+         type,
+         customizableProductOptionId
+      )
       let newItem = objToAdd
       newItem.product.option.id = id
       if (typeSelected) {
@@ -40,7 +47,9 @@ const CustomizableProductItem = ({
       }
       newItem.product.price = price
       newItem.product.id = componentProductId
-      newItem.product.customizableProductId = product.id
+      if (customizableProductOptionId) {
+         newItem.product.customizableProductOptionId = customizableProductOptionId
+      }
       newItem.product.name = `[${product.name}] ${name}`
       if (type) {
          newItem.product.type = type
@@ -49,6 +58,10 @@ const CustomizableProductItem = ({
          )
          newItem.product.image = option[type].assets.images[0]
       }
+      if (newItem.product.type === 'inventoryProduct') {
+         delete newItem.product.option.type
+      }
+      console.log(newItem)
       setobjToAdd(newItem)
       setcartItem(newItem)
    }
@@ -80,9 +93,9 @@ const CustomizableProductItem = ({
             _type = 'simpleRecipeProduct'
          }
          let objToAddToCart = {
-            customizableProductId: product.id,
-            customizableProductOptionId: default_product?.id,
             product: {
+               customizableProductId: product.id,
+               customizableProductOptionId: default_product?.id,
                id: default_product.id,
                name: default_product.name,
                price: _default_option?.price[0]?.value,

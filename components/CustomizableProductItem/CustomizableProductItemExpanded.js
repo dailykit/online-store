@@ -86,7 +86,8 @@ const Item = ({
                               simpleRecipeProduct?.id,
                               simpleRecipeProduct?.name,
                               'simpleRecipeProduct',
-                              typeSelected
+                              typeSelected,
+                              item.id
                            )
                         }}
                         style={[
@@ -332,7 +333,9 @@ const Item = ({
                                  ?.price[0]?.value,
                               inventoryProduct?.id,
                               inventoryProduct?.name,
-                              'inventoryProduct'
+                              'inventoryProduct',
+                              null, // typeSelected
+                              item.id
                            )
                         }}
                         style={[
