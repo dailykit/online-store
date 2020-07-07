@@ -23,11 +23,11 @@ const Item = ({
 
    const [typeSelected, setTypeSelected] = useState('mealKit')
    const [servingIndex, setServingIndex] = useState(0)
-   const [isSelected, setisSelected] = useState(0)
+   const [isSelected, setisSelected] = useState(undefined)
 
    React.useEffect(() => {
       const component = data.customizableProductOptions[isSelected]
-      if (component.simpleRecipeProduct) {
+      if (component?.simpleRecipeProduct) {
          setTypeSelected(
             component.simpleRecipeProduct.defaultSimpleRecipeProductOption.type
          )
