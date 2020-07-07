@@ -19,6 +19,7 @@ const CustomizableProductItem = ({
    product,
    refId,
    refType,
+   comboProductComponentId,
 }) => {
    const [expanded, setExpanded] = useState(false)
    const [numberOfOptions, setnumberOfOptions] = useState(0)
@@ -41,25 +42,25 @@ const CustomizableProductItem = ({
          customizableProductOptionId
       )
       let newItem = objToAdd
-      newItem.product.option.id = id
+      newItem.option.id = id
       if (typeSelected) {
-         newItem.product.option.type = typeSelected
+         newItem.option.type = typeSelected
       }
-      newItem.product.price = price
-      newItem.product.id = componentProductId
+      newItem.price = price
+      newItem.id = componentProductId
       if (customizableProductOptionId) {
-         newItem.product.customizableProductOptionId = customizableProductOptionId
+         newItem.customizableProductOptionId = customizableProductOptionId
       }
-      newItem.product.name = `[${product.name}] ${name}`
+      newItem.name = `[${product.name}] ${name}`
       if (type) {
-         newItem.product.type = type
+         newItem.type = type
          const option = product.customizableProductOptions.find(
             option => option[type]
          )
-         newItem.product.image = option[type].assets.images[0]
+         newItem.image = option[type].assets.images[0]
       }
-      if (newItem.product.type === 'inventoryProduct') {
-         delete newItem.product.option.type
+      if (newItem.type === 'inventoryProduct') {
+         delete newItem.option.type
       }
       console.log(newItem)
       setobjToAdd(newItem)
@@ -93,24 +94,21 @@ const CustomizableProductItem = ({
             _type = 'simpleRecipeProduct'
          }
          let objToAddToCart = {
-            product: {
-               customizableProductId: product.id,
-               customizableProductOptionId: default_product?.id,
-               id: default_product.id,
-               name: default_product.name,
-               price: _default_option?.price[0]?.value,
-               image: default_product.assets.images[0],
-               option: {
-                  id: _default_option?.id, // product option id
-                  type: _default_option?.type,
-               },
-               type: _type,
+            customizableProductId: product.id,
+            customizableProductOptionId: default_product?.id,
+            id: default_product.id,
+            name: default_product.name,
+            price: _default_option?.price[0]?.value,
+            image: default_product.assets.images[0],
+            option: {
+               id: _default_option?.id, // product option id
+               type: _default_option?.type,
             },
+            type: _type,
          }
-         if (!independantItem) {
-            objToAddToCart['name'] = name
+         if (comboProductComponentId) {
+            objToAddToCart.comboProductComponentId = comboProductComponentId
          }
-         console.log('objToAddToCart', objToAddToCart)
          setobjToAdd(objToAddToCart)
          if (!tunnelItem && independantItem) {
             setPrice(_default_option?.price[0]?.value)

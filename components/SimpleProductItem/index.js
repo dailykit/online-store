@@ -18,14 +18,15 @@ const SimpleProductItem = ({
    showInfo,
    refId,
    refType,
+   comboProductComponentId,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
    const setProductOptionId = (id, price, typeSelected) => {
       let newItem = objToAdd
-      newItem.product.option.id = id
-      newItem.product.option.type = typeSelected
-      newItem.product.price = price
+      newItem.option.id = id
+      newItem.option.type = typeSelected
+      newItem.price = price
       setobjToAdd(newItem)
       setcartItem(newItem)
    }
@@ -33,20 +34,18 @@ const SimpleProductItem = ({
    React.useEffect(() => {
       if (product.defaultSimpleRecipeProductOption.id) {
          let objToPush = {
-            product: {
-               id: product.id,
-               name: product.name,
-               price: product.defaultSimpleRecipeProductOption?.price[0].value,
-               image: product.assets.images[0],
-               option: {
-                  id: product.defaultSimpleRecipeProductOption?.id, // product option id
-                  type: product.defaultSimpleRecipeProductOption?.type,
-               },
-               type: 'simpleRecipeProduct',
+            id: product.id,
+            name: product.name,
+            price: product.defaultSimpleRecipeProductOption?.price[0].value,
+            image: product.assets.images[0],
+            option: {
+               id: product.defaultSimpleRecipeProductOption?.id, // product option id
+               type: product.defaultSimpleRecipeProductOption?.type,
             },
+            type: 'simpleRecipeProduct',
          }
-         if (!independantItem) {
-            objToPush['name'] = name
+         if (comboProductComponentId) {
+            objToPush.comboProductComponentId = comboProductComponentId
          }
          setobjToAdd(objToPush)
          if (!tunnelItem && independantItem) {
