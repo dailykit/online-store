@@ -27,7 +27,7 @@ export const styles = EStyleSheet.create({
       padding: width > 768 ? 8 : 12,
       marginBottom: 20,
       borderRadius: 4,
-      shadowColor: '#000',
+      shadowColor: '#666',
       shadowOffset: {
          width: 0,
          height: 4,
