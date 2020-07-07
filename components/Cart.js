@@ -71,44 +71,46 @@ const Cart = ({
             let total = parseFloat(cart?.cartInfo?.total) || 0
             if (tunnelItem) {
                if (type === 'comboProduct') {
-                  const basePrice = comboProductItems.reduce(
-                     (acc, product) => acc + parseFloat(product.product.price),
+                  console.log(comboProductItems)
+                  const unitPrice = comboProductItems.reduce(
+                     (acc, product) => acc + parseFloat(product.price),
                      0
                   )
-                  const price = parseFloat((basePrice * quantity).toFixed(2))
-                  total = total + price
+                  const totalPrice = parseFloat(
+                     (unitPrice * quantity).toFixed(2)
+                  )
+                  total = total + totalPrice
                   products.push({
                      cartItemId: uuid(),
-                     product: {
-                        name: product.name,
-                        components: comboProductItems,
-                        price,
-                        basePrice,
-                        quantity,
-                     },
+                     name: product.name,
+                     id: product.id,
+                     components: comboProductItems,
+                     discount: 0,
+                     totalPrice,
+                     unitPrice,
+                     quantity,
                      type,
+                     specialInstructions: '',
                   })
                } else {
-                  const updatedItem = {
-                     product: {
-                        ...cartItem.product,
-                        quantity,
-                        basePrice: parseFloat(
-                           parseFloat(cartItem.product.price).toFixed(2)
-                        ),
-                        price: parseFloat(
-                           (
-                              parseFloat(cartItem.product.price) * quantity
-                           ).toFixed(2)
-                        ),
-                     },
-                  }
-                  products.push({
+                  const item = {
                      cartItemId: uuid(),
-                     ...updatedItem,
                      type,
-                  })
-                  total = total + parseFloat(updatedItem.product.price)
+                     ...cartItem,
+                     quantity,
+                     unitPrice: parseFloat(
+                        parseFloat(cartItem.price).toFixed(2)
+                     ),
+                     totalPrice: parseFloat(
+                        (parseFloat(cartItem.price) * quantity).toFixed(2)
+                     ),
+                     discount: 0,
+                     specialInstructions: '',
+                  }
+                  delete item.price
+                  console.log('Item adding: ', item)
+                  products.push(item)
+                  total = total + parseFloat(item.totalPrice)
                }
                total = parseFloat(total.toFixed(2))
                // products and total ready
@@ -236,14 +238,11 @@ const Cart = ({
                               ? (
                                    comboProductItems.reduce(
                                       (acc, product) =>
-                                         acc +
-                                         parseFloat(product.product.price),
+                                         acc + parseFloat(product.price),
                                       0
                                    ) * quantity
                                 ).toFixed(2)
-                              : (cartItem?.product?.price * quantity).toFixed(
-                                   2
-                                )}
+                              : (cartItem?.price * quantity).toFixed(2)}
                         </Text>
                      </View>
                   </View>

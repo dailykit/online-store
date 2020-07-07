@@ -183,6 +183,7 @@ const ComboProduct = ({
                               name={el.name}
                               refId={product.id}
                               refType="comboProduct"
+                              comboProductComponentId={el.id}
                            />
                         )
                      }
@@ -209,6 +210,7 @@ const ComboProduct = ({
                               showInfo={true}
                               refId={product.id}
                               refType="comboProduct"
+                              comboProductComponentId={el.id}
                            />
                         )
                      }
@@ -235,6 +237,7 @@ const ComboProduct = ({
                               showInfo={true}
                               // -1 means no navigation
                               refId={-1}
+                              comboProductComponentId={el.id}
                            />
                         )
                      }

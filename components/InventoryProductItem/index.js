@@ -17,13 +17,14 @@ const InventoryProductItem = ({
    label,
    product,
    refId,
+   comboProductComponentId,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
    const setProductOptionId = (id, price) => {
       let newItem = objToAdd
-      newItem.product.option.id = id
-      newItem.product.price = price
+      newItem.option.id = id
+      newItem.price = price
       setobjToAdd(newItem)
       setcartItem(newItem)
    }
@@ -35,19 +36,17 @@ const InventoryProductItem = ({
       )
          return
       let objToPush = {
-         product: {
-            id: product?.id,
-            name: product?.name,
-            price: product?.inventoryProductOptions[0]?.price[0]?.value,
-            image: product?.assets?.images[0],
-            option: {
-               id: product?.inventoryProductOptions[0]?.id, // product option id
-            },
-            type: 'inventoryProduct',
+         id: product?.id,
+         name: product?.name,
+         price: product?.inventoryProductOptions[0]?.price[0]?.value,
+         image: product?.assets?.images[0],
+         option: {
+            id: product?.inventoryProductOptions[0]?.id, // product option id
          },
+         type: 'inventoryProduct',
       }
-      if (!independantItem) {
-         objToPush['name'] = name
+      if (comboProductComponentId) {
+         objToPush.comboProductComponentId = comboProductComponentId
       }
       setobjToAdd(objToPush)
       if (!tunnelItem && independantItem) {

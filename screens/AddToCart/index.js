@@ -65,25 +65,24 @@ const ModalContent = ({
                {type == 'comboProduct' && (
                   <ComboProduct
                      setcartItem={item => {
-                        let auxArray = comboProductItems
-                        if (
-                           !Array.isArray(item) &&
-                           Object.keys(item).length >= 1
-                        ) {
-                           if (item.customizableProductOptionId) {
-                              auxArray = auxArray.filter(
-                                 el =>
-                                    item.customizableProductOptionId !==
-                                    el.customizableProductOptionId
-                              )
-                           } else if (item.product.id) {
-                              auxArray = auxArray.filter(el => {
-                                 return item.product.id !== el.product.id
-                              })
-                           }
+                        console.log('Item recived: ', item)
+                        // filter removes empty objects
+                        let auxArray = comboProductItems.filter(
+                           item => item.comboProductComponentId
+                        )
+                        const index = auxArray.findIndex(
+                           component =>
+                              component.comboProductComponentId ===
+                              item.comboProductComponentId
+                        )
+                        console.log(index)
+                        if (index === -1) {
                            auxArray.push(item)
-                           setcomboProductItems(auxArray)
+                        } else {
+                           auxArray[index] = item
                         }
+                        console.log('Combo items: ', auxArray)
+                        setcomboProductItems(auxArray)
                      }}
                      navigation={navigation}
                      tunnelItem
