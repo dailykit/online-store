@@ -73,7 +73,7 @@ const Cart = ({
                if (type === 'comboProduct') {
                   console.log(comboProductItems)
                   const unitPrice = comboProductItems.reduce(
-                     (acc, product) => acc + parseFloat(product.price),
+                     (acc, product) => acc + parseFloat(product.unitPrice),
                      0
                   )
                   const totalPrice = parseFloat(
@@ -238,7 +238,7 @@ const Cart = ({
                               ? (
                                    comboProductItems.reduce(
                                       (acc, product) =>
-                                         acc + parseFloat(product.price),
+                                         acc + parseFloat(product.unitPrice),
                                       0
                                    ) * quantity
                                 ).toFixed(2)

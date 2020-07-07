@@ -34,56 +34,40 @@ const ModalContent = ({
       data?.comboProductComponents?.length || 0
    )
    const [currentComboProductIndex, setCurrentComboProductIndex] = useState(0)
-   // let name = '';
-   // if (type == 'simpleRecipeProduct') {
-   //   name = dataname;
-   // }
-   // if (type == 'comboProducts') {
-   //   name = data?.name;
-   // }
-   // if (type == 'inventoryProduct') {
-   //   name = data.name;
-   // }
-   // if (type == 'customizableProduct') {
-   //   name = data?.name;
-   // }
+
+   const selectComponent = item => {
+      console.log('Item recived: ', item)
+      // filter removes empty objects
+      let auxArray = comboProductItems.filter(
+         item => item.comboProductComponentId
+      )
+      const index = auxArray.findIndex(
+         component =>
+            component.comboProductComponentId === item.comboProductComponentId
+      )
+      console.log(index)
+      if (index !== -1) {
+         auxArray.splice(index, 1)
+      }
+      const refacItem = {
+         ...item,
+         totalPrice: parseFloat(item.price),
+         unitPrice: parseFloat(item.price),
+         quantity: 1,
+      }
+      delete refacItem.price
+      auxArray.push(refacItem)
+      console.log('Combo items: ', auxArray)
+      setcomboProductItems(auxArray)
+   }
 
    return (
       <View style={{ flex: 1 }}>
          <ScrollView style={styles.container}>
-            {/* <View style={styles.title_container}>
-          <View style={styles.details}>
-            <Text style={styles.title}>{data.name}</Text>
-          </View>
-          <View style={styles.close_container}>
-            <TouchableOpacity onPress={() => setIsModalVisible(false)}>
-              <AntDesign size={30} name='close' />
-            </TouchableOpacity>
-          </View>
-        </View> */}
             <View style={styles.item_parent_container}>
                {type == 'comboProduct' && (
                   <ComboProduct
-                     setcartItem={item => {
-                        console.log('Item recived: ', item)
-                        // filter removes empty objects
-                        let auxArray = comboProductItems.filter(
-                           item => item.comboProductComponentId
-                        )
-                        const index = auxArray.findIndex(
-                           component =>
-                              component.comboProductComponentId ===
-                              item.comboProductComponentId
-                        )
-                        console.log(index)
-                        if (index === -1) {
-                           auxArray.push(item)
-                        } else {
-                           auxArray[index] = item
-                        }
-                        console.log('Combo items: ', auxArray)
-                        setcomboProductItems(auxArray)
-                     }}
+                     setcartItem={item => selectComponent(item)}
                      navigation={navigation}
                      tunnelItem
                      setIsLastComboItem={setIsLastComboItem}
