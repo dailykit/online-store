@@ -36,6 +36,7 @@ const SimpleProductItem = ({
                id: product.id,
                name: product.name,
                price: product.defaultSimpleRecipeProductOption?.price[0].value,
+               image: product.assets.images[0],
                option: {
                   id: product.defaultSimpleRecipeProductOption?.id, // product option id
                },

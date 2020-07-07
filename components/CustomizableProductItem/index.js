@@ -34,6 +34,10 @@ const CustomizableProductItem = ({
       newItem.product.name = `[${product.name}] ${name}`
       if (type) {
          newItem.product.type = type
+         const option = product.customizableProductOptions.find(
+            option => option[type]
+         )
+         newItem.product.image = option[type].assets.images[0]
       }
       setobjToAdd(newItem)
       setcartItem(newItem)
@@ -72,6 +76,7 @@ const CustomizableProductItem = ({
                id: default_product.id,
                name: default_product.name,
                price: _default_option?.price[0]?.value,
+               image: default_product.assets.images[0],
                option: {
                   id: _default_option?.id, // product option id
                },

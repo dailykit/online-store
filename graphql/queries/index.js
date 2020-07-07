@@ -170,6 +170,7 @@ export const COMBO_PRODUCT = gql`
                      name
                      default
                      id
+                     assets
                      defaultSimpleRecipeProductOption {
                         id
                         price
@@ -220,6 +221,7 @@ export const COMBO_PRODUCT = gql`
                name
                default
                id
+               assets
                defaultSimpleRecipeProductOption {
                   id
                   price

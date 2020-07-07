@@ -39,6 +39,7 @@ const InventoryProductItem = ({
             id: product?.id,
             name: product?.name,
             price: product?.inventoryProductOptions[0]?.price[0]?.value,
+            image: product?.assets?.images[0],
             option: {
                id: product?.inventoryProductOptions[0]?.id, // product option id
             },
