@@ -1,0 +1,110 @@
+{
+   "total": 35,
+   "products": [
+      {
+         "type": "comboProduct",
+         "product": {
+            "name": "Combo Test",
+            "price": 3,
+            "quantity": 1,
+            "basePrice": 3,
+            "components": [
+               {
+                  "product": {
+                     "id": 2,
+                     "name": "Rice",
+                     "type": "simpleRecipeProduct",
+                     "image": "https://dailykit-133-test.s3.us-east-2.amazonaws.com/images/1593601858502.jpg",
+                     "price": "2",
+                     "option": {
+                        "id": 6,
+                        "type": "readyToEat"
+                     }
+                  }
+               },
+               {
+                  "product": {
+                     "id": 185,
+                     "name": "Spinach",
+                     "type": "inventoryProduct",
+                     "image": "https://dailykit-133-test.s3.amazonaws.com/images/7.Mesclun Mix - 3 Lb Bag.png",
+                     "price": "1",
+                     "option": {
+                        "id": 185
+                     }
+                  }
+               }
+            ]
+         },
+         "cartItemId": "5154bf0e-2c05-4488-aeb7-18ac5c3f6f54"
+      },
+      {
+         "type": "inventoryProduct",
+         "product": {
+            "id": 185,
+            "name": "Spinach",
+            "type": "inventoryProduct",
+            "image": "https://dailykit-133-test.s3.amazonaws.com/images/7.Mesclun Mix - 3 Lb Bag.png",
+            "price": 1,
+            "option": {
+               "id": 185
+            },
+            "quantity": 1,
+            "basePrice": 1
+         },
+         "cartItemId": "0598bbd4-9f9b-4e89-819c-3718989821e4"
+      },
+      {
+         "type": "simpleRecipeProduct",
+         "product": {
+            "id": 1,
+            "name": "Potato Chicken Meal Kit",
+            "type": "simpleRecipeProduct",
+            "image": "https://dailykit-133-test.s3.us-east-2.amazonaws.com/images/1592743974188.jpg",
+            "price": 24,
+            "option": {
+               "id": 2,
+               "type": "readyToEat"
+            },
+            "quantity": 2,
+            "basePrice": 12
+         },
+         "cartItemId": "40d16e67-69fe-4fcf-b9ff-3bb629f39edc"
+      },
+      {
+         "type": "simpleRecipeProduct",
+         "product": {
+            "id": 2,
+            "name": "Rice",
+            "type": "simpleRecipeProduct",
+            "image": "https://dailykit-133-test.s3.us-east-2.amazonaws.com/images/1593601858502.jpg",
+            "price": 5,
+            "option": {
+               "id": 8,
+               "type": "readyToEat"
+            },
+            "quantity": 1,
+            "basePrice": 5
+         },
+         "cartItemId": "a0e18dc0-1fcc-478b-99ef-1777aae861d8"
+      },
+      {
+         "type": "customizableProduct",
+         "product": {
+            "id": 185,
+            "name": "[Monday Choices] Spinach",
+            "type": "inventoryProduct",
+            "image": "https://dailykit-133-test.s3.amazonaws.com/images/7.Mesclun Mix - 3 Lb Bag.png",
+            "price": 2,
+            "option": {
+               "id": 185,
+               "type": "mealKit"
+            },
+            "quantity": 2,
+            "basePrice": 1,
+            "customizableProductId": 4
+         },
+         "cartItemId": "09e0220c-f998-4c25-845c-bb9dacc9c524"
+      }
+   ]
+}

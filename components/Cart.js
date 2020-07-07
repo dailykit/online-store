@@ -89,26 +89,26 @@ const Cart = ({
                      type,
                   })
                } else {
-                  const updatedItem = {
-                     product: {
-                        ...cartItem.product,
-                        quantity,
-                        basePrice: parseFloat(
-                           parseFloat(cartItem.product.price).toFixed(2)
-                        ),
-                        price: parseFloat(
-                           (
-                              parseFloat(cartItem.product.price) * quantity
-                           ).toFixed(2)
-                        ),
-                     },
-                  }
-                  products.push({
+                  const item = {
                      cartItemId: uuid(),
-                     ...updatedItem,
                      type,
-                  })
-                  total = total + parseFloat(updatedItem.product.price)
+                     ...cartItem.product,
+                     quantity,
+                     unitPrice: parseFloat(
+                        parseFloat(cartItem.product.price).toFixed(2)
+                     ),
+                     totalPrice: parseFloat(
+                        (parseFloat(cartItem.product.price) * quantity).toFixed(
+                           2
+                        )
+                     ),
+                     discount: 0,
+                     specialInstructions: '',
+                  }
+                  delete item.price
+                  console.log('Item adding: ', item)
+                  products.push(item)
+                  total = total + parseFloat(item.totalPrice)
                }
                total = parseFloat(total.toFixed(2))
                // products and total ready
