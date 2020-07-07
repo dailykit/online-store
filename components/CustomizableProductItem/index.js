@@ -24,10 +24,20 @@ const CustomizableProductItem = ({
    const [numberOfOptions, setnumberOfOptions] = useState(0)
    const [objToAdd, setobjToAdd] = useState({})
 
-   const setproductOptionId = (id, price, componentProductId, name, type) => {
+   const setproductOptionId = (
+      id,
+      price,
+      componentProductId,
+      name,
+      type,
+      typeSelected
+   ) => {
       console.log('Adding Customizable: ', componentProductId, name, type)
       let newItem = objToAdd
       newItem.product.option.id = id
+      if (typeSelected) {
+         newItem.product.option.type = typeSelected
+      }
       newItem.product.price = price
       newItem.product.id = componentProductId
       newItem.product.customizableProductId = product.id
@@ -79,6 +89,7 @@ const CustomizableProductItem = ({
                image: default_product.assets.images[0],
                option: {
                   id: _default_option?.id, // product option id
+                  type: _default_option?.type,
                },
                type: _type,
             },

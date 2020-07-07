@@ -21,9 +21,10 @@ const SimpleProductItem = ({
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
-   const setProductOptionId = (id, price) => {
+   const setProductOptionId = (id, price, typeSelected) => {
       let newItem = objToAdd
       newItem.product.option.id = id
+      newItem.product.option.type = typeSelected
       newItem.product.price = price
       setobjToAdd(newItem)
       setcartItem(newItem)
@@ -39,6 +40,7 @@ const SimpleProductItem = ({
                image: product.assets.images[0],
                option: {
                   id: product.defaultSimpleRecipeProductOption?.id, // product option id
+                  type: product.defaultSimpleRecipeProductOption?.type,
                },
                type: 'simpleRecipeProduct',
             },

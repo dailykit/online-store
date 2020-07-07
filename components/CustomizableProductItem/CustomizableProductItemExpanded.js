@@ -85,7 +85,8 @@ const Item = ({
                                  ?.price[0]?.value,
                               simpleRecipeProduct?.id,
                               simpleRecipeProduct?.name,
-                              'simpleRecipeProduct'
+                              'simpleRecipeProduct',
+                              typeSelected
                            )
                         }}
                         style={[
@@ -284,6 +285,7 @@ const Item = ({
                                              ? 'Meal Kit'
                                              : 'Ready To Eat'
                                        }
+                                       typeSelected={typeSelected}
                                        type={item_data?.type}
                                        customizableProduct
                                        name={simpleRecipeProduct?.name}
@@ -294,13 +296,16 @@ const Item = ({
                                           id,
                                           price,
                                           simpleRecipeProductId,
-                                          name
+                                          name,
+                                          typeSelected
                                        ) =>
                                           setproductOptionId(
                                              id,
                                              price,
                                              simpleRecipeProductId,
-                                             name
+                                             name,
+                                             null, // type
+                                             typeSelected
                                           )
                                        }
                                        id={item_data?.id}

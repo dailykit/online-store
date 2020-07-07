@@ -218,6 +218,7 @@ const SimpleProductItemCollapsed = ({
                                  : 'Ready To Eat'
                            }
                            type={item_data.type}
+                           typeSelected={typeSelected}
                            setproductOptionId={setProductOptionId}
                            id={item_data.id}
                         />
