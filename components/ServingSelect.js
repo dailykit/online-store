@@ -16,6 +16,7 @@ const ServingSelect = ({
    customizableProduct,
    simpleRecipeProductId,
    name,
+   typeSelected,
 }) => {
    const { visual } = useAppContext()
 
@@ -24,9 +25,15 @@ const ServingSelect = ({
          onPress={() => {
             setServingIndex(index - 1)
             if (customizableProduct) {
-               setproductOptionId(id, price, simpleRecipeProductId, name)
+               setproductOptionId(
+                  id,
+                  price,
+                  simpleRecipeProductId,
+                  name,
+                  typeSelected
+               )
             } else {
-               setproductOptionId(id, price)
+               setproductOptionId(id, price, typeSelected)
             }
          }}
          style={[
