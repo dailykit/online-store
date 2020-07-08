@@ -8,7 +8,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer'
 import Home from '../screens/Home'
 import AddToCart from '../screens/AddToCart'
 import OrderSummary from '../screens/OrderSummary'
-import OrderPlaced from '../screens/OrderPlaced'
+import Order from '../screens/Order'
 import { SafetyScreen } from '../screens/SafetyScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 import OrderHistory from '../screens/OrderHistory'
@@ -131,8 +131,8 @@ function AppStack(props) {
             }}
          />
          <Stack.Screen
-            name="OrderPlaced"
-            component={OrderPlaced}
+            name="Order"
+            component={Order}
             options={{
                headerShown: false,
             }}
