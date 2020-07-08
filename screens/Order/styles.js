@@ -8,9 +8,14 @@ export const styles = EStyleSheet.create({
       marginHorizontal: 'auto',
       padding: width > 768 ? 20 : 10,
    },
+   map: {
+      height: 400,
+      width: '100%',
+      marginBottom: 10,
+   },
    orderStatus: {
       paddingVertical: 10,
-      marginBottom: 20,
+      marginBottom: 10,
       justifyContent: 'space-around',
       alignItems: 'center',
    },
@@ -32,5 +37,13 @@ export const styles = EStyleSheet.create({
       fontSize: '1.2rem',
       fontWeight: 'bold',
       color: '#333',
+   },
+   trackingCode: {
+      padding: 5,
+      backgroundColor: '#ccc',
+   },
+   deliveryGuy: {
+      backgroundColor: '#f3f3f3',
+      padding: 5,
    },
 })

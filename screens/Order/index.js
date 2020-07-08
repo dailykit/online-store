@@ -12,6 +12,7 @@ import OrderCard from '../../components/OrderCard'
 import orderdelivered from '../../assets/imgs/orderdelivered.png'
 import orderpickup from '../../assets/imgs/orderpickup.png'
 import orderpreparing from '../../assets/imgs/orderpreparing.png'
+import MapView, { Marker } from 'react-native-maps'
 
 const Order = ({ route, navigation }) => {
    const { orderId } = route.params
@@ -31,7 +32,7 @@ const Order = ({ route, navigation }) => {
 
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-         <Header title={brand.name} navigation={navigation} />
+         <Header title="Home" navigation={navigation} />
          {loading ? (
             <View
                style={{
@@ -43,9 +44,11 @@ const Order = ({ route, navigation }) => {
                <Spinner />
             </View>
          ) : (
-            <ScrollView style={{ flex: 1 }}>
-               <View style={styles.container}>
-                  {/* <View style={{ marginBottom: 20 }}>
+            <>
+               {order ? (
+                  <ScrollView style={{ flex: 1 }}>
+                     <View style={styles.container}>
+                        {/* <View style={{ marginBottom: 20 }}>
                      <View style={styles.image_container}>
                         <Feather
                            name="check-circle"
@@ -62,28 +65,42 @@ const Order = ({ route, navigation }) => {
                         Order Placed!
                      </Text>
                   </View> */}
-                  {/* Conditional rendering */}
+                        {/* Conditional rendering */}
+                        <View
+                           style={{
+                              marginBottom: 20,
+                           }}
+                        >
+                           {order.fulfillmentType.includes('DELIVERY') ? (
+                              <Delivery order={order} />
+                           ) : (
+                              <Pickup />
+                           )}
+                        </View>
+                        {/* Order Details */}
+                        <View
+                           style={{
+                              marginBottom: 20,
+                           }}
+                        >
+                           <OrderCard order={order} />
+                        </View>
+                     </View>
+                  </ScrollView>
+               ) : (
                   <View
                      style={{
-                        marginBottom: 20,
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
                      }}
                   >
-                     {order.fulfillmentType.includes('DELIVERY') ? (
-                        <Delivery order={order} />
-                     ) : (
-                        <Pickup />
-                     )}
+                     <Text style={{ fontSize: '1.1rem' }}>
+                        Are you sure that order ID is correct?
+                     </Text>
                   </View>
-                  {/* Order Details */}
-                  <View
-                     style={{
-                        marginBottom: 20,
-                     }}
-                  >
-                     <OrderCard order={order} />
-                  </View>
-               </View>
-            </ScrollView>
+               )}
+            </>
          )}
       </SafeAreaView>
    )
@@ -110,7 +127,15 @@ const Delivery = ({ order }) => {
    return (
       <View>
          {/* Map */}
-         {order.deliveryInfo.tracking.location.isAvailable && <View></View>}
+         {order.deliveryInfo.tracking.location.isAvailable && (
+            <MapView
+               initialRegion={{
+                  latitude: order.deliveryInfo.tracking.location.latitude,
+                  longitude: order.deliveryInfo.tracking.location.longitude,
+               }}
+               style={styles.map}
+            ></MapView>
+         )}
          {/* Illustration */}
          <View style={styles.orderStatus}>
             <View style={styles.orderStatusIllustration}>
@@ -177,10 +202,50 @@ const Delivery = ({ order }) => {
          </View>
          {/* Tracking Code */}
          {order.deliveryInfo.tracking.code.isAvailable && (
-            <Text>
+            <Text style={styles.trackingCode}>
                You can also track your order here:
                {order.deliveryInfo.tracking.code.url}
             </Text>
+         )}
+         {/* Delivery Guy */}
+         {order.deliveryInfo.assigned.status.value === 'SUCCEEDED' ? (
+            <View style={styles.deliveryGuy}>
+               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Image
+                     style={{
+                        height: 40,
+                        width: 40,
+                        borderRadius: 20,
+                        marginRight: 8,
+                     }}
+                     source={{
+                        uri:
+                           order.deliveryInfo.assigned.driverInfo.driverPicture,
+                     }}
+                  />
+                  <Text>
+                     {order.deliveryInfo.assigned.driverInfo.driverFirstName} is
+                     on the way to deliver your order!
+                  </Text>
+               </View>
+               <View
+                  style={{
+                     flexDirection: 'row',
+                     alignItems: 'center',
+                     justifyContent: 'flex-end',
+                  }}
+               >
+                  <Text>{order.deliveryInfo.deliveryCompany.name}</Text>
+                  <Image
+                     style={{ height: 40, width: 40 }}
+                     source={{ uri: order.deliveryInfo.deliveryCompany.logo }}
+                  />
+               </View>
+            </View>
+         ) : (
+            <View style={styles.deliveryGuy}>
+               <Text>Waiting for delivery partner to be assigned...</Text>
+            </View>
          )}
       </View>
    )
