@@ -12,7 +12,7 @@ import OrderCard from '../../components/OrderCard'
 import orderdelivered from '../../assets/imgs/orderdelivered.png'
 import orderpickup from '../../assets/imgs/orderpickup.png'
 import orderpreparing from '../../assets/imgs/orderpreparing.png'
-import MapView, { Marker } from 'react-native-maps'
+import MapView from 'react-native-maps'
 
 const Order = ({ route, navigation }) => {
    const { orderId } = route.params
@@ -136,7 +136,14 @@ const Delivery = ({ order }) => {
                   longitude: order.deliveryInfo.tracking.location.longitude,
                }}
                style={styles.map}
-            ></MapView>
+            >
+               <MapView.Marker
+                  coordinate={{
+                     latitude: order.deliveryInfo.tracking.location.latitude,
+                     longitude: order.deliveryInfo.tracking.location.longitude,
+                  }}
+               />
+            </MapView>
          )}
          {/* Illustration */}
          <View style={styles.orderStatus}>
@@ -276,11 +283,20 @@ const Pickup = ({ order }) => {
          {/* Restaurant Map */}
          <MapView
             initialRegion={{
-               latitude: address.latitude,
-               longitude: address.longitude,
+               latitude: +address.latitude,
+               longitude: +address.longitude,
             }}
             style={styles.map}
-         ></MapView>
+         >
+            <MapView.Marker
+               coordinate={{
+                  latitude: +address.latitude,
+                  longitude: +address.longitude,
+                  title: order.deliveryInfo.pickup.pickupInfo.organizationName,
+                  description: 'Pickup order here!',
+               }}
+            />
+         </MapView>
          {/* Order Status */}
          <View style={styles.orderStatus}>
             <Text style={styles.orderStatusText}>
