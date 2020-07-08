@@ -39,26 +39,29 @@ const OrderCard = ({ order }) => {
                {moment(order?.created_at).format('LLLL')}
             </Text>
          </Text>
-         {/* <Text style={[styles.muted, styles.bold]}>
-                           Deliver on: <Text style={styles.lite}>NA</Text>
-                        </Text> */}
-         <Text style={styles.muted}>
-            {order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress?.line1 +
-               ', ' +
-               order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
-                  ?.line2 +
-               ', ' +
-               order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
-                  ?.city +
-               ', ' +
-               order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
-                  ?.state +
-               ', ' +
-               order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
-                  ?.country}{' '}
-            -{' '}
-            {order?.deliveryInfo.dropoff?.dropoffInfo?.customerAddress?.zipcode}
-         </Text>
+         {order.deliveryInfo.dropoff.dropoffInfo && (
+            <Text style={styles.muted}>
+               {order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
+                  ?.line1 +
+                  ', ' +
+                  order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
+                     ?.line2 +
+                  ', ' +
+                  order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
+                     ?.city +
+                  ', ' +
+                  order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
+                     ?.state +
+                  ', ' +
+                  order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
+                     ?.country}{' '}
+               -{' '}
+               {
+                  order?.deliveryInfo.dropoff?.dropoffInfo?.customerAddress
+                     ?.zipcode
+               }
+            </Text>
+         )}
          <Accordion
             headerStyle={styles.header}
             dataArray={[
