@@ -74,7 +74,7 @@ const Order = ({ route, navigation }) => {
                            {order.fulfillmentType.includes('DELIVERY') ? (
                               <Delivery order={order} />
                            ) : (
-                              <Pickup />
+                              <Pickup order={order} />
                            )}
                         </View>
                         {/* Order Details */}
@@ -121,6 +121,8 @@ const Delivery = ({ order }) => {
             return 'Your order is out for delivery!'
          case 'DELIVERED':
             return 'Your order has been delivered!'
+         default:
+            return 'Your order is almost ready!'
       }
    }
 
@@ -251,10 +253,30 @@ const Delivery = ({ order }) => {
    )
 }
 
-const Pickup = () => {
+const Pickup = ({ order }) => {
+   const renderOrderStatus = status => {
+      switch (status) {
+         case 'PENDING':
+            return 'Order confirmed!'
+         case 'UNDER_PROCESSING':
+            return 'Your order is being prepared!'
+         case 'READY_TO_DISPATCH':
+            return 'Your order is ready! Waiting for you to pickup...'
+         case 'DELIVERED':
+            return 'Your order has been picked up!'
+         default:
+            return 'Awaiting pickup!'
+      }
+   }
+
    return (
       <View>
-         <Text>Pickup</Text>
+         {/* Order Status */}
+         <View style={styles.orderStatus}>
+            <Text style={styles.orderStatusText}>
+               {renderOrderStatus(order.orderStatus)}
+            </Text>
+         </View>
       </View>
    )
 }
