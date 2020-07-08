@@ -14,7 +14,8 @@ import { useAppContext } from '../../context/app'
 import { useSubscription } from '@apollo/react-hooks'
 import { ORDER } from '../../graphql'
 import { Header } from '../../components'
-import { Spinner } from 'native-base'
+import { Spinner, Accordion } from 'native-base'
+import OrderCard from '../../components/OrderCard'
 
 const Order = ({ route, navigation }) => {
    const { orderId } = route.params
@@ -31,10 +32,6 @@ const Order = ({ route, navigation }) => {
          },
       }
    )
-
-   console.log(order)
-
-   const fulfillmentType = 'ONDEMAND_DELIVERY'
 
    return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -66,7 +63,9 @@ const Order = ({ route, navigation }) => {
                   <Pickup />
                )}
                {/* Order Details */}
-               <OrderDetails />
+               <View>
+                  <OrderCard order={order} />
+               </View>
             </ScrollView>
          )}
       </SafeAreaView>
@@ -87,14 +86,6 @@ const Pickup = () => {
    return (
       <View>
          <Text>Pickup</Text>
-      </View>
-   )
-}
-
-const OrderDetails = () => {
-   return (
-      <View>
-         <Text>Order Details</Text>
       </View>
    )
 }
