@@ -254,6 +254,8 @@ const Delivery = ({ order }) => {
 }
 
 const Pickup = ({ order }) => {
+   const address = order.deliveryInfo.pickup.pickupInfo.organizationAddress
+
    const renderOrderStatus = status => {
       switch (status) {
          case 'PENDING':
@@ -271,10 +273,32 @@ const Pickup = ({ order }) => {
 
    return (
       <View>
+         {/* Restaurant Map */}
+         <MapView
+            initialRegion={{
+               latitude: address.latitude,
+               longitude: address.longitude,
+            }}
+            style={styles.map}
+         ></MapView>
          {/* Order Status */}
          <View style={styles.orderStatus}>
             <Text style={styles.orderStatusText}>
                {renderOrderStatus(order.orderStatus)}
+            </Text>
+         </View>
+         {/* Restaurant Address */}
+         <View style={styles.address}>
+            <Text style={{ color: '#666' }}>Pickup location:</Text>
+            <Text style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>
+               {order.deliveryInfo.pickup.pickupInfo.organizationName}
+            </Text>
+            <Text>{address.line1}</Text>
+            <Text>{address.line2}</Text>
+            <Text>{`${address.city}, ${address.state}, ${address.country}`}</Text>
+            <Text>{address.zipcode}</Text>
+            <Text>
+               Phone: {order.deliveryInfo.pickup.pickupInfo.organizationPhone}
             </Text>
          </View>
       </View>

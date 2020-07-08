@@ -9,7 +9,7 @@ export const styles = EStyleSheet.create({
       padding: width > 768 ? 20 : 10,
    },
    map: {
-      height: 400,
+      height: height * 0.4,
       width: '100%',
       marginBottom: 10,
    },
@@ -45,5 +45,8 @@ export const styles = EStyleSheet.create({
    deliveryGuy: {
       backgroundColor: '#f3f3f3',
       padding: 5,
+   },
+   address: {
+      marginBottom: 20,
    },
 })
