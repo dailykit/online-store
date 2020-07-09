@@ -249,7 +249,7 @@ const Summary = ({ useQuantity, item }) => {
 
 const styles = StyleSheet.create({
    summary_container: {
-      height: height * 0.22,
+      paddingVertical: 10,
       borderBottomColor: '#eaeded',
       borderBottomWidth: 1,
       backgroundColor: '#fff',
