@@ -240,9 +240,11 @@ const Delivery = ({ order }) => {
                            order.deliveryInfo.assigned.driverInfo.driverPicture,
                      }}
                   />
-                  <Text>
-                     {order.deliveryInfo.assigned.driverInfo.driverFirstName} is
-                     on the way to deliver your order!
+                  <Text style={{ fontWeight: 'bold' }}>
+                     {order.deliveryInfo.assigned.driverInfo.driverFirstName}
+                     {order.orderStatus !== 'DELIVERED'
+                        ? ' will be delivering your order.'
+                        : ' delivered your order.'}
                   </Text>
                </View>
                <View
@@ -252,7 +254,9 @@ const Delivery = ({ order }) => {
                      justifyContent: 'flex-end',
                   }}
                >
-                  <Text>{order.deliveryInfo.deliveryCompany.name}</Text>
+                  <Text style={{ marginRight: 8 }}>
+                     {order.deliveryInfo.deliveryCompany.name}
+                  </Text>
                   <Image
                      style={{ height: 40, width: 40 }}
                      source={{ uri: order.deliveryInfo.deliveryCompany.logo }}
