@@ -128,93 +128,101 @@ const Delivery = ({ order }) => {
 
    return (
       <View>
-         {/* Map */}
-         {order.deliveryInfo.tracking.location.isAvailable && (
-            <MapView
-               initialRegion={{
-                  latitude: order.deliveryInfo.tracking.location.latitude,
-                  longitude: order.deliveryInfo.tracking.location.longitude,
-               }}
-               style={styles.map}
-            >
-               <MapView.Marker
-                  coordinate={{
-                     latitude: order.deliveryInfo.tracking.location.latitude,
-                     longitude: order.deliveryInfo.tracking.location.longitude,
-                  }}
-               />
-            </MapView>
-         )}
-         {/* Illustration */}
-         <View style={styles.orderStatus}>
-            <View style={styles.orderStatusIllustration}>
-               <View
-                  style={[
-                     styles.orderStatusImageContainer,
-                     {
-                        backgroundColor: [
-                           'PENDING',
-                           'UNDER_PROCESSING',
-                           'READY_TO_DISPATCH',
-                           'OUT_FOR_DELIVERY',
-                           'DELIVERED',
-                        ].includes(order.orderStatus)
-                           ? '#ddefff'
-                           : '#fff',
-                     },
-                  ]}
-               >
-                  <Image
-                     source={orderpreparing}
-                     style={{ height: '80%', width: '80%' }}
-                  />
+         {/* show until order is not delivered */}
+         {order.orderStatus !== 'DELIVERED' && (
+            <>
+               {/* Map */}
+               {order.deliveryInfo.tracking.location.isAvailable && (
+                  <MapView
+                     initialRegion={{
+                        latitude: order.deliveryInfo.tracking.location.latitude,
+                        longitude:
+                           order.deliveryInfo.tracking.location.longitude,
+                     }}
+                     style={styles.map}
+                  >
+                     <MapView.Marker
+                        coordinate={{
+                           latitude:
+                              order.deliveryInfo.tracking.location.latitude,
+                           longitude:
+                              order.deliveryInfo.tracking.location.longitude,
+                        }}
+                     />
+                  </MapView>
+               )}
+               {/* Illustration */}
+               <View style={styles.orderStatus}>
+                  <View style={styles.orderStatusIllustration}>
+                     <View
+                        style={[
+                           styles.orderStatusImageContainer,
+                           {
+                              backgroundColor: [
+                                 'PENDING',
+                                 'UNDER_PROCESSING',
+                                 'READY_TO_DISPATCH',
+                                 'OUT_FOR_DELIVERY',
+                                 'DELIVERED',
+                              ].includes(order.orderStatus)
+                                 ? '#ddefff'
+                                 : '#fff',
+                           },
+                        ]}
+                     >
+                        <Image
+                           source={orderpreparing}
+                           style={{ height: '80%', width: '80%' }}
+                        />
+                     </View>
+                     <View
+                        style={[
+                           styles.orderStatusImageContainer,
+                           {
+                              backgroundColor: [
+                                 'OUT_FOR_DELIVERY',
+                                 'DELIVERED',
+                              ].includes(order.orderStatus)
+                                 ? '#ddefff'
+                                 : '#fff',
+                           },
+                        ]}
+                     >
+                        <Image
+                           source={orderpickup}
+                           style={{ height: '80%', width: '80%' }}
+                        />
+                     </View>
+                     <View
+                        style={[
+                           styles.orderStatusImageContainer,
+                           {
+                              backgroundColor: ['DELIVERED'].includes(
+                                 order.orderStatus
+                              )
+                                 ? '#ddefff'
+                                 : '#fff',
+                           },
+                        ]}
+                     >
+                        <Image
+                           source={orderdelivered}
+                           style={{ height: '80%', width: '80%' }}
+                        />
+                     </View>
+                  </View>
+                  <Text style={styles.orderStatusText}>
+                     {renderOrderStatus(order.orderStatus)}
+                  </Text>
                </View>
-               <View
-                  style={[
-                     styles.orderStatusImageContainer,
-                     {
-                        backgroundColor: [
-                           'OUT_FOR_DELIVERY',
-                           'DELIVERED',
-                        ].includes(order.orderStatus)
-                           ? '#ddefff'
-                           : '#fff',
-                     },
-                  ]}
-               >
-                  <Image
-                     source={orderpickup}
-                     style={{ height: '80%', width: '80%' }}
-                  />
-               </View>
-               <View
-                  style={[
-                     styles.orderStatusImageContainer,
-                     {
-                        backgroundColor: ['DELIVERED'].includes(
-                           order.orderStatus
-                        )
-                           ? '#ddefff'
-                           : '#fff',
-                     },
-                  ]}
-               >
-                  <Image
-                     source={orderdelivered}
-                     style={{ height: '80%', width: '80%' }}
-                  />
-               </View>
-            </View>
-            <Text style={styles.orderStatusText}>
-               {renderOrderStatus(order.orderStatus)}
-            </Text>
-         </View>
-         {/* Tracking Code */}
-         {order.deliveryInfo.tracking.code.isAvailable && (
-            <Text style={styles.trackingCode}>
-               You can also track your order here:
-               {order.deliveryInfo.tracking.code.url}
-            </Text>
+               {/* Tracking Code */}
+               {order.deliveryInfo.tracking.code.isAvailable && (
+                  <Text style={styles.trackingCode}>
+                     You can also track your order here:
+                     {order.deliveryInfo.tracking.code.url}
+                  </Text>
+               )}
+            </>
          )}
          {/* Delivery Guy */}
          {order.deliveryInfo.assigned.status.value === 'SUCCEEDED' ? (
@@ -280,29 +288,36 @@ const Pickup = ({ order }) => {
 
    return (
       <View>
-         {/* Restaurant Map */}
-         <MapView
-            initialRegion={{
-               latitude: +address.latitude,
-               longitude: +address.longitude,
-            }}
-            style={styles.map}
-         >
-            <MapView.Marker
-               coordinate={{
-                  latitude: +address.latitude,
-                  longitude: +address.longitude,
-                  title: order.deliveryInfo.pickup.pickupInfo.organizationName,
-                  description: 'Pickup order here!',
-               }}
-            />
-         </MapView>
-         {/* Order Status */}
-         <View style={styles.orderStatus}>
-            <Text style={styles.orderStatusText}>
-               {renderOrderStatus(order.orderStatus)}
-            </Text>
-         </View>
+         {/* show until order is not delivered */}
+         {order.orderStatus !== 'DELIVERED' && (
+            <>
+               {/* Restaurant Map */}
+               <MapView
+                  initialRegion={{
+                     latitude: +address.latitude,
+                     longitude: +address.longitude,
+                  }}
+                  style={styles.map}
+               >
+                  <MapView.Marker
+                     coordinate={{
+                        latitude: +address.latitude,
+                        longitude: +address.longitude,
+                        title:
+                           order.deliveryInfo.pickup.pickupInfo
+                              .organizationName,
+                        description: 'Pickup order here!',
+                     }}
+                  />
+               </MapView>
+               {/* Order Status */}
+               <View style={styles.orderStatus}>
+                  <Text style={styles.orderStatusText}>
+                     {renderOrderStatus(order.orderStatus)}
+                  </Text>
+               </View>
+            </>
+         )}
          {/* Restaurant Address */}
          <View style={styles.address}>
             <Text style={{ color: '#666' }}>Pickup location:</Text>

@@ -179,16 +179,17 @@ export const ORDERS = gql`
          order_by: { created_at: desc }
       ) {
          id
-         orderStatus
-         itemTotal
          deliveryInfo
-         created_at
-         deliveryPrice
-         discount
+         fulfillmentType
+         orderStatus
          amountPaid
+         currency
+         deliveryPrice
+         transactionId
+         discount
          tax
          tip
-         transactionId
+         itemTotal
          orderInventoryProducts {
             inventoryProduct {
                id

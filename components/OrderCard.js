@@ -9,12 +9,41 @@ const OrderCard = ({ order }) => {
       switch (status) {
          case 'PENDING':
             return '#F6AD55'
+         case 'UNDER_PROCESSING':
+            return '#F6AD55'
          case 'READY_TO_DISPATCH':
-            return '#4299E1'
+            return '#3C91E6'
+         case 'OUT_FOR_DELIVERY':
+            return '#1EA896'
          case 'DELIVERED':
             return '#48BB78'
          default:
             return '#aaa'
+      }
+   }
+
+   const whatTitle = (status, type) => {
+      switch (status) {
+         case 'PENDING':
+            return 'PENDING'
+         case 'UNDER_PROCESSING':
+            return 'BEING PREPARED'
+         case 'READY_TO_DISPATCH':
+            return 'READY'
+         case 'OUT_FOR_DELIVERY':
+            if (type.includes('DELIVERY')) {
+               return 'ON THE WAY'
+            } else {
+               return 'AWAITING PICKUP'
+            }
+         case 'DELIVERED':
+            if (type.includes('DELIVERY')) {
+               return 'DELIVERED'
+            } else {
+               return 'PICKED UP'
+            }
+         default:
+            return 'CALL US'
       }
    }
 
@@ -30,7 +59,7 @@ const OrderCard = ({ order }) => {
                   },
                ]}
             >
-               {order.orderStatus.replace(/_/g, ' ')}
+               {whatTitle(order.orderStatus, order.fulfillmentType)}
             </Text>
          </View>
          <Text style={[styles.muted, styles.bold]}>
