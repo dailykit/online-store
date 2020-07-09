@@ -18,7 +18,7 @@ const SimpleProductItem = ({
    showInfo,
    refId,
    refType,
-   comboProductComponentId,
+   comboProductComponent,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
@@ -44,8 +44,9 @@ const SimpleProductItem = ({
             },
             type: 'simpleRecipeProduct',
          }
-         if (comboProductComponentId) {
-            objToPush.comboProductComponentId = comboProductComponentId
+         if (comboProductComponent) {
+            objToPush.comboProductComponentId = comboProductComponent.id
+            objToPush.comboProductComponentLabel = comboProductComponent.label
          }
          setobjToAdd(objToPush)
          if (!tunnelItem && independantItem) {

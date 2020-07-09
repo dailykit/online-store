@@ -19,7 +19,7 @@ const CustomizableProductItem = ({
    product,
    refId,
    refType,
-   comboProductComponentId,
+   comboProductComponent,
 }) => {
    const [expanded, setExpanded] = useState(false)
    const [numberOfOptions, setnumberOfOptions] = useState(0)
@@ -106,8 +106,10 @@ const CustomizableProductItem = ({
             },
             type: _type,
          }
-         if (comboProductComponentId) {
-            objToAddToCart.comboProductComponentId = comboProductComponentId
+         if (comboProductComponent) {
+            objToAddToCart.comboProductComponentId = comboProductComponent.id
+            objToAddToCart.comboProductComponentLabel =
+               comboProductComponent.label
          }
          setobjToAdd(objToAddToCart)
          if (!tunnelItem && independantItem) {
