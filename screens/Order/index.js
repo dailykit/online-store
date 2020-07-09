@@ -25,11 +25,12 @@ const Order = ({ route, navigation }) => {
       ORDER,
       {
          variables: {
-            id: orderId,
+            id: orderId.toString(),
          },
       }
    )
 
+   console.log(order)
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
