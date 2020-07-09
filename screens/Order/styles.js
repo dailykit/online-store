@@ -45,6 +45,9 @@ export const styles = EStyleSheet.create({
    deliveryGuy: {
       backgroundColor: '#f3f3f3',
       padding: 5,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
    },
    address: {
       marginBottom: 20,

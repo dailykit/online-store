@@ -52,7 +52,11 @@ export default ({ navigation }) => {
                      <>
                         <TouchableOpacity
                            key={order?.id}
-                           // onPress={() => navigation.navigate('DeliveryScreen')}
+                           onPress={() =>
+                              navigation.navigate('Order', {
+                                 orderId: order.id,
+                              })
+                           }
                            style={styles.card}
                         >
                            <OrderCard order={order} />

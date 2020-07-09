@@ -17,7 +17,9 @@ export const ORDER = gql`
          itemTotal
          orderInventoryProducts {
             inventoryProduct {
+               id
                name
+               assets
             }
             inventoryProductOption {
                label
@@ -26,7 +28,9 @@ export const ORDER = gql`
          }
          orderMealKitProducts {
             simpleRecipeProduct {
+               id
                name
+               assets
             }
             simpleRecipeProductOption {
                price
@@ -37,7 +41,9 @@ export const ORDER = gql`
          }
          orderReadyToEatProducts {
             simpleRecipeProduct {
+               id
                name
+               assets
             }
             simpleRecipeProductOption {
                price
@@ -173,19 +179,22 @@ export const ORDERS = gql`
          order_by: { created_at: desc }
       ) {
          id
-         orderStatus
-         itemTotal
          deliveryInfo
-         created_at
-         deliveryPrice
-         discount
+         fulfillmentType
+         orderStatus
          amountPaid
+         currency
+         deliveryPrice
+         transactionId
+         discount
          tax
          tip
-         transactionId
+         itemTotal
          orderInventoryProducts {
             inventoryProduct {
+               id
                name
+               assets
             }
             inventoryProductOption {
                label
@@ -194,7 +203,9 @@ export const ORDERS = gql`
          }
          orderMealKitProducts {
             simpleRecipeProduct {
+               id
                name
+               assets
             }
             simpleRecipeProductOption {
                price
@@ -205,7 +216,9 @@ export const ORDERS = gql`
          }
          orderReadyToEatProducts {
             simpleRecipeProduct {
+               id
                name
+               assets
             }
             simpleRecipeProductOption {
                price

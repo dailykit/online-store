@@ -17,7 +17,7 @@ const InventoryProductItem = ({
    label,
    product,
    refId,
-   comboProductComponentId,
+   comboProductComponent,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
@@ -45,8 +45,9 @@ const InventoryProductItem = ({
          },
          type: 'inventoryProduct',
       }
-      if (comboProductComponentId) {
-         objToPush.comboProductComponentId = comboProductComponentId
+      if (comboProductComponent) {
+         objToPush.comboProductComponentId = comboProductComponent.id
+         objToPush.comboProductComponentLabel = comboProductComponent.label
       }
       setobjToAdd(objToPush)
       if (!tunnelItem && independantItem) {
