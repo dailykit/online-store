@@ -90,13 +90,16 @@ const OrderCard = ({ order }) => {
                               >
                                  <Image
                                     source={{
-                                       uri: product.inventoryProduct.image,
+                                       uri:
+                                          product.inventoryProduct?.assets
+                                             ?.images[0],
                                     }}
                                     style={{
                                        height: 60,
                                        width: 60,
                                        resizeMode: 'cover',
                                        marginRight: 8,
+                                       borderRadius: 4,
                                     }}
                                  />
                                  <View style={styles.productInfo}>
@@ -122,13 +125,16 @@ const OrderCard = ({ order }) => {
                               >
                                  <Image
                                     source={{
-                                       uri: product.simpleRecipeProduct.image,
+                                       uri:
+                                          product.simpleRecipeProduct?.assets
+                                             ?.images[0],
                                     }}
                                     style={{
                                        height: 60,
                                        width: 60,
                                        resizeMode: 'cover',
                                        marginRight: 8,
+                                       borderRadius: 4,
                                     }}
                                  />
                                  <View style={styles.productInfo}>
@@ -163,13 +169,16 @@ const OrderCard = ({ order }) => {
                               >
                                  <Image
                                     source={{
-                                       uri: product.simpleRecipeProduct.image,
+                                       uri:
+                                          product.simpleRecipeProduct?.assets
+                                             ?.images[0],
                                     }}
                                     style={{
                                        height: 60,
                                        width: 60,
                                        resizeMode: 'cover',
                                        marginRight: 8,
+                                       borderRadius: 4,
                                     }}
                                  />
                                  <View style={styles.productInfo}>

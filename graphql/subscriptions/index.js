@@ -17,7 +17,9 @@ export const ORDER = gql`
          itemTotal
          orderInventoryProducts {
             inventoryProduct {
+               id
                name
+               assets
             }
             inventoryProductOption {
                label
@@ -26,7 +28,9 @@ export const ORDER = gql`
          }
          orderMealKitProducts {
             simpleRecipeProduct {
+               id
                name
+               assets
             }
             simpleRecipeProductOption {
                price
@@ -37,7 +41,9 @@ export const ORDER = gql`
          }
          orderReadyToEatProducts {
             simpleRecipeProduct {
+               id
                name
+               assets
             }
             simpleRecipeProductOption {
                price
@@ -185,7 +191,9 @@ export const ORDERS = gql`
          transactionId
          orderInventoryProducts {
             inventoryProduct {
+               id
                name
+               assets
             }
             inventoryProductOption {
                label
@@ -194,7 +202,9 @@ export const ORDERS = gql`
          }
          orderMealKitProducts {
             simpleRecipeProduct {
+               id
                name
+               assets
             }
             simpleRecipeProductOption {
                price
@@ -205,7 +215,9 @@ export const ORDERS = gql`
          }
          orderReadyToEatProducts {
             simpleRecipeProduct {
+               id
                name
+               assets
             }
             simpleRecipeProductOption {
                price
