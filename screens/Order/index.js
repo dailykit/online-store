@@ -13,6 +13,7 @@ import orderdelivered from '../../assets/imgs/orderdelivered.png'
 import orderpickup from '../../assets/imgs/orderpickup.png'
 import orderpreparing from '../../assets/imgs/orderpreparing.png'
 import MapView from 'react-native-maps'
+import * as moment from 'moment'
 
 const Order = ({ route, navigation }) => {
    const { orderId } = route.params
@@ -49,6 +50,36 @@ const Order = ({ route, navigation }) => {
                {order ? (
                   <ScrollView style={{ flex: 1 }}>
                      <View style={styles.container}>
+                        {/* Order Heading */}
+                        <View style={styles.orderHeading}>
+                           <View
+                              style={{
+                                 flexDirection: 'row',
+                                 alignItems: 'center',
+                              }}
+                           >
+                              <Text style={{ color: '#666' }}>Order ID:</Text>
+                              <Text
+                                 style={{ fontWeight: 'bold', fontSize: 18 }}
+                              >
+                                 {' '}
+                                 {order.id}
+                              </Text>
+                           </View>
+                           <View style={{ flexDirection: 'row' }}>
+                              <Text style={{ color: '#666' }}>
+                                 Ordererd on:
+                              </Text>
+                              <Text
+                                 style={{
+                                    fontWeight: 'bold',
+                                 }}
+                              >
+                                 {' '}
+                                 {moment(order?.created_at).format('LLLL')}
+                              </Text>
+                           </View>
+                        </View>
                         {/* Conditional rendering */}
                         <View
                            style={{
