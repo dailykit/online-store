@@ -1,124 +1,147 @@
-import { useSubscription } from '@apollo/react-hooks';
-import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { useSubscription, useLazyQuery } from '@apollo/react-hooks'
+import React from 'react'
+import { FlatList, StyleSheet, View, SafeAreaView } from 'react-native'
 import {
-  COMBO_PRODUCTS,
-  CUSTOMIZABLE_PRODUCTS,
-  INVENTORY_PRODUCTS,
-  SIMPLE_RECIPE_PRODUCTS,
-} from '../graphql';
-import { width } from '../utils/Scalaing';
-import Card from './Card';
-import { Spinner } from '@ui-kitten/components';
+   COMBO_PRODUCTS,
+   CUSTOMIZABLE_PRODUCTS,
+   INVENTORY_PRODUCTS,
+   SIMPLE_RECIPE_PRODUCTS,
+} from '../graphql'
+import { width } from '../utils/Scalaing'
+import Card from './Card'
+import CardSkeleton from './skeletons/card'
 
-const Products = ({ category, navigation, showLess }) => {
-  const [products, setProducts] = React.useState([]);
+const Products = ({ category, navigation, horizontal }) => {
+   const [products, setProducts] = React.useState([])
 
-  React.useEffect(() => {
-    // empty products on route change
-    setProducts([]);
-  }, [category]);
+   React.useEffect(() => {
+      // empty products on route change
+      setProducts([])
+      fetchInventoryProduts()
+      fetchSimpleRecipeProducts()
+      fetchCustomizableProducts()
+      fetchComboProducts()
+   }, [category])
 
-  // Subscriptions
-  const { loading: inventoryProductsLoading } = useSubscription(
-    INVENTORY_PRODUCTS,
-    {
+   // Subscriptions
+   const [
+      fetchInventoryProduts,
+      { loading: inventoryProductsLoading },
+   ] = useLazyQuery(INVENTORY_PRODUCTS, {
       variables: {
-        ids: category.inventoryProducts,
+         ids: category.inventoryProducts,
       },
-      onSubscriptionData: (data) => {
-        setProducts([
-          ...products,
-          ...data.subscriptionData.data.inventoryProducts,
-        ]);
+      onCompleted: data => {
+         setProducts([...products, ...data.inventoryProducts])
       },
-    }
-  );
+      fetchPolicy: 'cache-and-network',
+   })
 
-  const { loading: simpleRecipeProductsLoading } = useSubscription(
-    SIMPLE_RECIPE_PRODUCTS,
-    {
+   const [
+      fetchSimpleRecipeProducts,
+      { loading: simpleRecipeProductsLoading },
+   ] = useLazyQuery(SIMPLE_RECIPE_PRODUCTS, {
       variables: {
-        ids: category.simpleRecipeProducts,
+         ids: category.simpleRecipeProducts,
       },
-      onSubscriptionData: (data) => {
-        setProducts([
-          ...products,
-          ...data.subscriptionData.data.simpleRecipeProducts,
-        ]);
+      onCompleted: data => {
+         setProducts([...products, ...data.simpleRecipeProducts])
       },
-    }
-  );
+      fetchPolicy: 'cache-and-network',
+   })
 
-  const { loading: customizableProductsLoading } = useSubscription(
-    CUSTOMIZABLE_PRODUCTS,
-    {
+   const [
+      fetchCustomizableProducts,
+      { loading: customizableProductsLoading },
+   ] = useLazyQuery(CUSTOMIZABLE_PRODUCTS, {
       variables: {
-        ids: category.customizableProducts,
+         ids: category.customizableProducts,
       },
-      onSubscriptionData: (data) => {
-        setProducts([
-          ...products,
-          ...data.subscriptionData.data.customizableProducts,
-        ]);
+      onCompleted: data => {
+         setProducts([...products, ...data.customizableProducts])
       },
-    }
-  );
+      fetchPolicy: 'cache-and-network',
+   })
 
-  const { loading: comboProductsLoading } = useSubscription(COMBO_PRODUCTS, {
-    variables: {
-      ids: category.comboProducts,
-    },
-    onSubscriptionData: (data) => {
-      setProducts([...products, ...data.subscriptionData.data.comboProducts]);
-    },
-  });
+   const [fetchComboProducts, { loading: comboProductsLoading }] = useLazyQuery(
+      COMBO_PRODUCTS,
+      {
+         variables: {
+            ids: category.comboProducts,
+         },
+         onCompleted: data => {
+            setProducts([...products, ...data.comboProducts])
+         },
+         fetchPolicy: 'cache-and-network',
+      }
+   )
 
-  if (
-    inventoryProductsLoading ||
-    simpleRecipeProductsLoading ||
-    customizableProductsLoading ||
-    comboProductsLoading
-  )
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Spinner />
-      </View>
-    );
-
-  return (
-    <View
-      style={{
-        width: width,
-        alignItems: 'center',
-        width: width > 1280 ? 1280 : width,
-        margin: 'auto',
-      }}
-    >
-      {Boolean(products.length) && (
-        <>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            style={styles.productList}
-            numColumns={width > 1000 ? 4 : 1}
-            data={showLess ? products.slice(0, 4) : products}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item: product }) => (
-              <Card navigation={navigation} product={product} />
+   if (
+      [
+         inventoryProductsLoading,
+         simpleRecipeProductsLoading,
+         customizableProductsLoading,
+         comboProductsLoading,
+      ].some(item => item)
+   )
+      return (
+         <SafeAreaView style={{ margin: width > 768 ? 20 : 5 }}>
+            {horizontal ? (
+               <FlatList
+                  showsHorizontalScrollIndicator={true}
+                  horizontal={true}
+                  data={[1, 2, 3]}
+                  keyExtractor={item => item.toString()}
+                  renderItem={() => <CardSkeleton />}
+               />
+            ) : (
+               <FlatList
+                  showsVerticalScrollIndicator={false}
+                  style={styles.productList}
+                  numColumns={width > 768 ? 4 : 2}
+                  data={[1, 2, 3]}
+                  keyExtractor={item => item.toString()}
+                  renderItem={() => <CardSkeleton />}
+               />
             )}
-          />
-        </>
-      )}
-    </View>
-  );
-};
+         </SafeAreaView>
+      )
 
-export default Products;
+   return (
+      <SafeAreaView style={{ margin: width > 768 ? 20 : 5 }}>
+         {Boolean(products.length) &&
+            (horizontal ? (
+               <FlatList
+                  showsHorizontalScrollIndicator={true}
+                  horizontal={true}
+                  data={products}
+                  keyExtractor={item => item.id.toString()}
+                  renderItem={({ item: product }) => (
+                     <Card navigation={navigation} product={product} />
+                  )}
+               />
+            ) : (
+               <FlatList
+                  showsVerticalScrollIndicator={false}
+                  style={styles.productList}
+                  data={products}
+                  numColumns={width > 768 ? 4 : 2}
+                  keyExtractor={item => item.id.toString()}
+                  renderItem={({ item: product }) => (
+                     <Card navigation={navigation} product={product} />
+                  )}
+               />
+            ))}
+      </SafeAreaView>
+   )
+}
+
+export default Products
 
 const styles = StyleSheet.create({
-  productList: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    paddingHorizontal: 32,
-  },
-});
+   productList: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      marginHorizontal: 'auto',
+   },
+})

@@ -2,18 +2,14 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { height, width } from '../../utils/Scalaing';
 
 export const styles = EStyleSheet.create({
-  home: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
   img_container: {
-    height: height * 0.5,
+    height: width > 768 ? height * 0.6 : height * 0.25,
     width,
   },
   reallyBigContainer: {
     width: width,
     marginHorizontal: 'auto',
-    backgroundColor: '#fff',
+    backgroundColor: '#eaeded',
   },
   cover_image: {
     flex: 1,
@@ -86,5 +82,14 @@ export const styles = EStyleSheet.create({
     borderWidth: 1,
     minHeight: 40,
     paddingVertical: 7,
+  },
+  category: {
+    backgroundColor: '#fff',
+    marginHorizontal: width > 768 ? 20 : 0,
+    marginVertical: width > 768 ? 20 : 5,
+    borderRadius: 2,
+  },
+  sections: {
+    marginBottom: height * 0.1,
   },
 });

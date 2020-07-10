@@ -6,9 +6,11 @@ import { useCartContext } from '../context/cart';
 import { width } from '../utils/Scalaing';
 import Icon from './Icon';
 import NavBar from './NavBar';
+import { useAppContext } from '../context/app';
 
 const BasketButton = ({ isWhite, style, navigation }) => {
   const { cart } = useCartContext();
+  const { visual } = useAppContext();
   let numberOfProducts = cart?.cartInfo?.products?.length || 0;
 
   return (
@@ -16,23 +18,26 @@ const BasketButton = ({ isWhite, style, navigation }) => {
       style={[styles.button, style, { position: 'relative' }]}
       onPress={() => navigation.navigate('OrderSummary')}
     >
-      <Text
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          backgroundColor: '#e3e3e3',
-          borderRadius: 20,
-          height: 25,
-          width: 25,
-          padding: 2,
-          fontSize: 16,
-          textAlign: 'center',
-          fontWeight: 'bold',
-        }}
-      >
-        {numberOfProducts}
-      </Text>
+      {Boolean(numberOfProducts) && (
+        <Text
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            backgroundColor: visual.color,
+            color: '#fff',
+            borderRadius: 20,
+            height: 25,
+            width: 25,
+            padding: 2,
+            fontSize: 16,
+            textAlign: 'center',
+            fontWeight: 'bold',
+          }}
+        >
+          {numberOfProducts}
+        </Text>
+      )}
       <Icon
         size={24}
         name='shopping-cart'
@@ -68,7 +73,6 @@ class Header extends React.Component {
     } = this.props;
 
     const headerStyles = [
-      transparent ? { backgroundColor: 'rgba(0,0,0,0)' } : null,
       {
         height: 64,
         width: width,

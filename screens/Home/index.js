@@ -1,350 +1,387 @@
+import { useLazyQuery, useMutation, useSubscription } from '@apollo/react-hooks'
+import { Spinner } from 'native-base'
+import { Dimensions } from 'react-native'
+import { Datepicker } from '@ui-kitten/components'
+import * as axios from 'axios'
+import moment from 'moment'
+import React, { useRef, useState } from 'react'
+import Carousel from 'react-native-banner-carousel'
 import {
-  useLazyQuery,
-  useMutation,
-  useSubscription,
-} from '@apollo/react-hooks';
-import { Datepicker, Spinner } from '@ui-kitten/components';
-import * as axios from 'axios';
-import moment from 'moment';
-import React, { useRef, useState } from 'react';
+   Image,
+   ScrollView,
+   SectionList,
+   Text,
+   TouchableOpacity,
+   View,
+   ListView,
+} from 'react-native'
+// Change number to edit: 3 (shit package)
+import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv'
+import { Header, Icon } from '../../components'
+import Cart from '../../components/Cart'
+import { CategoryBanner } from '../../components/CategoryBanner'
+import DrawerLayout from '../../components/DrawerLayout'
+import Products from '../../components/Products'
+import { SafetyBanner } from '../../components/SafetyBanner'
+import { useAppContext } from '../../context/app'
+import { useAuth } from '../../context/auth'
+import { useCartContext } from '../../context/cart'
 import {
-  Image,
-  ScrollView,
-  SectionList,
-  Text,
-  TouchableOpacity,
-  View,
-  ListView,
-} from 'react-native';
-import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv';
-import { Header, Icon } from '../../components';
-import Cart from '../../components/Cart';
-import { CategoryBanner } from '../../components/CategoryBanner';
-import DrawerLayout from '../../components/DrawerLayout';
-import Products from '../../components/Products';
-import { SafetyBanner } from '../../components/SafetyBanner';
-import { useAppContext } from '../../context/app';
-import { useAuth } from '../../context/auth';
-import { useCartContext } from '../../context/cart';
-import {
-  CREATE_CUSTOMER,
-  CUSTOMER,
-  CUSTOMER_DETAILS,
-  STORE_SETTINGS,
-} from '../../graphql';
-import { height, width } from '../../utils/Scalaing';
-import { styles } from './styles';
-import CategoriesButton from '../../components/CategoriesButton';
-import Footer from '../../components/Footer';
+   CREATE_CUSTOMER,
+   CUSTOMER,
+   CUSTOMER_DETAILS,
+   STORE_SETTINGS,
+} from '../../graphql'
+import { height, width } from '../../utils/Scalaing'
+import { styles } from './styles'
+import CategoriesButton from '../../components/CategoriesButton'
+import Footer from '../../components/Footer'
+import { Feather } from '@expo/vector-icons'
 
-const CalendarIcon = (props) => <Icon size={24} {...props} name='calendar' />;
+const BannerWidth = Dimensions.get('window').width
+const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
 
-const Home = (props) => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [calendarDate, setcalendarDate] = useState(new Date());
+const images = [
+   'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+   'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+   'https://images.pexels.com/photos/1640775/pexels-photo-1640775.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+]
 
-  const [data, setData] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+const CalendarIcon = props => <Icon size={24} {...props} name="calendar" />
 
-  const { setCustomer, setCustomerDetails, cart } = useCartContext();
-  const { user } = useAuth();
+const Home = props => {
+   const [selectedIndex, setSelectedIndex] = useState(0)
+   const [calendarDate, setcalendarDate] = useState(new Date())
 
-  const sectionListRef = useRef();
-  const scrollViewRef = useRef();
+   const [data, setData] = React.useState([])
+   const [loading, setLoading] = React.useState(false)
 
-  const {
-    brand,
-    setBrand,
-    visual,
-    setVisual,
-    availability,
-    setAvailability,
-  } = useAppContext();
+   const { setCustomer, setCustomerDetails, cart } = useCartContext()
+   const { user } = useAuth()
 
-  // Query
-  const { loading: settingsLoading, error: settingsError } = useSubscription(
-    STORE_SETTINGS,
-    {
-      onSubscriptionData: (data) => {
-        const brandSettings = data.subscriptionData.data.storeSettings.filter(
-          (setting) => setting.type === 'brand'
-        );
-        const visualSettings = data.subscriptionData.data.storeSettings.filter(
-          (setting) => setting.type === 'visual'
-        );
-        const availabilitySettings = data.subscriptionData.data.storeSettings.filter(
-          (setting) => setting.type === 'availability'
-        );
+   // const sectionListRef = useRef();
+   // const scrollViewRef = useRef();
 
-        let brandState = {};
-        brandSettings.forEach(({ identifier, value }) => {
-          switch (identifier) {
-            case 'Brand Logo': {
-              brandState.logo = value.url;
-              return;
-            }
-            case 'Brand Name': {
-              brandState.name = value.name;
-              return;
-            }
-            default: {
-              return;
-            }
-          }
-        });
-        setBrand({ ...brandState });
+   const {
+      brand,
+      setBrand,
+      visual,
+      setVisual,
+      availability,
+      setAvailability,
+   } = useAppContext()
 
-        let visualState = {};
-        visualSettings.forEach(({ identifier, value }) => {
-          switch (identifier) {
-            case 'Primary Color': {
-              visualState.color = value.color;
-              return;
-            }
-            case 'Cover': {
-              visualState.cover = value.url;
-              return;
-            }
-            default: {
-              return;
-            }
-          }
-        });
-        setVisual({ ...visualState });
+   // Query
+   const { loading: settingsLoading, error: settingsError } = useSubscription(
+      STORE_SETTINGS,
+      {
+         onSubscriptionData: data => {
+            const brandSettings = data.subscriptionData.data.storeSettings.filter(
+               setting => setting.type === 'brand'
+            )
+            const visualSettings = data.subscriptionData.data.storeSettings.filter(
+               setting => setting.type === 'visual'
+            )
+            const availabilitySettings = data.subscriptionData.data.storeSettings.filter(
+               setting => setting.type === 'availability'
+            )
 
-        let availabilityState = {};
-        availabilitySettings.forEach(({ identifier, value }) => {
-          switch (identifier) {
-            case 'Store Availability': {
-              availabilityState.store = value;
-              return;
-            }
-            case 'Pickup Availability': {
-              availabilityState.pickup = value;
-              return;
-            }
-            case 'Delivery Availability': {
-              availabilityState.delivery = value;
-              return;
-            }
-            default: {
-              return;
-            }
-          }
-        });
-        setAvailability({ ...availabilityState });
-      },
-    }
-  );
-
-  // .
-  const fetchData = async (date) => {
-    try {
-      setLoading(true);
-      const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
-        input: date,
-      });
-      setData(response.data);
-      setLoading(false);
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
-    }
-  };
-
-  // Effects
-  React.useEffect(() => {
-    if (availability && isStoreOpen()) {
-      fetchData({
-        year: moment().year(),
-        month: moment().month(),
-        day: moment().date(),
-      });
-    }
-  }, [availability]);
-
-  React.useEffect(() => {
-    if (user.sub || user.userid) {
-      customerDetails();
-    }
-  }, [user]);
-
-  // Query
-  const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
-    variables: {
-      keycloakId: user.sub || user.userid,
-    },
-    onCompleted: (data) => {
-      if (data.platform_customerByClients?.length) {
-        setCustomerDetails(data.platform_customerByClients[0].customer);
-      } else {
-        console.log('No customer data found!');
-      }
-    },
-    fetchPolicy: 'cache-and-network',
-  });
-
-  // Mutations
-  const [createCustomer] = useMutation(CREATE_CUSTOMER, {
-    onCompleted: () => {
-      console.log('Customer created');
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-
-  // Subscription
-  const { error } = useSubscription(CUSTOMER, {
-    variables: {
-      keycloakId: user.sub || user.userid,
-      email: user.email,
-    },
-    onSubscriptionData: (data) => {
-      const customers = data.subscriptionData.data.customers;
-      if (customers.length) {
-        setCustomer(customers[0]);
-      } else {
-        createCustomer({
-          variables: {
-            object: {
-              keycloakId: user.sub || user.userid,
-              email: user.email,
-              source: 'online store',
-              clientId: CLIENTID,
-            },
-          },
-        });
-      }
-    },
-  });
-
-  const isStoreOpen = () => {
-    const current = new Date();
-    if (availability.store.isOpen) {
-      const minutes = current.getMinutes() + current.getHours() * 60;
-      const from = availability.store.from.split(':');
-      const to = availability.store.to.split(':');
-      const fromMinutes = parseInt(from[1]) + parseInt(from[0]) * 60;
-      const toMinutes = parseInt(to[1]) + parseInt(to[0]) * 60;
-
-      if (minutes >= fromMinutes && minutes <= toMinutes) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  };
-
-  if (error) console.log('Subscription error: ', error);
-
-  if (settingsLoading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#fff',
-        }}
-      >
-        <Spinner size='large' />
-      </View>
-    );
-  }
-  if (availability && !isStoreOpen())
-    return (
-      <View style={styles.reallyBigContainer}>
-        <ScrollView>
-          <View>
-            <Header title='Home' search options navigation={props.navigation} />
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                style={{
-                  fontWeight: 500,
-                  fontSize: 24,
-                  marginBottom: 20,
-                }}
-              >
-                Store Closed
-              </Text>
-              <Text style={{ fontSize: 20 }}>
-                {availability.store.shutMessage}
-              </Text>
-            </View>
-          </View>
-          <View style={styles.flexContainer}>
-            <Spinner />
-          </View>
-          <View style={{ height: height * 0.08 }} />
-        </ScrollView>
-        <Cart to='OrderSummary' {...props} text='Checkout' />
-      </View>
-    );
-  let pickerData = [];
-  let sectionsData = [];
-
-  if (data.length) {
-    data.forEach((category, _id) => {
-      pickerData.push(category.name);
-      let dataItems = [];
-      Object.keys(category)?.forEach((key) => {
-        if (
-          key != 'name' &&
-          key != '__typename' &&
-          key != 'title' &&
-          key != 'data'
-        ) {
-          category[key]?.forEach((el) =>
-            dataItems.push({
-              type: key,
-              id: el,
+            let brandState = {}
+            brandSettings.forEach(({ identifier, value }) => {
+               switch (identifier) {
+                  case 'Brand Logo': {
+                     brandState.logo = value.url
+                     return
+                  }
+                  case 'Brand Name': {
+                     brandState.name = value.name
+                     return
+                  }
+                  case 'Address': {
+                     brandState.address = value
+                  }
+                  default: {
+                     return
+                  }
+               }
             })
-          );
-        }
-      });
-      sectionsData.push({
-        title: category.name,
-        data: dataItems,
-      });
-    });
-  }
-  data.forEach((el) => {
-    el.title = el.name;
-    el.data = [{ ...el }];
-  });
-  return (
-    <>
-      <Header
-        title={brand?.name ? brand?.name : 'Home'}
-        search
-        options
-        navigation={props.navigation}
-      />
-      <ScrollView
-        ref={scrollViewRef}
-        stickyHeaderIndices={[1]}
-        style={[styles.home, styles.reallyBigContainer]}
-      >
-        {/* <Tabs /> */}
-        <View style={styles.img_container}>
-          <Image
-            source={{
-              uri: visual.cover,
-            }}
-            style={styles.cover_image}
-          />
-        </View>
+            setBrand({ ...brandState })
 
-        {/* <View
+            let visualState = {}
+            visualSettings.forEach(({ identifier, value }) => {
+               switch (identifier) {
+                  case 'Primary Color': {
+                     visualState.color = value.color
+                     return
+                  }
+                  case 'Slides': {
+                     visualState.slides = value
+                     return
+                  }
+                  default: {
+                     return
+                  }
+               }
+            })
+            setVisual({ ...visualState })
+
+            let availabilityState = {}
+            availabilitySettings.forEach(({ identifier, value }) => {
+               switch (identifier) {
+                  case 'Store Availability': {
+                     availabilityState.store = value
+                     return
+                  }
+                  case 'Pickup Availability': {
+                     availabilityState.pickup = value
+                     return
+                  }
+                  case 'Delivery Availability': {
+                     availabilityState.delivery = value
+                     return
+                  }
+                  default: {
+                     return
+                  }
+               }
+            })
+            setAvailability({ ...availabilityState })
+         },
+      }
+   )
+
+   // .
+   const fetchData = async date => {
+      try {
+         setLoading(true)
+         const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
+            date,
+         })
+         setData(response.data)
+         console.log(response.data)
+         setLoading(false)
+      } catch (err) {
+         setLoading(false)
+         console.log(err)
+      }
+   }
+
+   // Effects
+   React.useEffect(() => {
+      if (availability && isStoreOpen()) {
+         console.log('-------- store is open --------')
+         const date = new Date(Date.now()).toISOString()
+         fetchData(date)
+      }
+   }, [availability])
+
+   React.useEffect(() => {
+      if (user.sub || user.userid) {
+         customerDetails()
+      }
+   }, [user])
+
+   // Query
+   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
+      variables: {
+         keycloakId: user.sub || user.userid,
+      },
+      onCompleted: data => {
+         if (data.platform_customerByClients?.length) {
+            console.log(
+               'platform -> data',
+               data.platform_customerByClients[0].customer
+            )
+            setCustomerDetails(data.platform_customerByClients[0].customer)
+         } else {
+            console.log('No customer data found!')
+         }
+      },
+      fetchPolicy: 'cache-and-network',
+   })
+
+   // Mutations
+   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
+      onCompleted: () => {
+         console.log('Customer created')
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   // Subscription
+   const { error } = useSubscription(CUSTOMER, {
+      variables: {
+         keycloakId: user.sub || user.userid,
+         email: user.email,
+      },
+      onSubscriptionData: data => {
+         const customers = data.subscriptionData.data.customers
+         if (customers.length) {
+            setCustomer(customers[0])
+         } else {
+            createCustomer({
+               variables: {
+                  object: {
+                     keycloakId: user.sub || user.userid,
+                     email: user.email,
+                     source: 'online store',
+                     clientId: CLIENTID,
+                  },
+               },
+            })
+         }
+      },
+   })
+
+   const isStoreOpen = () => {
+      const current = new Date()
+      if (availability.store.isOpen) {
+         const minutes = current.getMinutes() + current.getHours() * 60
+         const from = availability.store.from.split(':')
+         const to = availability.store.to.split(':')
+         const fromMinutes = parseInt(from[1]) + parseInt(from[0]) * 60
+         const toMinutes = parseInt(to[1]) + parseInt(to[0]) * 60
+
+         if (minutes >= fromMinutes && minutes <= toMinutes) {
+            return true
+         } else {
+            return false
+         }
+      } else {
+         return false
+      }
+   }
+
+   if (error) console.log('Subscription error: ', error)
+
+   if (settingsLoading) {
+      return (
+         <View
+            style={{
+               flex: 1,
+               justifyContent: 'center',
+               alignItems: 'center',
+               backgroundColor: '#fff',
+            }}
+         >
+            <Spinner size="large" />
+         </View>
+      )
+   }
+   if (availability && !isStoreOpen())
+      return (
+         <View style={styles.reallyBigContainer}>
+            <ScrollView>
+               <View>
+                  <Header
+                     title="Home"
+                     search
+                     options
+                     navigation={props.navigation}
+                  />
+                  <View
+                     style={{
+                        flex: 1,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                     }}
+                  >
+                     <Text
+                        style={{
+                           fontWeight: 500,
+                           fontSize: 24,
+                           marginBottom: 20,
+                        }}
+                     >
+                        Store Closed
+                     </Text>
+                     <Text style={{ fontSize: 20 }}>
+                        {availability.store.shutMessage}
+                     </Text>
+                  </View>
+               </View>
+               <View style={styles.flexContainer}>
+                  <Spinner size="large" />
+               </View>
+               <View style={{ height: height * 0.08 }} />
+            </ScrollView>
+            <Cart to="OrderSummary" {...props} text="Checkout" />
+         </View>
+      )
+   let pickerData = []
+   let sectionsData = []
+
+   if (data.length) {
+      data.forEach((category, _id) => {
+         pickerData.push(category.name)
+         let dataItems = []
+         Object.keys(category)?.forEach(key => {
+            if (
+               key != 'name' &&
+               key != '__typename' &&
+               key != 'title' &&
+               key != 'data'
+            ) {
+               category[key]?.forEach(el =>
+                  dataItems.push({
+                     type: key,
+                     id: el,
+                  })
+               )
+            }
+         })
+         sectionsData.push({
+            title: category.name,
+            data: dataItems,
+         })
+      })
+   }
+   data.forEach(el => {
+      el.title = el.name
+      el.data = [{ ...el }]
+   })
+   return (
+      <>
+         <Header
+            title={brand?.name ? brand?.name : 'Home'}
+            search
+            options
+            navigation={props.navigation}
+         />
+         <ScrollView
+            stickyHeaderIndices={[2]}
+            style={[styles.reallyBigContainer]}
+            showsVerticalScrollIndicator={false}
+         >
+            {/* <Tabs /> */}
+            {Boolean(visual?.slides?.length) && (
+               <View style={styles.img_container}>
+                  <Carousel
+                     autoplay
+                     autoplayTimeout={3000}
+                     loop
+                     index={0}
+                     pageSize={BannerWidth}
+                  >
+                     {visual.slides.map((slide, index) => (
+                        <View key={index}>
+                           <Image
+                              style={{
+                                 width: BannerWidth,
+                                 height: BannerHeight,
+                                 size: 'cover',
+                              }}
+                              source={{ uri: slide.url }}
+                           />
+                        </View>
+                     ))}
+                  </Carousel>
+               </View>
+            )}
+
+            {/* <View
           style={{
             flexDirection: 'column',
             width: width,
@@ -389,101 +426,106 @@ const Home = (props) => {
             }}
           /> 
         </View>*/}
-        <View style={[styles.picker_container, { marginBottom: 4 }]}>
-          <ScrollView
-            horizontal
-            style={{
-              flex: 1,
-            }}
-            contentContainerStyle={{
-              marginHorizontal: width > 768 ? 'auto' : 'none',
-            }}
-            showsHorizontalScrollIndicator={false}
-          >
-            {data.map((category, key) => (
-              <CategoriesButton
-                title={category.name}
-                key={key}
-                id={key}
-                length={data?.length}
-                onPress={() =>
-                  props.navigation.navigate('CategoryProductsPage', {
-                    data,
-                    category,
-                  })
-                }
-              />
-            ))}
-          </ScrollView>
-        </View>
-        <View style={styles.flexContainerMiddle}>
-          <View style={styles.cardContainer}>
-            {/* <SectionList
-              showsVerticalScrollIndicator={true}
-              ref={sectionListRef}
-              sections={data}
-              style={{
-                height: height - 16 * 4.125 - 80 - 48,
-                width: width > 1280 ? width : width,
-                paddingBottom: height * 0.5,
-              }}
-              keyExtractor={(item, index) => item + index}
-              renderSectionHeader={({ section: { title } }) => (
-                <CategoryBanner category={title} />
-              )}
-              renderItem={({ item: category }) => (
-                <Products navigation={props.navigation} category={category} />
-              )}
-            /> */}
-            <View>
-              {data.map((category) => (
-                <View style={{ marginBottom: 20 }}>
-                  <CategoryBanner category={category.title} />
-                  <Products
-                    navigation={props.navigation}
-                    category={category}
-                    showLess={true}
-                  />
-                  <TouchableOpacity
-                    style={{
-                      marginHorizontal: 'auto',
-                      padding: 10,
-                      marginVertical: 20,
-                      backgroundColor: visual.color,
-                      borderRadius: 4,
-                      minWidth: 150,
-                      textAlign: 'center',
-                    }}
-                    onPress={() =>
-                      props.navigation.navigate('CategoryProductsPage', {
-                        data,
-                        category,
-                      })
-                    }
+            {loading && (
+               <View
+                  style={{
+                     flex: 1,
+                     justifyContent: 'center',
+                     alignItems: 'center',
+                     backgroundColor: '#fff',
+                  }}
+               >
+                  <Spinner size="large" />
+               </View>
+            )}
+
+            {Boolean(data.length) && (
+               <View style={[styles.picker_container, { marginBottom: 4 }]}>
+                  <ScrollView
+                     horizontal
+                     style={{
+                        flex: 1,
+                     }}
+                     contentContainerStyle={{
+                        marginHorizontal: 10,
+                     }}
+                     showsHorizontalScrollIndicator={false}
                   >
-                    <Text
-                      style={{
-                        color: '#fff',
-                        fontSize: '1.1rem',
-                      }}
-                    >
-                      View All
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
-            </View>
-          </View>
-        </View>
-        {/* <View style={styles.headerContainer}>
+                     {data.map((category, key) => (
+                        <CategoriesButton
+                           title={category.name}
+                           key={key}
+                           id={key}
+                           length={data?.length}
+                           onPress={() =>
+                              props.navigation.navigate(
+                                 'CategoryProductsPage',
+                                 {
+                                    data,
+                                    category,
+                                 }
+                              )
+                           }
+                        />
+                     ))}
+                  </ScrollView>
+               </View>
+            )}
+            {Boolean(data.length) && (
+               <View style={styles.sections}>
+                  {data.map(category => (
+                     <View style={styles.category}>
+                        <CategoryBanner
+                           navigation={props.navigation}
+                           title={category.name}
+                           category={category}
+                           data={data}
+                           showLink={true}
+                        />
+                        <Products
+                           navigation={props.navigation}
+                           category={category}
+                           horizontal={true}
+                        />
+                     </View>
+                  ))}
+               </View>
+            )}
+            {!loading && Boolean(!data.length) && (
+               <View
+                  style={{
+                     flex: 1,
+                     justifyContent: 'center',
+                     alignItems: 'center',
+                     padding: 20,
+                     minHeight: 200,
+                  }}
+               >
+                  <Feather name="frown" size={28} color="#666" />
+                  <Text
+                     style={{
+                        fontSize: '1.2rem',
+                        fontWeight: 'bold',
+                        color: '#666',
+                        marginTop: 10,
+                        textAlign: 'center',
+                     }}
+                  >
+                     Sorry! No products available at this moment.
+                  </Text>
+               </View>
+            )}
+            {/* <View style={styles.headerContainer}>
           <SafetyBanner {...props} />
         </View> */}
-        {width < 768 && <Cart to='OrderSummary' {...props} text='Checkout' />}
-        <DrawerLayout />
-        <Footer />
-      </ScrollView>
-    </>
-  );
-};
+            {width < 768 && (
+               <Cart to="OrderSummary" {...props} text="Checkout" />
+            )}
+            <DrawerLayout />
+            <Footer />
+         </ScrollView>
+      </>
+   )
+}
 
-export default Home;
+export default Home

@@ -1,7 +1,7 @@
-import { Feather, MaterialIcons } from '@expo/vector-icons';
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useAppContext } from '../context/app';
+import { Feather, MaterialIcons } from '@expo/vector-icons'
+import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useAppContext } from '../context/app'
 
 const ServingSelect = ({
    index,
@@ -16,17 +16,24 @@ const ServingSelect = ({
    customizableProduct,
    simpleRecipeProductId,
    name,
+   typeSelected,
 }) => {
-   const { visual } = useAppContext();
+   const { visual } = useAppContext()
 
    return (
       <TouchableOpacity
          onPress={() => {
-            setServingIndex(index - 1);
+            setServingIndex(index - 1)
             if (customizableProduct) {
-               setproductOptionId(id, price, simpleRecipeProductId, name);
+               setproductOptionId(
+                  id,
+                  price,
+                  simpleRecipeProductId,
+                  name,
+                  typeSelected
+               )
             } else {
-               setproductOptionId(id, price);
+               setproductOptionId(id, price, typeSelected)
             }
          }}
          style={[
@@ -65,8 +72,8 @@ const ServingSelect = ({
             )}
          </View>
       </TouchableOpacity>
-   );
-};
+   )
+}
 
 const styles = StyleSheet.create({
    done_container: {
@@ -101,6 +108,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
    },
-});
+})
 
-export default ServingSelect;
+export default ServingSelect

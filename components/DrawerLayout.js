@@ -16,6 +16,7 @@ import { useLazyQuery } from '@apollo/react-hooks';
 import { CUSTOMER_DETAILS } from '../graphql';
 import { useAuth } from '../context/auth';
 import Fulfillment from './Fulfillment';
+import Login from '../screens/Login';
 
 const DrawerLayout = () => {
   const {
@@ -55,25 +56,21 @@ const DrawerLayout = () => {
 
   // Handlers
   const renderScreen = () => {
-    console.log(drawerView);
     switch (drawerView) {
-      case 'Profile':
-        //   return <ProfileScreen />;
-        return <Fulfillment />;
       case 'EditAddress':
         return <EditAddress />;
       case 'SelectPaymentMethod':
         return <SelectPaymentMethod />;
-      case 'OrderHistory':
-        return <OrderHistory />;
       case 'AddDetails':
         return <AddDetails params={params} />;
       case 'Safety':
         return <SafetyScreen />;
       case 'Fulfillment':
         return <Fulfillment />;
+      case 'Login':
+        return <Login />;
       default:
-        return <Text>Oops!</Text>;
+        return <Text>Oops! No such component.</Text>;
     }
   };
 
