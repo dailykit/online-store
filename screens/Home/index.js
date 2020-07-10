@@ -97,6 +97,9 @@ const Home = props => {
                      brandState.name = value.name
                      return
                   }
+                  case 'Address': {
+                     brandState.address = value
+                  }
                   default: {
                      return
                   }
