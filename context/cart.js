@@ -23,9 +23,9 @@ import { useAppContext } from './app'
 const CartContext = React.createContext()
 
 export const CartContextProvider = ({ children }) => {
-   const { brand } = useAppContext()
+   const { availability } = useAppContext()
 
-   console.log('Brand Address: ', brand.address)
+   console.log('Brand Location: ', availability?.location)
 
    // From Hasura
    const [customer, setCustomer] = useState(undefined)
@@ -86,14 +86,14 @@ export const CartContextProvider = ({ children }) => {
       if (
          customerDetails?.defaultCustomerAddress?.lat &&
          customerDetails?.defaultCustomerAddress?.lng &&
-         brand.address?.lat &&
-         brand.address?.lng
+         availability?.location?.lat &&
+         availability?.location?.lng
       ) {
          const distance = getDistance(
             customerDetails.defaultCustomerAddress.lat,
             customerDetails.defaultCustomerAddress.lng,
-            +brand.address.lat,
-            +brand.address.lng
+            +availability.location.lat,
+            +availability.location.lng
          )
          setDistance(distance)
       }

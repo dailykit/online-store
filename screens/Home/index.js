@@ -97,9 +97,6 @@ const Home = props => {
                      brandState.name = value.name
                      return
                   }
-                  case 'Address': {
-                     brandState.address = value
-                  }
                   default: {
                      return
                   }
@@ -139,6 +136,9 @@ const Home = props => {
                   case 'Delivery Availability': {
                      availabilityState.delivery = value
                      return
+                  }
+                  case 'Location': {
+                     availabilityState.location = value.address
                   }
                   default: {
                      return
