@@ -73,7 +73,6 @@ const Cart = ({
             let total = parseFloat(cart?.cartInfo?.total) || 0
             if (tunnelItem) {
                if (type === 'comboProduct') {
-                  console.log(comboProductItems)
                   const unitPrice = comboProductItems.reduce(
                      (acc, product) => acc + parseFloat(product.unitPrice),
                      0
@@ -110,7 +109,6 @@ const Cart = ({
                      specialInstructions: '',
                   }
                   delete item.price
-                  console.log('Item adding: ', item)
                   products.push(item)
                   total = total + parseFloat(item.totalPrice)
                }

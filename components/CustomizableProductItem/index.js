@@ -62,7 +62,6 @@ const CustomizableProductItem = ({
       if (newItem.type === 'inventoryProduct') {
          delete newItem.option.type
       }
-      console.log(newItem)
       setobjToAdd(newItem)
       setcartItem(newItem)
    }
@@ -78,7 +77,6 @@ const CustomizableProductItem = ({
          let default_product
          let _default_option
          let _type
-         console.log('PRODUCT:', product)
          if (product.customizableProductOptions[0]?.inventoryProduct !== null) {
             default_product =
                product?.customizableProductOptions[0]?.inventoryProduct

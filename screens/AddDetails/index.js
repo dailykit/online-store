@@ -5,8 +5,6 @@ import { DAILYKEY_URL } from 'react-native-dotenv'
 const AddDetails = ({ params }) => {
    const { path } = params
 
-   console.log(DAILYKEY_URL)
-
    return (
       <React.Fragment>
          <ScrollView style={{ height: '100%' }}>

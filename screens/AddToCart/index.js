@@ -45,7 +45,6 @@ const ModalContent = ({
          component =>
             component.comboProductComponentId === item.comboProductComponentId
       )
-      console.log(index)
       if (index !== -1) {
          auxArray.splice(index, 1)
       }
@@ -57,7 +56,6 @@ const ModalContent = ({
       }
       delete refacItem.price
       auxArray.push(refacItem)
-      console.log('Combo items: ', auxArray)
       setcomboProductItems(auxArray)
    }
 

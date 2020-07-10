@@ -158,7 +158,6 @@ const Home = props => {
             date,
          })
          setData(response.data)
-         console.log(response.data)
          setLoading(false)
       } catch (err) {
          setLoading(false)
@@ -169,7 +168,6 @@ const Home = props => {
    // Effects
    React.useEffect(() => {
       if (availability && isStoreOpen()) {
-         console.log('-------- store is open --------')
          const date = new Date(Date.now()).toISOString()
          fetchData(date)
       }

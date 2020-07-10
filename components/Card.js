@@ -22,10 +22,6 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const { open } = useDrawerContext()
    const [isHovered, setIsHovered] = React.useState(false)
 
-   React.useEffect(() => {
-      console.log('Modal: ', isModalVisible)
-   }, [isModalVisible])
-
    return (
       <>
          {cardData && (
