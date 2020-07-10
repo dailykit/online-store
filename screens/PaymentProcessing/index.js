@@ -5,9 +5,12 @@ import React from 'react'
 import { useCartContext } from '../../context/cart'
 import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 import { styles } from './styles'
+import { Feather } from '@expo/vector-icons'
+import { useAppContext } from '../../context/app'
 
 const PaymentProcessing = ({ navigation }) => {
    const { cart } = useCartContext()
+   const { visual } = useAppContext()
 
    const [cartId, setCartId] = React.useState(undefined)
    const [progress, setProgress] = React.useState('Sending your order...')
@@ -51,11 +54,13 @@ const PaymentProcessing = ({ navigation }) => {
             }
             case 'SUCCEEDED': {
                if (data.cartByPK.status !== 'ORDER_PLACED') {
-                  return setProgress('Getting order details...')
+                  return setProgress('Confirming order...')
                } else {
-                  return navigation.navigate('Order', {
-                     orderId: data.cartByPK.orderId,
-                  })
+                  return setTimeout(() => {
+                     navigation.navigate('Order', {
+                        orderId: data.cartByPK.orderId,
+                     })
+                  }, 2000)
                }
             }
             case 'FAILED': {
@@ -67,6 +72,32 @@ const PaymentProcessing = ({ navigation }) => {
          }
       }
    }, [data])
+
+   if (data && data.cartByPK.status === 'ORDER_PLACED') {
+      return (
+         <View
+            style={{
+               flex: 1,
+               alignItems: 'center',
+               justifyContent: 'center',
+               backgroundColor: visual.color,
+            }}
+         >
+            <View style={{ marginBottom: 20 }}>
+               <Feather name="check-circle" size={48} color="#fff" />
+            </View>
+            <Text
+               style={{
+                  color: '#fff',
+                  fontSize: '1.2rem',
+                  fontWeight: 'bold',
+               }}
+            >
+               Order Placed!
+            </Text>
+         </View>
+      )
+   }
 
    return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

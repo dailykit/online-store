@@ -8,6 +8,12 @@ export const styles = EStyleSheet.create({
       marginHorizontal: 'auto',
       padding: width > 768 ? 20 : 10,
    },
+   orderHeading: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 10,
+   },
    map: {
       height: height * 0.4,
       width: '100%',
