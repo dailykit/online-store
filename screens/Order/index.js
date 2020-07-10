@@ -67,7 +67,7 @@ const Order = ({ route, navigation }) => {
                               marginBottom: 20,
                            }}
                         >
-                           <OrderCard order={order} />
+                           <OrderCard less order={order} />
                         </View>
                      </View>
                   </ScrollView>

@@ -4,7 +4,7 @@ import { Accordion } from 'native-base'
 import { View, Text, Image } from 'react-native'
 import * as moment from 'moment'
 
-const OrderCard = ({ order }) => {
+const OrderCard = ({ order, less }) => {
    const whatColor = status => {
       switch (status) {
          case 'PENDING':
@@ -49,50 +49,55 @@ const OrderCard = ({ order }) => {
 
    return (
       <>
-         <View style={styles.head}>
-            <Text style={styles.title}>Order ID: {order?.id}</Text>
-            <Text
-               style={[
-                  styles.status,
-                  {
-                     backgroundColor: whatColor(order.orderStatus),
-                  },
-               ]}
-            >
-               {whatTitle(order.orderStatus, order.fulfillmentType)}
-            </Text>
-         </View>
-         <Text style={[styles.muted, styles.bold]}>
-            Ordered on:{' '}
-            <Text style={styles.lite}>
-               {moment(order?.created_at).format('LLLL')}
-            </Text>
-         </Text>
-         {order.deliveryInfo.dropoff.dropoffInfo && (
-            <Text style={styles.muted}>
-               {order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
-                  ?.line1 +
-                  ', ' +
-                  order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
-                     ?.line2 +
-                  ', ' +
-                  order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
-                     ?.city +
-                  ', ' +
-                  order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
-                     ?.state +
-                  ', ' +
-                  order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
-                     ?.country}{' '}
-               -{' '}
-               {
-                  order?.deliveryInfo.dropoff?.dropoffInfo?.customerAddress
-                     ?.zipcode
-               }
-            </Text>
+         {!less && (
+            <>
+               <View style={styles.head}>
+                  <Text style={styles.title}>Order ID: {order?.id}</Text>
+                  <Text
+                     style={[
+                        styles.status,
+                        {
+                           backgroundColor: whatColor(order.orderStatus),
+                        },
+                     ]}
+                  >
+                     {whatTitle(order.orderStatus, order.fulfillmentType)}
+                  </Text>
+               </View>
+               <Text style={[styles.muted, styles.bold]}>
+                  Ordered on:{' '}
+                  <Text style={styles.lite}>
+                     {moment(order?.created_at).format('LLLL')}
+                  </Text>
+               </Text>
+               {order.deliveryInfo.dropoff.dropoffInfo && (
+                  <Text style={styles.muted}>
+                     {order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
+                        ?.line1 +
+                        ', ' +
+                        order?.deliveryInfo?.dropoff?.dropoffInfo
+                           ?.customerAddress?.line2 +
+                        ', ' +
+                        order?.deliveryInfo?.dropoff?.dropoffInfo
+                           ?.customerAddress?.city +
+                        ', ' +
+                        order?.deliveryInfo?.dropoff?.dropoffInfo
+                           ?.customerAddress?.state +
+                        ', ' +
+                        order?.deliveryInfo?.dropoff?.dropoffInfo
+                           ?.customerAddress?.country}{' '}
+                     -{' '}
+                     {
+                        order?.deliveryInfo.dropoff?.dropoffInfo
+                           ?.customerAddress?.zipcode
+                     }
+                  </Text>
+               )}
+            </>
          )}
          <Accordion
             headerStyle={styles.header}
+            expanded={less ? 0 : null}
             dataArray={[
                {
                   title: `${
