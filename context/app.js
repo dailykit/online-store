@@ -11,6 +11,7 @@ export const AppContextProvider = ({ children }) => {
    })
    const [brand, setBrand] = useState({
       name: 'Online Store',
+      address: {},
       logo:
          'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
    })

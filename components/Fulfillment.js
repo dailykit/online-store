@@ -32,7 +32,7 @@ import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
 
 const Fulfillment = () => {
-   const { visual, availability } = useAppContext()
+   const { visual, availability, brand } = useAppContext()
    const { cart } = useCartContext()
    const { setIsDrawerOpen } = useDrawerContext()
    const [distance, setDistance] = React.useState(0)
@@ -81,12 +81,17 @@ const Fulfillment = () => {
    )
 
    React.useEffect(() => {
-      if (cart?.address?.lat && cart?.address?.lng) {
+      if (
+         cart?.address?.lat &&
+         cart?.address?.lng &&
+         brand.address?.lat &&
+         brand.address?.lng
+      ) {
          const distance = getDistance(
             cart?.address?.lat,
             cart?.address?.lng,
-            33.8039712,
-            -118.1722264
+            +brand.address.lat,
+            +brand.address.lng
          )
          setDistance(distance)
       }

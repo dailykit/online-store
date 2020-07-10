@@ -18,10 +18,15 @@ import {
    getDistance,
    generateTimeStamp,
 } from '../utils/fulfillment'
+import { useAppContext } from './app'
 
 const CartContext = React.createContext()
 
 export const CartContextProvider = ({ children }) => {
+   const { brand } = useAppContext()
+
+   console.log('Brand Address: ', brand.address)
+
    // From Hasura
    const [customer, setCustomer] = useState(undefined)
    const [cart, setCart] = useState(undefined)
@@ -80,13 +85,15 @@ export const CartContextProvider = ({ children }) => {
    React.useEffect(() => {
       if (
          customerDetails?.defaultCustomerAddress?.lat &&
-         customerDetails?.defaultCustomerAddress?.lng
+         customerDetails?.defaultCustomerAddress?.lng &&
+         brand.address?.lat &&
+         brand.address?.lng
       ) {
          const distance = getDistance(
             customerDetails.defaultCustomerAddress.lat,
             customerDetails.defaultCustomerAddress.lng,
-            33.8039712,
-            -118.1722264
+            +brand.address.lat,
+            +brand.address.lng
          )
          setDistance(distance)
       }
