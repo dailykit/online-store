@@ -30,6 +30,7 @@ import {
 } from '../utils/fulfillment'
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
+import { Spinner } from 'native-base'
 
 const Fulfillment = () => {
    const { visual, availability } = useAppContext()
@@ -54,31 +55,33 @@ const Fulfillment = () => {
       },
    })
 
-   const { data: { preOrderPickup = [] } = {} } = useSubscription(
-      PREORDER_PICKUP
-   )
+   const {
+      data: { preOrderPickup = [] } = {},
+      loading: PPLoading,
+   } = useSubscription(PREORDER_PICKUP)
 
-   const { data: { onDemandPickup = [] } = {} } = useSubscription(
-      ONDEMAND_PICKUP
-   )
+   const {
+      data: { onDemandPickup = [] } = {},
+      loading: OPLoading,
+   } = useSubscription(ONDEMAND_PICKUP)
 
-   const { data: { preOrderDelivery = [] } = {} } = useSubscription(
-      PREORDER_DELIVERY,
-      {
-         variables: {
-            distance,
-         },
-      }
-   )
+   const {
+      data: { preOrderDelivery = [] } = {},
+      loading: PDLoading,
+   } = useSubscription(PREORDER_DELIVERY, {
+      variables: {
+         distance,
+      },
+   })
 
-   const { data: { onDemandDelivery = [] } = {} } = useSubscription(
-      ONDEMAND_DELIVERY,
-      {
-         variables: {
-            distance,
-         },
-      }
-   )
+   const {
+      data: { onDemandDelivery = [] } = {},
+      loading: ODLoading,
+   } = useSubscription(ONDEMAND_DELIVERY, {
+      variables: {
+         distance,
+      },
+   })
 
    React.useEffect(() => {
       if (
@@ -295,6 +298,16 @@ const Fulfillment = () => {
             },
          },
       })
+   }
+
+   if ([PPLoading, OPLoading, PDLoading, ODLoading].some(loading => loading)) {
+      return (
+         <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+         >
+            <Spinner />
+         </View>
+      )
    }
 
    return (
