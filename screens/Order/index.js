@@ -49,23 +49,6 @@ const Order = ({ route, navigation }) => {
                {order ? (
                   <ScrollView style={{ flex: 1 }}>
                      <View style={styles.container}>
-                        {/* <View style={{ marginBottom: 20 }}>
-                     <View style={styles.image_container}>
-                        <Feather
-                           name="check-circle"
-                           size={48}
-                           color={visual.color}
-                        />
-                     </View>
-                     <Text
-                        style={[
-                           styles.order_placed_title,
-                           { color: visual.color },
-                        ]}
-                     >
-                        Order Placed!
-                     </Text>
-                  </View> */}
                         {/* Conditional rendering */}
                         <View
                            style={{
