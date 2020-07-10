@@ -159,10 +159,33 @@ const Delivery = ({ order }) => {
                      <MapView.Marker
                         coordinate={{
                            latitude:
+                              order.deliveryInfo.pickup.pickupInfo
+                                 .organizationAddress.latitude,
+                           longitude:
+                              order.deliveryInfo.pickup.pickupInfo
+                                 .organizationAddress.longitude,
+                        }}
+                        image={require('../../assets/imgs/static-map-pin.png')}
+                     />
+                     <MapView.Marker
+                        coordinate={{
+                           latitude:
                               order.deliveryInfo.tracking.location.latitude,
                            longitude:
                               order.deliveryInfo.tracking.location.longitude,
                         }}
+                        image={require('../../assets/imgs/moving-map-pin.png')}
+                     />
+                     <MapView.Marker
+                        coordinate={{
+                           latitude:
+                              order.deliveryInfo.dropoff.dropoffInfo
+                                 .customerAddress.latitude,
+                           longitude:
+                              order.deliveryInfo.dropoff.dropoffInfo
+                                 .customerAddress.longitude,
+                        }}
+                        image={require('../../assets/imgs/static-map-pin.png')}
                      />
                   </MapView>
                )}
