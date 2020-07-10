@@ -29,17 +29,16 @@ const CustomizableProductItemCollapsed = ({
       const images = product.customizableProductOptions.map(option => {
          if (option.inventoryProduct) {
             return (
-               option.inventoryProduct.assets?.images[0] ||
+               option.inventoryProduct?.assets?.images[0] ||
                'https://via.placeholder.com/120'
             )
          } else {
             return (
-               option.simpleRecipeProduct.assets?.images[0] ||
+               option.simpleRecipeProduct?.assets?.images[0] ||
                'https://via.placeholder.com/120'
             )
          }
       })
-      console.log(images)
       setOptionImages(images)
    }, [])
 

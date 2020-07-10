@@ -36,12 +36,12 @@ const ComboProduct = ({
       const images = product.comboProductComponents.map(component => {
          if (component.inventoryProduct) {
             return (
-               component.inventoryProduct.assets?.images[0] ||
+               component.inventoryProduct?.assets?.images[0] ||
                'https://via.placeholder.com/120'
             )
          } else if (component.simpleRecipeProduct) {
             return (
-               component.simpleRecipeProduct.assets?.images[0] ||
+               component.simpleRecipeProduct?.assets?.images[0] ||
                'https://via.placeholder.com/120'
             )
          } else {
@@ -51,19 +51,18 @@ const ComboProduct = ({
             ) {
                return (
                   component.customizableProduct.defaultCustomizableProductOption
-                     .inventoryProduct.assets?.images[0] ||
+                     .inventoryProduct?.assets?.images[0] ||
                   'https://via.placeholder.com/120'
                )
             } else {
                return (
                   component.customizableProduct.defaultCustomizableProductOption
-                     .simpleRecipeProduct.assets?.images[0] ||
+                     .simpleRecipeProduct?.assets?.images[0] ||
                   'https://via.placeholder.com/120'
                )
             }
          }
       })
-      console.log(images)
       setOptionImages(images)
    }, [])
 

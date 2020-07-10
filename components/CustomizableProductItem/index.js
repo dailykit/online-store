@@ -57,7 +57,7 @@ const CustomizableProductItem = ({
          const option = product.customizableProductOptions.find(
             option => option[type]
          )
-         newItem.image = option[type].assets.images[0]
+         newItem.image = option[type].assets?.images[0]
       }
       if (newItem.type === 'inventoryProduct') {
          delete newItem.option.type
@@ -99,7 +99,7 @@ const CustomizableProductItem = ({
             id: default_product.id,
             name: default_product.name,
             price: _default_option?.price[0]?.value,
-            image: default_product.assets.images[0],
+            image: default_product.assets?.images[0],
             option: {
                id: _default_option?.id, // product option id
                type: _default_option?.type,
