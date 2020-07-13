@@ -51,12 +51,25 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                      })}
                   </View>
                   <BillingDetails />
+                  <Text
+                     style={{
+                        fontWeight: 'bold',
+                        color: '#666',
+                     }}
+                  >
+                     Fulfillment:
+                  </Text>
                   {!editing ? (
                      <View style={styles.title_container}>
                         {cart?.fulfillmentInfo ? (
                            <>
                               <View style={styles.title_container_left}>
-                                 <Text style={styles.deliver_on_text}>
+                                 <Text
+                                    style={[
+                                       styles.deliver_on_text,
+                                       { color: visual.color },
+                                    ]}
+                                 >
                                     {cart?.fulfillmentInfo?.type?.replace(
                                        '_',
                                        ' '
@@ -104,6 +117,27 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                         />
                      </View>
                   )}
+                  {cart.fulfillmentInfo.type.includes('DELIVERY') && (
+                     <View style={{ marginBottom: 10 }}>
+                        <Text
+                           style={{
+                              fontWeight: 'bold',
+                              color: '#666',
+                           }}
+                        >
+                           Address selected for deilvery:
+                        </Text>
+                        <Text>{`${cart.address.line1}, ${cart.address.line2}, ${cart.address.city}, ${cart.address.state}, ${cart.address.country}`}</Text>
+                     </View>
+                  )}
+                  <Text
+                     style={{
+                        fontWeight: 'bold',
+                        color: '#666',
+                     }}
+                  >
+                     Payment method:
+                  </Text>
                   <DefaultPaymentFloater navigation={navigation} />
                   <View style={{ height: height * 0.1 }} />
                </ScrollView>
