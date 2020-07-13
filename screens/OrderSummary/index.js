@@ -97,10 +97,12 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                         </View>
                      </View>
                   ) : (
-                     <Fulfillment
-                        navigation={navigation}
-                        setEditing={setEditing}
-                     />
+                     <View style={{ marginBottom: 10 }}>
+                        <Fulfillment
+                           navigation={navigation}
+                           setEditing={setEditing}
+                        />
+                     </View>
                   )}
                   <DefaultPaymentFloater navigation={navigation} />
                   <View style={{ height: height * 0.1 }} />

@@ -375,41 +375,55 @@ const Fulfillment = ({ navigation, setEditing }) => {
                   <DefaultAddressFloater navigation={navigation} />
                </>
             )}
-            <Text style={[styles.text, { opacity: 0.6 }]}>
-               When would you like your order:
-            </Text>
-            <TouchableOpacity
-               onPress={() => setTime('ONDEMAND')}
-               style={[
-                  styles.radioButton,
-                  { justifyContent: 'space-between', marginBottom: 5 },
-               ]}
-            >
-               <Text style={styles.text}>Now</Text>
-               {time === 'ONDEMAND' && (
-                  <View
-                     style={[styles.check, { backgroundColor: visual.color }]}
-                  >
-                     <MaterialIcons name="done" size={16} color="#fff" />
+            {Boolean(type) && (
+               <>
+                  <Text style={[styles.text, { opacity: 0.6 }]}>
+                     When would you like your order:
+                  </Text>
+                  <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+                     <TouchableOpacity
+                        onPress={() => setTime('ONDEMAND')}
+                        style={[styles.radioButton]}
+                     >
+                        <Text style={styles.text}>Now</Text>
+                        {time === 'ONDEMAND' && (
+                           <View
+                              style={[
+                                 styles.check,
+                                 { backgroundColor: visual.color },
+                              ]}
+                           >
+                              <MaterialIcons
+                                 name="done"
+                                 size={16}
+                                 color="#fff"
+                              />
+                           </View>
+                        )}
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        onPress={() => setTime('PREORDER')}
+                        style={[styles.radioButton]}
+                     >
+                        <Text style={styles.text}>Schedule for later</Text>
+                        {time === 'PREORDER' && (
+                           <View
+                              style={[
+                                 styles.check,
+                                 { backgroundColor: visual.color },
+                              ]}
+                           >
+                              <MaterialIcons
+                                 name="done"
+                                 size={16}
+                                 color="#fff"
+                              />
+                           </View>
+                        )}
+                     </TouchableOpacity>
                   </View>
-               )}
-            </TouchableOpacity>
-            <TouchableOpacity
-               onPress={() => setTime('PREORDER')}
-               style={[
-                  styles.radioButton,
-                  { justifyContent: 'space-between', marginBottom: 5 },
-               ]}
-            >
-               <Text style={styles.text}>Schedule for later</Text>
-               {time === 'PREORDER' && (
-                  <View
-                     style={[styles.check, { backgroundColor: visual.color }]}
-                  >
-                     <MaterialIcons name="done" size={16} color="#fff" />
-                  </View>
-               )}
-            </TouchableOpacity>
+               </>
+            )}
             {time === 'PREORDER' && !oops && (
                <>
                   <Text style={[styles.text, { opacity: 0.6, marginTop: 20 }]}>
@@ -463,6 +477,9 @@ const Fulfillment = ({ navigation, setEditing }) => {
                alignItems: 'center',
                backgroundColor: visual.color,
                borderRadius: 4,
+               width: 200,
+               marginHorizontal: 'auto',
+               opacity: type && time ? 1 : 0.5,
             }}
             onPress={confirm}
          >
@@ -477,7 +494,7 @@ export default Fulfillment
 const styles = StyleSheet.create({
    container: {
       position: 'relative',
-      padding: 5,
+      padding: 10,
       shadowColor: '#000',
       shadowOffset: {
          width: 0,
@@ -507,6 +524,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#ddd',
       height: 40,
       padding: 10,
+      marginHorizontal: 5,
       alignItems: 'baseline',
       justifyContent: 'center',
       flex: 1,
