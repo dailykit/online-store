@@ -314,6 +314,9 @@ const Fulfillment = ({ setEditing }) => {
       <View style={styles.container}>
          <View style={styles.headingContainer}>
             <Text style={styles.heading}>Help us know your preference</Text>
+            <TouchableOpacity onPress={() => setEditing(false)}>
+               <Text>close</Text>
+            </TouchableOpacity>
          </View>
          {!!oops && (
             <Text
@@ -464,7 +467,12 @@ export default Fulfillment
 
 const styles = StyleSheet.create({
    container: { position: 'relative' },
-   headingContainer: { justifyContent: 'center', marginBottom: 20 },
+   headingContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+   },
    heading: { lineHeight: 24, fontSize: 16, fontWeight: 'bold' },
    text: {
       fontSize: 16,
