@@ -31,8 +31,9 @@ import {
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
 import { Spinner } from 'native-base'
+import { DefaultAddressFloater } from './DefaultFloater'
 
-const Fulfillment = ({ setEditing }) => {
+const Fulfillment = ({ navigation, setEditing }) => {
    const { visual, availability } = useAppContext()
    const { cart } = useCartContext()
    const { setIsDrawerOpen } = useDrawerContext()
@@ -366,6 +367,14 @@ const Fulfillment = ({ setEditing }) => {
                   )}
                </TouchableOpacity>
             </View>
+            {type === 'DELIVERY' && (
+               <>
+                  <Text style={[styles.text, { opacity: 0.6 }]}>
+                     Select an address:
+                  </Text>
+                  <DefaultAddressFloater navigation={navigation} />
+               </>
+            )}
             <Text style={[styles.text, { opacity: 0.6 }]}>
                When would you like your order:
             </Text>
@@ -466,7 +475,18 @@ const Fulfillment = ({ setEditing }) => {
 export default Fulfillment
 
 const styles = StyleSheet.create({
-   container: { position: 'relative' },
+   container: {
+      position: 'relative',
+      padding: 5,
+      shadowColor: '#000',
+      shadowOffset: {
+         width: 0,
+         height: 1,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 2.22,
+      elevation: 3,
+   },
    headingContainer: {
       flexDirection: 'row',
       alignItems: 'center',
