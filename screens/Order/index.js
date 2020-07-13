@@ -15,6 +15,8 @@ import orderpreparing from '../../assets/imgs/orderpreparing.png'
 import MapView from 'react-native-maps'
 import * as moment from 'moment'
 
+import restaurant from '../../assets/imgs/restaurant @1x.png'
+
 const Order = ({ route, navigation }) => {
    const { orderId } = route.params
 
@@ -165,7 +167,7 @@ const Delivery = ({ order }) => {
                               order.deliveryInfo.pickup.pickupInfo
                                  .organizationAddress.longitude,
                         }}
-                        image={require('../../assets/imgs/static-map-pin.png')}
+                        image={require('../../assets/imgs/restaurant @1x.png')}
                      />
                      <MapView.Marker
                         coordinate={{
@@ -174,7 +176,7 @@ const Delivery = ({ order }) => {
                            longitude:
                               order.deliveryInfo.tracking.location.longitude,
                         }}
-                        image={require('../../assets/imgs/moving-map-pin.png')}
+                        image={require('../../assets/imgs/location delivery truck @1x.png')}
                      />
                      <MapView.Marker
                         coordinate={{
@@ -185,7 +187,7 @@ const Delivery = ({ order }) => {
                               order.deliveryInfo.dropoff.dropoffInfo
                                  .customerAddress.longitude,
                         }}
-                        image={require('../../assets/imgs/static-map-pin.png')}
+                        image={require('../../assets/imgs/location home @1x.png')}
                      />
                   </MapView>
                )}
@@ -350,7 +352,9 @@ const Pickup = ({ order }) => {
                               .organizationName,
                         description: 'Pickup order here!',
                      }}
-                  />
+                  >
+                     <Image source={restaurant} />
+                  </MapView.Marker>
                </MapView>
                {/* Order Status */}
                <View style={styles.orderStatus}>
