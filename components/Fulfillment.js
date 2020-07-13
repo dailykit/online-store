@@ -99,7 +99,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
          )
          setDistance(distance)
       }
-   }, [])
+   }, [cart?.address])
 
    React.useEffect(() => {
       if (fulfillment.date && time === 'PREORDER') {
@@ -223,10 +223,14 @@ const Fulfillment = ({ navigation, setEditing }) => {
                                     },
                                  })
                               } else {
-                                 setOops('Sorry! No time slots available.')
+                                 setOops(
+                                    'Sorry! No time slots available for selected options.'
+                                 )
                               }
                            } else {
-                              setOops('Sorry! No time slots available.')
+                              setOops(
+                                 'Sorry! No time slots available for selected options.'
+                              )
                            }
                         } else {
                            setOops('Sorry! No time slots available.')
@@ -251,7 +255,9 @@ const Fulfillment = ({ navigation, setEditing }) => {
                                  },
                               })
                            } else {
-                              setOops('Sorry! Option not available currently!')
+                              setOops(
+                                 'Sorry! Delivery not available at the moment.'
+                              )
                            }
                         } else {
                            setOops('Sorry! Option not available currently.')
@@ -272,7 +278,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
             }
          }
       }
-   }, [type, time])
+   }, [type, time, distance])
 
    const confirm = () => {
       if (oops || !type || !time) {
