@@ -353,7 +353,7 @@ const Pickup = ({ order }) => {
                         description: 'Pickup order here!',
                      }}
                   >
-                     <Image source={restaurant} />
+                     <Image source={restaurant} height="20" width="20" />
                   </MapView.Marker>
                </MapView>
                {/* Order Status */}

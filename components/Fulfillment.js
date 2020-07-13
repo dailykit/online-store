@@ -376,12 +376,12 @@ const Fulfillment = ({ navigation, setEditing }) => {
                </TouchableOpacity>
             </View>
             {type === 'DELIVERY' && (
-               <>
+               <View style={{ marginBottom: 20 }}>
                   <Text style={[styles.text, { opacity: 0.6 }]}>
                      Select an address:
                   </Text>
                   <DefaultAddressFloater navigation={navigation} />
-               </>
+               </View>
             )}
             {Boolean(type) && (
                <>
@@ -434,7 +434,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
             )}
             {time === 'PREORDER' && !oops && (
                <>
-                  <Text style={[styles.text, { opacity: 0.6, marginTop: 20 }]}>
+                  <Text style={[styles.text, { opacity: 0.6 }]}>
                      Select time slots:
                   </Text>
                   <View style={{ flexDirection: 'row' }}>

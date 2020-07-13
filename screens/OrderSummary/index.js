@@ -141,7 +141,9 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                   >
                      Payment card:
                   </Text>
-                  <DefaultPaymentFloater navigation={navigation} />
+                  <View style={{ marginBottom: 20 }}>
+                     <DefaultPaymentFloater navigation={navigation} />
+                  </View>
                   <View style={{ height: height * 0.1 }} />
                </ScrollView>
             </>
