@@ -55,6 +55,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                      style={{
                         fontWeight: 'bold',
                         color: '#666',
+                        marginBottom: 5,
                      }}
                   >
                      Fulfillment:
@@ -123,6 +124,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                            style={{
                               fontWeight: 'bold',
                               color: '#666',
+                              marginBottom: 5,
                            }}
                         >
                            Address selected for deilvery:
@@ -134,9 +136,10 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                      style={{
                         fontWeight: 'bold',
                         color: '#666',
+                        marginBottom: 5,
                      }}
                   >
-                     Payment method:
+                     Payment card:
                   </Text>
                   <DefaultPaymentFloater navigation={navigation} />
                   <View style={{ height: height * 0.1 }} />

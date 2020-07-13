@@ -21,12 +21,10 @@ export const styles = EStyleSheet.create({
       justifyContent: 'center',
    },
    title_container: {
-      height: height * 0.1,
       width: '100%',
       flexDirection: 'row',
       backgroundColor: '#fff',
-      paddingVertical: 10,
-      marginBottom: 20,
+      marginBottom: 10,
    },
    title_container_left: {
       flex: 1,
