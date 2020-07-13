@@ -85,6 +85,8 @@ const Fulfillment = ({ navigation, setEditing }) => {
    })
 
    React.useEffect(() => {
+      setTime('')
+      setOops('')
       if (
          cart?.address?.lat &&
          cart?.address?.lng &&
@@ -134,7 +136,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
                if (availability.pickup.isAvailable) {
                   switch (time) {
                      case 'PREORDER': {
-                        if (preOrderPickup[0].recurrences.length) {
+                        if (preOrderPickup[0]?.recurrences?.length) {
                            const result = generatePickUpSlots(
                               preOrderPickup[0].recurrences
                            )
@@ -163,7 +165,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
                         break
                      }
                      case 'ONDEMAND': {
-                        if (onDemandPickup[0].recurrences.length) {
+                        if (onDemandPickup[0]?.recurrences?.length) {
                            const result = isPickUpAvailable(
                               onDemandPickup[0].recurrences
                            )
@@ -203,7 +205,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
                if (availability.delivery.isAvailable) {
                   switch (time) {
                      case 'PREORDER': {
-                        if (preOrderDelivery[0].recurrences.length) {
+                        if (preOrderDelivery[0]?.recurrences?.length) {
                            const result = generateDeliverySlots(
                               preOrderDelivery[0].recurrences
                            )
@@ -238,7 +240,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
                         break
                      }
                      case 'ONDEMAND': {
-                        if (onDemandDelivery[0].recurrences.length) {
+                        if (onDemandDelivery[0]?.recurrences?.length) {
                            const result = isDeliveryAvailable(
                               onDemandDelivery[0].recurrences
                            )
