@@ -32,7 +32,7 @@ import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
 import { Spinner } from 'native-base'
 
-const Fulfillment = () => {
+const Fulfillment = ({ setEditing }) => {
    const { visual, availability } = useAppContext()
    const { cart } = useCartContext()
    const { setIsDrawerOpen } = useDrawerContext()
@@ -48,7 +48,7 @@ const Fulfillment = () => {
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
          console.log('Cart updated!')
-         setIsDrawerOpen(false)
+         setEditing(false)
       },
       onError: error => {
          console.log(error)
@@ -463,7 +463,7 @@ const Fulfillment = () => {
 export default Fulfillment
 
 const styles = StyleSheet.create({
-   container: { padding: 10, height: '100%', position: 'relative' },
+   container: { position: 'relative' },
    headingContainer: { justifyContent: 'center', marginBottom: 20 },
    heading: { lineHeight: 24, fontSize: 16, fontWeight: 'bold' },
    text: {
