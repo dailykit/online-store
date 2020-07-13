@@ -22,11 +22,14 @@ import { styles } from './styles'
 import Header from '../../components/Header'
 import { useDrawerContext } from '../../context/drawer'
 import { useAppContext } from '../../context/app'
+import Fulfillment from '../../components/Fulfillment'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
    const { open } = useDrawerContext()
    const { visual } = useAppContext()
+
+   const [editing, setEditing] = React.useState(false)
 
    let cartItems = cart?.cartInfo?.products
    return (
@@ -48,52 +51,99 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                      })}
                   </View>
                   <BillingDetails />
-                  <View style={styles.title_container}>
-                     {cart?.fulfillmentInfo ? (
-                        <>
-                           <View style={styles.title_container_left}>
-                              <Text style={styles.deliver_on_text}>
-                                 {cart?.fulfillmentInfo?.type?.replace(
-                                    '_',
-                                    ' '
-                                 )}
-                              </Text>
-                              <Text style={styles.time_text}>
-                                 {cart?.fulfillmentInfo?.date}
-                              </Text>
-                           </View>
-                           <View style={styles.title_container_middle}>
-                              <Text
-                                 style={[
-                                    styles.time_text,
-                                    { textAlign: 'center', flex: 1 },
-                                 ]}
-                              >
-                                 {cart?.fulfillmentInfo?.slot?.time}
-                              </Text>
-                           </View>
-                        </>
-                     ) : (
-                        <Text>
-                           Oops! We couldn't set default preference for you.{' '}
-                        </Text>
-                     )}
-                     <View style={styles.title_container_right}>
-                        <TouchableOpacity
-                           onPress={() => open('Fulfillment')}
-                           style={styles.edit}
-                        >
-                           <Text style={styles.edit_text}>edit{'  '}</Text>
-                           <Ionicons
-                              style={{ paddingTop: 2 }}
-                              size={16}
-                              name="ios-arrow-forward"
-                           />
-                        </TouchableOpacity>
+                  <Text
+                     style={{
+                        fontWeight: 'bold',
+                        color: '#666',
+                        marginBottom: 5,
+                     }}
+                  >
+                     Fulfillment:
+                  </Text>
+                  {!editing ? (
+                     <View style={styles.title_container}>
+                        {cart?.fulfillmentInfo ? (
+                           <>
+                              <View style={styles.title_container_left}>
+                                 <Text
+                                    style={[
+                                       styles.deliver_on_text,
+                                       { color: visual.color },
+                                    ]}
+                                 >
+                                    {cart?.fulfillmentInfo?.type?.replace(
+                                       '_',
+                                       ' '
+                                    )}
+                                 </Text>
+                                 <Text style={styles.time_text}>
+                                    {cart?.fulfillmentInfo?.date}
+                                 </Text>
+                              </View>
+                              <View style={styles.title_container_middle}>
+                                 <Text
+                                    style={[
+                                       styles.time_text,
+                                       { textAlign: 'center', flex: 1 },
+                                    ]}
+                                 >
+                                    {cart?.fulfillmentInfo?.slot?.time}
+                                 </Text>
+                              </View>
+                           </>
+                        ) : (
+                           <Text>
+                              Oops! We couldn't set default preference for you.
+                           </Text>
+                        )}
+                        <View style={styles.title_container_right}>
+                           <TouchableOpacity
+                              onPress={() => setEditing(true)}
+                              style={styles.edit}
+                           >
+                              <Text style={styles.edit_text}>edit{'  '}</Text>
+                              <Ionicons
+                                 style={{ paddingTop: 2 }}
+                                 size={16}
+                                 name="ios-arrow-forward"
+                              />
+                           </TouchableOpacity>
+                        </View>
                      </View>
+                  ) : (
+                     <View style={{ marginBottom: 10 }}>
+                        <Fulfillment
+                           navigation={navigation}
+                           setEditing={setEditing}
+                        />
+                     </View>
+                  )}
+                  {cart.fulfillmentInfo.type.includes('DELIVERY') && (
+                     <View style={{ marginBottom: 10 }}>
+                        <Text
+                           style={{
+                              fontWeight: 'bold',
+                              color: '#666',
+                              marginBottom: 5,
+                           }}
+                        >
+                           Address selected for deilvery:
+                        </Text>
+                        <Text>{`${cart.address.line1}, ${cart.address.line2}, ${cart.address.city}, ${cart.address.state}, ${cart.address.country}`}</Text>
+                     </View>
+                  )}
+                  <Text
+                     style={{
+                        fontWeight: 'bold',
+                        color: '#666',
+                        marginBottom: 5,
+                     }}
+                  >
+                     Payment card:
+                  </Text>
+                  <View style={{ marginBottom: 20 }}>
+                     <DefaultPaymentFloater navigation={navigation} />
                   </View>
-                  <DefaultPaymentFloater navigation={navigation} />
-                  <DefaultAddressFloater navigation={navigation} />
                   <View style={{ height: height * 0.1 }} />
                </ScrollView>
             </>

@@ -31,8 +31,9 @@ import {
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
 import { Spinner } from 'native-base'
+import { DefaultAddressFloater } from './DefaultFloater'
 
-const Fulfillment = () => {
+const Fulfillment = ({ navigation, setEditing }) => {
    const { visual, availability } = useAppContext()
    const { cart } = useCartContext()
    const { setIsDrawerOpen } = useDrawerContext()
@@ -48,7 +49,7 @@ const Fulfillment = () => {
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
          console.log('Cart updated!')
-         setIsDrawerOpen(false)
+         setEditing(false)
       },
       onError: error => {
          console.log(error)
@@ -84,6 +85,8 @@ const Fulfillment = () => {
    })
 
    React.useEffect(() => {
+      setTime('')
+      setOops('')
       if (
          cart?.address?.lat &&
          cart?.address?.lng &&
@@ -98,7 +101,7 @@ const Fulfillment = () => {
          )
          setDistance(distance)
       }
-   }, [])
+   }, [cart?.address])
 
    React.useEffect(() => {
       if (fulfillment.date && time === 'PREORDER') {
@@ -133,7 +136,7 @@ const Fulfillment = () => {
                if (availability.pickup.isAvailable) {
                   switch (time) {
                      case 'PREORDER': {
-                        if (preOrderPickup[0].recurrences.length) {
+                        if (preOrderPickup[0]?.recurrences?.length) {
                            const result = generatePickUpSlots(
                               preOrderPickup[0].recurrences
                            )
@@ -162,7 +165,7 @@ const Fulfillment = () => {
                         break
                      }
                      case 'ONDEMAND': {
-                        if (onDemandPickup[0].recurrences.length) {
+                        if (onDemandPickup[0]?.recurrences?.length) {
                            const result = isPickUpAvailable(
                               onDemandPickup[0].recurrences
                            )
@@ -202,7 +205,7 @@ const Fulfillment = () => {
                if (availability.delivery.isAvailable) {
                   switch (time) {
                      case 'PREORDER': {
-                        if (preOrderDelivery[0].recurrences.length) {
+                        if (preOrderDelivery[0]?.recurrences?.length) {
                            const result = generateDeliverySlots(
                               preOrderDelivery[0].recurrences
                            )
@@ -222,10 +225,14 @@ const Fulfillment = () => {
                                     },
                                  })
                               } else {
-                                 setOops('Sorry! No time slots available.')
+                                 setOops(
+                                    'Sorry! No time slots available for selected options.'
+                                 )
                               }
                            } else {
-                              setOops('Sorry! No time slots available.')
+                              setOops(
+                                 'Sorry! No time slots available for selected options.'
+                              )
                            }
                         } else {
                            setOops('Sorry! No time slots available.')
@@ -233,7 +240,7 @@ const Fulfillment = () => {
                         break
                      }
                      case 'ONDEMAND': {
-                        if (onDemandDelivery[0].recurrences.length) {
+                        if (onDemandDelivery[0]?.recurrences?.length) {
                            const result = isDeliveryAvailable(
                               onDemandDelivery[0].recurrences
                            )
@@ -250,7 +257,9 @@ const Fulfillment = () => {
                                  },
                               })
                            } else {
-                              setOops('Sorry! Option not available currently!')
+                              setOops(
+                                 'Sorry! Delivery not available at the moment.'
+                              )
                            }
                         } else {
                            setOops('Sorry! Option not available currently.')
@@ -271,7 +280,7 @@ const Fulfillment = () => {
             }
          }
       }
-   }, [type, time])
+   }, [type, time, distance])
 
    const confirm = () => {
       if (oops || !type || !time) {
@@ -314,6 +323,9 @@ const Fulfillment = () => {
       <View style={styles.container}>
          <View style={styles.headingContainer}>
             <Text style={styles.heading}>Help us know your preference</Text>
+            <TouchableOpacity onPress={() => setEditing(false)}>
+               <Text>close</Text>
+            </TouchableOpacity>
          </View>
          {!!oops && (
             <Text
@@ -363,44 +375,66 @@ const Fulfillment = () => {
                   )}
                </TouchableOpacity>
             </View>
-            <Text style={[styles.text, { opacity: 0.6 }]}>
-               When would you like your order:
-            </Text>
-            <TouchableOpacity
-               onPress={() => setTime('ONDEMAND')}
-               style={[
-                  styles.radioButton,
-                  { justifyContent: 'space-between', marginBottom: 5 },
-               ]}
-            >
-               <Text style={styles.text}>Now</Text>
-               {time === 'ONDEMAND' && (
-                  <View
-                     style={[styles.check, { backgroundColor: visual.color }]}
-                  >
-                     <MaterialIcons name="done" size={16} color="#fff" />
+            {type === 'DELIVERY' && (
+               <View style={{ marginBottom: 20 }}>
+                  <Text style={[styles.text, { opacity: 0.6 }]}>
+                     Select an address:
+                  </Text>
+                  <DefaultAddressFloater navigation={navigation} />
+               </View>
+            )}
+            {Boolean(type) && (
+               <>
+                  <Text style={[styles.text, { opacity: 0.6 }]}>
+                     When would you like your order:
+                  </Text>
+                  <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+                     <TouchableOpacity
+                        onPress={() => setTime('ONDEMAND')}
+                        style={[styles.radioButton]}
+                     >
+                        <Text style={styles.text}>Now</Text>
+                        {time === 'ONDEMAND' && (
+                           <View
+                              style={[
+                                 styles.check,
+                                 { backgroundColor: visual.color },
+                              ]}
+                           >
+                              <MaterialIcons
+                                 name="done"
+                                 size={16}
+                                 color="#fff"
+                              />
+                           </View>
+                        )}
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        onPress={() => setTime('PREORDER')}
+                        style={[styles.radioButton]}
+                     >
+                        <Text style={styles.text}>Schedule for later</Text>
+                        {time === 'PREORDER' && (
+                           <View
+                              style={[
+                                 styles.check,
+                                 { backgroundColor: visual.color },
+                              ]}
+                           >
+                              <MaterialIcons
+                                 name="done"
+                                 size={16}
+                                 color="#fff"
+                              />
+                           </View>
+                        )}
+                     </TouchableOpacity>
                   </View>
-               )}
-            </TouchableOpacity>
-            <TouchableOpacity
-               onPress={() => setTime('PREORDER')}
-               style={[
-                  styles.radioButton,
-                  { justifyContent: 'space-between', marginBottom: 5 },
-               ]}
-            >
-               <Text style={styles.text}>Schedule for later</Text>
-               {time === 'PREORDER' && (
-                  <View
-                     style={[styles.check, { backgroundColor: visual.color }]}
-                  >
-                     <MaterialIcons name="done" size={16} color="#fff" />
-                  </View>
-               )}
-            </TouchableOpacity>
+               </>
+            )}
             {time === 'PREORDER' && !oops && (
                <>
-                  <Text style={[styles.text, { opacity: 0.6, marginTop: 20 }]}>
+                  <Text style={[styles.text, { opacity: 0.6 }]}>
                      Select time slots:
                   </Text>
                   <View style={{ flexDirection: 'row' }}>
@@ -451,6 +485,9 @@ const Fulfillment = () => {
                alignItems: 'center',
                backgroundColor: visual.color,
                borderRadius: 4,
+               width: 200,
+               marginHorizontal: 'auto',
+               opacity: type && time ? 1 : 0.5,
             }}
             onPress={confirm}
          >
@@ -463,8 +500,24 @@ const Fulfillment = () => {
 export default Fulfillment
 
 const styles = StyleSheet.create({
-   container: { padding: 10, height: '100%', position: 'relative' },
-   headingContainer: { justifyContent: 'center', marginBottom: 20 },
+   container: {
+      position: 'relative',
+      padding: 10,
+      shadowColor: '#000',
+      shadowOffset: {
+         width: 0,
+         height: 1,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 2.22,
+      elevation: 3,
+   },
+   headingContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+   },
    heading: { lineHeight: 24, fontSize: 16, fontWeight: 'bold' },
    text: {
       fontSize: 16,
@@ -479,6 +532,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#ddd',
       height: 40,
       padding: 10,
+      marginHorizontal: 5,
       alignItems: 'baseline',
       justifyContent: 'center',
       flex: 1,
