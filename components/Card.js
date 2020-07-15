@@ -16,6 +16,7 @@ import { useMutation } from '@apollo/react-hooks'
 import { UPDATE_CART } from '../graphql'
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
+   const [busy, setBusy] = useState(false)
    const [price, setPrice] = useState(0)
    const [cardItem, setcardItem] = useState(null) // obj to push to jaguar
    const [cardData, setcardData] = useState(null) // obj to pass to add to cart modal
@@ -30,9 +31,11 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
          console.log('Product added!')
+         setBusy(false)
       },
       onError: error => {
          console.log(error)
+         setBusy(false)
       },
    })
 
@@ -41,6 +44,8 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
          if (product.isPopupAllowed) {
             setIsModalVisible(true)
          } else {
+            if (busy) return
+            setBusy(true)
             if (cart) {
                const products = [
                   ...cart.cartInfo.products,
@@ -92,6 +97,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
          }
       } catch (error) {
          console.log(error)
+         setBusy(false)
       }
    }
 
@@ -230,7 +236,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                      ]}
                   >
                      <Text style={styles.add_to_card_text}>
-                        ADD{' '}
+                        {busy ? '...' : 'ADD'}
                         {product.isPopupAllowed && (
                            <Feather size={width > 768 ? 14 : 10} name="plus" />
                         )}
@@ -300,6 +306,9 @@ const styles = EStyleSheet.create({
       backgroundColor: '#3fa4ff',
       paddingVertical: 5,
       paddingHorizontal: width > 768 ? 15 : 8,
+      minWidth: 60,
+      alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: 4,
    },
    add_to_card_text: {
