@@ -115,6 +115,7 @@ export const COMBO_PRODUCT = gql`
       comboProduct(id: $id) {
          id
          name
+         isPopupAllowed
          defaultCartItem
          comboProductComponents {
             id
@@ -251,6 +252,7 @@ export const CUSTOMIZABLE_PRODUCT = gql`
       customizableProduct(id: $id) {
          id
          name
+         isPopupAllowed
          defaultCartItem
          customizableProductOptions {
             id
@@ -323,6 +325,7 @@ export const INVENTORY_PRODUCT = gql`
          tags
          assets
          default
+         isPopupAllowed
          defaultCartItem
          inventoryProductOptions {
             id
@@ -344,6 +347,7 @@ export const SIMPLE_PRODUCT = gql`
          tags
          description
          assets
+         isPopupAllowed
          defaultCartItem
          defaultSimpleRecipeProductOption {
             id
@@ -384,6 +388,7 @@ export const INVENTORY_PRODUCTS = gql`
          description
          name
          tags
+         isPopupAllowed
          defaultCartItem
          sachetItem {
             unitSize
@@ -411,6 +416,7 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
          name
          default
          assets
+         isPopupAllowed
          defaultCartItem
          defaultSimpleRecipeProductOption {
             id
@@ -447,6 +453,7 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
       customizableProducts(where: { id: { _in: $ids } }) {
          id
          name
+         isPopupAllowed
          defaultCartItem
          customizableProductOptions {
             id
@@ -515,6 +522,7 @@ export const COMBO_PRODUCTS = gql`
       comboProducts(where: { id: { _in: $ids } }) {
          id
          name
+         isPopupAllowed
          defaultCartItem
          comboProductComponents {
             id
