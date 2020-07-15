@@ -296,7 +296,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
          const fulfillmentInfo = {
             type: time + '_' + type,
             slot: {
-               mileRangeId: fulfillment.mileRangeId || null,
+               mileRangeId: fulfillment.slot?.mileRangeId || null,
                ...generateTimeStamp(fulfillment.slot.time, fulfillment.date),
             },
          }
