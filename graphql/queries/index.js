@@ -113,8 +113,9 @@ export const GET_MENU = gql`
 export const COMBO_PRODUCT = gql`
    query ComboProduct($id: Int!) {
       comboProduct(id: $id) {
-         name
          id
+         name
+         defaultCartItem
          comboProductComponents {
             id
             label
@@ -248,8 +249,9 @@ export const COMBO_PRODUCT = gql`
 export const CUSTOMIZABLE_PRODUCT = gql`
    query CustomizableProduct($id: Int!) {
       customizableProduct(id: $id) {
-         name
          id
+         name
+         defaultCartItem
          customizableProductOptions {
             id
             inventoryProduct {
@@ -321,6 +323,7 @@ export const INVENTORY_PRODUCT = gql`
          tags
          assets
          default
+         defaultCartItem
          inventoryProductOptions {
             id
             price
@@ -335,12 +338,13 @@ export const INVENTORY_PRODUCT = gql`
 export const SIMPLE_PRODUCT = gql`
    query SimpleRecipeProduct($id: Int!) {
       simpleRecipeProduct(id: $id) {
+         id
          name
          default
-         id
          tags
          description
          assets
+         defaultCartItem
          defaultSimpleRecipeProductOption {
             id
             price
@@ -380,6 +384,7 @@ export const INVENTORY_PRODUCTS = gql`
          description
          name
          tags
+         defaultCartItem
          sachetItem {
             unitSize
             unit
@@ -402,10 +407,11 @@ export const INVENTORY_PRODUCTS = gql`
 export const SIMPLE_RECIPE_PRODUCTS = gql`
    query SimpleRecipeProducts($ids: [Int!]!) {
       simpleRecipeProducts(where: { id: { _in: $ids } }) {
+         id
          name
          default
-         id
          assets
+         defaultCartItem
          defaultSimpleRecipeProductOption {
             id
             price
@@ -439,8 +445,9 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
 export const CUSTOMIZABLE_PRODUCTS = gql`
    query CustomizableProducts($ids: [Int!]!) {
       customizableProducts(where: { id: { _in: $ids } }) {
-         name
          id
+         name
+         defaultCartItem
          customizableProductOptions {
             id
             inventoryProduct {
@@ -506,8 +513,9 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
 export const COMBO_PRODUCTS = gql`
    query ComboProducts($ids: [Int!]!) {
       comboProducts(where: { id: { _in: $ids } }) {
-         name
          id
+         name
+         defaultCartItem
          comboProductComponents {
             id
             label
