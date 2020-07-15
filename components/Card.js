@@ -11,6 +11,9 @@ import { Drawer } from './Drawer'
 import InventoryProductItem from './InventoryProductItem'
 import SimpleProductItem from './SimpleProductItem'
 import { useDrawerContext } from '../context/drawer'
+import { useCartContext } from '../context/cart'
+import { useMutation } from '@apollo/react-hooks'
+import { UPDATE_CART } from '../graphql'
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [price, setPrice] = useState(0)
@@ -18,15 +21,77 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [cardData, setcardData] = useState(null) // obj to pass to add to cart modal
    const [isModalVisible, setIsModalVisible] = useState(false)
    const { visual } = useAppContext()
+   const { cart, customerDetails, customer } = useCartContext()
    const { isAuthenticated, login } = useAuth()
    const { open } = useDrawerContext()
    const [isHovered, setIsHovered] = React.useState(false)
 
+   // Mutation
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: () => {
+         console.log('Product added!')
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
    const addToCart = () => {
-      if (product.isPopupAllowed) {
-         setIsModalVisible(true)
-      } else {
-         console.log(product.defaultCartItem)
+      try {
+         if (product.isPopupAllowed) {
+            setIsModalVisible(true)
+         } else {
+            if (cart) {
+               const products = [
+                  ...cart.cartInfo.products,
+                  product.defaultCartItem,
+               ]
+               const total = products.reduce(
+                  (acc, product) =>
+                     acc + parseFloat(product.totalPrice).toFixed(2),
+                  0
+               )
+               const cartInfo = {
+                  products,
+                  total: parseFloat(total),
+               }
+               updateCart({
+                  variables: {
+                     id: cart.id,
+                     set: {
+                        cartInfo: cartInfo,
+                     },
+                  },
+               })
+            } else {
+               const cartInfo = {
+                  products: [product.defaultCartItem],
+                  total: product.defaultCartItem.totalPrice,
+               }
+               createCart({
+                  variables: {
+                     object: {
+                        cartInfo: cartInfo,
+                        customerId: customer.id,
+                        customerInfo: {
+                           customerFirstName: customerDetails.firstName,
+                           customerLastName: customerDetails.lastName,
+                           customerPhone: customerDetails.phoneNumber,
+                           customerEmail: customerDetails.email,
+                        },
+                        fulfillmentInfo: null,
+                        paymentMethodId:
+                           customerDetails?.defaultPaymentMethodId,
+                        address: customerDetails?.defaultCustomerAddress,
+                        stripeCustomerId: customerDetails?.stripeCustomerId,
+                        tip: 0,
+                     },
+                  },
+               })
+            }
+         }
+      } catch (error) {
+         console.log(error)
       }
    }
 
