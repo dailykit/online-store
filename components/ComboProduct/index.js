@@ -27,11 +27,6 @@ const ComboProduct = ({
 
    const [optionImages, setOptionImages] = React.useState([])
 
-   const REF = {
-      id: product.id,
-      type: 'comboProduct',
-   }
-
    React.useEffect(() => {
       const images = product.comboProductComponents.map(component => {
          if (component.inventoryProduct) {
@@ -303,10 +298,17 @@ const ComboProduct = ({
                      paddingHorizontal: 20,
                      fontSize: width > 768 ? 18 : 14,
                   }}
-                  numberOfLines={1}
+                  numberOfLines={2}
                   ellipsizeMode="tail"
                >
-                  {product.comboProductComponents.length} items inside
+                  {product.isPopupAllowed
+                     ? `${product.comboProductComponents.length} items inside`
+                     : product.defaultCartItem.components
+                          .reduce((names, product) => {
+                             names.push(product.name)
+                             return names
+                          }, [])
+                          .join(' + ')}
                </Text>
             </View>
          )}
