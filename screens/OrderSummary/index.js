@@ -1,5 +1,6 @@
 import { Ionicons, Feather } from '@expo/vector-icons'
 import React, { lazy } from 'react'
+import moment from 'moment'
 import {
    SafeAreaView,
    ScrollView,
@@ -9,11 +10,7 @@ import {
 } from 'react-native'
 import BillingDetails from '../../components/BillingDetails'
 import { CartSummary } from '../../components/Cart'
-import {
-   DefaultAddressFloater,
-   DefaultPaymentFloater,
-} from '../../components/DefaultFloater'
-import HeaderBack from '../../components/HeaderBack'
+import { DefaultPaymentFloater } from '../../components/DefaultFloater'
 
 const Summary = lazy(() => import('../../components/Summary'))
 import { useCartContext } from '../../context/cart'
@@ -35,7 +32,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
-         {/* <HeaderBack title='Go Back' navigation={navigation} /> */}
          {cartItems?.length ? (
             <>
                <View style={styles.topBar}>
@@ -77,17 +73,11 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                                     )}
                                  </Text>
                                  <Text style={styles.time_text}>
-                                    {cart?.fulfillmentInfo?.date}
-                                 </Text>
-                              </View>
-                              <View style={styles.title_container_middle}>
-                                 <Text
-                                    style={[
-                                       styles.time_text,
-                                       { textAlign: 'center', flex: 1 },
-                                    ]}
-                                 >
-                                    {cart?.fulfillmentInfo?.slot?.time}
+                                    {moment
+                                       .parseZone(
+                                          cart?.fulfillmentInfo?.slot?.from
+                                       )
+                                       .format('MMMM Do YYYY, h:mm a')}
                                  </Text>
                               </View>
                            </>

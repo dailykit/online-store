@@ -1,12 +1,17 @@
 import { rrulestr } from 'rrule'
 
 export const generateTimeStamp = (time, date) => {
+   let formatedTime = time.split(':')
+   formatedTime =
+      makeDoubleDigit(formatedTime[0]) + ':' + makeDoubleDigit(formatedTime[1])
    const currTimestamp = new Date(Date.now()).toISOString()
    const selectedDate = new Date(date).toISOString()
-   const timestamp = `${selectedDate.split('T')[0]}T${time}:00.${
+   const from = `${selectedDate.split('T')[0]}T${formatedTime}:00.${
       currTimestamp.split('.')[1]
    }`
-   return timestamp
+   let to = new Date(from)
+   to = new Date(to.setMinutes(to.getMinutes() + 15)).toISOString()
+   return { from, to }
 }
 
 export const getMinutes = time => {
@@ -26,7 +31,7 @@ export const getTimeFromMinutes = num => {
    const rhours = Math.floor(hours)
    const minutes = (hours - rhours) * 60
    const rminutes = Math.round(minutes)
-   return rhours + ':' + makeDoubleDigit(rminutes)
+   return makeDoubleDigit(rhours) + ':' + makeDoubleDigit(rminutes)
 }
 
 export const deg2rad = deg => {

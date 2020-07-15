@@ -11,16 +11,95 @@ import { Drawer } from './Drawer'
 import InventoryProductItem from './InventoryProductItem'
 import SimpleProductItem from './SimpleProductItem'
 import { useDrawerContext } from '../context/drawer'
+import { useCartContext } from '../context/cart'
+import { useMutation } from '@apollo/react-hooks'
+import { UPDATE_CART } from '../graphql'
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
+   const [busy, setBusy] = useState(false)
    const [price, setPrice] = useState(0)
    const [cardItem, setcardItem] = useState(null) // obj to push to jaguar
    const [cardData, setcardData] = useState(null) // obj to pass to add to cart modal
    const [isModalVisible, setIsModalVisible] = useState(false)
    const { visual } = useAppContext()
+   const { cart, customerDetails, customer } = useCartContext()
    const { isAuthenticated, login } = useAuth()
    const { open } = useDrawerContext()
    const [isHovered, setIsHovered] = React.useState(false)
+
+   // Mutation
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: () => {
+         console.log('Product added!')
+         setBusy(false)
+      },
+      onError: error => {
+         console.log(error)
+         setBusy(false)
+      },
+   })
+
+   const addToCart = () => {
+      try {
+         if (product.isPopupAllowed) {
+            setIsModalVisible(true)
+         } else {
+            if (busy) return
+            setBusy(true)
+            if (cart) {
+               const products = [
+                  ...cart.cartInfo.products,
+                  product.defaultCartItem,
+               ]
+               const total = products.reduce(
+                  (acc, product) =>
+                     acc + parseFloat(product.totalPrice).toFixed(2),
+                  0
+               )
+               const cartInfo = {
+                  products,
+                  total: parseFloat(total),
+               }
+               updateCart({
+                  variables: {
+                     id: cart.id,
+                     set: {
+                        cartInfo: cartInfo,
+                     },
+                  },
+               })
+            } else {
+               const cartInfo = {
+                  products: [product.defaultCartItem],
+                  total: product.defaultCartItem.totalPrice,
+               }
+               createCart({
+                  variables: {
+                     object: {
+                        cartInfo: cartInfo,
+                        customerId: customer.id,
+                        customerInfo: {
+                           customerFirstName: customerDetails.firstName,
+                           customerLastName: customerDetails.lastName,
+                           customerPhone: customerDetails.phoneNumber,
+                           customerEmail: customerDetails.email,
+                        },
+                        fulfillmentInfo: null,
+                        paymentMethodId:
+                           customerDetails?.defaultPaymentMethodId,
+                        address: customerDetails?.defaultCustomerAddress,
+                        stripeCustomerId: customerDetails?.stripeCustomerId,
+                        tip: 0,
+                     },
+                  },
+               })
+            }
+         }
+      } catch (error) {
+         console.log(error)
+         setBusy(false)
+      }
+   }
 
    return (
       <>
@@ -147,9 +226,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                <View style={styles.add_to_cart_container}>
                   <TouchableOpacity
                      onPress={() => {
-                        !isAuthenticated
-                           ? open('Login')
-                           : setIsModalVisible(true)
+                        !isAuthenticated ? open('Login') : addToCart()
                         // navigation.navigate('AddToCart', { data: cardData, type, id });
                      }}
                      style={[
@@ -159,7 +236,10 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                      ]}
                   >
                      <Text style={styles.add_to_card_text}>
-                        ADD <Feather size={width > 768 ? 14 : 10} name="plus" />
+                        {busy ? '...' : 'ADD'}
+                        {product.isPopupAllowed && (
+                           <Feather size={width > 768 ? 14 : 10} name="plus" />
+                        )}
                      </Text>
                   </TouchableOpacity>
                </View>
@@ -226,6 +306,9 @@ const styles = EStyleSheet.create({
       backgroundColor: '#3fa4ff',
       paddingVertical: 5,
       paddingHorizontal: width > 768 ? 15 : 8,
+      minWidth: 60,
+      alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: 4,
    },
    add_to_card_text: {
