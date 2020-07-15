@@ -52,13 +52,12 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                   product.defaultCartItem,
                ]
                const total = products.reduce(
-                  (acc, product) =>
-                     acc + parseFloat(product.totalPrice).toFixed(2),
+                  (acc, product) => acc + parseFloat(product.totalPrice),
                   0
                )
                const cartInfo = {
                   products,
-                  total: parseFloat(total),
+                  total: parseFloat(total.toFixed(2)),
                }
                updateCart({
                   variables: {
