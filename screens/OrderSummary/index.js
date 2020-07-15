@@ -108,7 +108,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                         />
                      </View>
                   )}
-                  {cart.fulfillmentInfo.type.includes('DELIVERY') && (
+                  {cart.fulfillmentInfo?.type?.includes('DELIVERY') && (
                      <View style={{ marginBottom: 10 }}>
                         <Text
                            style={{
