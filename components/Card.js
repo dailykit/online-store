@@ -22,6 +22,14 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const { open } = useDrawerContext()
    const [isHovered, setIsHovered] = React.useState(false)
 
+   const addToCart = () => {
+      if (product.isPopupAllowed) {
+         setIsModalVisible(true)
+      } else {
+         console.log(product.defaultCartItem)
+      }
+   }
+
    return (
       <>
          {cardData && (
@@ -147,9 +155,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                <View style={styles.add_to_cart_container}>
                   <TouchableOpacity
                      onPress={() => {
-                        !isAuthenticated
-                           ? open('Login')
-                           : setIsModalVisible(true)
+                        !isAuthenticated ? open('Login') : addToCart()
                         // navigation.navigate('AddToCart', { data: cardData, type, id });
                      }}
                      style={[
