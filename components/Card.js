@@ -13,7 +13,7 @@ import SimpleProductItem from './SimpleProductItem'
 import { useDrawerContext } from '../context/drawer'
 import { useCartContext } from '../context/cart'
 import { useMutation } from '@apollo/react-hooks'
-import { UPDATE_CART } from '../graphql'
+import { UPDATE_CART, CREATE_CART } from '../graphql'
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [busy, setBusy] = useState(false)
@@ -31,6 +31,16 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
          console.log('Product added!')
+         setBusy(false)
+      },
+      onError: error => {
+         console.log(error)
+         setBusy(false)
+      },
+   })
+   const [createCart] = useMutation(CREATE_CART, {
+      onCompleted: () => {
+         console.log('Cart created!')
          setBusy(false)
       },
       onError: error => {

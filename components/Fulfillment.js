@@ -293,10 +293,12 @@ const Fulfillment = ({ navigation, setEditing }) => {
          if (oops || !type || !time) {
             return console.log('Invalid selections!')
          }
-
          const fulfillmentInfo = {
             type: time + '_' + type,
-            slot: generateTimeStamp(fulfillment.slot.time, fulfillment.date),
+            slot: {
+               mileRangeId: fulfillment.mileRangeId || null,
+               ...generateTimeStamp(fulfillment.slot.time, fulfillment.date),
+            },
          }
          console.log(fulfillmentInfo)
          updateCart({

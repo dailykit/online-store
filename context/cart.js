@@ -112,10 +112,13 @@ export const CartContextProvider = ({ children }) => {
                   const miniSlots = generateMiniSlots(result.data, 15)
                   if (miniSlots.length) {
                      const fulfillmentInfo = {
-                        slot: generateTimeStamp(
-                           miniSlots[0].slots[0].time,
-                           miniSlots[0].date
-                        ),
+                        slot: {
+                           mileRangeId: miniSlots[0].slots[0].mileRangeId,
+                           ...generateTimeStamp(
+                              miniSlots[0].slots[0].time,
+                              miniSlots[0].date
+                           ),
+                        },
                         type: 'PREORDER_DELIVERY',
                      }
                      console.log('Default fulfillment: ', fulfillmentInfo)
@@ -139,7 +142,10 @@ export const CartContextProvider = ({ children }) => {
                   const date = new Date()
                   const time = date.getHours() + ':' + date.getMinutes()
                   const fulfillmentInfo = {
-                     slot: generateTimeStamp(time, date.toDateString()),
+                     slot: {
+                        mileRangeId: result.mileRangeId,
+                        ...generateTimeStamp(time, date.toDateString()),
+                     },
                      type: 'ONDEMAND_DELIVERY',
                   }
                   console.log('Default fulfillment: ', fulfillmentInfo)
