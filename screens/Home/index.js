@@ -65,7 +65,13 @@ const Home = props => {
    const [data, setData] = React.useState([])
    const [loading, setLoading] = React.useState(false)
 
-   const { setCustomer, setCustomerDetails, cart } = useCartContext()
+   const {
+      setCustomer,
+      setCustomerDetails,
+      cart,
+      customer,
+      setCart,
+   } = useCartContext()
    const { user } = useAuth()
 
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
@@ -161,9 +167,21 @@ const Home = props => {
       }
    )
 
-   const [updateCart] = useMutation(UPDATE_CART, {
+   const [fetchCart] = useLazyQuery(FETCH_CART, {
       onCompleted: data => {
+         if (data.cartByPK.id) {
+            setCart(data.cartByPK)
+         }
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: () => {
          console.log('Cart updated!')
+         AsyncStorage.clear()
       },
       onError: error => {
          console.log(error)
@@ -200,8 +218,20 @@ const Home = props => {
          const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
          console.log('Pending Cart ID: ', cartId)
          setCartId(cartId)
+         if ((!user.sub || !user.id) && cartId) {
+            fetchCart({
+               variables: {
+                  id: cartId,
+               },
+            })
+         }
       })()
    }, [user])
+
+   React.useEffect(() => {
+      if (cartId && !customer) {
+      }
+   }, [cartId])
 
    // Query
    const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
