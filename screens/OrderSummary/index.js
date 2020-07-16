@@ -20,11 +20,13 @@ import Header from '../../components/Header'
 import { useDrawerContext } from '../../context/drawer'
 import { useAppContext } from '../../context/app'
 import Fulfillment from '../../components/Fulfillment'
+import { useAuth } from '../../context/auth'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
    const { open } = useDrawerContext()
    const { visual } = useAppContext()
+   const { isAuthenticated } = useAuth()
 
    const [editing, setEditing] = React.useState(false)
 
@@ -47,69 +49,8 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                      })}
                   </View>
                   <BillingDetails />
-                  <Text
-                     style={{
-                        fontWeight: 'bold',
-                        color: '#666',
-                        marginBottom: 5,
-                     }}
-                  >
-                     Fulfillment:
-                  </Text>
-                  {!editing ? (
-                     <View style={styles.title_container}>
-                        {cart?.fulfillmentInfo ? (
-                           <>
-                              <View style={styles.title_container_left}>
-                                 <Text
-                                    style={[
-                                       styles.deliver_on_text,
-                                       { color: visual.color },
-                                    ]}
-                                 >
-                                    {cart?.fulfillmentInfo?.type?.replace(
-                                       '_',
-                                       ' '
-                                    )}
-                                 </Text>
-                                 <Text style={styles.time_text}>
-                                    {moment
-                                       .parseZone(
-                                          cart?.fulfillmentInfo?.slot?.from
-                                       )
-                                       .format('MMMM Do YYYY, h:mm a')}
-                                 </Text>
-                              </View>
-                           </>
-                        ) : (
-                           <Text>
-                              Oops! We couldn't set default preference for you.
-                           </Text>
-                        )}
-                        <View style={styles.title_container_right}>
-                           <TouchableOpacity
-                              onPress={() => setEditing(true)}
-                              style={styles.edit}
-                           >
-                              <Text style={styles.edit_text}>edit{'  '}</Text>
-                              <Ionicons
-                                 style={{ paddingTop: 2 }}
-                                 size={16}
-                                 name="ios-arrow-forward"
-                              />
-                           </TouchableOpacity>
-                        </View>
-                     </View>
-                  ) : (
-                     <View style={{ marginBottom: 10 }}>
-                        <Fulfillment
-                           navigation={navigation}
-                           setEditing={setEditing}
-                        />
-                     </View>
-                  )}
-                  {cart.fulfillmentInfo?.type?.includes('DELIVERY') && (
-                     <View style={{ marginBottom: 10 }}>
+                  {isAuthenticated ? (
+                     <>
                         <Text
                            style={{
                               fontWeight: 'bold',
@@ -117,24 +58,126 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                               marginBottom: 5,
                            }}
                         >
-                           Address selected for deilvery:
+                           Fulfillment:
                         </Text>
-                        <Text>{`${cart.address.line1}, ${cart.address.line2}, ${cart.address.city}, ${cart.address.state}, ${cart.address.country}`}</Text>
+                        {!editing ? (
+                           <View style={styles.title_container}>
+                              {cart?.fulfillmentInfo ? (
+                                 <>
+                                    <View style={styles.title_container_left}>
+                                       <Text
+                                          style={[
+                                             styles.deliver_on_text,
+                                             { color: visual.color },
+                                          ]}
+                                       >
+                                          {cart?.fulfillmentInfo?.type?.replace(
+                                             '_',
+                                             ' '
+                                          )}
+                                       </Text>
+                                       <Text style={styles.time_text}>
+                                          {moment
+                                             .parseZone(
+                                                cart?.fulfillmentInfo?.slot
+                                                   ?.from
+                                             )
+                                             .format('MMMM Do YYYY, h:mm a')}
+                                       </Text>
+                                    </View>
+                                 </>
+                              ) : (
+                                 <Text>
+                                    Oops! We couldn't set default preference for
+                                    you.
+                                 </Text>
+                              )}
+                              <View style={styles.title_container_right}>
+                                 <TouchableOpacity
+                                    onPress={() => setEditing(true)}
+                                    style={styles.edit}
+                                 >
+                                    <Text style={styles.edit_text}>
+                                       edit{'  '}
+                                    </Text>
+                                    <Ionicons
+                                       style={{ paddingTop: 2 }}
+                                       size={16}
+                                       name="ios-arrow-forward"
+                                    />
+                                 </TouchableOpacity>
+                              </View>
+                           </View>
+                        ) : (
+                           <View style={{ marginBottom: 10 }}>
+                              <Fulfillment
+                                 navigation={navigation}
+                                 setEditing={setEditing}
+                              />
+                           </View>
+                        )}
+                        {cart.fulfillmentInfo?.type?.includes('DELIVERY') && (
+                           <View style={{ marginBottom: 10 }}>
+                              <Text
+                                 style={{
+                                    fontWeight: 'bold',
+                                    color: '#666',
+                                    marginBottom: 5,
+                                 }}
+                              >
+                                 Address selected for deilvery:
+                              </Text>
+                              <Text>{`${cart.address.line1}, ${cart.address.line2}, ${cart.address.city}, ${cart.address.state}, ${cart.address.country}`}</Text>
+                           </View>
+                        )}
+                        <Text
+                           style={{
+                              fontWeight: 'bold',
+                              color: '#666',
+                              marginBottom: 5,
+                           }}
+                        >
+                           Payment card:
+                        </Text>
+                        <View style={{ marginBottom: 20 }}>
+                           <DefaultPaymentFloater navigation={navigation} />
+                        </View>
+                        <View style={{ height: height * 0.1 }} />
+                        <CartSummary
+                           {...restProps}
+                           navigation={navigation}
+                           text="CONFIRM AND PAY"
+                           to="PaymentProcessing"
+                           pay
+                        />
+                     </>
+                  ) : (
+                     <View style={{ textAlign: 'center' }}>
+                        <Text
+                           style={{
+                              fontSize: '1.1rem',
+                              fontWeight: 'bold',
+                           }}
+                        >
+                           Almost there!
+                        </Text>
+                        <Text style={{ color: '#666', marginBottom: 10 }}>
+                           Login or Singup to place your order
+                        </Text>
+                        <TouchableOpacity
+                           onPress={() => open('Login')}
+                           style={{
+                              width: '100%',
+                              backgroundColor: visual.color,
+                              padding: 10,
+                           }}
+                        >
+                           <Text style={{ fontWeight: 'bold', color: '#fff' }}>
+                              CONTINUE
+                           </Text>
+                        </TouchableOpacity>
                      </View>
                   )}
-                  <Text
-                     style={{
-                        fontWeight: 'bold',
-                        color: '#666',
-                        marginBottom: 5,
-                     }}
-                  >
-                     Payment card:
-                  </Text>
-                  <View style={{ marginBottom: 20 }}>
-                     <DefaultPaymentFloater navigation={navigation} />
-                  </View>
-                  <View style={{ height: height * 0.1 }} />
                </ScrollView>
             </>
          ) : (
@@ -160,14 +203,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                <Feather name="shopping-cart" size={64} color={visual.color} />
             </View>
          )}
-
-         <CartSummary
-            {...restProps}
-            navigation={navigation}
-            text="CONFIRM AND PAY"
-            to="PaymentProcessing"
-            pay
-         />
       </SafeAreaView>
    )
 }
