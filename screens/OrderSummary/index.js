@@ -143,13 +143,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                            <DefaultPaymentFloater navigation={navigation} />
                         </View>
                         <View style={{ height: height * 0.1 }} />
-                        <CartSummary
-                           {...restProps}
-                           navigation={navigation}
-                           text="CONFIRM AND PAY"
-                           to="PaymentProcessing"
-                           pay
-                        />
                      </>
                   ) : (
                      <View style={{ textAlign: 'center' }}>
@@ -202,6 +195,15 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                </Text>
                <Feather name="shopping-cart" size={64} color={visual.color} />
             </View>
+         )}
+         {isAuthenticated && (
+            <CartSummary
+               {...restProps}
+               navigation={navigation}
+               text="CONFIRM AND PAY"
+               to="PaymentProcessing"
+               pay
+            />
          )}
       </SafeAreaView>
    )
