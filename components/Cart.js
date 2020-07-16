@@ -283,7 +283,10 @@ export const CartSummary = ({ navigation, text }) => {
             onPress={pay}
             style={[
                styles.container,
-               { backgroundColor: visual.color || '#3fa4ff' },
+               {
+                  backgroundColor: visual.color || '#3fa4ff',
+                  opacity: cart.isValid.status ? 1 : 0.6,
+               },
             ]}
          >
             <View style={[styles.container_left, { flex: 3 }]}>
