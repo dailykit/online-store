@@ -130,7 +130,7 @@ const InventoryProductCollapsed = ({
          )}
          {tunnelItem && isSelected && (
             <View style={{ paddingHorizontal: 20 }}>
-               <Text style={styles.something}>Avaliable Options:</Text>
+               <Text style={styles.something}>Available Options:</Text>
                {inventoryProduct.inventoryProductOptions.map(
                   (item_data, key) => {
                      return (
