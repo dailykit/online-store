@@ -14,6 +14,7 @@ import { useDrawerContext } from '../context/drawer'
 import { useCartContext } from '../context/cart'
 import { useMutation } from '@apollo/react-hooks'
 import { UPDATE_CART, CREATE_CART } from '../graphql'
+import { AsyncStorage } from 'react-native-web'
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [busy, setBusy] = useState(false)
@@ -46,6 +47,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
          console.log('Cart created!')
          setBusy(false)
          if (!customer) {
+            AsyncStorage.setItem('PENDING_CART_ID', data.createCart.id)
             setCart(data.createCart)
          }
       },

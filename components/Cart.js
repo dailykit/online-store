@@ -20,6 +20,8 @@ import { useAppContext } from '../context/app'
 import { useDrawerContext } from '../context/drawer'
 import { useAuth } from '../context/auth'
 
+import { AsyncStorage } from 'react-native-web'
+
 const Cart = ({
    navigation,
    text,
@@ -54,6 +56,7 @@ const Cart = ({
       onCompleted: data => {
          console.log('Cart created!')
          if (!customer) {
+            AsyncStorage.setItem('PENDING_CART_ID', data.createCart.id)
             setCart(data.createCart)
          }
       },

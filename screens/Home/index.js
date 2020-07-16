@@ -1,4 +1,9 @@
-import { useLazyQuery, useMutation, useSubscription } from '@apollo/react-hooks'
+import {
+   useLazyQuery,
+   useMutation,
+   useSubscription,
+   useQuery,
+} from '@apollo/react-hooks'
 import { Spinner } from 'native-base'
 import { Dimensions } from 'react-native'
 import { Datepicker } from '@ui-kitten/components'
@@ -31,12 +36,16 @@ import {
    CUSTOMER,
    CUSTOMER_DETAILS,
    STORE_SETTINGS,
+   FETCH_CART,
+   UPDATE_CART,
 } from '../../graphql'
 import { height, width } from '../../utils/Scalaing'
 import { styles } from './styles'
 import CategoriesButton from '../../components/CategoriesButton'
 import Footer from '../../components/Footer'
 import { Feather } from '@expo/vector-icons'
+
+import { AsyncStorage } from 'react-native-web'
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
@@ -58,6 +67,8 @@ const Home = props => {
 
    const { setCustomer, setCustomerDetails, cart } = useCartContext()
    const { user } = useAuth()
+
+   const [cartId, setCartId] = React.useState(null) // Pending Cart Id
 
    // const sectionListRef = useRef();
    // const scrollViewRef = useRef();
@@ -150,7 +161,15 @@ const Home = props => {
       }
    )
 
-   // .
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: data => {
+         console.log('Cart updated!')
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
    const fetchData = async date => {
       try {
          setLoading(true)
@@ -177,6 +196,11 @@ const Home = props => {
       if (user.sub || user.userid) {
          customerDetails()
       }
+      ;(async () => {
+         const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
+         console.log('Pending Cart ID: ', cartId)
+         setCartId(cartId)
+      })()
    }, [user])
 
    // Query
@@ -200,7 +224,18 @@ const Home = props => {
 
    // Mutations
    const [createCustomer] = useMutation(CREATE_CUSTOMER, {
-      onCompleted: () => {
+      onCompleted: data => {
+         if (cartId) {
+            updateCart({
+               variables: {
+                  id: cartId,
+                  set: {
+                     customerId: data.createCustomer.id,
+                     customerKeycloakId: user.sub || user.id,
+                  },
+               },
+            })
+         }
          console.log('Customer created')
       },
       onError: error => {
@@ -218,6 +253,17 @@ const Home = props => {
          const customers = data.subscriptionData.data.customers
          if (customers.length) {
             setCustomer(customers[0])
+            if (cartId) {
+               updateCart({
+                  variables: {
+                     id: cartId,
+                     set: {
+                        customerId: customers[0].id,
+                        customerKeycloakId: user.sub || user.id,
+                     },
+                  },
+               })
+            }
          } else {
             createCustomer({
                variables: {
