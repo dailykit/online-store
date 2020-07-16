@@ -109,7 +109,9 @@ const CustomizableProductItemCollapsed = ({
                numberOfLines={1}
                ellipsizeMode="tail"
             >
-               {product.customizableProductOptions.length} options available
+               {product.isPopupAllowed
+                  ? `${product.customizableProductOptions.length} options available`
+                  : product.defaultCartItem.name.split(']')[1]}
             </Text>
          </View>
       </>
