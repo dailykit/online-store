@@ -18,7 +18,8 @@ export const DrawerContextProvider = ({ children }) => {
    React.useEffect(() => {
       if (isAuthenticated) {
          if (window.location !== window.parent.location) {
-            window.parent.location.reload()
+            // window.parent.location.reload()
+            window.parent.location.replace(`${window.location.origin}/store`)
          }
       }
    }, [isAuthenticated])
