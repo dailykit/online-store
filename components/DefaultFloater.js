@@ -25,7 +25,11 @@ export const DefaultPaymentFloater = ({ navigation }) => {
 
    return (
       <TouchableOpacity
-         onPress={() => open('SelectPaymentMethod')}
+         onPress={() => {
+            customerDetails?.stripePaymentMethods?.length
+               ? open('SelectPaymentMethod')
+               : open('AddDetails', { path: 'card/create' })
+         }}
          style={styles.conatiner}
       >
          <View style={styles.cardNumberTextContainer}>
@@ -35,13 +39,18 @@ export const DefaultPaymentFloater = ({ navigation }) => {
                   XXXX XXXX XXXX {card.last4}
                </Text>
             ) : (
-               <Text style={styles.cardNumberText}>Select a Card</Text>
+               <Text style={styles.cardNumberText}>
+                  {customerDetails?.stripePaymentMethods?.length
+                     ? 'Select a Card'
+                     : 'Add a Card'}
+               </Text>
             )}
          </View>
          <View style={styles.cardNumberSelectedContainer}>
             <View>
                <Text>
-                  edit {'    '} <Ionicons name="ios-arrow-forward" />
+                  edit
+                  <Ionicons name="ios-arrow-forward" />
                </Text>
             </View>
          </View>
@@ -55,7 +64,11 @@ export const DefaultAddressFloater = ({ navigation }) => {
 
    return (
       <TouchableOpacity
-         onPress={() => open('EditAddress')}
+         onPress={() => {
+            customerDetails?.customerAddresses?.length
+               ? open('EditAddress')
+               : open('AddDetails', { path: 'address/create' })
+         }}
          style={styles.conatiner}
       >
          <View style={styles.cardNumberTextContainer}>
@@ -65,13 +78,18 @@ export const DefaultAddressFloater = ({ navigation }) => {
                   {cart.address.city}
                </Text>
             ) : (
-               <Text style={styles.cardNumberText}>Select an Address</Text>
+               <Text style={styles.cardNumberText}>
+                  {customerDetails?.customerAddresses?.length
+                     ? 'Select an Address'
+                     : 'Add an Address'}
+               </Text>
             )}
          </View>
          <View style={styles.cardNumberSelectedContainer}>
             <View>
                <Text>
-                  edit {'    '} <Ionicons name="ios-arrow-forward" />
+                  edit
+                  <Ionicons name="ios-arrow-forward" />
                </Text>
             </View>
          </View>
