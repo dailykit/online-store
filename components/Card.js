@@ -22,16 +22,19 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [cardData, setcardData] = useState(null) // obj to pass to add to cart modal
    const [isModalVisible, setIsModalVisible] = useState(false)
    const { visual } = useAppContext()
-   const { cart, customerDetails, customer } = useCartContext()
-   const { isAuthenticated, login } = useAuth()
+   const { cart, customerDetails, customer, setCart } = useCartContext()
+   const { isAuthenticated, login, user } = useAuth()
    const { open } = useDrawerContext()
    const [isHovered, setIsHovered] = React.useState(false)
 
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
+      onCompleted: data => {
          console.log('Product added!')
          setBusy(false)
+         if (!customer) {
+            setCart(data.updateCart.returning[0])
+         }
       },
       onError: error => {
          console.log(error)
@@ -39,9 +42,12 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
       },
    })
    const [createCart] = useMutation(CREATE_CART, {
-      onCompleted: () => {
+      onCompleted: data => {
          console.log('Cart created!')
          setBusy(false)
+         if (!customer) {
+            setCart(data.createCart)
+         }
       },
       onError: error => {
          console.log(error)
@@ -86,19 +92,23 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                   variables: {
                      object: {
                         cartInfo: cartInfo,
-                        customerId: customer.id,
+                        customerId: customer?.id || null,
                         customerInfo: {
-                           customerFirstName: customerDetails.firstName,
-                           customerLastName: customerDetails.lastName,
-                           customerPhone: customerDetails.phoneNumber,
-                           customerEmail: customerDetails.email,
+                           customerFirstName: customerDetails?.firstName,
+                           customerLastName: customerDetails?.lastName,
+                           customerPhone: customerDetails?.phoneNumber,
+                           customerEmail: customerDetails?.email,
                         },
                         fulfillmentInfo: null,
                         paymentMethodId:
-                           customerDetails?.defaultPaymentMethodId,
-                        address: customerDetails?.defaultCustomerAddress,
-                        stripeCustomerId: customerDetails?.stripeCustomerId,
+                           customerDetails?.defaultPaymentMethodId || null,
+                        address:
+                           customerDetails?.defaultCustomerAddress || null,
+                        stripeCustomerId:
+                           customerDetails?.stripeCustomerId || null,
                         tip: 0,
+                        customerKeycloakId: user.sub || user.id || null,
+                        cartSource: 'a-la-carte',
                      },
                   },
                })
@@ -234,10 +244,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                )}
                <View style={styles.add_to_cart_container}>
                   <TouchableOpacity
-                     onPress={() => {
-                        !isAuthenticated ? open('Login') : addToCart()
-                        // navigation.navigate('AddToCart', { data: cardData, type, id });
-                     }}
+                     onPress={addToCart}
                      style={[
                         styles.button,
                         { display: isNaN(price) ? 'none' : 'flex' },

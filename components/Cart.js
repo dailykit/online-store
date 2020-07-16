@@ -31,24 +31,31 @@ const Cart = ({
    setIsModalVisible,
    product,
 }) => {
-   const { cart, customerDetails, customer } = useCartContext()
+   const { cart, customerDetails, customer, setCart } = useCartContext()
    const { visual } = useAppContext()
    const { open } = useDrawerContext()
-   const { isAuthenticated, login } = useAuth()
+   const { isAuthenticated, login, user } = useAuth()
 
    const [quantity, setQuantity] = useState(1)
 
    const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
+      onCompleted: data => {
          console.log('Product added!')
+         if (!customer) {
+            console.log(data.updateCart)
+            setCart(data.updateCart.returning[0])
+         }
       },
       onError: error => {
          console.log(error)
       },
    })
    const [createCart] = useMutation(CREATE_CART, {
-      onCompleted: () => {
+      onCompleted: data => {
          console.log('Cart created!')
+         if (!customer) {
+            setCart(data.createCart)
+         }
       },
       onError: error => {
          console.log(error)
@@ -57,112 +64,92 @@ const Cart = ({
 
    const handleAddToCart = () => {
       try {
-         if (!isAuthenticated) {
-            console.log('Not logged in!')
-            open('Login')
-         }
-         if (
-            [
-               customerDetails?.firstName,
-               customerDetails?.lastName,
-               customerDetails?.email,
-               customerDetails?.phoneNumber,
-            ].every(exists => exists)
-         ) {
-            let products = cart?.cartInfo?.products || []
-            let total = parseFloat(cart?.cartInfo?.total) || 0
-            if (tunnelItem) {
-               if (type === 'comboProduct') {
-                  const unitPrice = comboProductItems.reduce(
-                     (acc, product) => acc + parseFloat(product.unitPrice),
-                     0
-                  )
-                  const totalPrice = parseFloat(
-                     (unitPrice * quantity).toFixed(2)
-                  )
-                  total = total + totalPrice
-                  products.push({
-                     cartItemId: uuid(),
-                     name: product.name,
-                     id: product.id,
-                     components: comboProductItems,
-                     discount: 0,
-                     totalPrice,
-                     unitPrice,
-                     quantity,
-                     type,
-                     specialInstructions: '',
-                  })
-               } else {
-                  const item = {
-                     cartItemId: uuid(),
-                     type,
-                     ...cartItem,
-                     quantity,
-                     unitPrice: parseFloat(
-                        parseFloat(cartItem.price).toFixed(2)
-                     ),
-                     totalPrice: parseFloat(
-                        (parseFloat(cartItem.price) * quantity).toFixed(2)
-                     ),
-                     discount: 0,
-                     specialInstructions: '',
-                  }
-                  delete item.price
-                  products.push(item)
-                  total = total + parseFloat(item.totalPrice)
+         let products = cart?.cartInfo?.products || []
+         let total = parseFloat(cart?.cartInfo?.total) || 0
+         if (tunnelItem) {
+            if (type === 'comboProduct') {
+               const unitPrice = comboProductItems.reduce(
+                  (acc, product) => acc + parseFloat(product.unitPrice),
+                  0
+               )
+               const totalPrice = parseFloat((unitPrice * quantity).toFixed(2))
+               total = total + totalPrice
+               products.push({
+                  cartItemId: uuid(),
+                  name: product.name,
+                  id: product.id,
+                  components: comboProductItems,
+                  discount: 0,
+                  totalPrice,
+                  unitPrice,
+                  quantity,
+                  type,
+                  specialInstructions: '',
+               })
+            } else {
+               const item = {
+                  cartItemId: uuid(),
+                  type,
+                  ...cartItem,
+                  quantity,
+                  unitPrice: parseFloat(parseFloat(cartItem.price).toFixed(2)),
+                  totalPrice: parseFloat(
+                     (parseFloat(cartItem.price) * quantity).toFixed(2)
+                  ),
+                  discount: 0,
+                  specialInstructions: '',
                }
-               total = parseFloat(total.toFixed(2))
-               // products and total ready
-               if (!customer) throw Error('Customer subscription failed!')
-               if (cart) {
-                  // Update
-                  // cartInfo are your products
-                  const cartInfo = {
-                     products,
-                     total,
-                  } // you'll have to generate this every time
-                  updateCart({
-                     variables: {
-                        id: cart.id,
-                        set: {
-                           cartInfo: cartInfo,
-                        },
-                     },
-                  })
-               } else {
-                  // Create
-                  // cartInfo are your products
-                  const cartInfo = {
-                     products,
-                     total,
-                  } // you'll have to generate this every time
-                  createCart({
-                     variables: {
-                        object: {
-                           cartInfo: cartInfo,
-                           customerId: customer.id,
-                           customerInfo: {
-                              customerFirstName: customerDetails.firstName,
-                              customerLastName: customerDetails.lastName,
-                              customerPhone: customerDetails.phoneNumber,
-                              customerEmail: customerDetails.email,
-                           },
-                           fulfillmentInfo: null,
-                           paymentMethodId:
-                              customerDetails?.defaultPaymentMethodId,
-                           address: customerDetails?.defaultCustomerAddress,
-                           stripeCustomerId: customerDetails?.stripeCustomerId,
-                           tip: 0,
-                        },
-                     },
-                  })
-               }
+               delete item.price
+               products.push(item)
+               total = total + parseFloat(item.totalPrice)
             }
-            if (text === 'Checkout') navigation.navigate('OrderSummary')
-         } else {
-            open('AddDetails', { path: 'profile/create' })
+            total = parseFloat(total.toFixed(2))
+            if (cart) {
+               const cartInfo = {
+                  products,
+                  total,
+               }
+               console.log('Cart ID', cart)
+               updateCart({
+                  variables: {
+                     id: cart.id,
+                     set: {
+                        cartInfo: cartInfo,
+                     },
+                  },
+               })
+            } else {
+               const cartInfo = {
+                  products,
+                  total,
+               }
+               createCart({
+                  variables: {
+                     object: {
+                        cartInfo: cartInfo,
+                        customerId: customer?.id || null,
+                        customerInfo: {
+                           customerFirstName: customerDetails?.firstName,
+                           customerLastName: customerDetails?.lastName,
+                           customerPhone: customerDetails?.phoneNumber,
+                           customerEmail: customerDetails?.email,
+                        },
+                        fulfillmentInfo: null,
+                        paymentMethodId:
+                           customerDetails?.defaultPaymentMethodId || null,
+                        address:
+                           customerDetails?.defaultCustomerAddress || null,
+                        stripeCustomerId:
+                           customerDetails?.stripeCustomerId || null,
+                        tip: 0,
+                        customerKeycloakId: user.sub || user.id || null,
+                        cartSource: 'a-la-carte',
+                     },
+                  },
+               })
+            }
          }
+         if (text === 'Checkout') navigation.navigate('OrderSummary')
          setIsModalVisible(false)
       } catch (error) {
          console.log(error)
