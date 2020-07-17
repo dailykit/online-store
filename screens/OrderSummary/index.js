@@ -31,11 +31,10 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    const [editing, setEditing] = React.useState(false)
 
-   let cartItems = cart?.cartInfo?.products
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
-         {!cartItems?.length ? (
+         {cart.cartInfo?.products?.length ? (
             <GridLayout>
                <Checkout>
                   <CheckoutSection>
@@ -58,7 +57,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                      </CheckoutSectionHeading>
                   </CheckoutSection>
                </Checkout>
-               <Cart />
+               <Cart cart={cart} />
             </GridLayout>
          ) : (
             <View
@@ -102,78 +101,53 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
 export default OrderSummary
 
-const Cart = () => {
+const Cart = ({ cart }) => {
    return (
       <StyledCart>
          <CartHeader>
             <CartHeaderTextLeft>Total Items</CartHeaderTextLeft>
-            <CartHeaderTextRight>2</CartHeaderTextRight>
+            <CartHeaderTextRight>
+               {cart.cartInfo.products.length}
+            </CartHeaderTextRight>
          </CartHeader>
          <CartItems>
-            <CartItem>
-               <CartItemLeft>
-                  <CartItemImage
-                     source={{ uri: 'https://via.placeholder.com/50' }}
-                  />
-                  <CartItemInfo>
-                     <CartItemName>Corona Beer</CartItemName>
-                     <CartItemLabel>1 bottle - 300ml</CartItemLabel>
-                  </CartItemInfo>
-               </CartItemLeft>
-               <CartItemRight>
-                  <CartItemQuantity></CartItemQuantity>
-                  <CartItemPrice>$ 1.99</CartItemPrice>
-               </CartItemRight>
-            </CartItem>
-            <CartItem>
-               <CartItemLeft>
-                  <CartItemImage
-                     source={{ uri: 'https://via.placeholder.com/50' }}
-                  />
-                  <CartItemInfo>
-                     <CartItemName>Chicken Biryani</CartItemName>
-                  </CartItemInfo>
-               </CartItemLeft>
-               <CartItemRight>
-                  <CartItemQuantity></CartItemQuantity>
-                  <CartItemPrice>$ 5</CartItemPrice>
-               </CartItemRight>
-            </CartItem>
-            <CartItem>
-               <CartItemLeft>
-                  <CartItemImage
-                     source={{ uri: 'https://via.placeholder.com/50' }}
-                  />
-                  <CartItemInfo>
-                     <CartItemName>Veg Biryani</CartItemName>
-                  </CartItemInfo>
-               </CartItemLeft>
-               <CartItemRight>
-                  <CartItemQuantity></CartItemQuantity>
-                  <CartItemPrice>$ 2</CartItemPrice>
-               </CartItemRight>
-            </CartItem>
+            {cart.cartInfo.products.map(product => (
+               <CartItem>
+                  <CartItemLeft>
+                     <CartItemImage source={{ uri: product.image }} />
+                     <CartItemInfo>
+                        <CartItemName>{product.name}</CartItemName>
+                     </CartItemInfo>
+                  </CartItemLeft>
+                  <CartItemRight>
+                     <CartItemQuantity></CartItemQuantity>
+                     <CartItemPrice>$ {product.totalPrice}</CartItemPrice>
+                  </CartItemRight>
+               </CartItem>
+            ))}
          </CartItems>
          <CartBilling>
             <CartBillingHeading>Bill Details</CartBillingHeading>
             <CartBillingDetail>
                <CartBillingDetailText>Item Total</CartBillingDetailText>
-               <CartBillingDetailText>$ 9.99</CartBillingDetailText>
+               <CartBillingDetailText>$ {cart.itemTotal}</CartBillingDetailText>
             </CartBillingDetail>
             <CartBillingDetail>
                <CartBillingDetailText>Delivery Fee</CartBillingDetailText>
-               <CartBillingDetailText>$ 1</CartBillingDetailText>
+               <CartBillingDetailText>
+                  $ {cart.deliveryPrice}
+               </CartBillingDetailText>
             </CartBillingDetail>
             <Divider margin="8px" />
             <CartBillingDetail>
                <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
-               <CartBillingDetailText>$ 1.09</CartBillingDetailText>
+               <CartBillingDetailText>$ {cart.tax}</CartBillingDetailText>
             </CartBillingDetail>
          </CartBilling>
          <Divider color="#282c3f" height="2px" />
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
-            <CartFooterText>$15.99</CartFooterText>
+            <CartFooterText>$ {cart.totalPrice}</CartFooterText>
          </CartFooter>
       </StyledCart>
    )
