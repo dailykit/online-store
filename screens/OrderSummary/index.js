@@ -31,6 +31,10 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    const [editing, setEditing] = React.useState(false)
 
+   String.prototype.SRPType = function () {
+      return this === 'readyToEat' ? 'Ready to Eat' : 'Meal Kit'
+   }
+
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
@@ -185,6 +189,17 @@ const Cart = ({ cart }) => {
                      <CartItemImage source={{ uri: product.image }} />
                      <CartItemInfo>
                         <CartItemName>{product.name}</CartItemName>
+                        {product.type === 'comboProduct' &&
+                           product.components.map(component => (
+                              <CartItemLabel>
+                                 {`${component.comboProductComponentLabel}: ${component.name}`}
+                              </CartItemLabel>
+                           ))}
+                        {product.type === 'simpleRecipeProduct' && (
+                           <CartItemLabel>
+                              {`${product.option.type.SRPType()}`}
+                           </CartItemLabel>
+                        )}
                      </CartItemInfo>
                   </CartItemLeft>
                   <CartItemRight>
