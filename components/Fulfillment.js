@@ -1,5 +1,5 @@
 import { useSubscription, useMutation } from '@apollo/react-hooks'
-import { MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons, Feather } from '@expo/vector-icons'
 import { Picker } from '@react-native-community/picker'
 import React from 'react'
 import {
@@ -329,7 +329,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
          <View style={styles.headingContainer}>
             <Text style={styles.heading}>Help us know your preference</Text>
             <TouchableOpacity onPress={() => setEditing(false)}>
-               <Text>close</Text>
+               <Feather name="x-circle" size={18} color="#333" />
             </TouchableOpacity>
          </View>
          {!!oops && (

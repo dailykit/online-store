@@ -1,4 +1,4 @@
-import { AntDesign, Ionicons } from '@expo/vector-icons'
+import { AntDesign, Ionicons, Feather } from '@expo/vector-icons'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
@@ -48,10 +48,7 @@ export const DefaultPaymentFloater = ({ navigation }) => {
          </View>
          <View style={styles.cardNumberSelectedContainer}>
             <View>
-               <Text>
-                  edit
-                  <Ionicons name="ios-arrow-forward" />
-               </Text>
+               <Feather name="edit" size={16} color="#333" />
             </View>
          </View>
       </TouchableOpacity>
@@ -87,10 +84,7 @@ export const DefaultAddressFloater = ({ navigation }) => {
          </View>
          <View style={styles.cardNumberSelectedContainer}>
             <View>
-               <Text>
-                  edit
-                  <Ionicons name="ios-arrow-forward" />
-               </Text>
+               <Feather name="edit" size={16} color="#333" />
             </View>
          </View>
       </TouchableOpacity>

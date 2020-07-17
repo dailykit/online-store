@@ -97,13 +97,10 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                                     onPress={() => setEditing(true)}
                                     style={styles.edit}
                                  >
-                                    <Text style={styles.edit_text}>
-                                       edit{'  '}
-                                    </Text>
-                                    <Ionicons
-                                       style={{ paddingTop: 2 }}
+                                    <Feather
+                                       name="edit"
                                        size={16}
-                                       name="ios-arrow-forward"
+                                       color="#333"
                                     />
                                  </TouchableOpacity>
                               </View>
