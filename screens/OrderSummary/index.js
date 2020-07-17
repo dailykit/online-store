@@ -41,103 +41,19 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
          {cart?.cartInfo?.products?.length ? (
-            <GridLayout>
-               <Checkout>
-                  {!isAuthenticated && (
-                     <CheckoutSection>
-                        <CheckoutSectionHeading>Account</CheckoutSectionHeading>
-                        <CheckoutSectionContent>
-                           <CheckoutSectionText>
-                              To place your order now, log in to your existing
-                              account or sign up.
-                           </CheckoutSectionText>
-                           <CTAContainer>
-                              <Button onPress={() => open('Login')}>
-                                 <ButtonText>LOGIN</ButtonText>
-                              </Button>
-                              <Button onPress={() => open('Register')}>
-                                 <ButtonText>SIGN UP</ButtonText>
-                              </Button>
-                           </CTAContainer>
-                        </CheckoutSectionContent>
-                     </CheckoutSection>
-                  )}
-                  <CheckoutSection>
-                     <CheckoutSectionHeading disabled={!isAuthenticated}>
-                        Fulfillment
-                     </CheckoutSectionHeading>
-                     {isAuthenticated && (
-                        <CheckoutSectionWrapper>
-                           <CheckoutSectionContent>
-                              {editing || !cart?.fulfillmentInfo ? (
-                                 <Fulfillment
-                                    navigation={navigation}
-                                    setEditing={setEditing}
-                                 />
-                              ) : (
-                                 <SelectedFulfillment>
-                                    <SelectedFulfillmentType
-                                       color={visual.color}
-                                    >
-                                       {cart.fulfillmentInfo?.type.replace(
-                                          '_',
-                                          ' '
-                                       )}
-                                    </SelectedFulfillmentType>
-                                    <SelectedFulfillmentTime>
-                                       {moment
-                                          .parseZone(
-                                             cart?.fulfillmentInfo?.slot?.from
-                                          )
-                                          .format('MMMM Do YYYY, h:mm a')}
-                                    </SelectedFulfillmentTime>
-                                 </SelectedFulfillment>
-                              )}
-                           </CheckoutSectionContent>
-                           {!editing && (
-                              <TouchableOpacity
-                                 onPress={() => setEditing(true)}
-                              >
-                                 <Feather
-                                    name="edit"
-                                    size={24}
-                                    color="#93959F"
-                                 />
-                              </TouchableOpacity>
-                           )}
-                        </CheckoutSectionWrapper>
-                     )}
-                  </CheckoutSection>
-                  <CheckoutSection>
-                     <CheckoutSectionHeading
-                        disabled={!isAuthenticated || !cart?.fulfillmentInfo}
-                     >
-                        Payment
-                     </CheckoutSectionHeading>
-                     {isAuthenticated && cart?.fulfillmentInfo && (
-                        <CheckoutSectionContent>
-                           <DefaultPaymentFloater navigation={navigation} />
-                           <CTA
-                              disabled={!cart.isValid.status}
-                              color={visual.color}
-                              onPress={() =>
-                                 cart.isValid.status &&
-                                 navigation.navigate('PaymentProcessing')
-                              }
-                           >
-                              <CTAText>PAY ${cart.totalPrice}</CTAText>
-                           </CTA>
-                           {!cart.isValid.status && (
-                              <Error>
-                                 <ErrorText>{cart.isValid.error}</ErrorText>
-                              </Error>
-                           )}
-                        </CheckoutSectionContent>
-                     )}
-                  </CheckoutSection>
-               </Checkout>
-               <Cart cart={cart} />
-            </GridLayout>
+            <>
+               {width > 768 ? (
+                  <GridLayout>
+                     <Checkout cart={cart} navigation={navigation} />
+                     <Cart cart={cart} />
+                  </GridLayout>
+               ) : (
+                  <ScrollView>
+                     <Cart cart={cart} />
+                     <Checkout cart={cart} navigation={navigation} />
+                  </ScrollView>
+               )}
+            </>
          ) : (
             <View
                style={{
@@ -179,6 +95,102 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 }
 
 export default OrderSummary
+
+const Checkout = ({ cart, navigation }) => {
+   const { open } = useDrawerContext()
+   const { visual } = useAppContext()
+   const { isAuthenticated } = useAuth()
+
+   const [editing, setEditing] = React.useState(false)
+
+   return (
+      <StyledCheckout>
+         {!isAuthenticated && (
+            <CheckoutSection>
+               <CheckoutSectionHeading>Account</CheckoutSectionHeading>
+               <CheckoutSectionContent>
+                  <CheckoutSectionText>
+                     To place your order now, log in to your existing account or
+                     sign up.
+                  </CheckoutSectionText>
+                  <CTAContainer>
+                     <Button onPress={() => open('Login')}>
+                        <ButtonText>LOGIN</ButtonText>
+                     </Button>
+                     <Button onPress={() => open('Register')}>
+                        <ButtonText>SIGN UP</ButtonText>
+                     </Button>
+                  </CTAContainer>
+               </CheckoutSectionContent>
+            </CheckoutSection>
+         )}
+         <CheckoutSection>
+            <CheckoutSectionHeading disabled={!isAuthenticated}>
+               Fulfillment
+            </CheckoutSectionHeading>
+            {isAuthenticated && (
+               <CheckoutSectionWrapper>
+                  <CheckoutSectionContent>
+                     {editing || !cart?.fulfillmentInfo ? (
+                        <Fulfillment
+                           navigation={navigation}
+                           setEditing={setEditing}
+                        />
+                     ) : (
+                        <SelectedFulfillment>
+                           <SelectedFulfillmentType color={visual.color}>
+                              {cart.fulfillmentInfo?.type.replace('_', ' ')}
+                           </SelectedFulfillmentType>
+                           <SelectedFulfillmentTime>
+                              {moment
+                                 .parseZone(cart?.fulfillmentInfo?.slot?.from)
+                                 .format('MMMM Do YYYY, h:mm a')}
+                           </SelectedFulfillmentTime>
+                        </SelectedFulfillment>
+                     )}
+                  </CheckoutSectionContent>
+                  {!editing && (
+                     <TouchableOpacity onPress={() => setEditing(true)}>
+                        <Feather
+                           name="edit"
+                           size={width > 768 ? 24 : 16}
+                           color="#93959F"
+                        />
+                     </TouchableOpacity>
+                  )}
+               </CheckoutSectionWrapper>
+            )}
+         </CheckoutSection>
+         <CheckoutSection>
+            <CheckoutSectionHeading
+               disabled={!isAuthenticated || !cart?.fulfillmentInfo}
+            >
+               Payment
+            </CheckoutSectionHeading>
+            {isAuthenticated && cart?.fulfillmentInfo && (
+               <CheckoutSectionContent>
+                  <DefaultPaymentFloater navigation={navigation} />
+                  <CTA
+                     disabled={!cart.isValid.status}
+                     color={visual.color}
+                     onPress={() =>
+                        cart.isValid.status &&
+                        navigation.navigate('PaymentProcessing')
+                     }
+                  >
+                     <CTAText>PAY ${cart.totalPrice}</CTAText>
+                  </CTA>
+                  {!cart.isValid.status && (
+                     <Error>
+                        <ErrorText>{cart.isValid.error}</ErrorText>
+                     </Error>
+                  )}
+               </CheckoutSectionContent>
+            )}
+         </CheckoutSection>
+      </StyledCheckout>
+   )
+}
 
 const Cart = ({ cart }) => {
    const { visual } = useAppContext()
@@ -349,21 +361,21 @@ const GridLayout = styled.View`
    height: calc(100% - 66px);
 `
 
-const Checkout = styled.View`
-   margin-right: 32px;
+const StyledCheckout = styled.View`
+   margin-right: ${width > 768 ? '32px' : '0px'};
 `
 
 const CheckoutSection = styled.View`
    position: relative;
-   margin-left: 25px;
+   margin-left: ${width > 768 ? '25px' : '0px'};
    background: #fff;
-   margin-bottom: 20px;
-   padding: 35px 40px 39px;
+   margin-bottom: ${width > 768 ? '20px' : '8px'};
+   padding: ${width > 768 ? '35px 40px 39px' : '10px'};
    border-radius: 4px;
 `
 
 const CheckoutSectionHeading = styled.Text`
-   font-size: 32px;
+   font-size: ${width > 768 ? '32px' : '18px'};
    font-weight: 600;
    color: ${props => (props.disabled ? '#93959f' : '#282C3F')};
 `
@@ -372,19 +384,19 @@ const CheckoutSectionWrapper = styled.View`
    flex-direction: row;
    align-items: center;
    justify-content: space-between;
+   width: 100%;
 `
 
 const CheckoutSectionContent = styled.View`
-   padding: 16px 0px;
-   width: 100%;
+   padding: ${width > 768 ? '16px 0px' : '8px 0px'};
 `
 
 const CheckoutSectionText = styled.Text`
    color: #7e808c;
    font-weight: 400;
    font-size: 16px;
-   line-height: 1.12;
-   margin-bottom: 32px;
+   line-height: ${width > 768 ? '1.12' : 'inherit'};
+   margin-bottom: ${width > 768 ? '32px' : '16px'};
 `
 
 const CTAContainer = styled.View`
@@ -393,8 +405,8 @@ const CTAContainer = styled.View`
 
 const Button = styled.TouchableOpacity`
    border: 1px solid ${props => props.color || '#60b246'};
-   margin-right: 20px;
-   padding: 9px 35px;
+   margin-right: ${width > 768 ? '20px' : '16px'};
+   padding: ${width > 768 ? '9px 35px' : '9px'};
 `
 
 const ButtonText = styled.Text`
@@ -405,8 +417,8 @@ const ButtonText = styled.Text`
 const SelectedFulfillment = styled.View``
 
 const SelectedFulfillmentType = styled.Text`
-   margin-bottom: 16px;
-   font-size: 17px;
+   margin-bottom: ${width > 768 ? '16px' : '12px'};
+   font-size: ${width > 768 ? '17px' : '14px'};
    font-weight: 500;
    color: ${props => props.color || '#7e808c'};
    line-height: 1.18;
@@ -414,21 +426,21 @@ const SelectedFulfillmentType = styled.Text`
 `
 
 const SelectedFulfillmentTime = styled.Text`
-   font-size: 17px;
-   font-weight: 500;
+   font-size: ${width > 768 ? '17px' : '14px'};
+   font-weight: ${width > 768 ? '500' : 'normal'};
 `
 
 const CTA = styled.TouchableOpacity`
    background-color: ${props => props.color || '#60B246'};
-   height: 50px;
+   height: ${width > 768 ? '50px' : '30px'};
    align-items: center;
    justify-content: center;
-   margin: 16px 0;
+   margin: ${width > 768 ? '16px 0' : '12px 0'};
    opacity: ${props => (props.disabled ? 0.6 : 1)};
 `
 
 const CTAText = styled.Text`
-   line-height: 50px;
+   line-height: ${width > 768 ? '50px' : '30px'};
    font-size: 15px;
    color: #fff;
    font-weight: 500;
@@ -450,7 +462,7 @@ const StyledCart = styled.View`
 
 const CartHeader = styled.View`
    background: #fff;
-   padding: 10px 30px;
+   padding: ${width > 768 ? '10px 30px' : '10px'};
    display: flex;
    flex-direction: row;
    align-items: center;
@@ -471,13 +483,13 @@ const CartHeaderTextRight = styled.Text`
 `
 
 const CartItems = styled.View`
-   max-height: 320px;
+   height: ${width > 768 ? '320px' : 'auto'};
    background: #fff;
-   overflow-y: auto;
+   overflow-y: ${width > 768 ? 'auto' : 'visible'};
 `
 
 const CartItem = styled.View`
-   padding: 10px 30px;
+   padding: ${width > 768 ? '10px 30px' : '10px'};
    flex-direction: row;
    align-items: center;
    justify-content: space-between;
@@ -502,7 +514,7 @@ const CartItemImage = styled.Image`
 const CartItemInfo = styled.View`
    margin-left: 10px;
    margin-right: 5px;
-   max-width: 150px;
+   max-width: ${width > 768 ? '150px' : '100px'};
 `
 
 const CartItemName = styled.Text`
@@ -539,7 +551,7 @@ const CartItemPrice = styled.Text`
 `
 
 const CartBilling = styled.View`
-   padding: 10px 30px;
+   padding: ${width > 768 ? '10px 30px' : '10px'};
    background: #fff;
 `
 
@@ -570,7 +582,7 @@ const Divider = styled.View`
 
 const CartFooter = styled.View`
    flex-direction: row;
-   padding: 0px 30px;
+   padding: ${width > 768 ? '0px 30px' : '0px 10px'};
    height: 40px;
    align-items: center;
    justify-content: space-between;
