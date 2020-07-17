@@ -62,6 +62,7 @@
     "react-native-web-maps": "^0.2.0",
     "react-native-webview": "^10.1.0",
     "rrule": "^2.6.4",
+    "styled-components": "^5.1.1",
     "subscriptions-transport-ws": "^0.9.16",
     "uuid": "3.3.2"
   },
