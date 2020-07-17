@@ -125,6 +125,11 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                            >
                               <CTAText>PAY ${cart.totalPrice}</CTAText>
                            </CTA>
+                           {!cart.isValid.status && (
+                              <Error>
+                                 <ErrorText>{cart.isValid.error}</ErrorText>
+                              </Error>
+                           )}
                         </CheckoutSectionContent>
                      )}
                   </CheckoutSection>
@@ -327,6 +332,15 @@ const CTAText = styled.Text`
    font-size: 15px;
    color: #fff;
    font-weight: 500;
+`
+
+const Error = styled.View`
+   background-color: #ff5a52;
+   padding: 10px;
+`
+
+const ErrorText = styled.Text`
+   color: #fff;
 `
 
 const StyledCart = styled.View`
