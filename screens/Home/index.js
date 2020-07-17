@@ -169,7 +169,7 @@ const Home = props => {
 
    const [fetchCart] = useLazyQuery(FETCH_CART, {
       onCompleted: data => {
-         if (data.cartByPK.id) {
+         if (data?.cartByPK?.id) {
             setCart(data.cartByPK)
          }
       },
@@ -179,9 +179,12 @@ const Home = props => {
    })
 
    const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
+      onCompleted: data => {
          console.log('Cart updated!')
-         AsyncStorage.clear()
+         if (data.updateCart.customerInfo?.customerFirstName) {
+            // means both the mutations are made
+            AsyncStorage.clear()
+         }
       },
       onError: error => {
          console.log(error)
@@ -245,6 +248,26 @@ const Home = props => {
                data.platform_customerByClients[0].customer
             )
             setCustomerDetails(data.platform_customerByClients[0].customer)
+            const details = data.platform_customerByClients[0].customer
+            if (cartId) {
+               updateCart({
+                  variables: {
+                     id: cartId,
+                     set: {
+                        customerInfo: {
+                           customerFirstName: details?.firstName,
+                           customerLastName: details?.lastName,
+                           customerPhone: details?.phoneNumber,
+                           customerEmail: details?.email,
+                        },
+                        paymentMethodId:
+                           details?.defaultPaymentMethodId || null,
+                        address: details?.defaultCustomerAddress || null,
+                        stripeCustomerId: details?.stripeCustomerId || null,
+                     },
+                  },
+               })
+            }
          } else {
             console.log('No customer data found!')
          }
@@ -283,17 +306,15 @@ const Home = props => {
          const customers = data.subscriptionData.data.customers
          if (customers.length) {
             setCustomer(customers[0])
-            if (cartId) {
-               updateCart({
-                  variables: {
-                     id: cartId,
-                     set: {
-                        customerId: customers[0].id,
-                        customerKeycloakId: user.sub || user.id,
-                     },
+            updateCart({
+               variables: {
+                  id: cartId,
+                  set: {
+                     customerId: customers[0].id,
+                     customerKeycloakId: user.sub || user.id,
                   },
-               })
-            }
+               },
+            })
          } else {
             createCustomer({
                variables: {
