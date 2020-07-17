@@ -194,6 +194,19 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                   Awww... This feels so light. Oh wait! It's empty.
                </Text>
                <Feather name="shopping-cart" size={64} color={visual.color} />
+               <TouchableOpacity
+                  style={{
+                     backgroundColor: visual.color,
+                     padding: 10,
+                     borderRadius: 2,
+                     marginTop: 30,
+                  }}
+                  onPress={() => navigation.navigate('Home')}
+               >
+                  <Text style={{ color: '#fff', fontSize: '1.1rem' }}>
+                     Browse Products
+                  </Text>
+               </TouchableOpacity>
             </View>
          )}
          {isAuthenticated && (

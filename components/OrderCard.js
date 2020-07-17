@@ -70,7 +70,7 @@ const OrderCard = ({ order, less }) => {
                      {moment(order?.created_at).format('LLLL')}
                   </Text>
                </Text>
-               {order.deliveryInfo.dropoff.dropoffInfo && (
+               {order.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress && (
                   <Text style={styles.muted}>
                      {order?.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress
                         ?.line1 +
@@ -249,8 +249,8 @@ const OrderCard = ({ order, less }) => {
                            <Text>{order.transactionId}</Text>
                         </View>
                         <View style={styles.row}>
-                           <Text>Delivery Price</Text>
-                           <Text>$ {order.deliveryPrice}</Text>
+                           <Text>Item Total</Text>
+                           <Text>$ {order.itemTotal}</Text>
                         </View>
                         {order.tip && (
                            <View style={styles.row}>
@@ -259,12 +259,12 @@ const OrderCard = ({ order, less }) => {
                            </View>
                         )}
                         <View style={styles.row}>
-                           <Text>Tax</Text>
-                           <Text>$ {order.tax}</Text>
+                           <Text>Delivery Price</Text>
+                           <Text>$ {order.deliveryPrice}</Text>
                         </View>
                         <View style={styles.row}>
-                           <Text>Total Price</Text>
-                           <Text>$ {order.itemTotal}</Text>
+                           <Text>Tax</Text>
+                           <Text>$ {order.tax}</Text>
                         </View>
                      </View>
                   ),
