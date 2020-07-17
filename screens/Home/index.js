@@ -181,8 +181,9 @@ const Home = props => {
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
          console.log('Cart updated!')
-         if (data.updateCart.customerInfo?.customerFirstName) {
+         if (data.updateCart.returning[0].customerInfo?.customerFirstName) {
             // means both the mutations are made
+            console.log('Cleared local storage!')
             AsyncStorage.clear()
          }
       },

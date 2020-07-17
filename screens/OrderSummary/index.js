@@ -105,25 +105,54 @@ const Checkout = ({ cart, navigation }) => {
 
    return (
       <StyledCheckout>
-         {!isAuthenticated && (
-            <CheckoutSection>
-               <CheckoutSectionHeading>Account</CheckoutSectionHeading>
-               <CheckoutSectionContent>
-                  <CheckoutSectionText>
-                     To place your order now, log in to your existing account or
-                     sign up.
-                  </CheckoutSectionText>
-                  <CTAContainer>
-                     <Button onPress={() => open('Login')}>
-                        <ButtonText>LOGIN</ButtonText>
-                     </Button>
-                     <Button onPress={() => open('Register')}>
-                        <ButtonText>SIGN UP</ButtonText>
-                     </Button>
-                  </CTAContainer>
-               </CheckoutSectionContent>
-            </CheckoutSection>
-         )}
+         <CheckoutSection>
+            <CheckoutSectionHeading>Account</CheckoutSectionHeading>
+            <CheckoutSectionContent>
+               {!isAuthenticated ? (
+                  <>
+                     <CheckoutSectionText>
+                        To place your order now, log in to your existing account
+                        or sign up.
+                     </CheckoutSectionText>
+                     <CTAContainer>
+                        <Button onPress={() => open('Login')}>
+                           <ButtonText>LOGIN</ButtonText>
+                        </Button>
+                        <Button onPress={() => open('Register')}>
+                           <ButtonText>SIGN UP</ButtonText>
+                        </Button>
+                     </CTAContainer>
+                  </>
+               ) : (
+                  <CustomerDetails>
+                     <View>
+                        <CustomerName>{`${
+                           cart.customerInfo?.customerFirstName || ''
+                        } ${
+                           cart.customerInfo?.customerLastName || ''
+                        }`}</CustomerName>
+                        <CustomerPhone>{`Phone: ${
+                           cart.customerInfo?.customerPhone || '-'
+                        }`}</CustomerPhone>
+                        <CustomerEmail>{`Email: ${
+                           cart.customerInfo?.customerEmail || '-'
+                        }`}</CustomerEmail>
+                     </View>
+                     <TouchableOpacity
+                        onPress={() =>
+                           open('AddDetails', { path: 'profile/create' })
+                        }
+                     >
+                        <Feather
+                           name="edit"
+                           size={width > 768 ? 24 : 16}
+                           color="#93959F"
+                        />
+                     </TouchableOpacity>
+                  </CustomerDetails>
+               )}
+            </CheckoutSectionContent>
+         </CheckoutSection>
          <CheckoutSection>
             <CheckoutSectionHeading disabled={!isAuthenticated}>
                Fulfillment
@@ -286,7 +315,9 @@ const Cart = ({ cart }) => {
                   <CartItemLeft>
                      <CartItemImage source={{ uri: product.image }} />
                      <CartItemInfo>
-                        <CartItemName>{product.name}</CartItemName>
+                        <CartItemName numberOfLines={2} ellipsizeMode="tail">
+                           {product.name}
+                        </CartItemName>
                         {product.type === 'comboProduct' &&
                            product.components.map(component => (
                               <CartItemLabel>
@@ -365,7 +396,8 @@ const GridLayout = styled.View`
    display: grid;
    background: #e9ecee;
    grid-template-columns: 1fr 400px;
-   height: calc(100% - 66px);
+   height: calc(100vh - 66px);
+   overflow-y: auto;
 `
 
 const StyledCheckout = styled.View`
@@ -382,7 +414,7 @@ const CheckoutSection = styled.View`
 `
 
 const CheckoutSectionHeading = styled.Text`
-   font-size: ${width > 768 ? '32px' : '18px'};
+   font-size: ${width > 768 ? '28px' : '18px'};
    font-weight: 600;
    color: ${props => (props.disabled ? '#93959f' : '#282C3F')};
 `
@@ -421,7 +453,30 @@ const ButtonText = styled.Text`
    font-weight: 500;
 `
 
-const SelectedFulfillment = styled.View``
+const CustomerDetails = styled.View`
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
+`
+
+const CustomerName = styled.Text`
+   font-size: ${width > 768 ? '20px' : '16px'};
+   font-weight: 500;
+   margin-bottom: 8px;
+`
+
+const CustomerPhone = styled.Text`
+   color: #93808c;
+   font-weight: 500;
+`
+
+const CustomerEmail = styled.Text`
+   color: #93808c;
+`
+
+const SelectedFulfillment = styled.View`
+   margin-top: 8px;
+`
 
 const SelectedFulfillmentType = styled.Text`
    margin-bottom: ${width > 768 ? '16px' : '12px'};
@@ -445,7 +500,7 @@ const SelectedFulfillmentAddress = styled.Text`
 
 const CTA = styled.TouchableOpacity`
    background-color: ${props => props.color || '#60B246'};
-   height: ${width > 768 ? '50px' : '30px'};
+   height: 50px;
    align-items: center;
    justify-content: center;
    margin: ${width > 768 ? '16px 0' : '12px 0'};
@@ -453,7 +508,7 @@ const CTA = styled.TouchableOpacity`
 `
 
 const CTAText = styled.Text`
-   line-height: ${width > 768 ? '50px' : '30px'};
+   line-height: 50px;
    font-size: 15px;
    color: #fff;
    font-weight: 500;
