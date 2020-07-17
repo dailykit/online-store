@@ -45,6 +45,14 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                               To place your order now, log in to your existing
                               account or sign up.
                            </CheckoutSectionText>
+                           <CTAContainer>
+                              <Button onPress={() => open('Login')}>
+                                 <ButtonText>LOGIN</ButtonText>
+                              </Button>
+                              <Button onPress={() => open('Login')}>
+                                 <ButtonText>SIGN UP</ButtonText>
+                              </Button>
+                           </CTAContainer>
                         </CheckoutSectionContent>
                      </CheckoutSection>
                   )}
@@ -100,22 +108,21 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                      >
                         Payment
                      </CheckoutSectionHeading>
-                     {isAuthenticated &&
-                        cart?.fulfillmentInfo(
-                           <CheckoutSectionContent>
-                              <DefaultPaymentFloater navigation={navigation} />
-                              <CTA
-                                 disabled={cart.isValid.status}
-                                 color={visual.color}
-                                 onPress={() =>
-                                    cart.isValid.status &&
-                                    navigation.navigate('PaymentProcessing')
-                                 }
-                              >
-                                 <CTAText>PAY ${cart.totalPrice}</CTAText>
-                              </CTA>
-                           </CheckoutSectionContent>
-                        )}
+                     {isAuthenticated && cart?.fulfillmentInfo && (
+                        <CheckoutSectionContent>
+                           <DefaultPaymentFloater navigation={navigation} />
+                           <CTA
+                              disabled={!cart.isValid.status}
+                              color={visual.color}
+                              onPress={() =>
+                                 cart.isValid.status &&
+                                 navigation.navigate('PaymentProcessing')
+                              }
+                           >
+                              <CTAText>PAY ${cart.totalPrice}</CTAText>
+                           </CTA>
+                        </CheckoutSectionContent>
+                     )}
                   </CheckoutSection>
                </Checkout>
                <Cart cart={cart} />
@@ -257,6 +264,22 @@ const CheckoutSectionText = styled.Text`
    font-weight: 400;
    font-size: 16px;
    line-height: 1.12;
+   margin-bottom: 32px;
+`
+
+const CTAContainer = styled.View`
+   flex-direction: row;
+`
+
+const Button = styled.TouchableOpacity`
+   border: 1px solid ${props => props.color || '#60b246'};
+   margin-right: 20px;
+   padding: 9px 35px;
+`
+
+const ButtonText = styled.Text`
+   color: ${props => props.color || '#60b246'};
+   font-weight: 500;
 `
 
 const SelectedFulfillment = styled.View``
