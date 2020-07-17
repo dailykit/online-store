@@ -53,7 +53,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                               <Button onPress={() => open('Login')}>
                                  <ButtonText>LOGIN</ButtonText>
                               </Button>
-                              <Button onPress={() => open('Login')}>
+                              <Button onPress={() => open('Register')}>
                                  <ButtonText>SIGN UP</ButtonText>
                               </Button>
                            </CTAContainer>

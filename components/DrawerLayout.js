@@ -16,7 +16,7 @@ import { useLazyQuery } from '@apollo/react-hooks'
 import { CUSTOMER_DETAILS } from '../graphql'
 import { useAuth } from '../context/auth'
 import Fulfillment from './Fulfillment'
-import Login from '../screens/Login'
+import Keycloak from '../screens/Keycloak'
 
 const DrawerLayout = () => {
    const {
@@ -68,7 +68,9 @@ const DrawerLayout = () => {
          case 'Fulfillment':
             return <Fulfillment />
          case 'Login':
-            return <Login />
+            return <Keycloak type="login" />
+         case 'Register':
+            return <Keycloak type="register" />
          default:
             return <Text>Oops! No such component.</Text>
       }
