@@ -22,6 +22,8 @@ import { useAppContext } from '../../context/app'
 import Fulfillment from '../../components/Fulfillment'
 import { useAuth } from '../../context/auth'
 import styled from 'styled-components/native'
+import { useMutation } from '@apollo/react-hooks'
+import { UPDATE_CART } from '../../graphql'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
@@ -179,6 +181,78 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 export default OrderSummary
 
 const Cart = ({ cart }) => {
+   const { visual } = useAppContext()
+
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: () => {
+         console.log('Cart updated!')
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   const updateQuantity = (product, quantity) => {
+      try {
+         if (quantity) {
+            let products = cart?.cartInfo?.products
+            const index = products.findIndex(
+               item => item.cartItemId === product.cartItemId
+            )
+            products[index].quantity = quantity
+            products[index].totalPrice = products[index].unitPrice * quantity
+            const total = products.reduce(
+               (acc, cartItem) => acc + parseFloat(cartItem.totalPrice),
+               0
+            )
+            const cartInfo = {
+               products,
+               total,
+            }
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     cartInfo: cartInfo,
+                  },
+               },
+            })
+         } else {
+            removeFromCart(product)
+         }
+      } catch (e) {
+         console.log(e)
+      }
+   }
+
+   const removeFromCart = product => {
+      let products = cart?.cartInfo?.products
+      let total
+      let newCartItems = products?.filter(
+         item => item.cartItemId !== product.cartItemId
+      )
+      if (newCartItems.length) {
+         total = newCartItems.reduce(
+            (acc, cartItem) => acc + parseFloat(cartItem.totalPrice),
+            0
+         )
+      } else {
+         total = 0
+      }
+      const cartInfo = {
+         products: newCartItems,
+         total,
+      }
+      updateCart({
+         variables: {
+            id: cart.id,
+            set: {
+               cartInfo: cartInfo,
+            },
+         },
+      })
+   }
+
    return (
       <StyledCart>
          <CartHeader>
@@ -208,7 +282,33 @@ const Cart = ({ cart }) => {
                      </CartItemInfo>
                   </CartItemLeft>
                   <CartItemRight>
-                     <CartItemQuantity></CartItemQuantity>
+                     <CartItemQuantity>
+                        <CartItemQuantityButton
+                           onPress={() =>
+                              updateQuantity(product, product.quantity - 1)
+                           }
+                        >
+                           <Feather
+                              name="minus"
+                              size={16}
+                              color={visual.color}
+                           />
+                        </CartItemQuantityButton>
+                        <CartItemQuantityValue>
+                           {product.quantity}
+                        </CartItemQuantityValue>
+                        <CartItemQuantityButton
+                           onPress={() =>
+                              updateQuantity(product, product.quantity + 1)
+                           }
+                        >
+                           <Feather
+                              name="plus"
+                              size={16}
+                              color={visual.color}
+                           />
+                        </CartItemQuantityButton>
+                     </CartItemQuantity>
                      <CartItemPrice>$ {product.totalPrice}</CartItemPrice>
                   </CartItemRight>
                </CartItem>
@@ -373,7 +473,7 @@ const CartHeaderTextRight = styled.Text`
 const CartItems = styled.View`
    max-height: 320px;
    background: #fff;
-   overflow-y: scroll;
+   overflow-y: auto;
 `
 
 const CartItem = styled.View`
@@ -402,6 +502,7 @@ const CartItemImage = styled.Image`
 const CartItemInfo = styled.View`
    margin-left: 10px;
    margin-right: 5px;
+   max-width: 150px;
 `
 
 const CartItemName = styled.Text`
@@ -413,11 +514,28 @@ const CartItemLabel = styled.Text`
    color: #9c9ea7;
 `
 
-const CartItemQuantity = styled.View``
+const CartItemQuantity = styled.View`
+   border: 1px solid #ccc;
+   flex-direction: row;
+   align-items: center;
+   margin-right: 16px;
+`
+
+const CartItemQuantityButton = styled.TouchableOpacity`
+   padding: 3px;
+`
+
+const CartItemQuantityValue = styled.Text`
+   padding: 3px;
+   font-weight: 500;
+   color: #93808c;
+`
 
 const CartItemPrice = styled.Text`
    font-size: 13px;
    color: #535665;
+   min-width: 50px;
+   text-align: right;
 `
 
 const CartBilling = styled.View`
