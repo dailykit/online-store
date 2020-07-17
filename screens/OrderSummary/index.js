@@ -130,7 +130,7 @@ const Checkout = ({ cart, navigation }) => {
             </CheckoutSectionHeading>
             {isAuthenticated && (
                <CheckoutSectionWrapper>
-                  <CheckoutSectionContent>
+                  <CheckoutSectionContent style={{ flex: 1 }}>
                      {editing || !cart?.fulfillmentInfo ? (
                         <Fulfillment
                            navigation={navigation}
@@ -146,6 +146,13 @@ const Checkout = ({ cart, navigation }) => {
                                  .parseZone(cart?.fulfillmentInfo?.slot?.from)
                                  .format('MMMM Do YYYY, h:mm a')}
                            </SelectedFulfillmentTime>
+                           {cart?.fulfillmentInfo?.type.includes(
+                              'DELIVERY'
+                           ) && (
+                              <SelectedFulfillmentAddress>
+                                 {`${cart.address.line1}, ${cart.address.line2}, ${cart.address.city}, ${cart.address.state}, ${cart.address.country}`}
+                              </SelectedFulfillmentAddress>
+                           )}
                         </SelectedFulfillment>
                      )}
                   </CheckoutSectionContent>
@@ -428,6 +435,12 @@ const SelectedFulfillmentType = styled.Text`
 const SelectedFulfillmentTime = styled.Text`
    font-size: ${width > 768 ? '17px' : '14px'};
    font-weight: ${width > 768 ? '500' : 'normal'};
+`
+
+const SelectedFulfillmentAddress = styled.Text`
+   color: #7e808c;
+   font-weight: 400;
+   font-size: 16px;
 `
 
 const CTA = styled.TouchableOpacity`
