@@ -49,8 +49,14 @@ export const CartContextProvider = ({ children }) => {
                },
             })
          } else if (saved.type.includes('profile')) {
-            console.log(saved)
-            console.log('profile update')
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     customerInfo: saved.data.customerInfo,
+                  },
+               },
+            })
          } else {
             console.log('Unkown update!')
          }
