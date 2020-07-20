@@ -1,5 +1,30 @@
 import gql from 'graphql-tag'
 
+export const FETCH_CART = gql`
+   query FetchCart($id: Int!) {
+      cartByPK(id: $id) {
+         id
+         address
+         customerInfo
+         cartInfo
+         customerId
+         isValid
+         paymentMethodId
+         stripeCustomerId
+         fulfillmentInfo
+         deliveryPrice
+         itemTotal
+         tip
+         taxPercent
+         tax
+         totalPrice
+         status
+         paymentStatus
+         orderId
+      }
+   }
+`
+
 export const SIMPLE_RECIPE = gql`
    query SimpleRecipe($id: Int!) {
       simpleRecipe(id: $id) {
@@ -113,8 +138,11 @@ export const GET_MENU = gql`
 export const COMBO_PRODUCT = gql`
    query ComboProduct($id: Int!) {
       comboProduct(id: $id) {
-         name
          id
+         name
+         isPopupAllowed
+         defaultCartItem
+         assets
          comboProductComponents {
             id
             label
@@ -248,8 +276,11 @@ export const COMBO_PRODUCT = gql`
 export const CUSTOMIZABLE_PRODUCT = gql`
    query CustomizableProduct($id: Int!) {
       customizableProduct(id: $id) {
-         name
          id
+         name
+         isPopupAllowed
+         defaultCartItem
+         assets
          customizableProductOptions {
             id
             inventoryProduct {
@@ -321,6 +352,8 @@ export const INVENTORY_PRODUCT = gql`
          tags
          assets
          default
+         isPopupAllowed
+         defaultCartItem
          inventoryProductOptions {
             id
             price
@@ -335,12 +368,14 @@ export const INVENTORY_PRODUCT = gql`
 export const SIMPLE_PRODUCT = gql`
    query SimpleRecipeProduct($id: Int!) {
       simpleRecipeProduct(id: $id) {
+         id
          name
          default
-         id
          tags
          description
          assets
+         isPopupAllowed
+         defaultCartItem
          defaultSimpleRecipeProductOption {
             id
             price
@@ -380,6 +415,8 @@ export const INVENTORY_PRODUCTS = gql`
          description
          name
          tags
+         isPopupAllowed
+         defaultCartItem
          sachetItem {
             unitSize
             unit
@@ -402,10 +439,12 @@ export const INVENTORY_PRODUCTS = gql`
 export const SIMPLE_RECIPE_PRODUCTS = gql`
    query SimpleRecipeProducts($ids: [Int!]!) {
       simpleRecipeProducts(where: { id: { _in: $ids } }) {
+         id
          name
          default
-         id
          assets
+         isPopupAllowed
+         defaultCartItem
          defaultSimpleRecipeProductOption {
             id
             price
@@ -439,8 +478,11 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
 export const CUSTOMIZABLE_PRODUCTS = gql`
    query CustomizableProducts($ids: [Int!]!) {
       customizableProducts(where: { id: { _in: $ids } }) {
-         name
          id
+         name
+         isPopupAllowed
+         defaultCartItem
+         assets
          customizableProductOptions {
             id
             inventoryProduct {
@@ -506,8 +548,11 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
 export const COMBO_PRODUCTS = gql`
    query ComboProducts($ids: [Int!]!) {
       comboProducts(where: { id: { _in: $ids } }) {
-         name
          id
+         name
+         isPopupAllowed
+         defaultCartItem
+         assets
          comboProductComponents {
             id
             label

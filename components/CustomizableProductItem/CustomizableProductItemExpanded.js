@@ -76,7 +76,6 @@ const Item = ({
                      <TouchableOpacity
                         key={_key}
                         onPress={() => {
-                           console.log('SRP Clicked')
                            setisSelected(_key)
                            setproductOptionId(
                               simpleRecipeProduct?.simpleRecipeProductOptions[0]
@@ -325,7 +324,6 @@ const Item = ({
                      <TouchableOpacity
                         key={_key}
                         onPress={() => {
-                           console.log('IP Clicked')
                            setisSelected(_key)
                            setproductOptionId(
                               inventoryProduct?.inventoryProductOptions[0]?.id,

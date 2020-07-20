@@ -1,4 +1,9 @@
-import { useLazyQuery, useMutation, useSubscription } from '@apollo/react-hooks'
+import {
+   useLazyQuery,
+   useMutation,
+   useSubscription,
+   useQuery,
+} from '@apollo/react-hooks'
 import { Spinner } from 'native-base'
 import { Dimensions } from 'react-native'
 import { Datepicker } from '@ui-kitten/components'
@@ -31,6 +36,8 @@ import {
    CUSTOMER,
    CUSTOMER_DETAILS,
    STORE_SETTINGS,
+   FETCH_CART,
+   UPDATE_CART,
 } from '../../graphql'
 import { height, width } from '../../utils/Scalaing'
 import { styles } from './styles'
@@ -38,26 +45,27 @@ import CategoriesButton from '../../components/CategoriesButton'
 import Footer from '../../components/Footer'
 import { Feather } from '@expo/vector-icons'
 
+import { AsyncStorage } from 'react-native-web'
+import BottomNav from '../../components/CheckoutBar'
+import CheckoutBar from '../../components/CheckoutBar'
+
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
 
-const images = [
-   'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-   'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-   'https://images.pexels.com/photos/1640775/pexels-photo-1640775.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-]
-
-const CalendarIcon = props => <Icon size={24} {...props} name="calendar" />
-
 const Home = props => {
-   const [selectedIndex, setSelectedIndex] = useState(0)
-   const [calendarDate, setcalendarDate] = useState(new Date())
-
    const [data, setData] = React.useState([])
    const [loading, setLoading] = React.useState(false)
 
-   const { setCustomer, setCustomerDetails, cart } = useCartContext()
+   const {
+      setCustomer,
+      setCustomerDetails,
+      cart,
+      customer,
+      setCart,
+   } = useCartContext()
    const { user } = useAuth()
+
+   const [cartId, setCartId] = React.useState(null) // Pending Cart Id
 
    // const sectionListRef = useRef();
    // const scrollViewRef = useRef();
@@ -96,9 +104,6 @@ const Home = props => {
                   case 'Brand Name': {
                      brandState.name = value.name
                      return
-                  }
-                  case 'Address': {
-                     brandState.address = value
                   }
                   default: {
                      return
@@ -140,6 +145,9 @@ const Home = props => {
                      availabilityState.delivery = value
                      return
                   }
+                  case 'Location': {
+                     availabilityState.location = value.address
+                  }
                   default: {
                      return
                   }
@@ -150,7 +158,31 @@ const Home = props => {
       }
    )
 
-   // .
+   const [fetchCart] = useLazyQuery(FETCH_CART, {
+      onCompleted: data => {
+         if (data?.cartByPK?.id) {
+            setCart(data.cartByPK)
+         }
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: data => {
+         console.log('Cart updated!')
+         if (data.updateCart.returning[0].customerInfo?.customerFirstName) {
+            // means both the mutations are made
+            console.log('Cleared local storage!')
+            AsyncStorage.clear()
+         }
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
    const fetchData = async date => {
       try {
          setLoading(true)
@@ -158,7 +190,6 @@ const Home = props => {
             date,
          })
          setData(response.data)
-         console.log(response.data)
          setLoading(false)
       } catch (err) {
          setLoading(false)
@@ -169,7 +200,6 @@ const Home = props => {
    // Effects
    React.useEffect(() => {
       if (availability && isStoreOpen()) {
-         console.log('-------- store is open --------')
          const date = new Date(Date.now()).toISOString()
          fetchData(date)
       }
@@ -179,7 +209,24 @@ const Home = props => {
       if (user.sub || user.userid) {
          customerDetails()
       }
+      ;(async () => {
+         const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
+         console.log('Pending Cart ID: ', cartId)
+         setCartId(cartId)
+         if ((!user.sub || !user.id) && cartId) {
+            fetchCart({
+               variables: {
+                  id: cartId,
+               },
+            })
+         }
+      })()
    }, [user])
+
+   React.useEffect(() => {
+      if (cartId && !customer) {
+      }
+   }, [cartId])
 
    // Query
    const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
@@ -193,6 +240,26 @@ const Home = props => {
                data.platform_customerByClients[0].customer
             )
             setCustomerDetails(data.platform_customerByClients[0].customer)
+            const details = data.platform_customerByClients[0].customer
+            if (cartId) {
+               updateCart({
+                  variables: {
+                     id: cartId,
+                     set: {
+                        customerInfo: {
+                           customerFirstName: details?.firstName,
+                           customerLastName: details?.lastName,
+                           customerPhone: details?.phoneNumber,
+                           customerEmail: details?.email,
+                        },
+                        paymentMethodId:
+                           details?.defaultPaymentMethodId || null,
+                        address: details?.defaultCustomerAddress || null,
+                        stripeCustomerId: details?.stripeCustomerId || null,
+                     },
+                  },
+               })
+            }
          } else {
             console.log('No customer data found!')
          }
@@ -202,7 +269,18 @@ const Home = props => {
 
    // Mutations
    const [createCustomer] = useMutation(CREATE_CUSTOMER, {
-      onCompleted: () => {
+      onCompleted: data => {
+         if (cartId) {
+            updateCart({
+               variables: {
+                  id: cartId,
+                  set: {
+                     customerId: data.createCustomer.id,
+                     customerKeycloakId: user.sub || user.id,
+                  },
+               },
+            })
+         }
          console.log('Customer created')
       },
       onError: error => {
@@ -220,6 +298,15 @@ const Home = props => {
          const customers = data.subscriptionData.data.customers
          if (customers.length) {
             setCustomer(customers[0])
+            updateCart({
+               variables: {
+                  id: cartId,
+                  set: {
+                     customerId: customers[0].id,
+                     customerKeycloakId: user.sub || user.id,
+                  },
+               },
+            })
          } else {
             createCustomer({
                variables: {
@@ -518,12 +605,10 @@ const Home = props => {
             {/* <View style={styles.headerContainer}>
           <SafetyBanner {...props} />
         </View> */}
-            {width < 768 && (
-               <Cart to="OrderSummary" {...props} text="Checkout" />
-            )}
             <DrawerLayout />
             <Footer />
          </ScrollView>
+         {width < 768 && <CheckoutBar navigation={props.navigation} />}
       </>
    )
 }

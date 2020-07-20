@@ -35,6 +35,7 @@ import { useAppContext } from '../context/app'
 import ProductPage from '../screens/ProductPage'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 import Recipe from '../screens/Recipe'
+import Search from '../screens/Search'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -66,6 +67,7 @@ function AppStack(props) {
             backgroundColor: 'white',
             width: width * 0.8,
          }}
+         gestureHandlerProps={{ enabled: false }}
          drawerContentOptions={{
             activeTintcolor: 'white',
             inactiveTintColor: '#000',
@@ -133,6 +135,13 @@ function AppStack(props) {
          <Stack.Screen
             name="Order"
             component={Order}
+            options={{
+               headerShown: false,
+            }}
+         />
+         <Stack.Screen
+            name="Search"
+            component={Search}
             options={{
                headerShown: false,
             }}

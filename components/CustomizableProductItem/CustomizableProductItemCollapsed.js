@@ -29,53 +29,64 @@ const CustomizableProductItemCollapsed = ({
       const images = product.customizableProductOptions.map(option => {
          if (option.inventoryProduct) {
             return (
-               option.inventoryProduct.assets?.images[0] ||
+               option.inventoryProduct?.assets?.images[0] ||
                'https://via.placeholder.com/120'
             )
          } else {
             return (
-               option.simpleRecipeProduct.assets?.images[0] ||
+               option.simpleRecipeProduct?.assets?.images[0] ||
                'https://via.placeholder.com/120'
             )
          }
       })
-      console.log(images)
       setOptionImages(images)
    }, [])
 
    return (
       <>
          <View>
-            <Carousel
-               autoplay
-               autoplayTimeout={3000}
-               loop
-               index={0}
-               pageSize={120}
-            >
-               {optionImages.map((slide, index) => (
-                  <View
-                     key={index}
-                     style={{
-                        flex: 1,
-                        position: 'relative',
-                        paddingTop: 20,
-                        width: width > 768 ? 150 : 120,
-                     }}
-                  >
-                     <Image
+            {product.assets?.images[0] ? (
+               <Image
+                  style={{
+                     flex: 1,
+                     height: width > 768 ? 150 : 120,
+                     width: '100%',
+                     resizeMode: 'cover',
+                  }}
+                  source={{ uri: product.assets.images[0] }}
+               />
+            ) : (
+               <Carousel
+                  autoplay
+                  autoplayTimeout={3000}
+                  loop
+                  index={0}
+                  pageSize={120}
+               >
+                  {optionImages.map((slide, index) => (
+                     <View
+                        key={index}
                         style={{
                            flex: 1,
-                           height: width > 768 ? 150 : 120,
-                           width: '100%',
-                           resizeMode: 'contain',
-                           marginHorizontal: 'auto',
+                           position: 'relative',
+                           paddingTop: 20,
+                           width: width > 768 ? 150 : 120,
                         }}
-                        source={{ uri: slide }}
-                     />
-                  </View>
-               ))}
-            </Carousel>
+                     >
+                        <Image
+                           style={{
+                              flex: 1,
+                              height: width > 768 ? 150 : 120,
+                              width: '100%',
+                              resizeMode: 'contain',
+                              marginHorizontal: 'auto',
+                           }}
+                           source={{ uri: slide }}
+                        />
+                     </View>
+                  ))}
+               </Carousel>
+            )}
             <Text
                style={{
                   marginTop: 8,
@@ -98,7 +109,9 @@ const CustomizableProductItemCollapsed = ({
                numberOfLines={1}
                ellipsizeMode="tail"
             >
-               {product.customizableProductOptions.length} options available
+               {product.isPopupAllowed
+                  ? `${product.customizableProductOptions.length} options available`
+                  : product.defaultCartItem.name.split(']')[1]}
             </Text>
          </View>
       </>

@@ -1,5 +1,5 @@
 import { useSubscription, useMutation } from '@apollo/react-hooks'
-import { MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons, Feather } from '@expo/vector-icons'
 import { Picker } from '@react-native-community/picker'
 import React from 'react'
 import {
@@ -30,9 +30,11 @@ import {
 } from '../utils/fulfillment'
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
+import { Spinner } from 'native-base'
+import { DefaultAddressFloater } from './DefaultFloater'
 
-const Fulfillment = () => {
-   const { visual, availability, brand } = useAppContext()
+const Fulfillment = ({ navigation, setEditing }) => {
+   const { visual, availability } = useAppContext()
    const { cart } = useCartContext()
    const { setIsDrawerOpen } = useDrawerContext()
    const [distance, setDistance] = React.useState(0)
@@ -47,55 +49,59 @@ const Fulfillment = () => {
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
          console.log('Cart updated!')
-         setIsDrawerOpen(false)
+         setEditing(false)
       },
       onError: error => {
          console.log(error)
       },
    })
 
-   const { data: { preOrderPickup = [] } = {} } = useSubscription(
-      PREORDER_PICKUP
-   )
+   const {
+      data: { preOrderPickup = [] } = {},
+      loading: PPLoading,
+   } = useSubscription(PREORDER_PICKUP)
 
-   const { data: { onDemandPickup = [] } = {} } = useSubscription(
-      ONDEMAND_PICKUP
-   )
+   const {
+      data: { onDemandPickup = [] } = {},
+      loading: OPLoading,
+   } = useSubscription(ONDEMAND_PICKUP)
 
-   const { data: { preOrderDelivery = [] } = {} } = useSubscription(
-      PREORDER_DELIVERY,
-      {
-         variables: {
-            distance,
-         },
-      }
-   )
+   const {
+      data: { preOrderDelivery = [] } = {},
+      loading: PDLoading,
+   } = useSubscription(PREORDER_DELIVERY, {
+      variables: {
+         distance,
+      },
+   })
 
-   const { data: { onDemandDelivery = [] } = {} } = useSubscription(
-      ONDEMAND_DELIVERY,
-      {
-         variables: {
-            distance,
-         },
-      }
-   )
+   const {
+      data: { onDemandDelivery = [] } = {},
+      loading: ODLoading,
+   } = useSubscription(ONDEMAND_DELIVERY, {
+      variables: {
+         distance,
+      },
+   })
 
    React.useEffect(() => {
+      setTime('')
+      setOops('')
       if (
          cart?.address?.lat &&
          cart?.address?.lng &&
-         brand.address?.lat &&
-         brand.address?.lng
+         availability?.location?.lat &&
+         availability?.location?.lng
       ) {
          const distance = getDistance(
             cart?.address?.lat,
             cart?.address?.lng,
-            +brand.address.lat,
-            +brand.address.lng
+            +availability.location.lat,
+            +availability.location.lng
          )
          setDistance(distance)
       }
-   }, [])
+   }, [cart?.address])
 
    React.useEffect(() => {
       if (fulfillment.date && time === 'PREORDER') {
@@ -123,183 +129,208 @@ const Fulfillment = () => {
    }, [fulfillment.time])
 
    React.useEffect(() => {
-      if (time && type) {
-         setOops('')
-         switch (type) {
-            case 'PICKUP': {
-               if (availability.pickup.isAvailable) {
-                  switch (time) {
-                     case 'PREORDER': {
-                        if (preOrderPickup[0].recurrences.length) {
-                           const result = generatePickUpSlots(
-                              preOrderPickup[0].recurrences
-                           )
-                           if (result.status) {
-                              const miniSlots = generateMiniSlots(
-                                 result.data,
-                                 15
+      try {
+         if (time && type) {
+            setOops('')
+            switch (type) {
+               case 'PICKUP': {
+                  if (availability.pickup.isAvailable) {
+                     switch (time) {
+                        case 'PREORDER': {
+                           if (preOrderPickup[0]?.recurrences?.length) {
+                              const result = generatePickUpSlots(
+                                 preOrderPickup[0].recurrences
                               )
-                              if (miniSlots.length) {
-                                 setPickerDates([...miniSlots])
-                                 setFulfillment({
-                                    date: miniSlots[0].date,
-                                    slot: {
-                                       time: miniSlots[0].slots[0].time,
-                                    },
-                                 })
+                              if (result.status) {
+                                 const miniSlots = generateMiniSlots(
+                                    result.data,
+                                    15
+                                 )
+                                 if (miniSlots.length) {
+                                    setPickerDates([...miniSlots])
+                                    setFulfillment({
+                                       date: miniSlots[0].date,
+                                       slot: {
+                                          time: miniSlots[0].slots[0].time,
+                                       },
+                                    })
+                                 } else {
+                                    setOops('Sorry! No time slots available.')
+                                 }
                               } else {
                                  setOops('Sorry! No time slots available.')
                               }
                            } else {
                               setOops('Sorry! No time slots available.')
                            }
-                        } else {
-                           setOops('Sorry! No time slots available.')
+                           break
                         }
-                        break
-                     }
-                     case 'ONDEMAND': {
-                        if (onDemandPickup[0].recurrences.length) {
-                           const result = isPickUpAvailable(
-                              onDemandPickup[0].recurrences
-                           )
-                           if (result.status) {
-                              const date = new Date()
-                              setFulfillment({
-                                 date: date.toDateString(),
-                                 slot: {
-                                    time:
-                                       date.getHours() +
-                                       ':' +
-                                       makeDoubleDigit(date.getMinutes()),
-                                 },
-                              })
-                           } else {
-                              setOops('Sorry! Option not available currently!')
-                           }
-                        } else {
-                           setOops('Sorry! Option not available currently.')
-                        }
-                        break
-                     }
-                     default: {
-                        return setOops('Unkown error!')
-                     }
-                  }
-               } else {
-                  setOops('Sorry! Pickup not available currently.')
-               }
-               break
-            }
-            case 'DELIVERY': {
-               if (!distance) {
-                  return setOops('Please add an address first!')
-               }
-               if (availability.delivery.isAvailable) {
-                  switch (time) {
-                     case 'PREORDER': {
-                        if (preOrderDelivery[0].recurrences.length) {
-                           const result = generateDeliverySlots(
-                              preOrderDelivery[0].recurrences
-                           )
-                           if (result.status) {
-                              const miniSlots = generateMiniSlots(
-                                 result.data,
-                                 15
+                        case 'ONDEMAND': {
+                           if (onDemandPickup[0]?.recurrences?.length) {
+                              const result = isPickUpAvailable(
+                                 onDemandPickup[0].recurrences
                               )
-                              if (miniSlots.length) {
-                                 setPickerDates([...miniSlots])
+                              if (result.status) {
+                                 const date = new Date()
                                  setFulfillment({
-                                    date: miniSlots[0].date,
+                                    date: date.toDateString(),
                                     slot: {
-                                       time: miniSlots[0].slots[0].time,
-                                       mileRangeId:
-                                          miniSlots[0].slots[0]?.mileRangeId,
+                                       time:
+                                          date.getHours() +
+                                          ':' +
+                                          date.getMinutes(),
                                     },
                                  })
                               } else {
-                                 setOops('Sorry! No time slots available.')
+                                 setOops(
+                                    'Sorry! Option not available currently!'
+                                 )
+                              }
+                           } else {
+                              setOops('Sorry! Option not available currently.')
+                           }
+                           break
+                        }
+                        default: {
+                           return setOops('Unkown error!')
+                        }
+                     }
+                  } else {
+                     setOops('Sorry! Pickup not available currently.')
+                  }
+                  break
+               }
+               case 'DELIVERY': {
+                  console.log('Distance: ', distance)
+                  if (!distance) {
+                     return setOops('Please add an address first!')
+                  }
+                  if (availability.delivery.isAvailable) {
+                     switch (time) {
+                        case 'PREORDER': {
+                           if (preOrderDelivery[0]?.recurrences?.length) {
+                              const result = generateDeliverySlots(
+                                 preOrderDelivery[0].recurrences
+                              )
+                              if (result.status) {
+                                 const miniSlots = generateMiniSlots(
+                                    result.data,
+                                    15
+                                 )
+                                 if (miniSlots.length) {
+                                    setPickerDates([...miniSlots])
+                                    setFulfillment({
+                                       date: miniSlots[0].date,
+                                       slot: {
+                                          time: miniSlots[0].slots[0].time,
+                                          mileRangeId:
+                                             miniSlots[0].slots[0]?.mileRangeId,
+                                       },
+                                    })
+                                 } else {
+                                    setOops(
+                                       'Sorry! No time slots available for selected options.'
+                                    )
+                                 }
+                              } else {
+                                 setOops(
+                                    'Sorry! No time slots available for selected options.'
+                                 )
                               }
                            } else {
                               setOops('Sorry! No time slots available.')
                            }
-                        } else {
-                           setOops('Sorry! No time slots available.')
+                           break
                         }
-                        break
-                     }
-                     case 'ONDEMAND': {
-                        if (onDemandDelivery[0].recurrences.length) {
-                           const result = isDeliveryAvailable(
-                              onDemandDelivery[0].recurrences
-                           )
-                           if (result.status) {
-                              const date = new Date()
-                              setFulfillment({
-                                 date: date.toDateString(),
-                                 slot: {
-                                    time:
-                                       date.getHours() +
-                                       ':' +
-                                       makeDoubleDigit(date.getMinutes()),
-                                    mileRangeId: result.mileRangeId,
-                                 },
-                              })
+                        case 'ONDEMAND': {
+                           if (onDemandDelivery[0]?.recurrences?.length) {
+                              const result = isDeliveryAvailable(
+                                 onDemandDelivery[0].recurrences
+                              )
+                              if (result.status) {
+                                 const date = new Date()
+                                 setFulfillment({
+                                    date: date.toDateString(),
+                                    slot: {
+                                       time:
+                                          date.getHours() +
+                                          ':' +
+                                          date.getMinutes(),
+                                       mileRangeId: result.mileRangeId,
+                                    },
+                                 })
+                              } else {
+                                 setOops(
+                                    'Sorry! Delivery not available at the moment.'
+                                 )
+                              }
                            } else {
-                              setOops('Sorry! Option not available currently!')
+                              setOops('Sorry! Option not available currently.')
                            }
-                        } else {
-                           setOops('Sorry! Option not available currently.')
+                           break
                         }
-                        break
+                        default: {
+                           return setOops('Unkown error!')
+                        }
                      }
-                     default: {
-                        return setOops('Unkown error!')
-                     }
+                  } else {
+                     setOops('Sorry! Delivery not available currently.')
                   }
-               } else {
-                  setOops('Sorry! Delivery not available currently.')
+                  break
                }
-               break
-            }
-            default: {
-               return setOops('Unkown error!')
+               default: {
+                  return setOops('Unkown error!')
+               }
             }
          }
+      } catch (error) {
+         console.log(error)
       }
-   }, [type, time])
+   }, [type, time, distance])
 
    const confirm = () => {
-      if (oops || !type || !time) {
-         return console.log('Invalid selections!')
-      }
-
-      const fulfillmentInfo = {
-         type: time + '_' + type,
-         date: fulfillment.date,
-         slot: {
-            ...fulfillment.slot,
-            timestamp: generateTimeStamp(
-               fulfillment.slot.time,
-               fulfillment.date
-            ),
-         },
-      }
-      console.log(fulfillmentInfo)
-      updateCart({
-         variables: {
-            id: cart.id,
-            set: {
-               fulfillmentInfo,
+      try {
+         if (oops || !type || !time) {
+            return console.log('Invalid selections!')
+         }
+         const fulfillmentInfo = {
+            type: time + '_' + type,
+            slot: {
+               mileRangeId: fulfillment.slot?.mileRangeId || null,
+               ...generateTimeStamp(fulfillment.slot.time, fulfillment.date),
             },
-         },
-      })
+         }
+         console.log(fulfillmentInfo)
+         updateCart({
+            variables: {
+               id: cart.id,
+               set: {
+                  fulfillmentInfo,
+               },
+            },
+         })
+      } catch (error) {
+         console.log(error)
+      }
+   }
+
+   if ([PPLoading, OPLoading, PDLoading, ODLoading].some(loading => loading)) {
+      return (
+         <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+         >
+            <Spinner />
+         </View>
+      )
    }
 
    return (
       <View style={styles.container}>
          <View style={styles.headingContainer}>
             <Text style={styles.heading}>Help us know your preference</Text>
+            <TouchableOpacity onPress={() => setEditing(false)}>
+               <Feather name="x-circle" size={18} color="#333" />
+            </TouchableOpacity>
          </View>
          {!!oops && (
             <Text
@@ -349,44 +380,66 @@ const Fulfillment = () => {
                   )}
                </TouchableOpacity>
             </View>
-            <Text style={[styles.text, { opacity: 0.6 }]}>
-               When would you like your order:
-            </Text>
-            <TouchableOpacity
-               onPress={() => setTime('ONDEMAND')}
-               style={[
-                  styles.radioButton,
-                  { justifyContent: 'space-between', marginBottom: 5 },
-               ]}
-            >
-               <Text style={styles.text}>Now</Text>
-               {time === 'ONDEMAND' && (
-                  <View
-                     style={[styles.check, { backgroundColor: visual.color }]}
-                  >
-                     <MaterialIcons name="done" size={16} color="#fff" />
+            {type === 'DELIVERY' && (
+               <View style={{ marginBottom: 20 }}>
+                  <Text style={[styles.text, { opacity: 0.6 }]}>
+                     Select an address:
+                  </Text>
+                  <DefaultAddressFloater navigation={navigation} />
+               </View>
+            )}
+            {Boolean(type) && (
+               <>
+                  <Text style={[styles.text, { opacity: 0.6 }]}>
+                     When would you like your order:
+                  </Text>
+                  <View style={{ flexDirection: 'row', marginBottom: 20 }}>
+                     <TouchableOpacity
+                        onPress={() => setTime('ONDEMAND')}
+                        style={[styles.radioButton]}
+                     >
+                        <Text style={styles.text}>Now</Text>
+                        {time === 'ONDEMAND' && (
+                           <View
+                              style={[
+                                 styles.check,
+                                 { backgroundColor: visual.color },
+                              ]}
+                           >
+                              <MaterialIcons
+                                 name="done"
+                                 size={16}
+                                 color="#fff"
+                              />
+                           </View>
+                        )}
+                     </TouchableOpacity>
+                     <TouchableOpacity
+                        onPress={() => setTime('PREORDER')}
+                        style={[styles.radioButton]}
+                     >
+                        <Text style={styles.text}>Schedule for later</Text>
+                        {time === 'PREORDER' && (
+                           <View
+                              style={[
+                                 styles.check,
+                                 { backgroundColor: visual.color },
+                              ]}
+                           >
+                              <MaterialIcons
+                                 name="done"
+                                 size={16}
+                                 color="#fff"
+                              />
+                           </View>
+                        )}
+                     </TouchableOpacity>
                   </View>
-               )}
-            </TouchableOpacity>
-            <TouchableOpacity
-               onPress={() => setTime('PREORDER')}
-               style={[
-                  styles.radioButton,
-                  { justifyContent: 'space-between', marginBottom: 5 },
-               ]}
-            >
-               <Text style={styles.text}>Schedule for later</Text>
-               {time === 'PREORDER' && (
-                  <View
-                     style={[styles.check, { backgroundColor: visual.color }]}
-                  >
-                     <MaterialIcons name="done" size={16} color="#fff" />
-                  </View>
-               )}
-            </TouchableOpacity>
+               </>
+            )}
             {time === 'PREORDER' && !oops && (
                <>
-                  <Text style={[styles.text, { opacity: 0.6, marginTop: 20 }]}>
+                  <Text style={[styles.text, { opacity: 0.6 }]}>
                      Select time slots:
                   </Text>
                   <View style={{ flexDirection: 'row' }}>
@@ -437,6 +490,9 @@ const Fulfillment = () => {
                alignItems: 'center',
                backgroundColor: visual.color,
                borderRadius: 4,
+               width: 200,
+               marginHorizontal: 'auto',
+               opacity: type && time ? 1 : 0.5,
             }}
             onPress={confirm}
          >
@@ -449,8 +505,24 @@ const Fulfillment = () => {
 export default Fulfillment
 
 const styles = StyleSheet.create({
-   container: { padding: 10, height: '100%', position: 'relative' },
-   headingContainer: { justifyContent: 'center', marginBottom: 20 },
+   container: {
+      position: 'relative',
+      padding: 10,
+      shadowColor: '#000',
+      shadowOffset: {
+         width: 0,
+         height: 1,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 2.22,
+      elevation: 3,
+   },
+   headingContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 20,
+   },
    heading: { lineHeight: 24, fontSize: 16, fontWeight: 'bold' },
    text: {
       fontSize: 16,
@@ -465,6 +537,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#ddd',
       height: 40,
       padding: 10,
+      marginHorizontal: 5,
       alignItems: 'baseline',
       justifyContent: 'center',
       flex: 1,

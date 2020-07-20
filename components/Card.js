@@ -11,20 +11,116 @@ import { Drawer } from './Drawer'
 import InventoryProductItem from './InventoryProductItem'
 import SimpleProductItem from './SimpleProductItem'
 import { useDrawerContext } from '../context/drawer'
+import { useCartContext } from '../context/cart'
+import { useMutation } from '@apollo/react-hooks'
+import { UPDATE_CART, CREATE_CART } from '../graphql'
+import { AsyncStorage } from 'react-native-web'
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
+   const [busy, setBusy] = useState(false)
    const [price, setPrice] = useState(0)
    const [cardItem, setcardItem] = useState(null) // obj to push to jaguar
    const [cardData, setcardData] = useState(null) // obj to pass to add to cart modal
    const [isModalVisible, setIsModalVisible] = useState(false)
    const { visual } = useAppContext()
-   const { isAuthenticated, login } = useAuth()
+   const { cart, customerDetails, customer, setCart } = useCartContext()
+   const { isAuthenticated, login, user } = useAuth()
    const { open } = useDrawerContext()
    const [isHovered, setIsHovered] = React.useState(false)
 
-   React.useEffect(() => {
-      console.log('Modal: ', isModalVisible)
-   }, [isModalVisible])
+   // Mutation
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: data => {
+         console.log('Product added!')
+         setBusy(false)
+         if (!customer) {
+            setCart(data.updateCart.returning[0])
+         }
+      },
+      onError: error => {
+         console.log(error)
+         setBusy(false)
+      },
+   })
+   const [createCart] = useMutation(CREATE_CART, {
+      onCompleted: data => {
+         console.log('Cart created!')
+         setBusy(false)
+         if (!customer) {
+            AsyncStorage.setItem('PENDING_CART_ID', data.createCart.id)
+            setCart(data.createCart)
+         }
+      },
+      onError: error => {
+         console.log(error)
+         setBusy(false)
+      },
+   })
+
+   const addToCart = () => {
+      try {
+         if (product.isPopupAllowed) {
+            setIsModalVisible(true)
+         } else {
+            if (busy) return
+            setBusy(true)
+            if (cart) {
+               const products = [
+                  ...cart.cartInfo.products,
+                  product.defaultCartItem,
+               ]
+               const total = products.reduce(
+                  (acc, product) => acc + parseFloat(product.totalPrice),
+                  0
+               )
+               const cartInfo = {
+                  products,
+                  total: parseFloat(total.toFixed(2)),
+               }
+               updateCart({
+                  variables: {
+                     id: cart.id,
+                     set: {
+                        cartInfo: cartInfo,
+                     },
+                  },
+               })
+            } else {
+               const cartInfo = {
+                  products: [product.defaultCartItem],
+                  total: product.defaultCartItem.totalPrice,
+               }
+               createCart({
+                  variables: {
+                     object: {
+                        cartInfo: cartInfo,
+                        customerId: customer?.id || null,
+                        customerInfo: {
+                           customerFirstName: customerDetails?.firstName,
+                           customerLastName: customerDetails?.lastName,
+                           customerPhone: customerDetails?.phoneNumber,
+                           customerEmail: customerDetails?.email,
+                        },
+                        fulfillmentInfo: null,
+                        paymentMethodId:
+                           customerDetails?.defaultPaymentMethodId || null,
+                        address:
+                           customerDetails?.defaultCustomerAddress || null,
+                        stripeCustomerId:
+                           customerDetails?.stripeCustomerId || null,
+                        tip: 0,
+                        customerKeycloakId: user.sub || user.id || null,
+                        cartSource: 'a-la-carte',
+                     },
+                  },
+               })
+            }
+         }
+      } catch (error) {
+         console.log(error)
+         setBusy(false)
+      }
+   }
 
    return (
       <>
@@ -150,12 +246,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                )}
                <View style={styles.add_to_cart_container}>
                   <TouchableOpacity
-                     onPress={() => {
-                        !isAuthenticated
-                           ? open('Login')
-                           : setIsModalVisible(true)
-                        // navigation.navigate('AddToCart', { data: cardData, type, id });
-                     }}
+                     onPress={addToCart}
                      style={[
                         styles.button,
                         { display: isNaN(price) ? 'none' : 'flex' },
@@ -163,7 +254,10 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                      ]}
                   >
                      <Text style={styles.add_to_card_text}>
-                        ADD <Feather size={width > 768 ? 14 : 10} name="plus" />
+                        {busy ? '...' : 'ADD'}
+                        {product.isPopupAllowed && (
+                           <Feather size={width > 768 ? 14 : 10} name="plus" />
+                        )}
                      </Text>
                   </TouchableOpacity>
                </View>
@@ -230,6 +324,9 @@ const styles = EStyleSheet.create({
       backgroundColor: '#3fa4ff',
       paddingVertical: 5,
       paddingHorizontal: width > 768 ? 15 : 8,
+      minWidth: 60,
+      alignItems: 'center',
+      justifyContent: 'center',
       borderRadius: 4,
    },
    add_to_card_text: {

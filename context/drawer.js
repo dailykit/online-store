@@ -1,42 +1,46 @@
-import React from 'react';
-import { useAuth } from './auth';
+import React from 'react'
+import { useAuth } from './auth'
 
-const DrawerContext = React.createContext();
+const DrawerContext = React.createContext()
 
 export const DrawerContextProvider = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
-  const [drawerView, setDrawerView] = React.useState(undefined);
-  const [params, setParams] = React.useState(undefined);
+   const { isAuthenticated } = useAuth()
+   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
+   const [drawerView, setDrawerView] = React.useState(undefined)
+   const [params, setParams] = React.useState(undefined)
 
-  const open = (screen, params) => {
-    console.log(screen);
-    setDrawerView(screen);
-    if (params) setParams(params);
-    setIsDrawerOpen(true);
-  };
+   const [saved, setSaved] = React.useState(undefined)
 
-  React.useEffect(() => {
-    if (isAuthenticated) {
-      if (window.location !== window.parent.location) {
-        window.parent.location.reload();
+   const open = (screen, params) => {
+      setDrawerView(screen)
+      if (params) setParams(params)
+      setIsDrawerOpen(true)
+   }
+
+   React.useEffect(() => {
+      if (isAuthenticated) {
+         if (window.location !== window.parent.location) {
+            // window.parent.location.reload()
+            window.parent.location.replace(`${window.location.origin}/store`)
+         }
       }
-    }
-  }, [isAuthenticated]);
+   }, [isAuthenticated])
 
-  return (
-    <DrawerContext.Provider
-      value={{
-        isDrawerOpen,
-        setIsDrawerOpen,
-        drawerView,
-        open,
-        params,
-      }}
-    >
-      {children}
-    </DrawerContext.Provider>
-  );
-};
+   return (
+      <DrawerContext.Provider
+         value={{
+            isDrawerOpen,
+            setIsDrawerOpen,
+            drawerView,
+            open,
+            params,
+            saved,
+            setSaved,
+         }}
+      >
+         {children}
+      </DrawerContext.Provider>
+   )
+}
 
-export const useDrawerContext = () => React.useContext(DrawerContext);
+export const useDrawerContext = () => React.useContext(DrawerContext)

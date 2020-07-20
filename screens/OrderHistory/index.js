@@ -23,9 +23,12 @@ export default ({ navigation }) => {
 
    if (loading) {
       return (
-         <View style={styles.center}>
-            <Spinner size="large" />
-         </View>
+         <>
+            <Header title="Home" navigation={navigation} />
+            <View style={styles.center}>
+               <Spinner size="large" />
+            </View>
+         </>
       )
    }
 

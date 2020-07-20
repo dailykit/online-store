@@ -57,12 +57,11 @@ const CustomizableProductItem = ({
          const option = product.customizableProductOptions.find(
             option => option[type]
          )
-         newItem.image = option[type].assets.images[0]
+         newItem.image = option[type].assets?.images[0]
       }
       if (newItem.type === 'inventoryProduct') {
          delete newItem.option.type
       }
-      console.log(newItem)
       setobjToAdd(newItem)
       setcartItem(newItem)
    }
@@ -78,7 +77,6 @@ const CustomizableProductItem = ({
          let default_product
          let _default_option
          let _type
-         console.log('PRODUCT:', product)
          if (product.customizableProductOptions[0]?.inventoryProduct !== null) {
             default_product =
                product?.customizableProductOptions[0]?.inventoryProduct
@@ -99,7 +97,7 @@ const CustomizableProductItem = ({
             id: default_product.id,
             name: default_product.name,
             price: _default_option?.price[0]?.value,
-            image: default_product.assets.images[0],
+            image: default_product.assets?.images[0],
             option: {
                id: _default_option?.id, // product option id
                type: _default_option?.type,

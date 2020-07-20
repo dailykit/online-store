@@ -27,21 +27,16 @@ const ComboProduct = ({
 
    const [optionImages, setOptionImages] = React.useState([])
 
-   const REF = {
-      id: product.id,
-      type: 'comboProduct',
-   }
-
    React.useEffect(() => {
       const images = product.comboProductComponents.map(component => {
          if (component.inventoryProduct) {
             return (
-               component.inventoryProduct.assets?.images[0] ||
+               component.inventoryProduct?.assets?.images[0] ||
                'https://via.placeholder.com/120'
             )
          } else if (component.simpleRecipeProduct) {
             return (
-               component.simpleRecipeProduct.assets?.images[0] ||
+               component.simpleRecipeProduct?.assets?.images[0] ||
                'https://via.placeholder.com/120'
             )
          } else {
@@ -51,19 +46,18 @@ const ComboProduct = ({
             ) {
                return (
                   component.customizableProduct.defaultCustomizableProductOption
-                     .inventoryProduct.assets?.images[0] ||
+                     .inventoryProduct?.assets?.images[0] ||
                   'https://via.placeholder.com/120'
                )
             } else {
                return (
                   component.customizableProduct.defaultCustomizableProductOption
-                     .simpleRecipeProduct.assets?.images[0] ||
+                     .simpleRecipeProduct?.assets?.images[0] ||
                   'https://via.placeholder.com/120'
                )
             }
          }
       })
-      console.log(images)
       setOptionImages(images)
    }, [])
 
@@ -255,36 +249,48 @@ const ComboProduct = ({
             </>
          ) : (
             <View>
-               <Carousel
-                  autoplay
-                  autoplayTimeout={3000}
-                  loop
-                  index={0}
-                  pageSize={120}
-               >
-                  {optionImages.map((slide, index) => (
-                     <View
-                        key={index}
-                        style={{
-                           flex: 1,
-                           position: 'relative',
-                           paddingTop: 20,
-                           width: width > 768 ? 150 : 120,
-                        }}
-                     >
-                        <Image
+               {product.assets?.images[0] ? (
+                  <Image
+                     style={{
+                        flex: 1,
+                        height: width > 768 ? 150 : 120,
+                        width: '100%',
+                        resizeMode: 'cover',
+                     }}
+                     source={{ uri: product.assets.images[0] }}
+                  />
+               ) : (
+                  <Carousel
+                     autoplay
+                     autoplayTimeout={3000}
+                     loop
+                     index={0}
+                     pageSize={120}
+                  >
+                     {optionImages.map((slide, index) => (
+                        <View
+                           key={index}
                            style={{
                               flex: 1,
-                              height: width > 768 ? 150 : 120,
-                              width: '100%',
-                              resizeMode: 'contain',
-                              marginHorizontal: 'auto',
+                              position: 'relative',
+                              paddingTop: 20,
+                              width: width > 768 ? 150 : 120,
                            }}
-                           source={{ uri: slide }}
-                        />
-                     </View>
-                  ))}
-               </Carousel>
+                        >
+                           <Image
+                              style={{
+                                 flex: 1,
+                                 height: width > 768 ? 150 : 120,
+                                 width: '100%',
+                                 resizeMode: 'contain',
+                                 marginHorizontal: 'auto',
+                              }}
+                              source={{ uri: slide }}
+                           />
+                        </View>
+                     ))}
+                  </Carousel>
+               )}
                <Text
                   style={{
                      marginTop: 8,
@@ -304,10 +310,17 @@ const ComboProduct = ({
                      paddingHorizontal: 20,
                      fontSize: width > 768 ? 18 : 14,
                   }}
-                  numberOfLines={1}
+                  numberOfLines={2}
                   ellipsizeMode="tail"
                >
-                  {product.comboProductComponents.length} items inside
+                  {product.isPopupAllowed
+                     ? `${product.comboProductComponents.length} items inside`
+                     : product.defaultCartItem.components
+                          .reduce((names, product) => {
+                             names.push(product.name)
+                             return names
+                          }, [])
+                          .join(' + ')}
                </Text>
             </View>
          )}
