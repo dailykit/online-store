@@ -35,6 +35,7 @@ import { useAppContext } from '../context/app'
 import ProductPage from '../screens/ProductPage'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 import Recipe from '../screens/Recipe'
+import Search from '../screens/Search'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -134,6 +135,13 @@ function AppStack(props) {
          <Stack.Screen
             name="Order"
             component={Order}
+            options={{
+               headerShown: false,
+            }}
+         />
+         <Stack.Screen
+            name="Search"
+            component={Search}
             options={{
                headerShown: false,
             }}

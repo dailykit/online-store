@@ -27,6 +27,12 @@ export default function (containerRef) {
                      type: String,
                   },
                },
+               Search: {
+                  path: 'Search',
+                  parse: {
+                     query: String,
+                  },
+               },
                CategoryProductsPage: {
                   path: 'categories',
                   parse: {

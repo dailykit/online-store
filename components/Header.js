@@ -1,6 +1,12 @@
 import { withNavigation } from '@react-navigation/compat'
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import {
+   StyleSheet,
+   Text,
+   TouchableOpacity,
+   View,
+   TextInput,
+} from 'react-native'
 import argonTheme from '../constants/Theme'
 import { useCartContext } from '../context/cart'
 import { width } from '../utils/Scalaing'
@@ -68,6 +74,8 @@ const WebNav = ({ navigation }) => {
    const { open } = useDrawerContext()
    const { isAuthenticated, logout } = useAuth()
 
+   const [query, setQuery] = React.useState('')
+
    return (
       <>
          <NavLeft>
@@ -78,6 +86,19 @@ const WebNav = ({ navigation }) => {
             <NavLink>
                <NavLinkText>About Us</NavLinkText>
             </NavLink>
+            <SearchContainer>
+               <Feather name="search" size={18} color="#aaa" />
+               <Search
+                  selectionColor={visual.color}
+                  onChangeText={text => setQuery(text)}
+                  value={query}
+                  placeholder="Search"
+                  onKeyPress={e =>
+                     e.charCode === 13 &&
+                     navigation.navigate('Search', { query })
+                  }
+               />
+            </SearchContainer>
          </NavLeft>
          <NavRight>
             {isAuthenticated && (
@@ -134,7 +155,9 @@ const MobileNav = ({ navigation }) => {
             </NavLink>
          </NavLeft>
          <NavRight>
-            <NavLink onPress={() => navigation.navigate('Home')}>
+            <NavLink
+               onPress={() => navigation.navigate('Search', { query: '' })}
+            >
                <Feather name="search" size={16} />
             </NavLink>
          </NavRight>
@@ -175,6 +198,21 @@ const NavLinkText = styled.Text`
    color: ${props => (props.white ? '#fff' : '#111')};
 `
 
+const SearchContainer = styled.View`
+   flex-direction: row;
+   margin-left: 32px;
+   border: 1px solid #aaa;
+   border-radius: 5px;
+   align-items: center;
+   padding: 5px;
+`
+
+const Search = styled.TextInput`
+   font-size: 1.1rem;
+   outline: none;
+   margin-left: 8px;
+`
+
 const NavRight = styled.View`
    flex-direction: row;
    align-items: center;
@@ -182,7 +220,6 @@ const NavRight = styled.View`
 
 const NavButton = styled(NavLink)`
    padding: 10px;
-   background-color: ${props =>
-      props.blend ? '#ccc' : props.color || '#33C931'};
+   background-color: ${props => (props.blend ? '#ccc' : props.color || '#666')};
    border-radius: 2px;
 `
