@@ -233,8 +233,11 @@ const Cart = ({ cart }) => {
    const { isAuthenticated } = useAuth()
 
    const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
+      onCompleted: data => {
          console.log('Cart updated!')
+         if (!isAuthenticated) {
+            setCart(data.updateCart.returning[0])
+         }
       },
       onError: error => {
          console.log(error)
@@ -300,10 +303,6 @@ const Cart = ({ cart }) => {
             },
          },
       })
-      if (!newCartItems.length && !isAuthenticated) {
-         setCart(undefined)
-         AsyncStorage.clear()
-      }
    }
 
    return (
