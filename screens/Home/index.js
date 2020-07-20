@@ -46,22 +46,13 @@ import Footer from '../../components/Footer'
 import { Feather } from '@expo/vector-icons'
 
 import { AsyncStorage } from 'react-native-web'
+import BottomNav from '../../components/CheckoutBar'
+import CheckoutBar from '../../components/CheckoutBar'
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
 
-const images = [
-   'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-   'https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-   'https://images.pexels.com/photos/1640775/pexels-photo-1640775.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-]
-
-const CalendarIcon = props => <Icon size={24} {...props} name="calendar" />
-
 const Home = props => {
-   const [selectedIndex, setSelectedIndex] = useState(0)
-   const [calendarDate, setcalendarDate] = useState(new Date())
-
    const [data, setData] = React.useState([])
    const [loading, setLoading] = React.useState(false)
 
@@ -614,12 +605,10 @@ const Home = props => {
             {/* <View style={styles.headerContainer}>
           <SafetyBanner {...props} />
         </View> */}
-            {width < 768 && (
-               <Cart to="OrderSummary" {...props} text="Checkout" />
-            )}
             <DrawerLayout />
             <Footer />
          </ScrollView>
+         {width < 768 && <CheckoutBar navigation={props.navigation} />}
       </>
    )
 }
