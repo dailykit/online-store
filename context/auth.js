@@ -1,66 +1,69 @@
-import React from 'react';
-import Keycloak from 'keycloak-js';
+import React from 'react'
+import Keycloak from 'keycloak-js'
 
 // No. of times this file  had to be editied(cuz this package is garbage): 8
-import { CLIENTID } from 'react-native-dotenv';
+import { CLIENTID } from 'react-native-dotenv'
 
 const keycloak = new Keycloak({
-  realm: 'consumers',
-  url: 'https://secure.dailykit.org/auth',
-  clientId: CLIENTID,
-  'ssl-required': 'none',
-  'public-client': true,
-  'bearer-only': false,
-  'verify-token-audience': true,
-  'use-resource-role-mappings': true,
-  'confidential-port': 0,
-});
+   realm: 'consumers',
+   url: 'https://secure.dailykit.org/auth',
+   clientId: CLIENTID,
+   'ssl-required': 'none',
+   'public-client': true,
+   'bearer-only': false,
+   'verify-token-audience': true,
+   'use-resource-role-mappings': true,
+   'confidential-port': 0,
+})
 
-const AuthContext = React.createContext();
+const AuthContext = React.createContext()
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
-  const [user, setUser] = React.useState({});
-  const [isInitialized, setIsInitialized] = React.useState(false);
-  const [loginUrl, setLoginUrl] = React.useState('');
+   const [isAuthenticated, setIsAuthenticated] = React.useState(false)
+   const [user, setUser] = React.useState({})
+   const [isInitialized, setIsInitialized] = React.useState(false)
+   const [loginUrl, setLoginUrl] = React.useState('')
+   const [registerUrl, setRegisterUrl] = React.useState('')
 
-  const initialize = async () => {
-    const authenticated = await keycloak.init({
-      onLoad: 'check-sso',
-      promiseType: 'native',
-    });
-    setIsInitialized(true);
-    if (authenticated) {
-      setIsAuthenticated(authenticated);
-      const profile = await keycloak.loadUserInfo();
-      setUser(profile);
-    }
-  };
+   const initialize = async () => {
+      const authenticated = await keycloak.init({
+         onLoad: 'check-sso',
+         promiseType: 'native',
+      })
+      setIsInitialized(true)
+      if (authenticated) {
+         setIsAuthenticated(authenticated)
+         const profile = await keycloak.loadUserInfo()
+         setUser(profile)
+      }
+   }
 
-  React.useEffect(() => {
-    initialize();
-    setLoginUrl(keycloak.createLoginUrl());
-  }, []);
+   React.useEffect(() => {
+      initialize()
+      setLoginUrl(keycloak.createLoginUrl())
+      setRegisterUrl(keycloak.createRegisterUrl())
+   }, [])
 
-  const login = () => keycloak.login();
-  const logout = () => keycloak.logout();
-  const register = () => keycloak.register();
+   const login = () => keycloak.login()
+   const logout = () => keycloak.logout()
+   const register = () => keycloak.register()
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        register,
-        isInitialized,
-        isAuthenticated,
-        loginUrl,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-};
+   return (
+      <AuthContext.Provider
+         value={{
+            user,
+            login,
+            logout,
+            register,
+            isInitialized,
+            isAuthenticated,
+            loginUrl,
+            registerUrl,
+         }}
+      >
+         {children}
+      </AuthContext.Provider>
+   )
+}
 
-export const useAuth = () => React.useContext(AuthContext);
+export const useAuth = () => React.useContext(AuthContext)

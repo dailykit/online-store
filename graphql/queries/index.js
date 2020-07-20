@@ -1,5 +1,30 @@
 import gql from 'graphql-tag'
 
+export const FETCH_CART = gql`
+   query FetchCart($id: Int!) {
+      cartByPK(id: $id) {
+         id
+         address
+         customerInfo
+         cartInfo
+         customerId
+         isValid
+         paymentMethodId
+         stripeCustomerId
+         fulfillmentInfo
+         deliveryPrice
+         itemTotal
+         tip
+         taxPercent
+         tax
+         totalPrice
+         status
+         paymentStatus
+         orderId
+      }
+   }
+`
+
 export const SIMPLE_RECIPE = gql`
    query SimpleRecipe($id: Int!) {
       simpleRecipe(id: $id) {

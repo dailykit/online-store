@@ -9,6 +9,8 @@ export const DrawerContextProvider = ({ children }) => {
    const [drawerView, setDrawerView] = React.useState(undefined)
    const [params, setParams] = React.useState(undefined)
 
+   const [saved, setSaved] = React.useState(undefined)
+
    const open = (screen, params) => {
       setDrawerView(screen)
       if (params) setParams(params)
@@ -18,7 +20,8 @@ export const DrawerContextProvider = ({ children }) => {
    React.useEffect(() => {
       if (isAuthenticated) {
          if (window.location !== window.parent.location) {
-            window.parent.location.reload()
+            // window.parent.location.reload()
+            window.parent.location.replace(`${window.location.origin}/store`)
          }
       }
    }, [isAuthenticated])
@@ -31,6 +34,8 @@ export const DrawerContextProvider = ({ children }) => {
             drawerView,
             open,
             params,
+            saved,
+            setSaved,
          }}
       >
          {children}

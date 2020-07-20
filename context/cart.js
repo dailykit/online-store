@@ -19,11 +19,54 @@ import {
    generateTimeStamp,
 } from '../utils/fulfillment'
 import { useAppContext } from './app'
+import { useDrawerContext } from './drawer'
 
 const CartContext = React.createContext()
 
 export const CartContextProvider = ({ children }) => {
    const { availability } = useAppContext()
+
+   const { saved } = useDrawerContext()
+
+   React.useEffect(() => {
+      if (saved && cart) {
+         if (saved.type.includes('card')) {
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     paymentMethodId: saved.data.paymentMethodId,
+                  },
+               },
+            })
+         } else if (saved.type.includes('address')) {
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     address: saved.data.address,
+                  },
+               },
+            })
+         } else if (saved.type.includes('profile')) {
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     customerInfo: {
+                        customerFirstName: saved.data.firstName,
+                        customerLastName: saved.data.lastName,
+                        customerPhone: saved.data.phoneNumber,
+                        customerEmail: saved.data.email,
+                     },
+                  },
+               },
+            })
+         } else {
+            console.log('Unkown update!')
+         }
+      }
+   }, [saved])
 
    console.log('Brand Location: ', availability?.location)
 
