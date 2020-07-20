@@ -114,11 +114,17 @@ const Checkout = ({ cart, navigation }) => {
                         or sign up.
                      </CheckoutSectionText>
                      <CTAContainer>
-                        <Button onPress={() => open('Login')}>
-                           <ButtonText>LOGIN</ButtonText>
+                        <Button
+                           color={visual.color}
+                           onPress={() => open('Login')}
+                        >
+                           <ButtonText color={visual.color}>LOGIN</ButtonText>
                         </Button>
-                        <Button onPress={() => open('Register')}>
-                           <ButtonText>SIGN UP</ButtonText>
+                        <Button
+                           color={visual.color}
+                           onPress={() => open('Register')}
+                        >
+                           <ButtonText color={visual.color}>SIGN UP</ButtonText>
                         </Button>
                      </CTAContainer>
                   </>
