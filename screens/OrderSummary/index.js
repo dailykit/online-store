@@ -7,6 +7,7 @@ import {
    Text,
    TouchableOpacity,
    View,
+   AsyncStorage,
 } from 'react-native'
 import { DefaultPaymentFloater } from '../../components/DefaultFloater'
 
@@ -228,6 +229,8 @@ const Checkout = ({ cart, navigation }) => {
 
 const Cart = ({ cart }) => {
    const { visual } = useAppContext()
+   const { setCart } = useCartContext()
+   const { isAuthenticated } = useAuth()
 
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
@@ -297,6 +300,10 @@ const Cart = ({ cart }) => {
             },
          },
       })
+      if (!newCartItems.length && !isAuthenticated) {
+         setCart(undefined)
+         AsyncStorage.clear()
+      }
    }
 
    return (
