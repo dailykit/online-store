@@ -10,8 +10,10 @@ import { useAppContext } from '../context/app'
 import styled from 'styled-components/native'
 import { useDrawerContext } from '../context/drawer'
 import { useAuth } from '../context/auth'
+import { Feather } from '@expo/vector-icons'
+import { useIsDrawerOpen } from '@react-navigation/drawer'
 
-const BasketButton = ({ isWhite, style, navigation }) => {
+const BasketButton = ({ isWhite }) => {
    const { cart } = useCartContext()
    const { visual } = useAppContext()
    let numberOfProducts = cart?.cartInfo?.products?.length || 0
@@ -48,12 +50,26 @@ const BasketButton = ({ isWhite, style, navigation }) => {
 }
 
 const Header = ({ navigation }) => {
+   return (
+      <Wrapper>
+         {width > 768 ? (
+            <WebNav navigation={navigation} />
+         ) : (
+            <MobileNav navigation={navigation} />
+         )}
+      </Wrapper>
+   )
+}
+
+export default Header
+
+const WebNav = ({ navigation }) => {
    const { brand } = useAppContext()
    const { open } = useDrawerContext()
    const { isAuthenticated, logout } = useAuth()
 
    return (
-      <Wrapper>
+      <>
          <NavLeft>
             <BrandLogo source={{ uri: brand.logo }} />
             <NavLink onPress={() => navigation.navigate('Home')}>
@@ -92,11 +108,36 @@ const Header = ({ navigation }) => {
                </>
             )}
          </NavRight>
-      </Wrapper>
+      </>
    )
 }
 
-export default Header
+const MobileNav = ({ navigation }) => {
+   const { brand } = useAppContext()
+   const { open } = useDrawerContext()
+   const { isAuthenticated, logout } = useAuth()
+
+   const isDrawerOpen = useIsDrawerOpen()
+
+   return (
+      <>
+         <NavLeft>
+            <NavLink onPress={() => navigation.toggleDrawer()}>
+               <Feather name={isDrawerOpen ? 'x' : 'menu'} size={16} />
+            </NavLink>
+            <BrandLogo source={{ uri: brand.logo }} />
+            <NavLink onPress={() => navigation.navigate('Home')}>
+               <NavLinkText>{brand.name || 'Home'}</NavLinkText>
+            </NavLink>
+         </NavLeft>
+         <NavRight>
+            <NavLink onPress={() => navigation.navigate('Home')}>
+               <Feather name="search" size={16} />
+            </NavLink>
+         </NavRight>
+      </>
+   )
+}
 
 const Wrapper = styled.View`
    height: 66px;
@@ -104,7 +145,7 @@ const Wrapper = styled.View`
    flex-direction: row;
    align-items: center;
    justify-content: space-between;
-   padding: 0px 20px;
+   padding: ${width > 786 ? '0px 20px' : '0px'};
    shadow-opacity: 0.5;
    shadow-radius: 5px;
    shadow-color: #ccc;

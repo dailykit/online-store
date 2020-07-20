@@ -66,6 +66,7 @@ function AppStack(props) {
             backgroundColor: 'white',
             width: width * 0.8,
          }}
+         gestureHandlerProps={{ enabled: false }}
          drawerContentOptions={{
             activeTintcolor: 'white',
             inactiveTintColor: '#000',

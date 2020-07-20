@@ -10,33 +10,38 @@ const CheckoutBar = ({ navigation }) => {
    const { cart } = useCartContext()
 
    return (
-      <Wrapper show={cart && cart.cartInfo.products.length}>
-         <Button
-            color={visual.color}
-            onPress={() => navigation.navigate('OrderSummary')}
-         >
-            <Stats>
-               <StatsCount>{`${cart.cartInfo.products.length} ITEM${
-                  cart.cartInfo.products.length > 1 ? 'S' : ''
-               }`}</StatsCount>
-               <StatsPrice>
-                  <StatsPriceExact>$ {cart.cartInfo.total}</StatsPriceExact>
-                  <StatsPriceTrail>plus taxes</StatsPriceTrail>
-               </StatsPrice>
-            </Stats>
-            <Cart>
-               <CartText>View Cart</CartText>
-               <Feather name="chevron-right" color="#fff" size={16} />
-            </Cart>
-         </Button>
-      </Wrapper>
+      <>
+         {cart && cart.cartInfo.products.length && (
+            <Wrapper>
+               <Button
+                  color={visual.color}
+                  onPress={() => navigation.navigate('OrderSummary')}
+               >
+                  <Stats>
+                     <StatsCount>{`${cart.cartInfo.products.length} ITEM${
+                        cart.cartInfo.products.length > 1 ? 'S' : ''
+                     }`}</StatsCount>
+                     <StatsPrice>
+                        <StatsPriceExact>
+                           $ {cart.cartInfo.total}
+                        </StatsPriceExact>
+                        <StatsPriceTrail>plus taxes</StatsPriceTrail>
+                     </StatsPrice>
+                  </Stats>
+                  <Cart>
+                     <CartText>View Cart</CartText>
+                     <Feather name="chevron-right" color="#fff" size={16} />
+                  </Cart>
+               </Button>
+            </Wrapper>
+         )}
+      </>
    )
 }
 
 export default CheckoutBar
 
 const Wrapper = styled.View`
-   display: ${props => (props.show ? 'flex' : 'none')};
    position: fixed;
    bottom: 0;
    left: 0;
