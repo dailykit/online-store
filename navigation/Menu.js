@@ -1,5 +1,5 @@
 import React from 'react'
-import { Image, ScrollView, View } from 'react-native'
+import { Image, ScrollView, View, TouchableOpacity } from 'react-native'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { Feather } from '@expo/vector-icons'
@@ -20,7 +20,13 @@ function CustomDrawerContent({
    const { open } = useDrawerContext()
 
    return (
-      <View styles={{ flex: 1, padding: 10 }}>
+      <View styles={{ flex: 1, padding: 10, position: 'relative' }}>
+         <TouchableOpacity
+            onPress={navigation.closeDrawer}
+            style={{ position: 'absolute', top: 10, left: 10 }}
+         >
+            <Feather name="x" color="#999" size={24} />
+         </TouchableOpacity>
          <View style={{ marginVertical: 20, marginHorizontal: 'auto' }}>
             <Image
                style={{ width: 80, height: 80, borderRadius: 40 }}
