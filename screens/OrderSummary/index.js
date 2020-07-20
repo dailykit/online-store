@@ -8,8 +8,6 @@ import {
    TouchableOpacity,
    View,
 } from 'react-native'
-import BillingDetails from '../../components/BillingDetails'
-import { CartSummary } from '../../components/Cart'
 import { DefaultPaymentFloater } from '../../components/DefaultFloater'
 
 const Summary = lazy(() => import('../../components/Summary'))

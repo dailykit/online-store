@@ -64,7 +64,7 @@ const Header = ({ navigation }) => {
 export default Header
 
 const WebNav = ({ navigation }) => {
-   const { brand } = useAppContext()
+   const { brand, visual } = useAppContext()
    const { open } = useDrawerContext()
    const { isAuthenticated, logout } = useAuth()
 
@@ -99,10 +99,13 @@ const WebNav = ({ navigation }) => {
                </NavButton>
             ) : (
                <>
-                  <NavButton onPress={() => open('Login')}>
+                  <NavButton color={visual.color} onPress={() => open('Login')}>
                      <NavLinkText white>Login</NavLinkText>
                   </NavButton>
-                  <NavButton onPress={() => open('Register')}>
+                  <NavButton
+                     color={visual.color}
+                     onPress={() => open('Register')}
+                  >
                      <NavLinkText white>Sign Up</NavLinkText>
                   </NavButton>
                </>
