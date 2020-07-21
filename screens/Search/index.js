@@ -24,6 +24,7 @@ const Search = ({ navigation }) => {
    const [query, setQuery] = React.useState('')
 
    const [products, setProducts] = React.useState([])
+   const [error, setError] = React.useState('')
 
    // Query
    const [searchProducts, { loading }] = useLazyQuery(SEARCH_PRODUCTS, {
@@ -33,12 +34,17 @@ const Search = ({ navigation }) => {
          tag: query,
       },
       onCompleted: data => {
-         setProducts([
+         const items = [
             ...data.comboProducts,
             ...data.customizableProducts,
             ...data.simpleRecipeProducts,
             ...data.inventoryProducts,
-         ])
+         ]
+         if (items.length) {
+            setProducts(items)
+         } else {
+            setError('Sorry! No items found.')
+         }
       },
       onError: error => {
          console.log(error)
@@ -89,6 +95,7 @@ const Search = ({ navigation }) => {
          navigation.goBack() || navigation.navigate('Home')
       }
       if (e.which === 13) {
+         setError('')
          searchProducts()
       }
    }
@@ -120,6 +127,7 @@ const Search = ({ navigation }) => {
                   <EscapeText>Esc</EscapeText>
                </EscapeContainer>
             </SearchContainer>
+            {Boolean(error) && <Error>{error}</Error>}
             <ProductsContainer>
                {loading ? (
                   <FlatList
@@ -136,7 +144,7 @@ const Search = ({ navigation }) => {
                   />
                ) : (
                   <>
-                     {products.length ? (
+                     {Boolean(products.length) && (
                         <FlatList
                            showsVerticalScrollIndicator={false}
                            style={{
@@ -151,10 +159,6 @@ const Search = ({ navigation }) => {
                               <Card navigation={navigation} product={product} />
                            )}
                         />
-                     ) : (
-                        <View>
-                           <Text>Sorry no products found!</Text>
-                        </View>
                      )}
                   </>
                )}
@@ -203,6 +207,8 @@ const EscapeText = styled.Text`
    font-size: 1.1rem;
    color: #666;
 `
+
+const Error = styled.Text``
 
 const ProductsContainer = styled.ScrollView`
    flex: 1;
