@@ -192,7 +192,7 @@ const SearchContainer = styled.View`
 `
 
 const SearchInputWrapper = styled.View`
-   width: 90%;
+   width: ${width > 768 ? '100%' : '90%'};
    border: 1px solid #d4d5d9;
    flex-direction: row;
    align-items: center;
