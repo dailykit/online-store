@@ -86,18 +86,9 @@ const WebNav = ({ navigation }) => {
             <NavLink>
                <NavLinkText>About Us</NavLinkText>
             </NavLink>
-            <SearchContainer>
+            <SearchContainer onPress={() => navigation.navigate('Search')}>
                <Feather name="search" size={18} color="#aaa" />
-               <Search
-                  selectionColor={visual.color}
-                  onChangeText={text => setQuery(text)}
-                  value={query}
-                  placeholder="Search"
-                  onKeyPress={e =>
-                     e.charCode === 13 &&
-                     navigation.navigate('Search', { query })
-                  }
-               />
+               <SearchText>Search</SearchText>
             </SearchContainer>
          </NavLeft>
          <NavRight>
@@ -155,9 +146,7 @@ const MobileNav = ({ navigation }) => {
             </NavLink>
          </NavLeft>
          <NavRight>
-            <NavLink
-               onPress={() => navigation.navigate('Search', { query: '' })}
-            >
+            <NavLink onPress={() => navigation.navigate('Search')}>
                <Feather name="search" size={16} />
             </NavLink>
          </NavRight>
@@ -198,19 +187,16 @@ const NavLinkText = styled.Text`
    color: ${props => (props.white ? '#fff' : '#111')};
 `
 
-const SearchContainer = styled.View`
+const SearchContainer = styled.TouchableOpacity`
    flex-direction: row;
    margin-left: 32px;
-   border: 1px solid #aaa;
-   border-radius: 5px;
-   align-items: center;
-   padding: 5px;
+   align-items: baseline;
 `
 
-const Search = styled.TextInput`
+const SearchText = styled.Text`
    font-size: 1.1rem;
-   outline: none;
    margin-left: 8px;
+   color: #666;
 `
 
 const NavRight = styled.View`

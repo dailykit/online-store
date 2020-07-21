@@ -17,6 +17,8 @@ export const AppContextProvider = ({ children }) => {
    })
    const [availability, setAvailability] = useState(undefined)
 
+   const [menuData, setMenuData] = React.useState([])
+
    return (
       <AppContext.Provider
          value={{
@@ -26,6 +28,8 @@ export const AppContextProvider = ({ children }) => {
             setBrand,
             availability,
             setAvailability,
+            menuData,
+            setMenuData,
          }}
       >
          {children}

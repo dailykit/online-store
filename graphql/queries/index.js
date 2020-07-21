@@ -680,3 +680,314 @@ export const COMBO_PRODUCTS = gql`
       }
    }
 `
+
+export const SEARCH_PRODUCTS = gql`
+   query(
+      $comboProducts: [Int!]!
+      $customizableProducts: [Int!]!
+      $simpleRecipeProducts: [Int!]!
+      $inventoryProducts: [Int!]!
+      $name: String!
+      $tag: jsonb!
+   ) {
+      comboProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $comboProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+               }
+            ]
+         }
+      ) {
+         id
+         name
+         isPopupAllowed
+         defaultCartItem
+         assets
+         comboProductComponents {
+            id
+            label
+            customizableProductId
+            inventoryProductId
+            simpleRecipeProductId
+            customizableProduct {
+               id
+               name
+               defaultCustomizableProductOption {
+                  inventoryProduct {
+                     assets
+                  }
+                  simpleRecipeProduct {
+                     assets
+                  }
+               }
+               customizableProductOptions {
+                  id
+                  inventoryProduct {
+                     id
+                     assets
+                     default
+                     description
+                     name
+                     tags
+                     sachetItem {
+                        unitSize
+                        unit
+                     }
+                     supplierItem {
+                        unitSize
+                        unit
+                     }
+                     inventoryProductOptions {
+                        id
+                        price
+                        quantity
+                        label
+                        inventoryProductId
+                     }
+                  }
+                  simpleRecipeProduct {
+                     name
+                     default
+                     id
+                     assets
+                     defaultSimpleRecipeProductOption {
+                        id
+                        price
+                        type
+                        simpleRecipeYield {
+                           yield
+                        }
+                        simpleRecipeYieldId
+                     }
+                     simpleRecipeProductOptions(
+                        where: { isActive: { _eq: true } }
+                     ) {
+                        id
+                        price
+                        type
+                        simpleRecipeYield {
+                           yield
+                        }
+                        simpleRecipeYieldId
+                     }
+                     simpleRecipe {
+                        author
+                        cuisine
+                        id
+                        name
+                        show
+                        type
+                     }
+                  }
+               }
+            }
+            inventoryProduct {
+               id
+               assets
+               default
+               description
+               name
+               tags
+               inventoryProductOptions {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+               }
+            }
+            simpleRecipeProduct {
+               name
+               default
+               id
+               assets
+               defaultSimpleRecipeProductOption {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+               }
+               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+               }
+               simpleRecipe {
+                  author
+                  cuisine
+                  id
+                  name
+                  show
+                  type
+               }
+            }
+         }
+      }
+      customizableProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $customizableProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+               }
+            ]
+         }
+      ) {
+         id
+         name
+         isPopupAllowed
+         defaultCartItem
+         assets
+         customizableProductOptions {
+            id
+            inventoryProduct {
+               id
+               assets
+               default
+               description
+               name
+               tags
+               sachetItem {
+                  unitSize
+                  unit
+               }
+               supplierItem {
+                  unitSize
+                  unit
+               }
+               inventoryProductOptions {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+               }
+            }
+            simpleRecipeProduct {
+               name
+               default
+               assets
+               id
+               defaultSimpleRecipeProductOption {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+               }
+               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+               }
+               simpleRecipe {
+                  author
+                  cuisine
+                  id
+                  name
+                  show
+                  type
+               }
+            }
+         }
+      }
+      simpleRecipeProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $simpleRecipeProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+               }
+            ]
+         }
+      ) {
+         id
+         name
+         default
+         tags
+         description
+         assets
+         isPopupAllowed
+         defaultCartItem
+         defaultSimpleRecipeProductOption {
+            id
+            price
+            type
+            simpleRecipeYield {
+               yield
+            }
+            simpleRecipeYieldId
+         }
+         simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+            id
+            price
+            type
+            simpleRecipeYield {
+               yield
+            }
+            simpleRecipeYieldId
+         }
+         simpleRecipe {
+            author
+            cuisine
+            id
+            name
+            show
+            type
+         }
+      }
+      inventoryProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $inventoryProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+               }
+            ]
+         }
+      ) {
+         id
+         name
+         description
+         tags
+         assets
+         default
+         isPopupAllowed
+         defaultCartItem
+         inventoryProductOptions {
+            id
+            price
+            quantity
+            label
+            inventoryProductId
+         }
+      }
+   }
+`
