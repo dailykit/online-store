@@ -18,6 +18,7 @@ import { Feather } from '@expo/vector-icons'
 import { useAppContext } from '../../context/app'
 import HeaderBack from '../../components/HeaderBack'
 import AddToCart from '../AddToCart'
+import CheckoutBar from '../../components/CheckoutBar'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
@@ -86,7 +87,9 @@ const ProductPage = ({ navigation, route }) => {
             id={product?.id}
             setIsModalVisible={setIsModalVisible}
          />
-         <SafeAreaView style={styles.safeArea}>
+         <SafeAreaView
+            style={[styles.safeArea, { paddingBottom: width < 768 ? 70 : 0 }]}
+         >
             {width > 768 ? (
                <Header title="Home" navigation={navigation} />
             ) : (
@@ -220,6 +223,7 @@ const ProductPage = ({ navigation, route }) => {
                   </View>
                </View>
             </ScrollView>
+            {width < 768 && <CheckoutBar navigation={navigation} />}
          </SafeAreaView>
       </>
    )

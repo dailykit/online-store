@@ -14,6 +14,7 @@ import { FlatList } from 'react-native'
 import { useAppContext } from '../../context/app'
 import Header from '../../components/Header'
 import { Drawer } from '../../components/Drawer'
+import CheckoutBar from '../../components/CheckoutBar'
 
 const Recipe = ({ route, navigation }) => {
    let { recipeId, refId, refType } = route.params
@@ -342,6 +343,7 @@ const Recipe = ({ route, navigation }) => {
                )}
             </View>
          </ScrollView>
+         {width < 768 && <CheckoutBar navigation={navigation} />}
       </>
    )
 }

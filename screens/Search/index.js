@@ -16,6 +16,7 @@ import { Feather } from '@expo/vector-icons'
 import { width } from '../../utils/Scalaing'
 import { Card } from '../../components'
 import CardSkeleton from '../../components/skeletons/card'
+import CheckoutBar from '../../components/CheckoutBar'
 
 const Search = ({ navigation }) => {
    const { menuData } = useAppContext()
@@ -173,6 +174,7 @@ const Search = ({ navigation }) => {
                )}
             </ProductsContainer>
          </Wrapper>
+         {width < 768 && <CheckoutBar navigation={navigation} />}
       </View>
    )
 }
@@ -182,7 +184,7 @@ export default Search
 const Wrapper = styled.View`
    width: ${width > 1280 ? '1280px' : width + 'px'};
    margin: ${width > 768 ? '20px auto 0px' : '10px auto 0px'};
-   padding: 10px;
+   margin-bottom: ${width < 768 ? '70px' : '0px'};
    flex: 1;
 `
 
