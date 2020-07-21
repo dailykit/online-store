@@ -77,6 +77,7 @@ const Home = props => {
       setVisual,
       availability,
       setAvailability,
+      setMenuData,
    } = useAppContext()
 
    // Query
@@ -191,6 +192,7 @@ const Home = props => {
          })
          setData(response.data)
          setLoading(false)
+         setMenuData(response.data)
       } catch (err) {
          setLoading(false)
          console.log(err)
