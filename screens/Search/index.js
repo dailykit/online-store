@@ -115,15 +115,24 @@ const Search = ({ navigation }) => {
          <Wrapper>
             <SearchContainer>
                <SearchInputWrapper>
-                  <Feather name="search" size={28} color="#3D4157" />
+                  <Feather
+                     name="search"
+                     size={width > 768 ? 28 : 16}
+                     color="#3D4157"
+                  />
                   <SearchInput
                      onChangeText={text => setQuery(text)}
                      value={query}
                      placeholder="Search for products and tags"
+                     autoFocus={true}
                   />
                </SearchInputWrapper>
                <EscapeContainer onPress={() => navigation.goBack()}>
-                  <Feather name="x" size={28} color="#3D4157" />
+                  <Feather
+                     name="x"
+                     size={width > 768 ? 28 : 16}
+                     color="#3D4157"
+                  />
                   <EscapeText>Esc</EscapeText>
                </EscapeContainer>
             </SearchContainer>
@@ -137,7 +146,7 @@ const Search = ({ navigation }) => {
                         flexWrap: 'wrap',
                         marginHorizontal: 'auto',
                      }}
-                     numColumns={width > 768 ? 4 : 2}
+                     numColumns={width > 768 ? 3 : 2}
                      data={[1, 2, 3]}
                      keyExtractor={item => item.toString()}
                      renderItem={() => <CardSkeleton />}
@@ -172,7 +181,7 @@ export default Search
 
 const Wrapper = styled.View`
    width: ${width > 1280 ? '1280px' : width + 'px'};
-   margin: 20px auto 0px;
+   margin: ${width > 768 ? '20px auto 0px' : '10px auto 0px'};
    padding: 10px;
    flex: 1;
 `
@@ -183,32 +192,35 @@ const SearchContainer = styled.View`
 `
 
 const SearchInputWrapper = styled.View`
-   width: 100%;
+   width: 90%;
    border: 1px solid #d4d5d9;
    flex-direction: row;
    align-items: center;
-   padding: 1.2rem;
+   padding: ${width > 768 ? '1.2rem' : '1rem'};
 `
 
 const SearchInput = styled.TextInput`
    flex: 1;
-   margin-left: 1.2rem;
-   font-size: 1.2rem;
+   margin-left: ${width > 768 ? '1.2rem' : '1rem'};
+   font-size: ${width > 768 ? '1.2rem' : '1rem'};
    color: #282c3f;
    font-weight: 500;
+   outline: none;
 `
 
 const EscapeContainer = styled.TouchableOpacity`
-   margin-left: 16px;
+   margin-left: ${width > 768 ? '16px' : '8px'};
    align-items: center;
 `
 
 const EscapeText = styled.Text`
-   font-size: 1.1rem;
+   font-size: ${width > 768 ? '1.1rem' : '0.8rem'};
    color: #666;
 `
 
-const Error = styled.Text``
+const Error = styled.Text`
+   color: #666;
+`
 
 const ProductsContainer = styled.ScrollView`
    flex: 1;
