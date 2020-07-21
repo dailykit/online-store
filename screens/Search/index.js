@@ -2,14 +2,28 @@ import React from 'react'
 import { View, Text } from 'react-native'
 import Header from '../../components/Header'
 import { useAppContext } from '../../context/app'
+import { useLazyQuery } from '@apollo/react-hooks'
+import { SEARCH_PRODUCTS } from '../../graphql/queries'
 
 const Search = ({ navigation }) => {
    const { menuData } = useAppContext()
 
    const [mergedData, setMergedData] = React.useState(undefined)
+   const [query, setQuery] = React.useState('Friday')
+
+   // Query
+   const [
+      searchProducts,
+      { data: { products = {} } = {}, loading, error },
+   ] = useLazyQuery(SEARCH_PRODUCTS, {
+      variables: {
+         ...mergedData,
+         name: `%${query}%`,
+         tag: query,
+      },
+   })
 
    const squashAndMerge = data => {
-      console.log(data)
       const prepData = data.reduce(
          (prepData, category) => {
             prepData.comboProducts = [
@@ -45,11 +59,11 @@ const Search = ({ navigation }) => {
             inventoryProducts: [],
          }
       )
-      console.log(prepData)
       setMergedData(prepData)
    }
 
    React.useEffect(() => {
+      console.log('Menu Data: ', menuData)
       squashAndMerge(menuData)
    }, [])
 

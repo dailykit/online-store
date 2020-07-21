@@ -680,3 +680,79 @@ export const COMBO_PRODUCTS = gql`
       }
    }
 `
+
+export const SEARCH_PRODUCTS = gql`
+   query(
+      $comboProducts: [Int!]!
+      $customizableProducts: [Int!]!
+      $simpleRecipeProducts: [Int!]!
+      $inventoryProducts: [Int!]!
+      $name: String!
+      $tag: jsonb!
+   ) {
+      comboProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $comboProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+               }
+            ]
+         }
+      ) {
+         id
+         name
+      }
+      customizableProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $customizableProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+               }
+            ]
+         }
+      ) {
+         id
+         name
+      }
+      simpleRecipeProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $simpleRecipeProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+               }
+            ]
+         }
+      ) {
+         id
+         name
+      }
+      inventoryProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $inventoryProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+               }
+            ]
+         }
+      ) {
+         id
+         name
+      }
+   }
+`
