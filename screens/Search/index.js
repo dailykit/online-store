@@ -5,6 +5,7 @@ import {
    TextInput,
    TouchableOpacity,
    ScrollView,
+   FlatList,
 } from 'react-native'
 import styled from 'styled-components/native'
 import Header from '../../components/Header'
@@ -13,6 +14,8 @@ import { useLazyQuery } from '@apollo/react-hooks'
 import { SEARCH_PRODUCTS } from '../../graphql/queries'
 import { Feather } from '@expo/vector-icons'
 import { width } from '../../utils/Scalaing'
+import { Card } from '../../components'
+import CardSkeleton from '../../components/skeletons/card'
 
 const Search = ({ navigation }) => {
    const { menuData } = useAppContext()
@@ -20,15 +23,25 @@ const Search = ({ navigation }) => {
    const [mergedData, setMergedData] = React.useState(undefined)
    const [query, setQuery] = React.useState('')
 
+   const [products, setProducts] = React.useState([])
+
    // Query
-   const [
-      searchProducts,
-      { data: { products = {} } = {}, loading, error },
-   ] = useLazyQuery(SEARCH_PRODUCTS, {
+   const [searchProducts, { loading }] = useLazyQuery(SEARCH_PRODUCTS, {
       variables: {
          ...mergedData,
          name: `%${query}%`,
          tag: query,
+      },
+      onCompleted: data => {
+         setProducts([
+            ...data.comboProducts,
+            ...data.customizableProducts,
+            ...data.simpleRecipeProducts,
+            ...data.inventoryProducts,
+         ])
+      },
+      onError: error => {
+         console.log(error)
       },
    })
 
@@ -71,9 +84,22 @@ const Search = ({ navigation }) => {
       setMergedData(prepData)
    }
 
+   const handleKeyDown = e => {
+      if (e.which === 27) {
+         navigation.goBack() || navigation.navigate('Home')
+      }
+      if (e.which === 13) {
+         searchProducts()
+      }
+   }
+
    React.useEffect(() => {
       console.log('Menu Data: ', menuData)
       squashAndMerge(menuData)
+      document.addEventListener('keydown', handleKeyDown)
+      return () => {
+         document.removeEventListener('keydown', handleKeyDown)
+      }
    }, [])
 
    return (
@@ -94,6 +120,45 @@ const Search = ({ navigation }) => {
                   <EscapeText>Esc</EscapeText>
                </EscapeContainer>
             </SearchContainer>
+            <ProductsContainer>
+               {loading ? (
+                  <FlatList
+                     showsVerticalScrollIndicator={false}
+                     style={{
+                        flexDirection: 'row',
+                        flexWrap: 'wrap',
+                        marginHorizontal: 'auto',
+                     }}
+                     numColumns={width > 768 ? 4 : 2}
+                     data={[1, 2, 3]}
+                     keyExtractor={item => item.toString()}
+                     renderItem={() => <CardSkeleton />}
+                  />
+               ) : (
+                  <>
+                     {products.length ? (
+                        <FlatList
+                           showsVerticalScrollIndicator={false}
+                           style={{
+                              flexDirection: 'row',
+                              flexWrap: 'wrap',
+                              marginHorizontal: 'auto',
+                           }}
+                           data={products}
+                           numColumns={width > 768 ? 3 : 2}
+                           keyExtractor={item => item.id.toString()}
+                           renderItem={({ item: product }) => (
+                              <Card navigation={navigation} product={product} />
+                           )}
+                        />
+                     ) : (
+                        <View>
+                           <Text>Sorry no products found!</Text>
+                        </View>
+                     )}
+                  </>
+               )}
+            </ProductsContainer>
          </Wrapper>
       </View>
    )
@@ -105,6 +170,7 @@ const Wrapper = styled.View`
    width: ${width > 1280 ? '1280px' : width + 'px'};
    margin: 20px auto 0px;
    padding: 10px;
+   flex: 1;
 `
 
 const SearchContainer = styled.View`
@@ -136,4 +202,9 @@ const EscapeContainer = styled.TouchableOpacity`
 const EscapeText = styled.Text`
    font-size: 1.1rem;
    color: #666;
+`
+
+const ProductsContainer = styled.ScrollView`
+   flex: 1;
+   margin-top: 10px;
 `
