@@ -1,6 +1,6 @@
 import React from 'react'
 import Modal from 'modal-enhanced-react-native-web'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { useDrawerContext } from '../context/drawer'
 import { height, width } from '../utils/Scalaing'
 
@@ -17,6 +17,7 @@ import { CUSTOMER_DETAILS } from '../graphql'
 import { useAuth } from '../context/auth'
 import Fulfillment from './Fulfillment'
 import Keycloak from '../screens/Keycloak'
+import { Feather } from '@expo/vector-icons'
 
 const DrawerLayout = () => {
    const {
@@ -84,6 +85,21 @@ const DrawerLayout = () => {
             setIsDrawerOpen(false)
          }}
       >
+         <TouchableOpacity
+            style={{
+               width: width > 1280 ? 640 : width,
+               position: 'relative',
+               marginHorizontal: 'auto',
+            }}
+            onPress={() => setIsDrawerOpen(false)}
+         >
+            <Feather
+               name="x"
+               size={28}
+               color="#fff"
+               style={{ position: 'absolute', right: 0, top: -40 }}
+            />
+         </TouchableOpacity>
          <View style={width > 1280 ? styles.container : styles.phoneContainer}>
             <View
                style={width > 1280 ? styles.component : styles.phoneComponent}
