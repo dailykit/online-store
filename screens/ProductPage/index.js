@@ -19,11 +19,12 @@ import { useAppContext } from '../../context/app'
 import HeaderBack from '../../components/HeaderBack'
 import AddToCart from '../AddToCart'
 import CheckoutBar from '../../components/CheckoutBar'
+import AppSkeleton from '../../components/skeletons/app'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
 
-   const { visual } = useAppContext()
+   const { visual, settingsLoading } = useAppContext()
 
    const [product, setProduct] = React.useState({})
    const [isModalVisible, setIsModalVisible] = React.useState(false)
@@ -67,6 +68,10 @@ const ProductPage = ({ navigation, route }) => {
          }
       }
    }, [id, type])
+
+   if (settingsLoading) {
+      return <AppSkeleton />
+   }
 
    if (IPLoading || SRPLoading)
       return (

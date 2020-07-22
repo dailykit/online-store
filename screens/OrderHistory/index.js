@@ -10,9 +10,12 @@ import { styles } from './styles'
 import { useSubscription } from '@apollo/react-hooks'
 import { Header } from '../../components'
 import OrderCard from '../../components/OrderCard'
+import { useAppContext } from '../../context/app'
+import AppSkeleton from '../../components/skeletons/app'
 
 export default ({ navigation }) => {
    const { customer } = useCartContext()
+   const { settingsLoading } = useAppContext()
 
    // Query
    const { data, loading, error } = useSubscription(ORDERS, {
@@ -20,6 +23,10 @@ export default ({ navigation }) => {
          id: customer?.id,
       },
    })
+
+   if (settingsLoading) {
+      return <AppSkeleton />
+   }
 
    if (loading) {
       return (

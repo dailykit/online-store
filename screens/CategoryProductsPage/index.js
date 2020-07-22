@@ -7,9 +7,17 @@ import { width } from '../../utils/Scalaing'
 import CategoriesButton from '../../components/CategoriesButton'
 import Footer from '../../components/Footer'
 import CheckoutBar from '../../components/CheckoutBar'
+import AppSkeleton from '../../components/skeletons/app'
+import { useAppContext } from '../../context/app'
 
 const CategoryProductsPage = ({ navigation, route }) => {
    const { data, category } = route.params
+
+   const { settingsLoading } = useAppContext()
+
+   if (settingsLoading) {
+      return <AppSkeleton />
+   }
 
    return (
       <>

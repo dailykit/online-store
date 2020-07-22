@@ -16,12 +16,13 @@ import MapView from 'react-native-maps'
 import * as moment from 'moment'
 
 import restaurant from '../../assets/imgs/restaurant @1x.png'
+import AppSkeleton from '../../components/skeletons/app'
 
 const Order = ({ route, navigation }) => {
    const { orderId } = route.params
 
    const { cart } = useCartContext()
-   const { visual, brand } = useAppContext()
+   const { visual, brand, settingsLoading } = useAppContext()
 
    // Subscription
    const { data: { order = {} } = {}, loading, error } = useSubscription(
@@ -33,7 +34,10 @@ const Order = ({ route, navigation }) => {
       }
    )
 
-   console.log(order)
+   if (settingsLoading) {
+      return <AppSkeleton />
+   }
+
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
