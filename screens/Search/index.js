@@ -17,9 +17,10 @@ import { width } from '../../utils/Scalaing'
 import { Card } from '../../components'
 import CardSkeleton from '../../components/skeletons/card'
 import CheckoutBar from '../../components/CheckoutBar'
+import AppSkeleton from '../../components/skeletons/app'
 
 const Search = ({ navigation }) => {
-   const { menuData } = useAppContext()
+   const { menuData, settingsLoading } = useAppContext()
 
    const [mergedData, setMergedData] = React.useState(undefined)
    const [query, setQuery] = React.useState('')
@@ -102,13 +103,20 @@ const Search = ({ navigation }) => {
    }
 
    React.useEffect(() => {
-      console.log('Menu Data: ', menuData)
-      squashAndMerge(menuData)
       document.addEventListener('keydown', handleKeyDown)
       return () => {
          document.removeEventListener('keydown', handleKeyDown)
       }
    }, [])
+
+   React.useEffect(() => {
+      console.log('Menu Data: ', menuData)
+      squashAndMerge(menuData)
+   }, [menuData])
+
+   if (settingsLoading) {
+      return <AppSkeleton />
+   }
 
    return (
       <View style={{ backgroundColor: '#fff', flex: 1 }}>

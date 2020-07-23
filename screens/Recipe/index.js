@@ -15,11 +15,12 @@ import { useAppContext } from '../../context/app'
 import Header from '../../components/Header'
 import { Drawer } from '../../components/Drawer'
 import CheckoutBar from '../../components/CheckoutBar'
+import AppSkeleton from '../../components/skeletons/app'
 
 const Recipe = ({ route, navigation }) => {
    let { recipeId, refId, refType } = route.params
 
-   const { visual } = useAppContext()
+   const { visual, settingsLoading } = useAppContext()
 
    const [option, setOption] = React.useState(undefined)
    const [fetching, setFetching] = React.useState(false)
@@ -97,6 +98,10 @@ const Recipe = ({ route, navigation }) => {
                return console.log('No type matched for fetching!')
          }
       }
+   }
+
+   if (settingsLoading) {
+      return <AppSkeleton />
    }
 
    if (loading) {
