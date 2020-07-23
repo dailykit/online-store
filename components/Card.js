@@ -294,15 +294,12 @@ const styles = EStyleSheet.create({
       color: 'gray',
       textAlign: 'right',
    },
-   item_parent_container: {
-      flex: 5,
-   },
    bottom_container: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
-      paddingTop: width > 768 ? 20 : 16,
+      paddingVertical: 5,
       paddingHorizontal: width > 768 ? '1rem' : '0.5rem',
    },
    item_details: {
