@@ -6,6 +6,7 @@ import { styles } from './styles'
 import ServingSelect from '../ServingSelect'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
+import Modifiers from '../Modifiers'
 
 const SimpleProductItemCollapsed = ({
    navigation,
@@ -224,6 +225,16 @@ const SimpleProductItemCollapsed = ({
                         />
                      )
                   })}
+               {simpleRecipeProduct.simpleRecipeProductOptions[servingIndex]
+                  .modifier && (
+                  <Modifiers
+                     data={
+                        simpleRecipeProduct.simpleRecipeProductOptions[
+                           servingIndex
+                        ].modifier.data
+                     }
+                  />
+               )}
             </View>
          )}
       </>
