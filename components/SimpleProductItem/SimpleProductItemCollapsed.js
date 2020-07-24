@@ -133,6 +133,8 @@ const SimpleProductItemCollapsed = ({
                                  fontSize: width > 768 || tunnelItem ? 18 : 14,
                               },
                            ]}
+                           numberOfLines={1}
+                           ellipsizeMode="tail"
                         >
                            {tunnelItem
                               ? simpleRecipeProduct.simpleRecipe.cuisine

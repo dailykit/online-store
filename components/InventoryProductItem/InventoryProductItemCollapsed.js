@@ -111,6 +111,8 @@ const InventoryProductCollapsed = ({
                                  fontSize: width > 768 || tunnelItem ? 18 : 14,
                               },
                            ]}
+                           numberOfLines={1}
+                           ellipsizeMode="tail"
                         >
                            {inventoryProduct?.inventoryProductOptions[0]?.label
                               ?.substr(0, 1)

@@ -4,11 +4,7 @@ import { height, width } from '../../utils/Scalaing'
 export const styles = EStyleSheet.create({
    item_container: {
       flexDirection: 'column',
-      paddingBottom: 5,
-      marginBottom: 2,
-      paddingBottom: 20,
-      paddingHorizontal: 10,
-      marginTop: 4,
+      paddingVertical: 4,
       borderBottomWidth: 0,
       backgroundColor: '#fff',
       borderBottomColor: '#fff',
@@ -16,13 +12,11 @@ export const styles = EStyleSheet.create({
    item_container_one: {
       flex: 4,
       position: 'relative',
-      paddingTop: 20,
-      height: width > 768 ? 150 : 100,
    },
    item_container_two: {
       flex: 1.3,
       paddingTop: width > 768 ? 16 : 8,
-      paddingHorizontal: width > 768 ? 10 : 5,
+      paddingHorizontal: 20,
       justifyContent: 'center',
    },
    item_container_three: {
@@ -53,8 +47,6 @@ export const styles = EStyleSheet.create({
    item_chef: {
       fontSize: 18,
       color: '#4f4e4e',
-      flex: 1,
-      textAlign: 'right',
    },
    something: {
       fontSize: '$s',
@@ -71,9 +63,9 @@ export const styles = EStyleSheet.create({
       fontSize: '$s',
    },
    options_text: {
-      color: '#3fa4fd',
-      textAlign: 'right',
+      color: '#4f4e4e',
       fontSize: '$s',
+      marginBottom: 8,
    },
    item_details: {
       textAlign: 'left',
@@ -116,7 +108,6 @@ export const styles = EStyleSheet.create({
    type_container_right: {
       flex: 1,
       flexDirection: 'row',
-      justifyContent: 'center',
       paddingVertical: 15,
    },
    type_button: {
@@ -142,7 +133,7 @@ export const styles = EStyleSheet.create({
    },
    item_three_lower: {
       flex: 1,
-      alignItems: 'center',
       flexDirection: 'row',
+      justifyContent: 'space-between',
    },
 })

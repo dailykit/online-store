@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { View, Dimensions, AsyncStorage, ActivityIndicator } from 'react-native'
+import {
+   useLazyQuery,
+   useMutation,
+   useSubscription,
+   useQuery,
+} from '@apollo/react-hooks'
+import * as axios from 'axios'
+import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv'
 
 import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
@@ -29,13 +37,20 @@ import { height, width } from '../utils/Scalaing'
 import PaymentProcessing from '../screens/PaymentProcessing'
 import AddDetails from '../screens/AddDetails'
 import { Spinner } from 'native-base'
-import { useLazyQuery, useQuery } from '@apollo/react-hooks'
-import { STORE_SETTINGS } from '../graphql'
+import {
+   CREATE_CUSTOMER,
+   CUSTOMER,
+   CUSTOMER_DETAILS,
+   STORE_SETTINGS,
+   FETCH_CART,
+   UPDATE_CART,
+} from '../graphql'
 import { useAppContext } from '../context/app'
 import ProductPage from '../screens/ProductPage'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 import Recipe from '../screens/Recipe'
 import Search from '../screens/Search'
+import { useCartContext } from '../context/cart'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -47,7 +62,180 @@ const Loader = () => (
 )
 
 export default function OnboardingStack(props) {
-   const { isAuthenticated, isInitialized } = useAuth()
+   const { user } = useAuth()
+   const { setCustomer, setCustomerDetails, setCart } = useCartContext()
+   const {
+      setBrand,
+      setVisual,
+      availability,
+      setAvailability,
+      setMenuData,
+      setMenuLoading,
+   } = useAppContext()
+
+   const [cartId, setCartId] = React.useState(null) // Pending Cart Id
+
+   // Mutations
+   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
+      onCompleted: data => {
+         if (cartId) {
+            updateCart({
+               variables: {
+                  id: cartId,
+                  set: {
+                     customerId: data.createCustomer.id,
+                     customerKeycloakId: user.sub || user.id,
+                  },
+               },
+            })
+         }
+         console.log('Customer created')
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   // Subscription
+   const { error } = useSubscription(CUSTOMER, {
+      variables: {
+         keycloakId: user.sub || user.userid,
+         email: user.email,
+      },
+      onSubscriptionData: data => {
+         const customers = data.subscriptionData.data.customers
+         if (customers.length) {
+            setCustomer(customers[0])
+            if (cartId) {
+               updateCart({
+                  variables: {
+                     id: cartId,
+                     set: {
+                        customerId: customers[0].id,
+                        customerKeycloakId: user.sub || user.id,
+                     },
+                  },
+               })
+            }
+         } else {
+            createCustomer({
+               variables: {
+                  object: {
+                     keycloakId: user.sub || user.userid,
+                     email: user.email,
+                     source: 'online store',
+                     clientId: CLIENTID,
+                  },
+               },
+            })
+         }
+      },
+   })
+
+   if (error) console.log('Subscription error: ', error)
+
+   const [fetchCart] = useLazyQuery(FETCH_CART, {
+      onCompleted: data => {
+         if (data?.cartByPK?.id) {
+            setCart(data.cartByPK)
+         }
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: data => {
+         console.log('Cart updated!')
+         if (cartId && data.updateCart.returning[0].customerId) {
+            console.log('Cleared local storage!')
+            setCartId(null)
+            AsyncStorage.clear()
+         }
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   React.useEffect(() => {
+      if (user.sub || user.userid) {
+         customerDetails()
+      }
+      ;(async () => {
+         const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
+         console.log('Pending Cart ID: ', cartId)
+         setCartId(cartId)
+         if ((!user.sub || !user.id) && cartId) {
+            fetchCart({
+               variables: {
+                  id: cartId,
+               },
+            })
+         }
+      })()
+   }, [user])
+
+   // Query
+   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
+      variables: {
+         keycloakId: user.sub || user.userid,
+      },
+      onCompleted: data => {
+         if (data.platform_customerByClients?.length) {
+            console.log(
+               'platform -> data',
+               data.platform_customerByClients[0].customer
+            )
+            setCustomerDetails(data.platform_customerByClients[0].customer)
+         } else {
+            console.log('No customer data found!')
+         }
+      },
+      fetchPolicy: 'cache-and-network',
+   })
+
+   const fetchData = async date => {
+      try {
+         setMenuLoading(true)
+         const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
+            date,
+         })
+         setMenuData(response.data)
+      } catch (err) {
+         console.log(err)
+      } finally {
+         setMenuLoading(false)
+      }
+   }
+
+   const isStoreOpen = () => {
+      const current = new Date()
+      if (availability.store.isOpen) {
+         const minutes = current.getMinutes() + current.getHours() * 60
+         const from = availability.store.from.split(':')
+         const to = availability.store.to.split(':')
+         const fromMinutes = parseInt(from[1]) + parseInt(from[0]) * 60
+         const toMinutes = parseInt(to[1]) + parseInt(to[0]) * 60
+
+         if (minutes >= fromMinutes && minutes <= toMinutes) {
+            return true
+         } else {
+            return false
+         }
+      } else {
+         return false
+      }
+   }
+
+   // Effects
+   React.useEffect(() => {
+      if (availability && isStoreOpen()) {
+         const date = new Date(Date.now()).toISOString()
+         fetchData(date)
+      }
+   }, [availability])
 
    return (
       <>

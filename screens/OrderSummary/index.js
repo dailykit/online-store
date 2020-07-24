@@ -23,17 +23,22 @@ import { useAuth } from '../../context/auth'
 import styled from 'styled-components/native'
 import { useMutation } from '@apollo/react-hooks'
 import { UPDATE_CART } from '../../graphql'
+import AppSkeleton from '../../components/skeletons/app'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
    const { open } = useDrawerContext()
-   const { visual } = useAppContext()
+   const { visual, settingsLoading } = useAppContext()
    const { isAuthenticated } = useAuth()
 
    const [editing, setEditing] = React.useState(false)
 
    String.prototype.SRPType = function () {
       return this === 'readyToEat' ? 'Ready to Eat' : 'Meal Kit'
+   }
+
+   if (settingsLoading) {
+      return <AppSkeleton />
    }
 
    return (

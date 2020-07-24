@@ -6,10 +6,17 @@ import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { styles } from './styles'
 import { Header } from '../../components'
+import { useAppContext } from '../../context/app'
+import AppSkeleton from '../../components/skeletons/app'
 
 export default ({ navigation }) => {
    const { customerDetails } = useCartContext()
    const { open } = useDrawerContext()
+   const { settingsLoading } = useAppContext()
+
+   if (settingsLoading) {
+      return <AppSkeleton />
+   }
 
    return (
       <View style={{ backgroundColor: '#fff', height: '100%' }}>
