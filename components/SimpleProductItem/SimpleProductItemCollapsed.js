@@ -18,6 +18,8 @@ const SimpleProductItemCollapsed = ({
    showInfo,
    refId,
    refType,
+   onModifersSelected,
+   onValidityChange,
 }) => {
    const [typeSelected, setTypeSelected] = useState('mealKit')
    const [servingIndex, setServingIndex] = useState(0)
@@ -233,6 +235,8 @@ const SimpleProductItemCollapsed = ({
                            servingIndex
                         ].modifier.data
                      }
+                     onModifersSelected={onModifersSelected}
+                     onValidityChange={onValidityChange}
                   />
                )}
             </View>

@@ -32,6 +32,7 @@ const Cart = ({
    comboProductItems,
    setIsModalVisible,
    product,
+   isDisabled,
 }) => {
    const { cart, customerDetails, customer, setCart } = useCartContext()
    const { visual } = useAppContext()
@@ -90,19 +91,28 @@ const Cart = ({
                   specialInstructions: '',
                })
             } else {
+               console.log('cartItem', cartItem)
+               const price =
+                  parseFloat(cartItem.price) +
+                  cartItem.modifiers.reduce(
+                     (acc, modifier) => acc + parseFloat(modifier.price),
+                     0
+                  )
                const item = {
                   cartItemId: uuid(),
                   type,
                   ...cartItem,
                   quantity,
-                  unitPrice: parseFloat(parseFloat(cartItem.price).toFixed(2)),
+                  unitPrice: parseFloat(parseFloat(price).toFixed(2)),
                   totalPrice: parseFloat(
-                     (parseFloat(cartItem.price) * quantity).toFixed(2)
+                     (parseFloat(price) * quantity).toFixed(2)
                   ),
+                  modifiers: cartItem.modifiers,
                   discount: 0,
                   specialInstructions: '',
                }
                delete item.price
+               console.log(item)
                products.push(item)
                total = total + parseFloat(item.totalPrice)
             }
@@ -239,8 +249,12 @@ const Cart = ({
                )}
             </View>
             <TouchableOpacity
-               style={styles.container_right}
+               style={[
+                  styles.container_right,
+                  { opacity: isDisabled ? 0.7 : 1 },
+               ]}
                onPress={handleAddToCart}
+               disabled={isDisabled}
             >
                <Text style={styles.text}>
                   {text}

@@ -1,8 +1,11 @@
 import React from 'react'
 import styled from 'styled-components/native'
 import { CheckBox } from 'react-native-elements'
+import { useAppContext } from '../context/app'
 
-const Modifiers = ({ data, onModifersSelected }) => {
+const Modifiers = ({ data, onModifersSelected, onValidityChange }) => {
+   const { visual } = useAppContext()
+
    const [selected, setSelected] = React.useState([])
    let isValid = React.useRef(false)
 
@@ -10,7 +13,6 @@ const Modifiers = ({ data, onModifersSelected }) => {
       const requiredModifers = data.categories.filter(
          category => category.isRequired
       )
-      console.log('checkValidity -> requiredModifers', requiredModifers)
       if (!requiredModifers.length) {
          // can proceed without modifers
          isValid.current = true
@@ -93,12 +95,16 @@ const Modifiers = ({ data, onModifersSelected }) => {
    }
 
    React.useEffect(() => {
-      checkValidity()
+      ;(async () => {
+         await checkValidity()
+         console.log('isValid', isValid.current)
+         onValidityChange(isValid.current)
+         if (isValid.current) {
+            console.log('Selected: ', selected)
+            onModifersSelected(selected)
+         }
+      })()
    }, [selected])
-
-   React.useEffect(() => {
-      console.log('isValid: ', isValid)
-   }, [isValid.current])
 
    return (
       <Wrapper>
@@ -131,6 +137,7 @@ const Modifiers = ({ data, onModifersSelected }) => {
                      uncheckedIcon={
                         category.type === 'single' ? 'circle-o' : 'square-o'
                      }
+                     checkedColor={visual.color}
                      onPress={() => handleSelection(category, option)}
                   />
                ))}
