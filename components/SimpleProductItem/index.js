@@ -24,13 +24,18 @@ const SimpleProductItem = ({
    const [objToAdd, setobjToAdd] = useState({})
 
    const setProductOptionId = (id, price, typeSelected) => {
-      let newItem = objToAdd
-      newItem.option.id = id
-      newItem.option.type = typeSelected
-      newItem.price = price
-      newItem.modifiers = []
-      setobjToAdd(newItem)
-      setcartItem(newItem)
+      setobjToAdd({
+         ...objToAdd,
+         option: { id, type: typeSelected },
+         price,
+         modifiers: [],
+      })
+      setcartItem({
+         ...objToAdd,
+         option: { id, type: typeSelected },
+         price,
+         modifiers: [],
+      })
    }
 
    const modifiersHandler = modifiers => {

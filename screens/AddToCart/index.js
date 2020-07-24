@@ -120,6 +120,9 @@ const ModalContent = ({
                      isSelected
                      id={id}
                      product={data}
+                     onModifiersValidityChange={isValid =>
+                        setIsDisabled(!isValid)
+                     }
                      {...restProps}
                   />
                )}

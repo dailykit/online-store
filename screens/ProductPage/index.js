@@ -34,6 +34,7 @@ const ProductPage = ({ navigation, route }) => {
          onCompleted: data => {
             setProduct(data.inventoryProduct)
          },
+         fetchPolicy: 'cache-and-network',
       }
    )
 
@@ -43,6 +44,7 @@ const ProductPage = ({ navigation, route }) => {
          onCompleted: data => {
             setProduct(data.simpleRecipeProduct)
          },
+         fetchPolicy: 'cache-and-network',
       }
    )
 

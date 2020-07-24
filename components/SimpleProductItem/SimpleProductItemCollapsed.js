@@ -51,6 +51,9 @@ const SimpleProductItemCollapsed = ({
          onValidityChange(true)
       }
       setSelectedOption(option)
+      if (tunnelItem) {
+         setProductOptionId(option.id, option.price[0].value, option.type)
+      }
    }, [typeSelected, servingIndex])
 
    const { visual } = useAppContext()
