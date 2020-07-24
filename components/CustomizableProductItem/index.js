@@ -102,6 +102,7 @@ const CustomizableProductItem = ({
                id: _default_option?.id, // product option id
                type: _default_option?.type,
             },
+            modifiers: [],
             type: _type,
          }
          if (comboProductComponent) {

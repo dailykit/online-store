@@ -43,6 +43,7 @@ const InventoryProductItem = ({
          option: {
             id: product?.inventoryProductOptions[0]?.id, // product option id
          },
+         modifiers: [],
          type: 'inventoryProduct',
       }
       if (comboProductComponent) {

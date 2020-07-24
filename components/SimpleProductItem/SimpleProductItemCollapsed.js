@@ -243,7 +243,7 @@ const SimpleProductItemCollapsed = ({
                         />
                      )
                   })}
-               {selectedOption.modifier && (
+               {selectedOption?.modifier && (
                   <Modifiers
                      data={selectedOption.modifier.data}
                      onModifersSelected={onModifersSelected}
