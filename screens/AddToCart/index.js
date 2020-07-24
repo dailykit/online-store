@@ -115,7 +115,7 @@ const ModalContent = ({
                      }}
                      showInfo={showInfo}
                      navigation={navigation}
-                     independantItem
+                     independantItem={true}
                      tunnelItem
                      isSelected
                      id={id}

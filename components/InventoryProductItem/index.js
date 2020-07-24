@@ -64,7 +64,7 @@ const InventoryProductItem = ({
       if (tunnelItem && independantItem) {
          setcartItem(objToPush)
       }
-   }, [])
+   }, [product])
 
    useEffect(() => {
       if (tunnelItem && isSelected && objToAdd?.product?.price) {
