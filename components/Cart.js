@@ -41,6 +41,22 @@ const Cart = ({
 
    const [quantity, setQuantity] = useState(1)
 
+   const [priceShown, setPriceShown] = React.useState(0)
+
+   React.useEffect(() => {
+      if (cartItem) {
+         console.log(cartItem.price)
+         setPriceShown(
+            parseFloat(cartItem.price) +
+               cartItem.modifiers.reduce(
+                  (acc, modifier) => acc + parseFloat(modifier.price),
+                  0
+               )
+         )
+         setQuantity(1)
+      }
+   }, [cartItem])
+
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
          console.log('Product added!')
@@ -242,7 +258,7 @@ const Cart = ({
                                       0
                                    ) * quantity
                                 ).toFixed(2)
-                              : (cartItem?.price * quantity).toFixed(2)}
+                              : (priceShown * quantity).toFixed(2)}
                         </Text>
                      </View>
                   </View>
@@ -251,7 +267,7 @@ const Cart = ({
             <TouchableOpacity
                style={[
                   styles.container_right,
-                  { opacity: isDisabled ? 0.7 : 1 },
+                  { opacity: isDisabled ? 0.3 : 1 },
                ]}
                onPress={handleAddToCart}
                disabled={isDisabled}

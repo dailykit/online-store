@@ -28,6 +28,7 @@ const SimpleProductItem = ({
       newItem.option.id = id
       newItem.option.type = typeSelected
       newItem.price = price
+      newItem.modifiers = []
       setobjToAdd(newItem)
       setcartItem(newItem)
    }

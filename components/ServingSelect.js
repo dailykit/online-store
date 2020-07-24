@@ -17,6 +17,7 @@ const ServingSelect = ({
    simpleRecipeProductId,
    name,
    typeSelected,
+   setSelectedOption,
 }) => {
    const { visual } = useAppContext()
 
@@ -24,6 +25,7 @@ const ServingSelect = ({
       <TouchableOpacity
          onPress={() => {
             setServingIndex(index - 1)
+            setSelectedOption()
             if (customizableProduct) {
                setproductOptionId(
                   id,

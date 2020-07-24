@@ -22,6 +22,9 @@ const SimpleProductItemCollapsed = ({
    onValidityChange,
 }) => {
    const [typeSelected, setTypeSelected] = useState('mealKit')
+   const [selectedOption, setSelectedOption] = useState(
+      simpleRecipeProduct.defaultSimpleRecipeProductOption
+   )
    const [servingIndex, setServingIndex] = useState(0)
 
    React.useEffect(() => {
@@ -39,6 +42,16 @@ const SimpleProductItemCollapsed = ({
          )
       setServingIndex(index)
    }, [])
+
+   React.useEffect(() => {
+      const option = simpleRecipeProduct.simpleRecipeProductOptions.filter(
+         option => option.type === typeSelected
+      )[servingIndex]
+      if (!option?.modifier && onValidityChange) {
+         onValidityChange(true)
+      }
+      setSelectedOption(option)
+   }, [typeSelected, servingIndex])
 
    const { visual } = useAppContext()
 
@@ -224,17 +237,15 @@ const SimpleProductItemCollapsed = ({
                            typeSelected={typeSelected}
                            setproductOptionId={setProductOptionId}
                            id={item_data.id}
+                           setSelectedOption={() =>
+                              setSelectedOption(item_data)
+                           }
                         />
                      )
                   })}
-               {simpleRecipeProduct.simpleRecipeProductOptions[servingIndex]
-                  .modifier && (
+               {selectedOption.modifier && (
                   <Modifiers
-                     data={
-                        simpleRecipeProduct.simpleRecipeProductOptions[
-                           servingIndex
-                        ].modifier.data
-                     }
+                     data={selectedOption.modifier.data}
                      onModifersSelected={onModifersSelected}
                      onValidityChange={onValidityChange}
                   />
