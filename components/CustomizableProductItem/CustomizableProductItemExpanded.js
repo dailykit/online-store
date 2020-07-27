@@ -7,6 +7,7 @@ import SimpleProductItemCollapsed from '../SimpleProductItem/SimpleProductItemCo
 import { stylesExpanded as styles } from './styles'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
+import Modifiers from '../Modifiers'
 const Item = ({
    _id,
    navigation,
@@ -18,11 +19,14 @@ const Item = ({
    setproductOptionId,
    refId,
    refType,
+   onModifersSelected,
+   onValidityChange,
 }) => {
    const { visual } = useAppContext()
 
    const [typeSelected, setTypeSelected] = useState('mealKit')
    const [servingIndex, setServingIndex] = useState(0)
+   const [selectedOption, setSelectedOption] = useState(undefined)
    const [isSelected, setisSelected] = useState(undefined)
 
    React.useEffect(() => {
@@ -47,6 +51,43 @@ const Item = ({
          setServingIndex(index)
       }
    }, [isSelected])
+
+   React.useEffect(() => {
+      const customizableOption = data.customizableProductOptions[isSelected]
+      let option
+      if (customizableOption) {
+         if (customizableOption.simpleRecipeProduct) {
+            option = data.customizableProductOptions[
+               isSelected
+            ].simpleRecipeProduct.simpleRecipeProductOptions.filter(
+               option => option.type === typeSelected
+            )[servingIndex]
+            if (option && tunnelItem) {
+               setproductOptionId(
+                  option.id,
+                  option.price[0].value,
+                  customizableOption.simpleRecipeProduct.id,
+                  customizableOption.simpleRecipeProduct.name,
+                  'simpleRecipeProduct',
+                  option.type,
+                  customizableOption.id
+               )
+            }
+         } else {
+            option =
+               customizableOption.inventoryProduct.inventoryProductOptions[
+                  servingIndex
+               ]
+            if (option && tunnelItem) {
+               setproductOptionId(option.id, option.price[0].value)
+            }
+         }
+         if (!option?.modifier && onValidityChange) {
+            onValidityChange(true)
+         }
+         setSelectedOption(option)
+      }
+   }, [typeSelected, servingIndex])
 
    return (
       <View key={_id} style={styles.container}>
@@ -292,6 +333,9 @@ const Item = ({
                                        simpleRecipeProductId={
                                           simpleRecipeProduct?.id
                                        }
+                                       setSelectedOption={() =>
+                                          setSelectedOption(item_data)
+                                       }
                                        setproductOptionId={(
                                           id,
                                           price,
@@ -312,6 +356,13 @@ const Item = ({
                                     />
                                  )
                               })}
+                           {selectedOption?.modifier && (
+                              <Modifiers
+                                 data={selectedOption.modifier.data}
+                                 onModifersSelected={onModifersSelected}
+                                 onValidityChange={onValidityChange}
+                              />
+                           )}
                         </View>
                      )}
                   </>
@@ -456,6 +507,9 @@ const Item = ({
                                        }
                                        size={item_data.label}
                                        price={item_data.price[0].value}
+                                       setSelectedOption={() =>
+                                          setSelectedOption(item_data)
+                                       }
                                        setproductOptionId={(id, price) =>
                                           setproductOptionId(
                                              id,
@@ -468,6 +522,13 @@ const Item = ({
                                     />
                                  )
                               }
+                           )}
+                           {selectedOption?.modifier && (
+                              <Modifiers
+                                 data={selectedOption.modifier.data}
+                                 onModifersSelected={onModifersSelected}
+                                 onValidityChange={onValidityChange}
+                              />
                            )}
                         </View>
                      )}
