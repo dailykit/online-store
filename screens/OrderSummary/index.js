@@ -24,6 +24,7 @@ import styled from 'styled-components/native'
 import { useMutation } from '@apollo/react-hooks'
 import { UPDATE_CART } from '../../graphql'
 import AppSkeleton from '../../components/skeletons/app'
+import DrawerLayout from '../../components/DrawerLayout'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
@@ -402,6 +403,7 @@ const Cart = ({ cart }) => {
             <CartFooterText>TO PAY</CartFooterText>
             <CartFooterText>$ {cart.totalPrice}</CartFooterText>
          </CartFooter>
+         <DrawerLayout />
       </StyledCart>
    )
 }

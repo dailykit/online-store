@@ -20,6 +20,7 @@ import HeaderBack from '../../components/HeaderBack'
 import AddToCart from '../AddToCart'
 import CheckoutBar from '../../components/CheckoutBar'
 import AppSkeleton from '../../components/skeletons/app'
+import DrawerLayout from '../../components/DrawerLayout'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
@@ -230,6 +231,7 @@ const ProductPage = ({ navigation, route }) => {
                   </View>
                </View>
             </ScrollView>
+            <DrawerLayout />
             {width < 768 && <CheckoutBar navigation={navigation} />}
          </SafeAreaView>
       </>

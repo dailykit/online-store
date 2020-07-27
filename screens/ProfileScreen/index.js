@@ -8,6 +8,7 @@ import { styles } from './styles'
 import { Header } from '../../components'
 import { useAppContext } from '../../context/app'
 import AppSkeleton from '../../components/skeletons/app'
+import DrawerLayout from '../../components/DrawerLayout'
 
 export default ({ navigation }) => {
    const { customerDetails } = useCartContext()
@@ -133,6 +134,7 @@ export default ({ navigation }) => {
         </TouchableOpacity> */}
             </ScrollView>
          </View>
+         <DrawerLayout />
       </View>
    )
 }
