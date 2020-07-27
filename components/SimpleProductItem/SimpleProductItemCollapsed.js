@@ -51,7 +51,7 @@ const SimpleProductItemCollapsed = ({
          onValidityChange(true)
       }
       setSelectedOption(option)
-      if (tunnelItem) {
+      if (option && tunnelItem) {
          setProductOptionId(option.id, option.price[0].value, option.type)
       }
    }, [typeSelected, servingIndex])
