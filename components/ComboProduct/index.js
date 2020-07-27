@@ -20,6 +20,7 @@ const ComboProduct = ({
    setCurrentComboProductIndex,
    setPrice,
    product,
+   onModifiersValidityChange,
 }) => {
    const [selected, setSelected] = useState(0)
 
@@ -181,6 +182,9 @@ const ComboProduct = ({
                                  id: el.id,
                                  label: el.label,
                               }}
+                              onModifiersValidityChange={
+                                 onModifiersValidityChange
+                              }
                            />
                         )
                      }
@@ -211,6 +215,9 @@ const ComboProduct = ({
                                  id: el.id,
                                  label: el.label,
                               }}
+                              onModifiersValidityChange={
+                                 onModifiersValidityChange
+                              }
                            />
                         )
                      }
@@ -241,6 +248,9 @@ const ComboProduct = ({
                                  id: el.id,
                                  label: el.label,
                               }}
+                              onModifiersValidityChange={
+                                 onModifiersValidityChange
+                              }
                            />
                         )
                      }

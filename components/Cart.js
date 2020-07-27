@@ -45,7 +45,6 @@ const Cart = ({
 
    React.useEffect(() => {
       if (cartItem) {
-         console.log(cartItem.price)
          setPriceShown(
             parseFloat(cartItem.price) +
                cartItem.modifiers.reduce(
@@ -56,6 +55,22 @@ const Cart = ({
          setQuantity(1)
       }
    }, [cartItem])
+
+   React.useEffect(() => {
+      console.log(comboProductItems)
+      setPriceShown(
+         comboProductItems.reduce(
+            (acc, product) =>
+               acc +
+               parseFloat(product.unitPrice) +
+               product.modifiers.reduce(
+                  (acc, modifier) => acc + parseFloat(modifier.price),
+                  0
+               ),
+            0
+         )
+      )
+   }, [comboProductItems])
 
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
@@ -88,8 +103,15 @@ const Cart = ({
          let total = parseFloat(cart?.cartInfo?.total) || 0
          if (tunnelItem) {
             if (type === 'comboProduct') {
+               console.log(comboProductItems)
                const unitPrice = comboProductItems.reduce(
-                  (acc, product) => acc + parseFloat(product.unitPrice),
+                  (acc, product) =>
+                     acc +
+                     parseFloat(product.unitPrice) +
+                     product.modifiers.reduce(
+                        (acc, modifier) => acc + parseFloat(modifier.price),
+                        0
+                     ),
                   0
                )
                const totalPrice = parseFloat((unitPrice * quantity).toFixed(2))
@@ -249,16 +271,7 @@ const Cart = ({
                               fontSize: 16,
                            }}
                         >
-                           $
-                           {type === 'comboProduct'
-                              ? (
-                                   comboProductItems.reduce(
-                                      (acc, product) =>
-                                         acc + parseFloat(product.unitPrice),
-                                      0
-                                   ) * quantity
-                                ).toFixed(2)
-                              : (priceShown * quantity).toFixed(2)}
+                           ${(priceShown * quantity).toFixed(2)}
                         </Text>
                      </View>
                   </View>
@@ -349,17 +362,22 @@ export const ComboProductItemProceed = ({
    text,
    setCurrentComboProductIndex,
    currentComboProductIndex,
+   isDisabled,
 }) => {
    const { visual } = useAppContext()
    return (
       <View style={[styles.outerContainer, { width: '100%' }]}>
          <TouchableOpacity
+            disabled={isDisabled}
             onPress={() => {
                setCurrentComboProductIndex(currentComboProductIndex + 1)
             }}
             style={[
                styles.container,
-               { backgroundColor: visual.color || '#3fa4ff' },
+               {
+                  backgroundColor: visual.color || '#3fa4ff',
+                  opacity: isDisabled ? 0.7 : 1,
+               },
             ]}
          >
             <View style={[styles.container_left, { flex: 4 }]}>
