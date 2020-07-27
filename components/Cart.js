@@ -57,19 +57,20 @@ const Cart = ({
    }, [cartItem])
 
    React.useEffect(() => {
-      console.log(comboProductItems)
-      setPriceShown(
-         comboProductItems.reduce(
-            (acc, product) =>
-               acc +
-               parseFloat(product.unitPrice) +
-               product.modifiers.reduce(
-                  (acc, modifier) => acc + parseFloat(modifier.price),
-                  0
-               ),
-            0
+      if (comboProductItems?.length && type === 'comboProduct') {
+         setPriceShown(
+            comboProductItems.reduce(
+               (acc, product) =>
+                  acc +
+                  parseFloat(product.unitPrice) +
+                  product.modifiers.reduce(
+                     (acc, modifier) => acc + parseFloat(modifier.price),
+                     0
+                  ),
+               0
+            )
          )
-      )
+      }
    }, [comboProductItems])
 
    const [updateCart] = useMutation(UPDATE_CART, {

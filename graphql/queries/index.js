@@ -177,12 +177,27 @@ export const COMBO_PRODUCT = gql`
                         unitSize
                         unit
                      }
+                     defaultInventoryProductOption {
+                        id
+                        price
+                        quantity
+                        label
+                        inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
+                     }
                      inventoryProductOptions {
                         id
                         price
                         quantity
                         label
                         inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
                      }
                   }
                   simpleRecipeProduct {
@@ -236,12 +251,27 @@ export const COMBO_PRODUCT = gql`
                description
                name
                tags
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
                inventoryProductOptions {
                   id
                   price
                   quantity
                   label
                   inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
                }
             }
             simpleRecipeProduct {
@@ -314,12 +344,27 @@ export const CUSTOMIZABLE_PRODUCT = gql`
                   unitSize
                   unit
                }
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
                inventoryProductOptions {
                   id
                   price
                   quantity
                   label
                   inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
                }
             }
             simpleRecipeProduct {
@@ -378,12 +423,27 @@ export const INVENTORY_PRODUCT = gql`
          default
          isPopupAllowed
          defaultCartItem
+         defaultInventoryProductOption {
+            id
+            price
+            quantity
+            label
+            inventoryProductId
+            modifier {
+               id
+               data
+            }
+         }
          inventoryProductOptions {
             id
             price
             quantity
             label
             inventoryProductId
+            modifier {
+               id
+               data
+            }
          }
       }
    }
@@ -457,12 +517,27 @@ export const INVENTORY_PRODUCTS = gql`
             unitSize
             unit
          }
+         defaultInventoryProductOption {
+            id
+            price
+            quantity
+            label
+            inventoryProductId
+            modifier {
+               id
+               data
+            }
+         }
          inventoryProductOptions {
             id
             price
             quantity
             label
             inventoryProductId
+            modifier {
+               id
+               data
+            }
          }
       }
    }
@@ -540,12 +615,27 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
                   unitSize
                   unit
                }
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
                inventoryProductOptions {
                   id
                   price
                   quantity
                   label
                   inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
                }
             }
             simpleRecipeProduct {
@@ -635,12 +725,27 @@ export const COMBO_PRODUCTS = gql`
                         unitSize
                         unit
                      }
+                     defaultInventoryProductOption {
+                        id
+                        price
+                        quantity
+                        label
+                        inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
+                     }
                      inventoryProductOptions {
                         id
                         price
                         quantity
                         label
                         inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
                      }
                   }
                   simpleRecipeProduct {
@@ -692,12 +797,27 @@ export const COMBO_PRODUCTS = gql`
                description
                name
                tags
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
                inventoryProductOptions {
                   id
                   price
                   quantity
                   label
                   inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
                }
             }
             simpleRecipeProduct {
@@ -806,12 +926,27 @@ export const SEARCH_PRODUCTS = gql`
                         unitSize
                         unit
                      }
+                     defaultInventoryProductOption {
+                        id
+                        price
+                        quantity
+                        label
+                        inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
+                     }
                      inventoryProductOptions {
                         id
                         price
                         quantity
                         label
                         inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
                      }
                   }
                   simpleRecipeProduct {
@@ -865,12 +1000,27 @@ export const SEARCH_PRODUCTS = gql`
                description
                name
                tags
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
                inventoryProductOptions {
                   id
                   price
                   quantity
                   label
                   inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
                }
             }
             simpleRecipeProduct {
@@ -950,12 +1100,27 @@ export const SEARCH_PRODUCTS = gql`
                   unitSize
                   unit
                }
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
                inventoryProductOptions {
                   id
                   price
                   quantity
                   label
                   inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
                }
             }
             simpleRecipeProduct {
@@ -1077,12 +1242,27 @@ export const SEARCH_PRODUCTS = gql`
          default
          isPopupAllowed
          defaultCartItem
+         defaultInventoryProductOption {
+            id
+            price
+            quantity
+            label
+            inventoryProductId
+            modifier {
+               id
+               data
+            }
+         }
          inventoryProductOptions {
             id
             price
             quantity
             label
             inventoryProductId
+            modifier {
+               id
+               data
+            }
          }
       }
    }

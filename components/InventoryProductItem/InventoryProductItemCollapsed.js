@@ -4,6 +4,7 @@ import ServingSelect from '../ServingSelect'
 import { styles } from './styles'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
+import Modifiers from '../Modifiers'
 
 const InventoryProductCollapsed = ({
    data: inventoryProduct,
