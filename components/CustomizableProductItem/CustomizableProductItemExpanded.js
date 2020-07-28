@@ -16,7 +16,7 @@ const Item = ({
    independantItem,
    numberOfOptions,
    tunnelItem,
-   setproductOptionId,
+   setProductOption,
    refId,
    refType,
    onModifersSelected,
@@ -63,13 +63,10 @@ const Item = ({
                option => option.type === typeSelected
             )[servingIndex]
             if (option && tunnelItem) {
-               setproductOptionId(
-                  option.id,
-                  option.price[0].value,
-                  customizableOption.simpleRecipeProduct.id,
-                  customizableOption.simpleRecipeProduct.name,
+               setProductOption(
+                  option,
+                  customizableOption.simpleRecipeProduct,
                   'simpleRecipeProduct',
-                  option.type,
                   customizableOption.id
                )
             }
@@ -79,7 +76,12 @@ const Item = ({
                   servingIndex
                ]
             if (option && tunnelItem) {
-               setproductOptionId(option.id, option.price[0].value)
+               setProductOption(
+                  option,
+                  customizableOption.inventoryProduct,
+                  'inventoryProduct',
+                  customizableOption.id
+               )
             }
          }
          if (!option?.modifier && onValidityChange) {
@@ -118,15 +120,10 @@ const Item = ({
                         key={_key}
                         onPress={() => {
                            setisSelected(_key)
-                           setproductOptionId(
-                              simpleRecipeProduct?.simpleRecipeProductOptions[0]
-                                 ?.id,
-                              simpleRecipeProduct?.simpleRecipeProductOptions[0]
-                                 ?.price[0]?.value,
-                              simpleRecipeProduct?.id,
-                              simpleRecipeProduct?.name,
+                           setProductOption(
+                              simpleRecipeProduct?.defaultSimpleRecipeProductOption,
+                              simpleRecipeProduct,
                               'simpleRecipeProduct',
-                              typeSelected,
                               item.id
                            )
                         }}
@@ -336,20 +333,12 @@ const Item = ({
                                        setSelectedOption={() =>
                                           setSelectedOption(item_data)
                                        }
-                                       setproductOptionId={(
-                                          id,
-                                          price,
-                                          simpleRecipeProductId,
-                                          name,
-                                          typeSelected
-                                       ) =>
-                                          setproductOptionId(
-                                             id,
-                                             price,
-                                             simpleRecipeProductId,
-                                             name,
-                                             null, // type
-                                             typeSelected
+                                       setProductOption={() =>
+                                          setProductOption(
+                                             item_data,
+                                             simpleRecipeProduct,
+                                             'simpleRecipeProduct',
+                                             item.id
                                           )
                                        }
                                        id={item_data?.id}
@@ -376,14 +365,10 @@ const Item = ({
                         key={_key}
                         onPress={() => {
                            setisSelected(_key)
-                           setproductOptionId(
-                              inventoryProduct?.inventoryProductOptions[0]?.id,
-                              inventoryProduct?.inventoryProductOptions[0]
-                                 ?.price[0]?.value,
-                              inventoryProduct?.id,
-                              inventoryProduct?.name,
+                           setProductOption(
+                              inventoryProduct?.defaultInventoryProductOption,
+                              inventoryProduct,
                               'inventoryProduct',
-                              null, // typeSelected
                               item.id
                            )
                         }}
@@ -510,12 +495,12 @@ const Item = ({
                                        setSelectedOption={() =>
                                           setSelectedOption(item_data)
                                        }
-                                       setproductOptionId={(id, price) =>
-                                          setproductOptionId(
-                                             id,
-                                             price,
-                                             inventoryProduct.id,
-                                             inventoryProduct.name
+                                       setProductOption={() =>
+                                          setProductOption(
+                                             item_data,
+                                             inventoryProduct,
+                                             'inventoryProduct',
+                                             item.id
                                           )
                                        }
                                        id={item_data.id}

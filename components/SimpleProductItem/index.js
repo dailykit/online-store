@@ -23,17 +23,25 @@ const SimpleProductItem = ({
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
-   const setProductOptionId = (id, price, typeSelected) => {
+   const setProductOption = option => {
       setobjToAdd({
          ...objToAdd,
-         option: { id, type: typeSelected },
-         price,
+         option: {
+            id: option.type,
+            type: option.type,
+            serving: option.simpleRecipeYield.yield.serving,
+         },
+         price: parseFloat(option.price[0].value),
          modifiers: [],
       })
       setcartItem({
          ...objToAdd,
-         option: { id, type: typeSelected },
-         price,
+         option: {
+            id: option.type,
+            type: option.type,
+            serving: option.simpleRecipeYield.yield.serving,
+         },
+         price: parseFloat(option.price[0].value),
          modifiers: [],
       })
    }
@@ -53,6 +61,9 @@ const SimpleProductItem = ({
             option: {
                id: product.defaultSimpleRecipeProductOption?.id, // product option id
                type: product.defaultSimpleRecipeProductOption?.type,
+               serving:
+                  product.defaultSimpleRecipeProductOption?.simpleRecipeYield
+                     .yield.serving,
             },
             modifiers: [],
             type: 'simpleRecipeProduct',
@@ -84,7 +95,7 @@ const SimpleProductItem = ({
          navigation={navigation}
          label={label}
          tunnelItem={tunnelItem}
-         setProductOptionId={setProductOptionId}
+         setProductOption={setProductOption}
          setSelected={setSelected}
          isSelected={isSelected}
          refId={refId}

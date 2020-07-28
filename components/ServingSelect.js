@@ -12,7 +12,7 @@ const ServingSelect = ({
    display,
    type,
    id,
-   setproductOptionId,
+   setProductOption,
    customizableProduct,
    simpleRecipeProductId,
    name,
@@ -26,17 +26,7 @@ const ServingSelect = ({
          onPress={() => {
             setServingIndex(index - 1)
             setSelectedOption()
-            if (customizableProduct) {
-               setproductOptionId(
-                  id,
-                  price,
-                  simpleRecipeProductId,
-                  name,
-                  typeSelected
-               )
-            } else {
-               setproductOptionId(id, price, typeSelected)
-            }
+            setProductOption()
          }}
          style={[
             styles.servingSelectContainer,

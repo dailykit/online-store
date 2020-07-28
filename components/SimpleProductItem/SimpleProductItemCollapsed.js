@@ -13,7 +13,7 @@ const SimpleProductItemCollapsed = ({
    data: simpleRecipeProduct,
    label,
    tunnelItem,
-   setProductOptionId,
+   setProductOption,
    isSelected,
    showInfo,
    refId,
@@ -52,7 +52,7 @@ const SimpleProductItemCollapsed = ({
       }
       setSelectedOption(option)
       if (option && tunnelItem) {
-         setProductOptionId(option.id, option.price[0].value, option.type)
+         setProductOption(option)
       }
    }, [typeSelected, servingIndex])
 
@@ -240,7 +240,7 @@ const SimpleProductItemCollapsed = ({
                            }
                            type={item_data.type}
                            typeSelected={typeSelected}
-                           setproductOptionId={setProductOptionId}
+                           setProductOption={() => setProductOption(item_data)}
                            id={item_data.id}
                            setSelectedOption={() =>
                               setSelectedOption(item_data)

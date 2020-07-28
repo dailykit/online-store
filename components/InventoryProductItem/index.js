@@ -22,9 +22,19 @@ const InventoryProductItem = ({
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
-   const setProductOptionId = (id, price) => {
-      setobjToAdd({ ...objToAdd, option: { id }, price, modifiers: [] })
-      setcartItem({ ...objToAdd, option: { id }, price, modifiers: [] })
+   const setProductOption = option => {
+      setobjToAdd({
+         ...objToAdd,
+         option: { id: option.id, label: option.label },
+         price: option.price[0].value,
+         modifiers: [],
+      })
+      setcartItem({
+         ...objToAdd,
+         option: { id: option.id, label: option.label },
+         price: option.price[0].value,
+         modifiers: [],
+      })
    }
 
    const modifiersHandler = modifiers => {
@@ -41,10 +51,11 @@ const InventoryProductItem = ({
       let objToPush = {
          id: product?.id,
          name: product?.name,
-         price: product?.inventoryProductOptions[0]?.price[0]?.value,
+         price: product?.defaultInventoryProductOption?.price[0]?.value,
          image: product?.assets?.images[0],
          option: {
-            id: product?.inventoryProductOptions[0]?.id, // product option id
+            id: product?.defaultInventoryProductOption?.id, // product option id
+            label: product?.defaultInventoryProductOption?.label,
          },
          modifiers: [],
          type: 'inventoryProduct',
@@ -55,7 +66,7 @@ const InventoryProductItem = ({
       }
       setobjToAdd(objToPush)
       if (!tunnelItem && independantItem) {
-         setPrice(product?.inventoryProductOptions[0]?.price[0]?.value)
+         setPrice(product?.defaultInventoryProductOption?.price[0]?.value)
          setcardData(product)
       }
       if (tunnelItem && isSelected) {
@@ -81,7 +92,7 @@ const InventoryProductItem = ({
          navigation={navigation}
          label={label}
          tunnelItem={tunnelItem}
-         setProductOptionId={setProductOptionId}
+         setProductOption={setProductOption}
          setSelected={setSelected}
          isSelected={isSelected}
          refId={refId}

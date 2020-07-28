@@ -26,43 +26,31 @@ const CustomizableProductItem = ({
    const [numberOfOptions, setnumberOfOptions] = useState(0)
    const [objToAdd, setobjToAdd] = useState({})
 
-   const setproductOptionId = (
-      id,
-      price,
-      componentProductId,
-      name,
+   const setProductOption = (
+      option,
+      slaveProduct,
       type,
-      typeSelected,
-      customizableProductOptionId
+      customizableOptionId
    ) => {
-      console.log(
-         'Adding Customizable: ',
-         componentProductId,
-         name,
-         type,
-         customizableProductOptionId
-      )
+      console.log(option, product, type, customizableOptionId)
       let newItem = objToAdd
-      newItem.option.id = id
-      if (typeSelected) {
-         newItem.option.type = typeSelected
-      }
-      newItem.price = price
-      newItem.id = componentProductId
-      if (customizableProductOptionId) {
-         newItem.customizableProductOptionId = customizableProductOptionId
-      }
-      newItem.name = `[${product.name}] ${name}`
-      if (type) {
-         newItem.type = type
-         const option = product.customizableProductOptions.find(
-            option => option[type]
-         )
-         newItem.image = option[type].assets?.images[0]
-      }
-      if (newItem.type === 'inventoryProduct') {
+      newItem.option.id = option.id
+      if (type === 'simpeRecipeProduct') {
+         newItem.option.type = option.type
+         delete newItem.option.label
+      } else {
+         newItem.option.label = option.label
          delete newItem.option.type
       }
+      newItem.price = parseFloat(option.price[0].value)
+      newItem.id = slaveProduct.id
+      newItem.customizableProductOptionId = customizableOptionId
+      newItem.name = `[${product.name}] ${slaveProduct.name}`
+      newItem.type = type
+      const cusOption = product.customizableProductOptions.find(
+         option => option[type]
+      )
+      newItem.image = cusOption[type].assets?.images[0]
       setobjToAdd({ ...newItem, modifiers: [] })
       setcartItem({ ...newItem, modifiers: [] })
    }
@@ -158,7 +146,7 @@ const CustomizableProductItem = ({
             independantItem={independantItem ? true : false}
             numberOfOptions={numberOfOptions}
             tunnelItem={tunnelItem && isSelected}
-            setproductOptionId={setproductOptionId}
+            setProductOption={setProductOption}
             refId={refId}
             refType={refType}
             onModifersSelected={modifiersHandler}

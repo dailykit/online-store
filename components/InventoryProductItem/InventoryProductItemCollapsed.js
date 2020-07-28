@@ -10,7 +10,7 @@ const InventoryProductCollapsed = ({
    data: inventoryProduct,
    label,
    tunnelItem,
-   setProductOptionId,
+   setProductOption,
    navigation,
    showInfo,
    isSelected,
@@ -35,7 +35,7 @@ const InventoryProductCollapsed = ({
       }
       setSelectedOption(option)
       if (tunnelItem) {
-         setProductOptionId(option.id, option.price[0].value)
+         setProductOption(option)
       }
    }, [servingIndex])
 
@@ -160,7 +160,7 @@ const InventoryProductCollapsed = ({
                            setServingIndex={index => setServingIndex(index)}
                            size={item_data.label}
                            price={item_data.price[0].value}
-                           setproductOptionId={setProductOptionId}
+                           setProductOption={() => setProductOption(item_data)}
                            id={item_data.id}
                            setSelectedOption={() =>
                               setSelectedOption(item_data)

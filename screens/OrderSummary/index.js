@@ -342,7 +342,14 @@ const Cart = ({ cart }) => {
                            ))}
                         {product.type === 'simpleRecipeProduct' && (
                            <CartItemLabel>
-                              {`${product.option.type.SRPType()}`}
+                              {`${product.option.type.SRPType()} x${
+                                 product.option.serving
+                              }`}
+                           </CartItemLabel>
+                        )}
+                        {product.type === 'inventoryProduct' && (
+                           <CartItemLabel>
+                              {`${product.option.label}`}
                            </CartItemLabel>
                         )}
                      </CartItemInfo>
