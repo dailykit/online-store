@@ -213,7 +213,7 @@ const Home = props => {
                               props.navigation.navigate(
                                  'CategoryProductsPage',
                                  {
-                                    data,
+                                    data: menuData,
                                     category,
                                  }
                               )
