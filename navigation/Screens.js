@@ -148,7 +148,11 @@ export default function OnboardingStack(props) {
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
          console.log('Cart updated!')
-         if (cartId && data.updateCart.returning[0].customerId) {
+         if (
+            cartId &&
+            data.updateCart.returning[0].customerId &&
+            data.updateCart.returning[0].customerInfo
+         ) {
             console.log('Cleared local storage!')
             setCartId(null)
             AsyncStorage.clear()
@@ -189,6 +193,26 @@ export default function OnboardingStack(props) {
                data.platform_customerByClients[0].customer
             )
             setCustomerDetails(data.platform_customerByClients[0].customer)
+            updateCart({
+               variables: {
+                  id: cartId,
+                  set: {
+                     customerInfo: {
+                        customerFirstName:
+                           data.platform_customerByClients[0].customer
+                              ?.firstName,
+                        customerLastName:
+                           data.platform_customerByClients[0].customer
+                              ?.lastName,
+                        customerPhone:
+                           data.platform_customerByClients[0].customer
+                              ?.phoneNumber,
+                        customerEmail:
+                           data.platform_customerByClients[0].customer?.email,
+                     },
+                  },
+               },
+            })
          } else {
             console.log('No customer data found!')
          }
