@@ -35,6 +35,8 @@ const ModalContent = ({
    )
    const [currentComboProductIndex, setCurrentComboProductIndex] = useState(0)
 
+   const [isDisabled, setIsDisabled] = React.useState(false)
+
    const selectComponent = item => {
       console.log('Item recived: ', item)
       // filter removes empty objects
@@ -75,6 +77,9 @@ const ModalContent = ({
                      name={data.name}
                      id={id}
                      product={data}
+                     onModifiersValidityChange={isValid =>
+                        setIsDisabled(!isValid)
+                     }
                      {...restProps}
                   />
                )}
@@ -87,6 +92,9 @@ const ModalContent = ({
                      isSelected
                      id={id}
                      product={data}
+                     onModifiersValidityChange={isValid =>
+                        setIsDisabled(!isValid)
+                     }
                      {...restProps}
                   />
                )}
@@ -100,6 +108,9 @@ const ModalContent = ({
                      isSelected
                      id={id}
                      product={data}
+                     onModifiersValidityChange={isValid =>
+                        setIsDisabled(!isValid)
+                     }
                      {...restProps}
                   />
                )}
@@ -110,11 +121,14 @@ const ModalContent = ({
                      }}
                      showInfo={showInfo}
                      navigation={navigation}
-                     independantItem
+                     independantItem={true}
                      tunnelItem
                      isSelected
                      id={id}
                      product={data}
+                     onModifiersValidityChange={isValid =>
+                        setIsDisabled(!isValid)
+                     }
                      {...restProps}
                   />
                )}
@@ -133,6 +147,7 @@ const ModalContent = ({
                   tunnelItem
                   type={type}
                   setIsModalVisible={setIsModalVisible}
+                  isDisabled={isDisabled}
                />
             )}
             {type == 'comboProduct' &&
@@ -147,6 +162,7 @@ const ModalContent = ({
                      tunnelItem
                      type={type}
                      setIsModalVisible={setIsModalVisible}
+                     isDisabled={isDisabled}
                   />
                )}
             {type == 'comboProduct' &&
@@ -154,6 +170,7 @@ const ModalContent = ({
                   <ComboProductItemProceed
                      setCurrentComboProductIndex={setCurrentComboProductIndex}
                      currentComboProductIndex={currentComboProductIndex}
+                     isDisabled={isDisabled}
                   />
                )}
          </View>

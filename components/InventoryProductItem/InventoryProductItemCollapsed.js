@@ -4,6 +4,7 @@ import ServingSelect from '../ServingSelect'
 import { styles } from './styles'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
+import Modifiers from '../Modifiers'
 
 const InventoryProductCollapsed = ({
    data: inventoryProduct,
@@ -14,13 +15,29 @@ const InventoryProductCollapsed = ({
    showInfo,
    isSelected,
    refId,
+   onModifersSelected,
+   onValidityChange,
 }) => {
    const { visual } = useAppContext()
 
    const [servingIndex, setServingIndex] = useState(0)
+   const [selectedOption, setSelectedOption] = useState(
+      inventoryProduct?.defaultInventoryProductOption
+   )
    if (!inventoryProduct) {
       return <Text>Bad Data</Text>
    }
+
+   React.useEffect(() => {
+      const option = inventoryProduct.inventoryProductOptions[servingIndex]
+      if (!option?.modifier && onValidityChange) {
+         onValidityChange(true)
+      }
+      setSelectedOption(option)
+      if (tunnelItem) {
+         setProductOptionId(option.id, option.price[0].value)
+      }
+   }, [servingIndex])
 
    return (
       <>
@@ -145,9 +162,19 @@ const InventoryProductCollapsed = ({
                            price={item_data.price[0].value}
                            setproductOptionId={setProductOptionId}
                            id={item_data.id}
+                           setSelectedOption={() =>
+                              setSelectedOption(item_data)
+                           }
                         />
                      )
                   }
+               )}
+               {selectedOption?.modifier && (
+                  <Modifiers
+                     data={selectedOption.modifier.data}
+                     onModifersSelected={onModifersSelected}
+                     onValidityChange={onValidityChange}
+                  />
                )}
             </View>
          )}

@@ -6,6 +6,7 @@ import { styles } from './styles'
 import ServingSelect from '../ServingSelect'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
+import Modifiers from '../Modifiers'
 
 const SimpleProductItemCollapsed = ({
    navigation,
@@ -17,8 +18,13 @@ const SimpleProductItemCollapsed = ({
    showInfo,
    refId,
    refType,
+   onModifersSelected,
+   onValidityChange,
 }) => {
    const [typeSelected, setTypeSelected] = useState('mealKit')
+   const [selectedOption, setSelectedOption] = useState(
+      simpleRecipeProduct.defaultSimpleRecipeProductOption
+   )
    const [servingIndex, setServingIndex] = useState(0)
 
    React.useEffect(() => {
@@ -36,6 +42,19 @@ const SimpleProductItemCollapsed = ({
          )
       setServingIndex(index)
    }, [])
+
+   React.useEffect(() => {
+      const option = simpleRecipeProduct.simpleRecipeProductOptions.filter(
+         option => option.type === typeSelected
+      )[servingIndex]
+      if (!option?.modifier && onValidityChange) {
+         onValidityChange(true)
+      }
+      setSelectedOption(option)
+      if (option && tunnelItem) {
+         setProductOptionId(option.id, option.price[0].value, option.type)
+      }
+   }, [typeSelected, servingIndex])
 
    const { visual } = useAppContext()
 
@@ -223,9 +242,19 @@ const SimpleProductItemCollapsed = ({
                            typeSelected={typeSelected}
                            setproductOptionId={setProductOptionId}
                            id={item_data.id}
+                           setSelectedOption={() =>
+                              setSelectedOption(item_data)
+                           }
                         />
                      )
                   })}
+               {selectedOption?.modifier && (
+                  <Modifiers
+                     data={selectedOption.modifier.data}
+                     onModifersSelected={onModifersSelected}
+                     onValidityChange={onValidityChange}
+                  />
+               )}
             </View>
          )}
       </>

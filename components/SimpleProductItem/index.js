@@ -19,16 +19,28 @@ const SimpleProductItem = ({
    refId,
    refType,
    comboProductComponent,
+   onModifiersValidityChange,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
    const setProductOptionId = (id, price, typeSelected) => {
-      let newItem = objToAdd
-      newItem.option.id = id
-      newItem.option.type = typeSelected
-      newItem.price = price
-      setobjToAdd(newItem)
-      setcartItem(newItem)
+      setobjToAdd({
+         ...objToAdd,
+         option: { id, type: typeSelected },
+         price,
+         modifiers: [],
+      })
+      setcartItem({
+         ...objToAdd,
+         option: { id, type: typeSelected },
+         price,
+         modifiers: [],
+      })
+   }
+
+   const modifiersHandler = modifiers => {
+      setobjToAdd({ ...objToAdd, modifiers })
+      setcartItem({ ...objToAdd, modifiers })
    }
 
    React.useEffect(() => {
@@ -42,6 +54,7 @@ const SimpleProductItem = ({
                id: product.defaultSimpleRecipeProductOption?.id, // product option id
                type: product.defaultSimpleRecipeProductOption?.type,
             },
+            modifiers: [],
             type: 'simpleRecipeProduct',
          }
          if (comboProductComponent) {
@@ -76,6 +89,8 @@ const SimpleProductItem = ({
          isSelected={isSelected}
          refId={refId}
          refType={refType}
+         onModifersSelected={modifiersHandler}
+         onValidityChange={onModifiersValidityChange}
       />
    )
 }

@@ -18,15 +18,18 @@ const InventoryProductItem = ({
    product,
    refId,
    comboProductComponent,
+   onModifiersValidityChange,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
    const setProductOptionId = (id, price) => {
-      let newItem = objToAdd
-      newItem.option.id = id
-      newItem.price = price
-      setobjToAdd(newItem)
-      setcartItem(newItem)
+      setobjToAdd({ ...objToAdd, option: { id }, price, modifiers: [] })
+      setcartItem({ ...objToAdd, option: { id }, price, modifiers: [] })
+   }
+
+   const modifiersHandler = modifiers => {
+      setobjToAdd({ ...objToAdd, modifiers })
+      setcartItem({ ...objToAdd, modifiers })
    }
 
    useEffect(() => {
@@ -43,6 +46,7 @@ const InventoryProductItem = ({
          option: {
             id: product?.inventoryProductOptions[0]?.id, // product option id
          },
+         modifiers: [],
          type: 'inventoryProduct',
       }
       if (comboProductComponent) {
@@ -60,7 +64,7 @@ const InventoryProductItem = ({
       if (tunnelItem && independantItem) {
          setcartItem(objToPush)
       }
-   }, [])
+   }, [product])
 
    useEffect(() => {
       if (tunnelItem && isSelected && objToAdd?.product?.price) {
@@ -81,6 +85,8 @@ const InventoryProductItem = ({
          setSelected={setSelected}
          isSelected={isSelected}
          refId={refId}
+         onModifersSelected={modifiersHandler}
+         onValidityChange={onModifiersValidityChange}
       />
    )
 }

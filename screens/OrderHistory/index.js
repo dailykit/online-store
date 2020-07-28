@@ -12,6 +12,7 @@ import { Header } from '../../components'
 import OrderCard from '../../components/OrderCard'
 import { useAppContext } from '../../context/app'
 import AppSkeleton from '../../components/skeletons/app'
+import DrawerLayout from '../../components/DrawerLayout'
 
 export default ({ navigation }) => {
    const { customer } = useCartContext()
@@ -75,6 +76,7 @@ export default ({ navigation }) => {
                   ))}
             </ScrollView>
          </View>
+         <DrawerLayout />
       </View>
    )
 }

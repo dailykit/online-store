@@ -1,0 +1,91 @@
+{
+   "categories": [
+      {
+         "name": "Crust",
+         "type": "single",
+         "options": [
+            {
+               "name": "Thin Crust",
+               "flags": {},
+               "image": "",
+               "price": 1,
+               "discount": 10,
+               "isActive": true,
+               "isVisible": false,
+               "productId": 2,
+               "productType": "bulkItem",
+               "productQuantity": 1
+            },
+            {
+               "name": "Flatbread",
+               "flags": {},
+               "image": "",
+               "price": 1,
+               "discount": 10,
+               "isActive": true,
+               "isVisible": false,
+               "productId": 2,
+               "productType": "bulkItem",
+               "productQuantity": 1
+            }
+         ],
+         "isActive": true,
+         "isRequired": true
+      },
+      {
+         "name": "Toppings",
+         "type": "multiple",
+         "limits": {
+            "max": 2,
+            "min": 0,
+            "free": 2
+         },
+         "options": [
+            {
+               "name": "Cheese",
+               "flags": {
+                  "isAvailableForFree": true
+               },
+               "image": "",
+               "price": 1,
+               "discount": 10,
+               "isActive": true,
+               "isVisible": false,
+               "productId": 2,
+               "productType": "bulkItem",
+               "productQuantity": 1
+            },
+            {
+               "name": "Pineapple",
+               "flags": {
+                  "isAvailableForFree": true
+               },
+               "image": "",
+               "price": 2,
+               "discount": 10,
+               "isActive": true,
+               "isVisible": false,
+               "productId": 2,
+               "productType": "bulkItem",
+               "productQuantity": 1
+            },
+            {
+               "name": "Tomato Onion",
+               "flags": {
+                  "isAvailableForFree": true
+               },
+               "image": "",
+               "price": 0.5,
+               "discount": 10,
+               "isActive": true,
+               "isVisible": false,
+               "productId": 2,
+               "productType": "bulkItem",
+               "productQuantity": 1
+            }
+         ],
+         "isActive": true,
+         "isRequired": false
+      }
+   ]
+}

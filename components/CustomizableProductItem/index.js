@@ -20,6 +20,7 @@ const CustomizableProductItem = ({
    refId,
    refType,
    comboProductComponent,
+   onModifiersValidityChange,
 }) => {
    const [expanded, setExpanded] = useState(false)
    const [numberOfOptions, setnumberOfOptions] = useState(0)
@@ -62,8 +63,13 @@ const CustomizableProductItem = ({
       if (newItem.type === 'inventoryProduct') {
          delete newItem.option.type
       }
-      setobjToAdd(newItem)
-      setcartItem(newItem)
+      setobjToAdd({ ...newItem, modifiers: [] })
+      setcartItem({ ...newItem, modifiers: [] })
+   }
+
+   const modifiersHandler = modifiers => {
+      setobjToAdd({ ...objToAdd, modifiers })
+      setcartItem({ ...objToAdd, modifiers })
    }
 
    useEffect(() => {
@@ -102,6 +108,7 @@ const CustomizableProductItem = ({
                id: _default_option?.id, // product option id
                type: _default_option?.type,
             },
+            modifiers: [],
             type: _type,
          }
          if (comboProductComponent) {
@@ -154,6 +161,8 @@ const CustomizableProductItem = ({
             setproductOptionId={setproductOptionId}
             refId={refId}
             refType={refType}
+            onModifersSelected={modifiersHandler}
+            onValidityChange={onModifiersValidityChange}
          />
       )
    }
@@ -172,6 +181,8 @@ const CustomizableProductItem = ({
          numberOfOptions={numberOfOptions}
          tunnelItem={tunnelItem}
          product={product}
+         onModifersSelected={modifiersHandler}
+         onValidityChange={onModifiersValidityChange}
       />
    )
 }

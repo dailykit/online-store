@@ -111,7 +111,13 @@ const WebNav = ({ navigation }) => {
                </NavButton>
             ) : (
                <>
-                  <NavButton color={visual.color} onPress={() => open('Login')}>
+                  <NavButton
+                     color={visual.color}
+                     onPress={() => {
+                        console.log('Login clicked')
+                        open('Login')
+                     }}
+                  >
                      <NavLinkText white>Login</NavLinkText>
                   </NavButton>
                   <NavButton
