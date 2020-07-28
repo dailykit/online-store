@@ -39,6 +39,8 @@ export default ({ navigation }) => {
                   flex: 1,
                   alignItems: 'center',
                   backgroundColor: '#fff',
+                  width: '100%',
+                  padding: 10,
                }}
             >
                <View style={styles.badgeConatiner}>
@@ -47,7 +49,7 @@ export default ({ navigation }) => {
                <Text style={styles.title}>Our Staff Safety Report</Text>
 
                <View style={styles.staffConatiner}>
-                  {check?.SafetyCheckPerUsers?.length &&
+                  {Boolean(check?.SafetyCheckPerUsers?.length) &&
                      check.SafetyCheckPerUsers.map(checkup => (
                         <StaffSafetyContainer
                            key={checkup.id}

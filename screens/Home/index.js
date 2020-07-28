@@ -267,9 +267,9 @@ const Home = props => {
                   </Text>
                </View>
             )}
-            {/* <View style={styles.headerContainer}>
-          <SafetyBanner {...props} />
-        </View> */}
+            <View style={styles.headerContainer}>
+               <SafetyBanner {...props} />
+            </View>
             <DrawerLayout />
             <Footer />
          </ScrollView>
