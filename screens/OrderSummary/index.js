@@ -25,6 +25,7 @@ import { useMutation } from '@apollo/react-hooks'
 import { UPDATE_CART } from '../../graphql'
 import AppSkeleton from '../../components/skeletons/app'
 import DrawerLayout from '../../components/DrawerLayout'
+import { Accordion } from 'native-base'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
@@ -336,21 +337,124 @@ const Cart = ({ cart }) => {
                         </CartItemName>
                         {product.type === 'comboProduct' &&
                            product.components.map(component => (
-                              <CartItemLabel>
-                                 {`${component.comboProductComponentLabel}: ${component.name}`}
-                              </CartItemLabel>
+                              <>
+                                 <CartItemLabel
+                                    ellipsizeMode="tail"
+                                    numberOfLines={1}
+                                 >
+                                    {`${component.comboProductComponentLabel}: ${component.name}`}
+                                 </CartItemLabel>
+                                 {Boolean(component.modifiers?.length) && (
+                                    <AccordianContainer>
+                                       <Accordion
+                                          dataArray={[
+                                             {
+                                                title: `Modifiers (${component.modifiers.length})`,
+                                                content: (
+                                                   <>
+                                                      {component.modifiers.map(
+                                                         modifier => (
+                                                            <StyledAccordianContentText
+                                                               ellipsizeMode="tail"
+                                                               numberOfLines={1}
+                                                            >
+                                                               {`${modifier.category} - ${modifier.name}`}
+                                                            </StyledAccordianContentText>
+                                                         )
+                                                      )}
+                                                   </>
+                                                ),
+                                             },
+                                          ]}
+                                          renderHeader={(item, expanded) => (
+                                             <StyledAccordianHeader>
+                                                <StyledAccordianHeaderText>
+                                                   {item.title}
+                                                </StyledAccordianHeaderText>
+                                                <Feather
+                                                   name={
+                                                      expanded
+                                                         ? 'chevron-up'
+                                                         : 'chevron-down'
+                                                   }
+                                                   color="#666"
+                                                   size={14}
+                                                />
+                                             </StyledAccordianHeader>
+                                          )}
+                                          renderContent={item => (
+                                             <StyledAccordianContent>
+                                                {item.content}
+                                             </StyledAccordianContent>
+                                          )}
+                                       />
+                                    </AccordianContainer>
+                                 )}
+                              </>
                            ))}
                         {product.type === 'simpleRecipeProduct' && (
-                           <CartItemLabel>
+                           <CartItemLabel
+                              ellipsizeMode="tail"
+                              numberOfLines={1}
+                           >
                               {`${product.option.type.SRPType()} x${
                                  product.option.serving
                               }`}
                            </CartItemLabel>
                         )}
                         {product.type === 'inventoryProduct' && (
-                           <CartItemLabel>
+                           <CartItemLabel
+                              ellipsizeMode="tail"
+                              numberOfLines={1}
+                           >
                               {`${product.option.label}`}
                            </CartItemLabel>
+                        )}
+                        {Boolean(product.modifiers?.length) && (
+                           <AccordianContainer>
+                              <Accordion
+                                 dataArray={[
+                                    {
+                                       title: `Modifiers (${product.modifiers.length})`,
+                                       content: (
+                                          <>
+                                             {product.modifiers.map(
+                                                modifier => (
+                                                   <StyledAccordianContentText
+                                                      ellipsizeMode="tail"
+                                                      numberOfLines={1}
+                                                   >
+                                                      {`${modifier.category} - ${modifier.name}`}
+                                                   </StyledAccordianContentText>
+                                                )
+                                             )}
+                                          </>
+                                       ),
+                                    },
+                                 ]}
+                                 renderHeader={(item, expanded) => (
+                                    <StyledAccordianHeader>
+                                       <StyledAccordianHeaderText>
+                                          {item.title}
+                                       </StyledAccordianHeaderText>
+                                       <Feather
+                                          name={
+                                             expanded
+                                                ? 'chevron-up'
+                                                : 'chevron-down'
+                                          }
+                                          color="#666"
+                                          size={14}
+                                       />
+                                    </StyledAccordianHeader>
+                                 )}
+                                 renderContent={item => (
+                                    <StyledAccordianContent>
+                                       {item.content}
+                                    </StyledAccordianContent>
+                                 )}
+                              />
+                           </AccordianContainer>
                         )}
                      </CartItemInfo>
                   </CartItemLeft>
@@ -615,6 +719,31 @@ const CartItemName = styled.Text`
 `
 
 const CartItemLabel = styled.Text`
+   color: #9c9ea7;
+`
+
+const AccordianContainer = styled.View`
+   margin-top: 4px;
+`
+
+const StyledAccordianHeader = styled.View`
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
+   padding: 4px;
+`
+
+const StyledAccordianHeaderText = styled.Text`
+   font-size: 12px;
+   color: #666;
+`
+
+const StyledAccordianContent = styled.View`
+   padding: 4px;
+`
+
+const StyledAccordianContentText = styled.Text`
+   font-size: 12px;
    color: #9c9ea7;
 `
 

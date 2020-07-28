@@ -27,7 +27,7 @@ const SimpleProductItem = ({
       setobjToAdd({
          ...objToAdd,
          option: {
-            id: option.type,
+            id: option.id,
             type: option.type,
             serving: option.simpleRecipeYield.yield.serving,
          },
@@ -37,7 +37,7 @@ const SimpleProductItem = ({
       setcartItem({
          ...objToAdd,
          option: {
-            id: option.type,
+            id: option.id,
             type: option.type,
             serving: option.simpleRecipeYield.yield.serving,
          },
