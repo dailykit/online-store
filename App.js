@@ -78,6 +78,15 @@ if (!global.atob) {
    global.atob = decode
 }
 
+if (window.navigator) {
+   // disable service worker, if any
+   navigator.serviceWorker.ready
+      .then(registration => {
+         registration.unregister()
+      })
+      .catch(err => console.log('Service worker: ', err))
+}
+
 const BASE_SIZE = 0.7
 
 EStyleSheet.build({
