@@ -130,14 +130,7 @@ const InventoryProductCollapsed = ({
                            numberOfLines={1}
                            ellipsizeMode="tail"
                         >
-                           {inventoryProduct?.inventoryProductOptions[0]?.label
-                              ?.substr(0, 1)
-                              .toUpperCase() +
-                              inventoryProduct?.inventoryProductOptions[0]?.label?.substr(
-                                 1,
-                                 inventoryProduct?.inventoryProductOptions[0]
-                                    ?.label?.length - 1
-                              )}
+                           {selectedOption.label}
                         </Text>
                      )}
                      <Text

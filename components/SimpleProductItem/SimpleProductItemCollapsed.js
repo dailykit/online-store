@@ -136,9 +136,7 @@ const SimpleProductItemCollapsed = ({
                         >
                            {tunnelItem
                               ? simpleRecipeProduct.simpleRecipe.cuisine
-                              : simpleRecipeProduct
-                                   ?.defaultSimpleRecipeProductOption.type ===
-                                'mealKit'
+                              : selectedOption.type === 'mealKit'
                               ? 'Meal Kit'
                               : 'Ready to Eat'}
                         </Text>
@@ -154,9 +152,7 @@ const SimpleProductItemCollapsed = ({
                            {tunnelItem
                               ? simpleRecipeProduct.simpleRecipe.author
                               : 'x' +
-                                simpleRecipeProduct
-                                   ?.defaultSimpleRecipeProductOption
-                                   .simpleRecipeYield.yield.serving}
+                                selectedOption.simpleRecipeYield.yield.serving}
                         </Text>
                      </View>
                   </View>
