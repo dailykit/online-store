@@ -16,7 +16,7 @@ import DrawerLayout from '../../components/DrawerLayout'
 
 export default ({ navigation }) => {
    const { customer } = useCartContext()
-   const { settingsLoading } = useAppContext()
+   const { masterLoading } = useAppContext()
 
    // Query
    const { data, loading, error } = useSubscription(ORDERS, {
@@ -25,7 +25,7 @@ export default ({ navigation }) => {
       },
    })
 
-   if (settingsLoading) {
+   if (masterLoading) {
       return <AppSkeleton />
    }
 

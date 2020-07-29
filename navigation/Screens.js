@@ -70,34 +70,118 @@ export default function OnboardingStack(props) {
       availability,
       setAvailability,
       setMenuData,
+      setMasterLoading,
+      menuLoading,
       setMenuLoading,
    } = useAppContext()
 
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
 
-   // Mutations
-   const [createCustomer] = useMutation(CREATE_CUSTOMER, {
-      onCompleted: data => {
-         if (cartId) {
-            updateCart({
-               variables: {
-                  id: cartId,
-                  set: {
-                     customerId: data.createCustomer.id,
-                     customerKeycloakId: user.sub || user.id,
-                  },
-               },
+   // Query
+   const { loading: settingsLoading, error: settingsError } = useSubscription(
+      STORE_SETTINGS,
+      {
+         onSubscriptionData: data => {
+            const brandSettings = data.subscriptionData.data.storeSettings.filter(
+               setting => setting.type === 'brand'
+            )
+            const visualSettings = data.subscriptionData.data.storeSettings.filter(
+               setting => setting.type === 'visual'
+            )
+            const availabilitySettings = data.subscriptionData.data.storeSettings.filter(
+               setting => setting.type === 'availability'
+            )
+
+            let brandState = {}
+            brandSettings.forEach(({ identifier, value }) => {
+               switch (identifier) {
+                  case 'Brand Logo': {
+                     brandState.logo = value.url
+                     return
+                  }
+                  case 'Brand Name': {
+                     brandState.name = value.name
+                     return
+                  }
+                  default: {
+                     return
+                  }
+               }
             })
-         }
-         console.log('Customer created')
-      },
-      onError: error => {
-         console.log(error)
-      },
-   })
+            setBrand({ ...brandState })
+
+            let visualState = {}
+            visualSettings.forEach(({ identifier, value }) => {
+               switch (identifier) {
+                  case 'Primary Color': {
+                     visualState.color = value.color
+                     return
+                  }
+                  case 'Slides': {
+                     visualState.slides = value
+                     return
+                  }
+                  default: {
+                     return
+                  }
+               }
+            })
+            setVisual({ ...visualState })
+
+            let availabilityState = {}
+            availabilitySettings.forEach(({ identifier, value }) => {
+               switch (identifier) {
+                  case 'Store Availability': {
+                     availabilityState.store = value
+                     return
+                  }
+                  case 'Pickup Availability': {
+                     availabilityState.pickup = value
+                     return
+                  }
+                  case 'Delivery Availability': {
+                     availabilityState.delivery = value
+                     return
+                  }
+                  case 'Location': {
+                     availabilityState.location = value.address
+                  }
+                  default: {
+                     return
+                  }
+               }
+            })
+            setAvailability({ ...availabilityState })
+         },
+      }
+   )
+
+   // Mutations
+   const [createCustomer, { laoding: creatingCustomer }] = useMutation(
+      CREATE_CUSTOMER,
+      {
+         onCompleted: data => {
+            if (cartId) {
+               updateCart({
+                  variables: {
+                     id: cartId,
+                     set: {
+                        customerId: data.createCustomer.id,
+                        customerKeycloakId: user.sub || user.id,
+                     },
+                  },
+               })
+            }
+            console.log('Customer created')
+         },
+         onError: error => {
+            console.log(error)
+         },
+      }
+   )
 
    // Subscription
-   const { error } = useSubscription(CUSTOMER, {
+   const { error, loading: fetchingCustomer } = useSubscription(CUSTOMER, {
       variables: {
          keycloakId: user.sub || user.userid,
          email: user.email,
@@ -134,7 +218,7 @@ export default function OnboardingStack(props) {
 
    if (error) console.log('Subscription error: ', error)
 
-   const [fetchCart] = useLazyQuery(FETCH_CART, {
+   const [fetchCart, { loading: fetchingCart }] = useLazyQuery(FETCH_CART, {
       onCompleted: data => {
          if (data?.cartByPK?.id) {
             setCart(data.cartByPK)
@@ -182,43 +266,47 @@ export default function OnboardingStack(props) {
    }, [user])
 
    // Query
-   const [customerDetails] = useLazyQuery(CUSTOMER_DETAILS, {
-      variables: {
-         keycloakId: user.sub || user.userid,
-      },
-      onCompleted: data => {
-         if (data.platform_customerByClients?.length) {
-            console.log(
-               'platform -> data',
-               data.platform_customerByClients[0].customer
-            )
-            setCustomerDetails(data.platform_customerByClients[0].customer)
-            updateCart({
-               variables: {
-                  id: cartId,
-                  set: {
-                     customerInfo: {
-                        customerFirstName:
-                           data.platform_customerByClients[0].customer
-                              ?.firstName,
-                        customerLastName:
-                           data.platform_customerByClients[0].customer
-                              ?.lastName,
-                        customerPhone:
-                           data.platform_customerByClients[0].customer
-                              ?.phoneNumber,
-                        customerEmail:
-                           data.platform_customerByClients[0].customer?.email,
+   const [customerDetails, { loading: fetchingCustomerDetails }] = useLazyQuery(
+      CUSTOMER_DETAILS,
+      {
+         variables: {
+            keycloakId: user.sub || user.userid,
+         },
+         onCompleted: data => {
+            if (data.platform_customerByClients?.length) {
+               console.log(
+                  'platform -> data',
+                  data.platform_customerByClients[0].customer
+               )
+               setCustomerDetails(data.platform_customerByClients[0].customer)
+               updateCart({
+                  variables: {
+                     id: cartId,
+                     set: {
+                        customerInfo: {
+                           customerFirstName:
+                              data.platform_customerByClients[0].customer
+                                 ?.firstName,
+                           customerLastName:
+                              data.platform_customerByClients[0].customer
+                                 ?.lastName,
+                           customerPhone:
+                              data.platform_customerByClients[0].customer
+                                 ?.phoneNumber,
+                           customerEmail:
+                              data.platform_customerByClients[0].customer
+                                 ?.email,
+                        },
                      },
                   },
-               },
-            })
-         } else {
-            console.log('No customer data found!')
-         }
-      },
-      fetchPolicy: 'cache-and-network',
-   })
+               })
+            } else {
+               console.log('No customer data found!')
+            }
+         },
+         fetchPolicy: 'cache-and-network',
+      }
+   )
 
    const fetchData = async date => {
       try {
@@ -260,6 +348,24 @@ export default function OnboardingStack(props) {
          fetchData(date)
       }
    }, [availability])
+
+   React.useEffect(() => {
+      setMasterLoading(
+         [
+            settingsLoading,
+            fetchingCustomer,
+            creatingCustomer,
+            fetchingCart,
+            fetchingCustomerDetails,
+         ].some(loading => loading)
+      )
+   }, [
+      settingsLoading,
+      fetchingCustomer,
+      creatingCustomer,
+      fetchingCart,
+      fetchingCustomerDetails,
+   ])
 
    return (
       <>

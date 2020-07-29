@@ -21,7 +21,7 @@ import AppSkeleton from '../../components/skeletons/app'
 import DrawerLayout from '../../components/DrawerLayout'
 
 const Search = ({ navigation }) => {
-   const { menuData, settingsLoading } = useAppContext()
+   const { menuData, masterLoading } = useAppContext()
 
    const [mergedData, setMergedData] = React.useState(undefined)
    const [query, setQuery] = React.useState('')
@@ -115,7 +115,7 @@ const Search = ({ navigation }) => {
       squashAndMerge(menuData)
    }, [menuData])
 
-   if (settingsLoading) {
+   if (masterLoading) {
       return <AppSkeleton />
    }
 

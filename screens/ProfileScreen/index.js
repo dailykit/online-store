@@ -13,9 +13,9 @@ import DrawerLayout from '../../components/DrawerLayout'
 export default ({ navigation }) => {
    const { customerDetails } = useCartContext()
    const { open } = useDrawerContext()
-   const { settingsLoading } = useAppContext()
+   const { masterLoading } = useAppContext()
 
-   if (settingsLoading) {
+   if (masterLoading) {
       return <AppSkeleton />
    }
 

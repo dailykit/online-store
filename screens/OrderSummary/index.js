@@ -31,7 +31,7 @@ import { useStoreToast } from '../../utils'
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
    const { open } = useDrawerContext()
-   const { visual, settingsLoading } = useAppContext()
+   const { visual, masterLoading } = useAppContext()
    const { isAuthenticated } = useAuth()
 
    const [editing, setEditing] = React.useState(false)
@@ -40,7 +40,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       return this === 'readyToEat' ? 'Ready to Eat' : 'Meal Kit'
    }
 
-   if (settingsLoading) {
+   if (masterLoading) {
       return <AppSkeleton />
    }
 

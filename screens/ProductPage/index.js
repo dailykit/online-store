@@ -25,7 +25,7 @@ import DrawerLayout from '../../components/DrawerLayout'
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
 
-   const { visual, settingsLoading } = useAppContext()
+   const { visual, masterLoading } = useAppContext()
 
    const [product, setProduct] = React.useState({})
    const [isModalVisible, setIsModalVisible] = React.useState(false)
@@ -72,7 +72,7 @@ const ProductPage = ({ navigation, route }) => {
       }
    }, [id, type])
 
-   if (settingsLoading) {
+   if (masterLoading) {
       return <AppSkeleton />
    }
 

@@ -21,7 +21,7 @@ import DrawerLayout from '../../components/DrawerLayout'
 const Recipe = ({ route, navigation }) => {
    let { recipeId, refId, refType } = route.params
 
-   const { visual, settingsLoading } = useAppContext()
+   const { visual, masterLoading } = useAppContext()
 
    const [option, setOption] = React.useState(undefined)
    const [fetching, setFetching] = React.useState(false)
@@ -101,7 +101,7 @@ const Recipe = ({ route, navigation }) => {
       }
    }
 
-   if (settingsLoading) {
+   if (masterLoading) {
       return <AppSkeleton />
    }
 

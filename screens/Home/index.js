@@ -42,7 +42,7 @@ const Home = props => {
       availability,
       menuData,
       menuLoading,
-      settingsLoading,
+      masterLoading,
    } = useAppContext()
 
    const isStoreOpen = () => {
@@ -64,7 +64,7 @@ const Home = props => {
       }
    }
 
-   if (settingsLoading) {
+   if (masterLoading) {
       return <AppSkeleton />
    }
 

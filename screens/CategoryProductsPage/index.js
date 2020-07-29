@@ -14,9 +14,9 @@ import DrawerLayout from '../../components/DrawerLayout'
 const CategoryProductsPage = ({ navigation, route }) => {
    const { data, category } = route.params
 
-   const { settingsLoading } = useAppContext()
+   const { masterLoading } = useAppContext()
 
-   if (settingsLoading) {
+   if (masterLoading) {
       return <AppSkeleton />
    }
 

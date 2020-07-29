@@ -22,7 +22,7 @@ const Order = ({ route, navigation }) => {
    const { orderId } = route.params
 
    const { cart } = useCartContext()
-   const { visual, brand, settingsLoading } = useAppContext()
+   const { visual, brand, masterLoading } = useAppContext()
 
    // Subscription
    const { data: { order = {} } = {}, loading, error } = useSubscription(
@@ -34,7 +34,7 @@ const Order = ({ route, navigation }) => {
       }
    )
 
-   if (settingsLoading) {
+   if (masterLoading) {
       return <AppSkeleton />
    }
 
