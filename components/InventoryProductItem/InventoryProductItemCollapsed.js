@@ -30,6 +30,20 @@ const InventoryProductCollapsed = ({
    }
 
    React.useEffect(() => {
+      const option =
+         inventoryProduct.defaultInventoryProductOption ||
+         inventoryProduct.inventoryProductOptions[0]
+      const index = inventoryProduct.inventoryProductOptions.findIndex(
+         op => op.id === option.id
+      )
+      if (index !== -1) {
+         setServingIndex(index)
+      } else {
+         setServingIndex(0)
+      }
+   }, [])
+
+   React.useEffect(() => {
       const option = inventoryProduct.inventoryProductOptions[servingIndex]
       if (!option?.modifier && onValidityChange) {
          onValidityChange(true)
