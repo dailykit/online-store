@@ -52,18 +52,19 @@ const SimpleProductItem = ({
    }
 
    React.useEffect(() => {
-      if (product.defaultSimpleRecipeProductOption.id) {
+      if (product) {
+         const option =
+            product.defaultSimpleRecipeProductOption ||
+            product.simpleRecipeProductOptions[0]
          let objToPush = {
             id: product.id,
             name: product.name,
-            price: product.defaultSimpleRecipeProductOption?.price[0].value,
+            price: option?.price[0].value,
             image: product.assets?.images[0],
             option: {
-               id: product.defaultSimpleRecipeProductOption?.id, // product option id
-               type: product.defaultSimpleRecipeProductOption?.type,
-               serving:
-                  product.defaultSimpleRecipeProductOption?.simpleRecipeYield
-                     .yield.serving,
+               id: option?.id, // product option id
+               type: option?.type,
+               serving: option?.simpleRecipeYield.yield.serving,
             },
             modifiers: [],
             type: 'simpleRecipeProduct',
@@ -74,7 +75,7 @@ const SimpleProductItem = ({
          }
          setobjToAdd(objToPush)
          if (!tunnelItem && independantItem) {
-            setPrice(product.defaultSimpleRecipeProductOption?.price[0]?.value)
+            setPrice(option?.price[0]?.value)
             setcardData(product)
          }
          if (tunnelItem && isSelected) {

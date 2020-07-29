@@ -21,25 +21,23 @@ const SimpleProductItemCollapsed = ({
    onModifersSelected,
    onValidityChange,
 }) => {
-   const [typeSelected, setTypeSelected] = useState('mealKit')
+   const [typeSelected, setTypeSelected] = useState(
+      simpleRecipeProduct.defaultSimpleRecipeProductOption?.type ||
+         simpleRecipeProduct.simpleRecipeProductOptions[0].type
+   )
    const [selectedOption, setSelectedOption] = useState(
-      simpleRecipeProduct.defaultSimpleRecipeProductOption
+      simpleRecipeProduct.defaultSimpleRecipeProductOption ||
+         simpleRecipeProduct.simpleRecipeProductOptions[0]
    )
    const [servingIndex, setServingIndex] = useState(0)
 
    React.useEffect(() => {
-      setTypeSelected(simpleRecipeProduct.defaultSimpleRecipeProductOption.type)
+      const op =
+         simpleRecipeProduct.defaultSimpleRecipeProductOption ||
+         simpleRecipeProduct.simpleRecipeProductOptions[0]
       const index = simpleRecipeProduct.simpleRecipeProductOptions
-         .filter(
-            option =>
-               option.type ===
-               simpleRecipeProduct.defaultSimpleRecipeProductOption.type
-         )
-         .findIndex(
-            option =>
-               option.id ===
-               simpleRecipeProduct.defaultSimpleRecipeProductOption.id
-         )
+         .filter(option => option.type === op.type)
+         .findIndex(option => option.id === op.id)
       setServingIndex(index)
    }, [])
 
