@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { Ionicons, Feather } from '@expo/vector-icons'
 import { useCartContext } from '../context/cart'
-import { uuid } from '../utils'
+import { uuid, useStoreToast } from '../utils'
 import { useMutation } from '@apollo/react-hooks'
 import EStyleSheet, { child } from 'react-native-extended-stylesheet'
 import { CREATE_CART, UPDATE_CART } from '../graphql/mutations'
@@ -38,6 +38,8 @@ const Cart = ({
    const { visual } = useAppContext()
    const { open } = useDrawerContext()
    const { isAuthenticated, login, user } = useAuth()
+
+   const { toastr } = useStoreToast()
 
    const [quantity, setQuantity] = useState(1)
 
@@ -76,6 +78,7 @@ const Cart = ({
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
          console.log('Product added!')
+         toastr('success', 'Item added!')
          if (!customer) {
             console.log(data.updateCart)
             setCart(data.updateCart.returning[0])
@@ -88,6 +91,7 @@ const Cart = ({
    const [createCart] = useMutation(CREATE_CART, {
       onCompleted: data => {
          console.log('Cart created!')
+         toastr('success', 'Item added!')
          if (!customer) {
             AsyncStorage.setItem('PENDING_CART_ID', data.createCart.id)
             setCart(data.createCart)

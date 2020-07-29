@@ -37,6 +37,8 @@ import Screens from './navigation/Screens'
 import useLinking from './navigation/useLinking'
 import { width } from './utils/Scalaing'
 import { Spinner } from 'native-base'
+import { ThemeProvider } from 'styled-components'
+import { ToastProvider } from 'react-native-styled-toast'
 
 const httpLink = new HttpLink({
    uri: HASURA_URL,
@@ -114,6 +116,18 @@ function cacheImages(images) {
    })
 }
 
+const theme = {
+   space: [0, 4, 8, 12, 16, 20, 24, 32, 40, 48],
+   colors: {
+      text: '#0A0A0A',
+      background: '#FFF',
+      border: '#E2E8F0',
+      muted: '#F0F1F3',
+      success: '#7DBE31',
+      error: '#FC0021',
+   },
+}
+
 const App = () => {
    const [isLoading, setIsLoading] = React.useState(true)
 
@@ -139,40 +153,46 @@ const App = () => {
       return (
          <Suspense fallback={<Spinner size="large" />}>
             <ErrorBoundary>
-               <NavigationContainer
-                  ref={containerRef}
-                  initialState={initialNavigationState}
-               >
-                  <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-                     <View
-                        style={{
-                           marginTop:
-                              Platform.OS == 'android'
-                                 ? Constants.statusBarHeight
-                                 : 0,
-                           flex: 1,
-                           backgroundColor: '#fff',
-                        }}
+               <ThemeProvider theme={theme}>
+                  <ToastProvider>
+                     <NavigationContainer
+                        ref={containerRef}
+                        initialState={initialNavigationState}
                      >
-                        {Platform.OS == 'ios' && (
-                           <StatusBar barStyle="dark-content" />
-                        )}
-                        <ApplicationProvider {...eva} theme={eva.light}>
-                           <ApolloProvider client={client}>
-                              <AuthProvider>
-                                 <AppContextProvider>
-                                    <DrawerContextProvider>
-                                       <CartContextProvider>
-                                          <Screens />
-                                       </CartContextProvider>
-                                    </DrawerContextProvider>
-                                 </AppContextProvider>
-                              </AuthProvider>
-                           </ApolloProvider>
-                        </ApplicationProvider>
-                     </View>
-                  </SafeAreaView>
-               </NavigationContainer>
+                        <SafeAreaView
+                           style={{ flex: 1, backgroundColor: '#fff' }}
+                        >
+                           <View
+                              style={{
+                                 marginTop:
+                                    Platform.OS == 'android'
+                                       ? Constants.statusBarHeight
+                                       : 0,
+                                 flex: 1,
+                                 backgroundColor: '#fff',
+                              }}
+                           >
+                              {Platform.OS == 'ios' && (
+                                 <StatusBar barStyle="dark-content" />
+                              )}
+                              <ApplicationProvider {...eva} theme={eva.light}>
+                                 <ApolloProvider client={client}>
+                                    <AuthProvider>
+                                       <AppContextProvider>
+                                          <DrawerContextProvider>
+                                             <CartContextProvider>
+                                                <Screens />
+                                             </CartContextProvider>
+                                          </DrawerContextProvider>
+                                       </AppContextProvider>
+                                    </AuthProvider>
+                                 </ApolloProvider>
+                              </ApplicationProvider>
+                           </View>
+                        </SafeAreaView>
+                     </NavigationContainer>
+                  </ToastProvider>
+               </ThemeProvider>
             </ErrorBoundary>
          </Suspense>
       )

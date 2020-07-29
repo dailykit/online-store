@@ -26,6 +26,7 @@ import { UPDATE_CART } from '../../graphql'
 import AppSkeleton from '../../components/skeletons/app'
 import DrawerLayout from '../../components/DrawerLayout'
 import { Accordion } from 'native-base'
+import { useStoreToast } from '../../utils'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
@@ -245,6 +246,8 @@ const Cart = ({ cart }) => {
    const { setCart } = useCartContext()
    const { isAuthenticated } = useAuth()
 
+   const { toastr } = useStoreToast()
+
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
          console.log('Cart updated!')
@@ -290,7 +293,7 @@ const Cart = ({ cart }) => {
       }
    }
 
-   const removeFromCart = product => {
+   const removeFromCart = async product => {
       let products = cart?.cartInfo?.products
       let total
       let newCartItems = products?.filter(
@@ -308,7 +311,7 @@ const Cart = ({ cart }) => {
          products: newCartItems,
          total,
       }
-      updateCart({
+      const { data } = await updateCart({
          variables: {
             id: cart.id,
             set: {
@@ -316,6 +319,9 @@ const Cart = ({ cart }) => {
             },
          },
       })
+      if (data) {
+         toastr('success', 'Item removed!')
+      }
    }
 
    return (
@@ -332,7 +338,7 @@ const Cart = ({ cart }) => {
                   <CartItemLeft>
                      <CartItemImage source={{ uri: product.image }} />
                      <CartItemInfo>
-                        <CartItemName numberOfLines={2} ellipsizeMode="tail">
+                        <CartItemName numberOfLines={1} ellipsizeMode="tail">
                            {product.name}
                         </CartItemName>
                         {product.type === 'comboProduct' &&
