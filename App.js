@@ -154,7 +154,7 @@ const App = () => {
          <Suspense fallback={<Spinner size="large" />}>
             <ErrorBoundary>
                <ThemeProvider theme={theme}>
-                  <ToastProvider>
+                  <ToastProvider position="BOTTOM">
                      <NavigationContainer
                         ref={containerRef}
                         initialState={initialNavigationState}
