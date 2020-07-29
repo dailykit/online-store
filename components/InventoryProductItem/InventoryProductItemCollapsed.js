@@ -22,7 +22,8 @@ const InventoryProductCollapsed = ({
 
    const [servingIndex, setServingIndex] = useState(0)
    const [selectedOption, setSelectedOption] = useState(
-      inventoryProduct?.defaultInventoryProductOption
+      inventoryProduct.defaultInventoryProductOption ||
+         inventoryProduct.inventoryProductOptions[0]
    )
    if (!inventoryProduct) {
       return <Text>Bad Data</Text>

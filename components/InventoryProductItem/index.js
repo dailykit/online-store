@@ -48,14 +48,17 @@ const InventoryProductItem = ({
          !product?.inventoryProductOptions[0]
       )
          return
+      const option =
+         product.defaultInventoryProductOption ||
+         product.inventoryProductOptions[0]
       let objToPush = {
          id: product?.id,
          name: product?.name,
-         price: product?.defaultInventoryProductOption?.price[0]?.value,
+         price: option.price[0]?.value,
          image: product?.assets?.images[0],
          option: {
-            id: product?.defaultInventoryProductOption?.id, // product option id
-            label: product?.defaultInventoryProductOption?.label,
+            id: option?.id, // product option id
+            label: option?.label,
          },
          modifiers: [],
          type: 'inventoryProduct',
@@ -66,7 +69,7 @@ const InventoryProductItem = ({
       }
       setobjToAdd(objToPush)
       if (!tunnelItem && independantItem) {
-         setPrice(product?.defaultInventoryProductOption?.price[0]?.value)
+         setPrice(option?.price[0]?.value)
          setcardData(product)
       }
       if (tunnelItem && isSelected) {
