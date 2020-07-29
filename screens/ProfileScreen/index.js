@@ -26,7 +26,7 @@ export default ({ navigation }) => {
             <View style={styles.userDetailsContainer}>
                <View style={styles.avatar}>
                   <Image
-                     source={{ uri: 'https://picsum.photos/200' }}
+                     source={require('../../assets/imgs/default-profile.png')}
                      style={styles.image}
                   />
                </View>
