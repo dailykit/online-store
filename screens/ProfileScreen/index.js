@@ -37,9 +37,11 @@ export default ({ navigation }) => {
                   }}
                >
                   <Text style={styles.userName}>
-                     {`${customerDetails?.firstName || ''} ${
-                        customerDetails?.lastName || ''
-                     }`}
+                     {customerDetails?.firstName
+                        ? `${customerDetails?.firstName || ''} ${
+                             customerDetails?.lastName || ''
+                          }`
+                        : 'Add your name'}
                   </Text>
                   <TouchableOpacity
                      style={{ marginLeft: 24 }}
