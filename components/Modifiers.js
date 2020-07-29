@@ -108,7 +108,7 @@ const Modifiers = ({ data, onModifersSelected, onValidityChange }) => {
 
    return (
       <Wrapper>
-         <Heading>Available Modifiers:</Heading>
+         <Heading>Available Add-Ons:</Heading>
          {data.categories.map(category => (
             <Category>
                <CategoryName>

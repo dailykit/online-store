@@ -356,7 +356,7 @@ const Cart = ({ cart }) => {
                                        <Accordion
                                           dataArray={[
                                              {
-                                                title: `Modifiers (${component.modifiers.length})`,
+                                                title: `Add-Ons (${component.modifiers.length})`,
                                                 content: (
                                                    <>
                                                       {component.modifiers.map(
@@ -422,7 +422,7 @@ const Cart = ({ cart }) => {
                               <Accordion
                                  dataArray={[
                                     {
-                                       title: `Modifiers (${product.modifiers.length})`,
+                                       title: `Add-Ons (${product.modifiers.length})`,
                                        content: (
                                           <>
                                              {product.modifiers.map(
