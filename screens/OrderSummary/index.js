@@ -97,6 +97,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                </TouchableOpacity>
             </View>
          )}
+         <DrawerLayout />
       </SafeAreaView>
    )
 }
@@ -520,7 +521,6 @@ const Cart = ({ cart }) => {
             <CartFooterText>TO PAY</CartFooterText>
             <CartFooterText>$ {cart.totalPrice}</CartFooterText>
          </CartFooter>
-         <DrawerLayout />
       </StyledCart>
    )
 }
