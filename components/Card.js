@@ -15,6 +15,7 @@ import { useCartContext } from '../context/cart'
 import { useMutation } from '@apollo/react-hooks'
 import { UPDATE_CART, CREATE_CART } from '../graphql'
 import { AsyncStorage } from 'react-native-web'
+import { useStoreToast } from '../utils'
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [busy, setBusy] = useState(false)
@@ -28,17 +29,21 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const { open } = useDrawerContext()
    const [isHovered, setIsHovered] = React.useState(false)
 
+   const { toastr } = useStoreToast()
+
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
          console.log('Product added!')
          setBusy(false)
+         toastr('success', 'Item added!')
          if (!customer) {
             setCart(data.updateCart.returning[0])
          }
       },
       onError: error => {
          console.log(error)
+         toastr('error', error.message)
          setBusy(false)
       },
    })
@@ -46,6 +51,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
       onCompleted: data => {
          console.log('Cart created!')
          setBusy(false)
+         toastr('success', 'Item added!')
          if (!customer) {
             AsyncStorage.setItem('PENDING_CART_ID', data.createCart.id)
             setCart(data.createCart)
@@ -53,6 +59,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
       },
       onError: error => {
          console.log(error)
+         toastr('error', error.message)
          setBusy(false)
       },
    })
