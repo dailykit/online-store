@@ -8,7 +8,6 @@ import { styles } from './styles'
 import { Header } from '../../components'
 import { useAppContext } from '../../context/app'
 import AppSkeleton from '../../components/skeletons/app'
-import DrawerLayout from '../../components/DrawerLayout'
 import Auth from '../../components/error/Auth'
 import PlatformError from '../../components/error/PlatformError'
 
@@ -146,7 +145,6 @@ export default ({ navigation }) => {
         </TouchableOpacity> */}
             </ScrollView>
          </View>
-         <DrawerLayout />
       </View>
    )
 }

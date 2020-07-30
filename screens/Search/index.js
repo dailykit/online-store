@@ -18,7 +18,6 @@ import { Card } from '../../components'
 import CardSkeleton from '../../components/skeletons/card'
 import CheckoutBar from '../../components/CheckoutBar'
 import AppSkeleton from '../../components/skeletons/app'
-import DrawerLayout from '../../components/DrawerLayout'
 
 const Search = ({ navigation }) => {
    const { menuData, masterLoading } = useAppContext()
@@ -183,7 +182,6 @@ const Search = ({ navigation }) => {
                )}
             </ProductsContainer>
          </Wrapper>
-         <DrawerLayout />
          {width < 768 && <CheckoutBar navigation={navigation} />}
       </View>
    )

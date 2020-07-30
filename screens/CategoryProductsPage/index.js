@@ -9,7 +9,6 @@ import Footer from '../../components/Footer'
 import CheckoutBar from '../../components/CheckoutBar'
 import AppSkeleton from '../../components/skeletons/app'
 import { useAppContext } from '../../context/app'
-import DrawerLayout from '../../components/DrawerLayout'
 
 const CategoryProductsPage = ({ navigation, route }) => {
    const { data, category } = route.params
@@ -68,7 +67,6 @@ const CategoryProductsPage = ({ navigation, route }) => {
             />
             <Footer />
          </ScrollView>
-         <DrawerLayout />
          {width < 768 && <CheckoutBar navigation={navigation} />}
       </>
    )

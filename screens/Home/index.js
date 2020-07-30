@@ -15,7 +15,6 @@ import {
 import { Header, Icon } from '../../components'
 import Cart from '../../components/Cart'
 import { CategoryBanner } from '../../components/CategoryBanner'
-import DrawerLayout from '../../components/DrawerLayout'
 import Products from '../../components/Products'
 import { SafetyBanner } from '../../components/SafetyBanner'
 import { useAppContext } from '../../context/app'
@@ -270,7 +269,6 @@ const Home = props => {
             <View style={styles.headerContainer}>
                <SafetyBanner {...props} />
             </View>
-            <DrawerLayout />
             <Footer />
          </ScrollView>
          {width < 768 && <CheckoutBar navigation={props.navigation} />}

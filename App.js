@@ -40,6 +40,8 @@ import { Spinner } from 'native-base'
 import { ThemeProvider } from 'styled-components'
 import { ToastProvider } from 'react-native-styled-toast'
 
+import DrawerLayout from './components/DrawerLayout'
+
 const httpLink = new HttpLink({
    uri: HASURA_URL,
 })
@@ -191,6 +193,7 @@ const App = () => {
                                           <DrawerContextProvider>
                                              <CartContextProvider>
                                                 <Screens />
+                                                <DrawerLayout />
                                              </CartContextProvider>
                                           </DrawerContextProvider>
                                        </AppContextProvider>

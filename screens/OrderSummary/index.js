@@ -97,7 +97,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                </TouchableOpacity>
             </View>
          )}
-         <DrawerLayout />
       </SafeAreaView>
    )
 }

@@ -12,7 +12,6 @@ import { Header } from '../../components'
 import OrderCard from '../../components/OrderCard'
 import { useAppContext } from '../../context/app'
 import AppSkeleton from '../../components/skeletons/app'
-import DrawerLayout from '../../components/DrawerLayout'
 import Auth from '../../components/error/Auth'
 import PlatformError from '../../components/error/PlatformError'
 
@@ -86,7 +85,6 @@ export default ({ navigation }) => {
                   ))}
             </ScrollView>
          </View>
-         <DrawerLayout />
       </View>
    )
 }

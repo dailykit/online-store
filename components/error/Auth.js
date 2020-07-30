@@ -4,7 +4,6 @@ import styled from 'styled-components/native'
 import { width } from '../../utils/Scalaing'
 import Header from '../Header'
 import { useAppContext } from '../../context/app'
-import DrawerLayout from '../DrawerLayout'
 import { useDrawerContext } from '../../context/drawer'
 
 const Auth = ({ navigation }) => {
@@ -29,7 +28,6 @@ const Auth = ({ navigation }) => {
                </CTAContainer>
             </Wrapper>
          </View>
-         <DrawerLayout />
       </>
    )
 }

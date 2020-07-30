@@ -16,7 +16,6 @@ import Header from '../../components/Header'
 import { Drawer } from '../../components/Drawer'
 import CheckoutBar from '../../components/CheckoutBar'
 import AppSkeleton from '../../components/skeletons/app'
-import DrawerLayout from '../../components/DrawerLayout'
 
 const Recipe = ({ route, navigation }) => {
    let { recipeId, refId, refType } = route.params
@@ -348,7 +347,6 @@ const Recipe = ({ route, navigation }) => {
                   </View>
                )}
             </View>
-            <DrawerLayout />
          </ScrollView>
          {width < 768 && <CheckoutBar navigation={navigation} />}
       </>
