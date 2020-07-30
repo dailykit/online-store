@@ -407,6 +407,8 @@ function AppStack(props) {
             },
          }}
          initialRouteName="Home"
+         lazy={true}
+         removeClippedSubviews={true}
       >
          <Stack.Screen
             name="Home"
