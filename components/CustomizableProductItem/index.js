@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native'
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed'
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded'
+import { priceSort } from '../../utils'
 
 const CustomizableProductItem = ({
    isSelected,
@@ -74,7 +75,9 @@ const CustomizableProductItem = ({
          if (product.customizableProductOptions[0]?.inventoryProduct !== null) {
             default_product =
                product?.customizableProductOptions[0]?.inventoryProduct
-            _default_option = default_product.inventoryProductOptions[0]
+            _default_option =
+               default_product.defaultInventoryProductOption ||
+               default_product.inventoryProductOptions.sort(priceSort)[0]
             _type = 'inventoryProduct'
          }
          if (
@@ -82,7 +85,9 @@ const CustomizableProductItem = ({
          ) {
             default_product =
                product?.customizableProductOptions[0]?.simpleRecipeProduct
-            _default_option = default_product.simpleRecipeProductOptions[0]
+            _default_option =
+               default_product.defaultSimpleRecipeProductOption ||
+               default_product.simpleRecipeProductOptions.sort(priceSort)[0]
             _type = 'simpleRecipeProduct'
          }
          let objToAddToCart = {

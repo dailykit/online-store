@@ -7,6 +7,7 @@ import ServingSelect from '../ServingSelect'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
 import Modifiers from '../Modifiers'
+import { priceSort } from '../../utils'
 
 const SimpleProductItemCollapsed = ({
    navigation,
@@ -21,20 +22,16 @@ const SimpleProductItemCollapsed = ({
    onModifersSelected,
    onValidityChange,
 }) => {
-   const [typeSelected, setTypeSelected] = useState(
-      simpleRecipeProduct.defaultSimpleRecipeProductOption?.type ||
-         simpleRecipeProduct.simpleRecipeProductOptions[0].type
-   )
-   const [selectedOption, setSelectedOption] = useState(
-      simpleRecipeProduct.defaultSimpleRecipeProductOption ||
-         simpleRecipeProduct.simpleRecipeProductOptions[0]
-   )
+   const [typeSelected, setTypeSelected] = useState('')
+   const [selectedOption, setSelectedOption] = useState(undefined)
    const [servingIndex, setServingIndex] = useState(0)
 
    React.useEffect(() => {
       const op =
          simpleRecipeProduct.defaultSimpleRecipeProductOption ||
-         simpleRecipeProduct.simpleRecipeProductOptions[0]
+         simpleRecipeProduct.simpleRecipeProductOptions.sort(priceSort)[0]
+      setSelectedOption(op)
+      setTypeSelected(op.type)
       const index = simpleRecipeProduct.simpleRecipeProductOptions
          .filter(option => option.type === op.type)
          .findIndex(option => option.id === op.id)
@@ -136,7 +133,7 @@ const SimpleProductItemCollapsed = ({
                         >
                            {tunnelItem
                               ? simpleRecipeProduct.simpleRecipe.cuisine
-                              : selectedOption.type === 'mealKit'
+                              : selectedOption?.type === 'mealKit'
                               ? 'Meal Kit'
                               : 'Ready to Eat'}
                         </Text>
@@ -152,7 +149,8 @@ const SimpleProductItemCollapsed = ({
                            {tunnelItem
                               ? simpleRecipeProduct.simpleRecipe.author
                               : 'x' +
-                                selectedOption.simpleRecipeYield.yield.serving}
+                                selectedOption?.simpleRecipeYield?.yield
+                                   ?.serving}
                         </Text>
                      </View>
                   </View>

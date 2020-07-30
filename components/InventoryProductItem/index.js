@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import InventoryProductCollapsed from './InventoryProductItemCollapsed'
+import { priceSort } from '../../utils'
 
 const InventoryProductItem = ({
    _id,
@@ -43,14 +44,9 @@ const InventoryProductItem = ({
    }
 
    useEffect(() => {
-      if (
-         product?.inventoryProductOptions === undefined ||
-         !product?.inventoryProductOptions[0]
-      )
-         return
       const option =
          product.defaultInventoryProductOption ||
-         product.inventoryProductOptions[0]
+         product.inventoryProductOptions.sort(priceSort)[0]
       let objToPush = {
          id: product?.id,
          name: product?.name,

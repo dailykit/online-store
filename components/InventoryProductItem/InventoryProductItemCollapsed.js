@@ -5,6 +5,7 @@ import { styles } from './styles'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
 import Modifiers from '../Modifiers'
+import { priceSort } from '../../utils'
 
 const InventoryProductCollapsed = ({
    data: inventoryProduct,
@@ -21,10 +22,7 @@ const InventoryProductCollapsed = ({
    const { visual } = useAppContext()
 
    const [servingIndex, setServingIndex] = useState(0)
-   const [selectedOption, setSelectedOption] = useState(
-      inventoryProduct.defaultInventoryProductOption ||
-         inventoryProduct.inventoryProductOptions[0]
-   )
+   const [selectedOption, setSelectedOption] = useState(undefined)
    if (!inventoryProduct) {
       return <Text>Bad Data</Text>
    }
@@ -32,7 +30,8 @@ const InventoryProductCollapsed = ({
    React.useEffect(() => {
       const option =
          inventoryProduct.defaultInventoryProductOption ||
-         inventoryProduct.inventoryProductOptions[0]
+         inventoryProduct.inventoryProductOptions.sort(priceSort)[0]
+      setSelectedOption(option)
       const index = inventoryProduct.inventoryProductOptions.findIndex(
          op => op.id === option.id
       )
@@ -130,7 +129,7 @@ const InventoryProductCollapsed = ({
                            numberOfLines={1}
                            ellipsizeMode="tail"
                         >
-                           {selectedOption.label}
+                           {selectedOption?.label}
                         </Text>
                      )}
                      <Text

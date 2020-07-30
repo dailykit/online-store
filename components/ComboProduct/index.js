@@ -9,6 +9,7 @@ import { useAppContext } from '../../context/app'
 import Carousel from 'react-native-banner-carousel'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Feather } from '@expo/vector-icons'
+import { priceSort } from '../../utils'
 
 const ComboProduct = ({
    tunnelItem,
@@ -69,16 +70,18 @@ const ComboProduct = ({
             price =
                price +
                parseFloat(
-                  product.inventoryProduct.inventoryProductOptions[0].price[0]
-                     .value
+                  product.inventoryProduct.inventoryProductOptions.sort(
+                     priceSort
+                  )[0].price[0].value
                )
          }
          if (product.simpleRecipeProductId !== null) {
             price =
                price +
                parseFloat(
-                  product.simpleRecipeProduct.simpleRecipeProductOptions[0]
-                     .price[0].value
+                  product.simpleRecipeProduct.simpleRecipeProductOptions.sort(
+                     priceSort
+                  )[0].price[0].value
                )
          }
          if (product.customizableProductId !== null) {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed'
+import { priceSort } from '../../utils'
 
 const SimpleProductItem = ({
    _id,
@@ -55,7 +56,7 @@ const SimpleProductItem = ({
       if (product) {
          const option =
             product.defaultSimpleRecipeProductOption ||
-            product.simpleRecipeProductOptions[0]
+            product.simpleRecipeProductOptions.sort(priceSort)[0]
          let objToPush = {
             id: product.id,
             name: product.name,

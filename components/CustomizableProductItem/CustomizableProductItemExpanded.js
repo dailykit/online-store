@@ -8,6 +8,7 @@ import { stylesExpanded as styles } from './styles'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
 import Modifiers from '../Modifiers'
+import { priceSort } from '../../utils'
 const Item = ({
    _id,
    navigation,
@@ -438,15 +439,11 @@ const Item = ({
                                        },
                                     ]}
                                  >
-                                    {inventoryProduct?.inventoryProductOptions[0]?.label
-                                       ?.substr(0, 1)
-                                       .toUpperCase() +
-                                       inventoryProduct?.inventoryProductOptions[0]?.label?.substr(
-                                          1,
-                                          inventoryProduct
-                                             ?.inventoryProductOptions[0]?.label
-                                             ?.length - 1
-                                       )}
+                                    {
+                                       inventoryProduct?.inventoryProductOptions.sort(
+                                          priceSort
+                                       )[0]?.label
+                                    }
                                  </Text>
                               )}
                               <Text

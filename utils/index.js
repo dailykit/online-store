@@ -11,6 +11,14 @@ export function uuid() {
    })
 }
 
+export const priceSort = (item1, item2) => {
+   if (item1.price[0].value > item2.price[0].value) {
+      return 1
+   } else {
+      return -1
+   }
+}
+
 export const useStoreToast = () => {
    const { toast } = useToast()
 
