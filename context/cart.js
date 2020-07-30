@@ -54,10 +54,10 @@ export const CartContextProvider = ({ children }) => {
                   id: cart.id,
                   set: {
                      customerInfo: {
-                        customerFirstName: saved.data.firstName,
-                        customerLastName: saved.data.lastName,
-                        customerPhone: saved.data.phoneNumber,
-                        customerEmail: saved.data.email,
+                        customerFirstName: saved.data.customerInfo.firstName,
+                        customerLastName: saved.data.customerInfo.lastName,
+                        customerPhone: saved.data.customerInfo.phoneNumber,
+                        customerEmail: saved.data.customerInfo.email,
                      },
                   },
                },
