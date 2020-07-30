@@ -500,7 +500,9 @@ export const SIMPLE_PRODUCT = gql`
 
 export const INVENTORY_PRODUCTS = gql`
    query InventoryProducts($ids: [Int!]!) {
-      inventoryProducts(where: { id: { _in: $ids } }) {
+      inventoryProducts(
+         where: { id: { _in: $ids }, isPublished: { _eq: true } }
+      ) {
          id
          assets
          default
@@ -545,7 +547,9 @@ export const INVENTORY_PRODUCTS = gql`
 
 export const SIMPLE_RECIPE_PRODUCTS = gql`
    query SimpleRecipeProducts($ids: [Int!]!) {
-      simpleRecipeProducts(where: { id: { _in: $ids } }) {
+      simpleRecipeProducts(
+         where: { id: { _in: $ids }, isPublished: { _eq: true } }
+      ) {
          id
          name
          default
@@ -592,7 +596,9 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
 
 export const CUSTOMIZABLE_PRODUCTS = gql`
    query CustomizableProducts($ids: [Int!]!) {
-      customizableProducts(where: { id: { _in: $ids } }) {
+      customizableProducts(
+         where: { id: { _in: $ids }, isPublished: { _eq: true } }
+      ) {
          id
          name
          isPopupAllowed
@@ -685,7 +691,7 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
 
 export const COMBO_PRODUCTS = gql`
    query ComboProducts($ids: [Int!]!) {
-      comboProducts(where: { id: { _in: $ids } }) {
+      comboProducts(where: { id: { _in: $ids }, isPublished: { _eq: true } }) {
          id
          name
          isPopupAllowed
@@ -883,6 +889,7 @@ export const SEARCH_PRODUCTS = gql`
                      { name: { _ilike: $name } }
                      { tags: { _contains: $tag } }
                   ]
+                  isPublished: { _eq: true }
                }
             ]
          }
@@ -1074,6 +1081,7 @@ export const SEARCH_PRODUCTS = gql`
                      { name: { _ilike: $name } }
                      { tags: { _contains: $tag } }
                   ]
+                  isPublished: { _eq: true }
                }
             ]
          }
@@ -1174,6 +1182,7 @@ export const SEARCH_PRODUCTS = gql`
                      { name: { _ilike: $name } }
                      { tags: { _contains: $tag } }
                   ]
+                  isPublished: { _eq: true }
                }
             ]
          }
@@ -1230,6 +1239,7 @@ export const SEARCH_PRODUCTS = gql`
                      { name: { _ilike: $name } }
                      { tags: { _contains: $tag } }
                   ]
+                  isPublished: { _eq: true }
                }
             ]
          }
