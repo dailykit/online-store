@@ -1,15 +1,12 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Image } from 'react-native'
 import styled from 'styled-components/native'
 import { width } from '../../utils/Scalaing'
 import Header from '../Header'
 import { useAppContext } from '../../context/app'
-import DrawerLayout from '../DrawerLayout'
-import { useDrawerContext } from '../../context/drawer'
 
-const Auth = ({ navigation }) => {
+const PlatformError = ({ navigation }) => {
    const { visual } = useAppContext()
-   const { open } = useDrawerContext()
 
    return (
       <>
@@ -18,23 +15,31 @@ const Auth = ({ navigation }) => {
             style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
          >
             <Wrapper>
-               <Heading>The page you're trying to view requires login!</Heading>
+               <Heading>Oops! It's not you. It's us.</Heading>
                <CTAContainer>
-                  <CTA color={visual.color} onPress={() => open('Login')}>
-                     <CTAText color={visual.color}>Login</CTAText>
+                  <CTA
+                     color={visual.color}
+                     onPress={() => window.location.reload()}
+                     highlight
+                  >
+                     <CTAText highlight color={visual.color}>
+                        Reload
+                     </CTAText>
                   </CTA>
-                  <CTA color={visual.color} onPress={() => open('Register')}>
-                     <CTAText color={visual.color}>Register</CTAText>
+                  <CTA
+                     color={visual.color}
+                     onPress={() => navigation.navigate('Home')}
+                  >
+                     <CTAText color={visual.color}>Back to Home</CTAText>
                   </CTA>
                </CTAContainer>
             </Wrapper>
          </View>
-         <DrawerLayout />
       </>
    )
 }
 
-export default Auth
+export default PlatformError
 
 const Wrapper = styled.View`
    padding: ${width > 768 ? '1.2rem' : '0.8rem'};
@@ -51,6 +56,7 @@ const Heading = styled.Text`
    color: #666;
    font-size: 1.2rem;
    margin-bottom: 1rem;
+   text-align: center;
 `
 
 const CTAContainer = styled.View`
@@ -61,12 +67,13 @@ const CTAContainer = styled.View`
 
 const CTA = styled.TouchableOpacity`
    padding: 8px;
-   background-color: #fff;
+   background-color: ${props =>
+      props.highlight ? props.color || '#efefef' : '#fff'};
    border: 1px solid ${props => props.color || '#efefef'};
    border-radius: 2px;
    margin: 8px;
 `
 
 const CTAText = styled.Text`
-   color: ${props => props.color || '#666'};
+   color: ${props => (props.highlight ? '#fff' : props.color || '#666')};
 `

@@ -10,6 +10,7 @@ import { useAppContext } from '../../context/app'
 import AppSkeleton from '../../components/skeletons/app'
 import DrawerLayout from '../../components/DrawerLayout'
 import Auth from '../../components/error/Auth'
+import PlatformError from '../../components/error/PlatformError'
 
 export default ({ navigation }) => {
    const { customer, customerDetails } = useCartContext()
@@ -20,8 +21,12 @@ export default ({ navigation }) => {
       return <AppSkeleton />
    }
 
-   if (!customer) {
-      return <Auth navigation={navigation} />
+   // if (!customer) {
+   //    return <Auth navigation={navigation} />
+   // }
+
+   if (!customerDetails) {
+      return <PlatformError navigation={navigation} />
    }
 
    return (
