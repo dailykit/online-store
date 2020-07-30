@@ -17,11 +17,12 @@ import * as moment from 'moment'
 
 import restaurant from '../../assets/imgs/restaurant @1x.png'
 import AppSkeleton from '../../components/skeletons/app'
+import Auth from '../../components/error/Auth'
 
 const Order = ({ route, navigation }) => {
    const { orderId } = route.params
 
-   const { cart } = useCartContext()
+   const { cart, customer } = useCartContext()
    const { visual, brand, masterLoading } = useAppContext()
 
    // Subscription
@@ -36,6 +37,10 @@ const Order = ({ route, navigation }) => {
 
    if (masterLoading) {
       return <AppSkeleton />
+   }
+
+   if (!customer) {
+      return <Auth navigation={navigation} />
    }
 
    return (

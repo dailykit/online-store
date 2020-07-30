@@ -21,9 +21,9 @@ export default ({ navigation }) => {
       return <AppSkeleton />
    }
 
-   // if (!customer) {
-   //    return <Auth navigation={navigation} />
-   // }
+   if (!customer) {
+      return <Auth navigation={navigation} />
+   }
 
    if (!customerDetails) {
       return <PlatformError navigation={navigation} />

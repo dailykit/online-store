@@ -13,9 +13,11 @@ import OrderCard from '../../components/OrderCard'
 import { useAppContext } from '../../context/app'
 import AppSkeleton from '../../components/skeletons/app'
 import DrawerLayout from '../../components/DrawerLayout'
+import Auth from '../../components/error/Auth'
+import PlatformError from '../../components/error/PlatformError'
 
 export default ({ navigation }) => {
-   const { customer } = useCartContext()
+   const { customer, customerDetails } = useCartContext()
    const { masterLoading } = useAppContext()
 
    // Query
@@ -27,6 +29,14 @@ export default ({ navigation }) => {
 
    if (masterLoading) {
       return <AppSkeleton />
+   }
+
+   if (!customer) {
+      return <Auth navigation={navigation} />
+   }
+
+   if (!customerDetails) {
+      return <PlatformError navigation={navigation} />
    }
 
    if (loading) {
