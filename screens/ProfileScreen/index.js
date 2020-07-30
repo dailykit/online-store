@@ -9,14 +9,19 @@ import { Header } from '../../components'
 import { useAppContext } from '../../context/app'
 import AppSkeleton from '../../components/skeletons/app'
 import DrawerLayout from '../../components/DrawerLayout'
+import Auth from '../../components/error/Auth'
 
 export default ({ navigation }) => {
-   const { customerDetails } = useCartContext()
+   const { customer, customerDetails } = useCartContext()
    const { open } = useDrawerContext()
    const { masterLoading } = useAppContext()
 
    if (masterLoading) {
       return <AppSkeleton />
+   }
+
+   if (!customer) {
+      return <Auth navigation={navigation} />
    }
 
    return (
