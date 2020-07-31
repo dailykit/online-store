@@ -60,7 +60,7 @@ const CTAContainer = styled.View`
 const CTA = styled.TouchableOpacity`
    padding: 8px;
    background-color: #fff;
-   border: 1px solid ${props => props.color || '#efefef'};
+   border: 1px solid ${props => props.color || '#E9ECEE'};
    border-radius: 2px;
    margin: 8px;
 `

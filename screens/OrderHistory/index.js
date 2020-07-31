@@ -61,7 +61,7 @@ export default ({ navigation }) => {
    }
 
    return (
-      <View style={{ backgroundColor: '#fff', flex: 1 }}>
+      <View style={{ backgroundColor: '#E9ECEE', flex: 1 }}>
          <Header title="Home" navigation={navigation} />
          <View style={styles.outerContainer}>
             <Text style={styles.heading}>Order History</Text>

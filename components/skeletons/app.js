@@ -59,7 +59,7 @@ export default AppSkeleton
 
 const Wrapper = styled.View`
    flex: 1;
-   background: #efefef;
+   background: #e9ecee;
 `
 
 const Header = styled.View`
@@ -75,7 +75,7 @@ const Logo = styled.View`
    height: 50px;
    width: 50px;
    border-radius: 25px;
-   background-color: #efefef;
+   background-color: #e9ecee;
 `
 
 const NavLinks = styled.View`
@@ -88,7 +88,7 @@ const NavLink = styled.View`
    height: 40px;
    width: 100px;
    border-radius: 4px;
-   background-color: #efefef;
+   background-color: #e9ecee;
 `
 
 const Body = styled.View``

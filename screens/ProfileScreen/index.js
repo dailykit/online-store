@@ -29,7 +29,7 @@ export default ({ navigation }) => {
    // }
 
    return (
-      <View style={{ backgroundColor: '#fff', height: '100%' }}>
+      <View style={{ backgroundColor: '#E9ECEE', height: '100%' }}>
          <Header title="Home" navigation={navigation} />
          <View style={styles.container}>
             <View style={styles.userDetailsContainer}>

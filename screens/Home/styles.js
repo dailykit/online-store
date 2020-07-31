@@ -9,7 +9,7 @@ export const styles = EStyleSheet.create({
    reallyBigContainer: {
       width: width,
       marginHorizontal: 'auto',
-      backgroundColor: '#eaeded',
+      backgroundColor: '#E9ECEE',
       position: 'relative',
    },
    cover_image: {
