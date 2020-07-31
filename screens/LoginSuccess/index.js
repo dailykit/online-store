@@ -7,10 +7,13 @@ import { Feather } from '@expo/vector-icons'
 const LoginSuccess = () => {
    const sendMessage = () => {
       if (window) {
-         window.parent.postMessage({
-            loginSuccess: true,
-            message: 'Login successful!',
-         })
+         window.parent.postMessage(
+            {
+               loginSuccess: true,
+               message: 'Login successful!',
+            },
+            '*'
+         )
       }
    }
 
