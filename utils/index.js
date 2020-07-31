@@ -19,6 +19,10 @@ export const priceSort = (item1, item2) => {
    }
 }
 
+export const discountedPrice = ({ value, discount }) => {
+   return parseFloat((value - value * (discount / 100)).toFixed(2))
+}
+
 export const useStoreToast = () => {
    const { toast } = useToast()
 

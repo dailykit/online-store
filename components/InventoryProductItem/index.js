@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import InventoryProductCollapsed from './InventoryProductItemCollapsed'
-import { priceSort } from '../../utils'
+import { priceSort, discountedPrice } from '../../utils'
 
 const InventoryProductItem = ({
    _id,
@@ -65,7 +65,7 @@ const InventoryProductItem = ({
       }
       setobjToAdd(objToPush)
       if (!tunnelItem && independantItem) {
-         setPrice(option?.price[0]?.value)
+         setPrice(discountedPrice(option.price[0]))
          setcardData(product)
       }
       if (tunnelItem && isSelected) {
