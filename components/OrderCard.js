@@ -227,14 +227,14 @@ const OrderCard = ({ order, less }) => {
                                        }
                                     </Text>
                                  </View>
-                                 <Text style={styles.productPrice}>
-                                    ${' '}
-                                    {
-                                       product.simpleRecipeProductOption
-                                          .price[0].value
-                                    }
-                                 </Text>
                               </View>
+                              <Text style={styles.productPrice}>
+                                 ${' '}
+                                 {
+                                    product.simpleRecipeProductOption.price[0]
+                                       .value
+                                 }
+                              </Text>
                            </View>
                         ))}
                      </View>
