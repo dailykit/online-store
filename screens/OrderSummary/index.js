@@ -517,7 +517,9 @@ const Cart = ({ cart }) => {
             <CartBillingHeading>Bill Details</CartBillingHeading>
             <CartBillingDetail>
                <CartBillingDetailText>Item Total</CartBillingDetailText>
-               <CartBillingDetailText>$ {cart.itemTotal}</CartBillingDetailText>
+               <CartBillingDetailText>
+                  $ {cart.itemTotal.toFixed(2)}
+               </CartBillingDetailText>
             </CartBillingDetail>
             <CartBillingDetail>
                <CartBillingDetailText>Delivery Fee</CartBillingDetailText>
@@ -534,7 +536,7 @@ const Cart = ({ cart }) => {
          <Divider color="#282c3f" height="2px" />
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
-            <CartFooterText>$ {cart.totalPrice}</CartFooterText>
+            <CartFooterText>$ {cart.totalPrice.toFixed(2)}</CartFooterText>
          </CartFooter>
       </StyledCart>
    )
