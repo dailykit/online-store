@@ -137,32 +137,46 @@ const Checkout = ({ cart, navigation }) => {
                      </CTAContainer>
                   </>
                ) : (
-                  <CustomerDetails>
-                     <View>
-                        <CustomerName>{`${
-                           cart.customerInfo?.customerFirstName || ''
-                        } ${
-                           cart.customerInfo?.customerLastName || ''
-                        }`}</CustomerName>
-                        <CustomerPhone>{`Phone: ${
-                           cart.customerInfo?.customerPhone || '-'
-                        }`}</CustomerPhone>
-                        <CustomerEmail>{`Email: ${
-                           cart.customerInfo?.customerEmail || '-'
-                        }`}</CustomerEmail>
-                     </View>
-                     <TouchableOpacity
-                        onPress={() =>
-                           open('AddDetails', { path: 'profile/create' })
-                        }
-                     >
-                        <Feather
-                           name="edit"
-                           size={width > 768 ? 24 : 16}
-                           color="#93959F"
-                        />
-                     </TouchableOpacity>
-                  </CustomerDetails>
+                  <>
+                     {cart.customerInfo?.customerFirstName ? (
+                        <CustomerDetails>
+                           <View>
+                              <CustomerName>{`${
+                                 cart.customerInfo?.customerFirstName || ''
+                              } ${
+                                 cart.customerInfo?.customerLastName || ''
+                              }`}</CustomerName>
+                              <CustomerPhone>{`Phone: ${
+                                 cart.customerInfo?.customerPhone || '-'
+                              }`}</CustomerPhone>
+                              <CustomerEmail>{`Email: ${
+                                 cart.customerInfo?.customerEmail || '-'
+                              }`}</CustomerEmail>
+                           </View>
+                           <TouchableOpacity
+                              onPress={() =>
+                                 open('AddDetails', { path: 'profile/create' })
+                              }
+                           >
+                              <Feather
+                                 name="edit"
+                                 size={width > 768 ? 24 : 16}
+                                 color="#93959F"
+                              />
+                           </TouchableOpacity>
+                        </CustomerDetails>
+                     ) : (
+                        <BasicDetailsCTA
+                           onPress={() =>
+                              open('AddDetails', { path: 'profile/create' })
+                           }
+                        >
+                           <BasicDetailsCTAText>
+                              Add your Info
+                           </BasicDetailsCTAText>
+                        </BasicDetailsCTA>
+                     )}
+                  </>
                )}
             </CheckoutSectionContent>
          </CheckoutSection>
@@ -584,6 +598,23 @@ const Button = styled.TouchableOpacity`
 const ButtonText = styled.Text`
    color: ${props => props.color || '#60b246'};
    font-weight: 500;
+`
+
+const BasicDetailsCTA = styled.TouchableOpacity`
+   width: 100%:
+   background-color: #fff;
+   align-items: center;
+   justify-content: center;
+   shadow-opacity: 0.75;
+   shadow-radius: 5px;
+   shadow-color: #ccc;
+   shadow-offset: 1px 1px;
+   border-radius: 2px;
+`
+
+const BasicDetailsCTAText = styled.Text`
+   color: #666;
+   margin: 12px auto;
 `
 
 const CustomerDetails = styled.View`

@@ -65,7 +65,7 @@ export const AuthProvider = ({ children }) => {
             if (e.origin !== window.origin) return
             try {
                if (e.data.loginSuccess) {
-                  window.location.reload()
+                  initialize()
                }
             } catch (error) {}
          })
