@@ -5,10 +5,6 @@ import { useAuth } from '../../context/auth'
 const Keycloak = ({ type }) => {
    const { loginUrl, registerUrl } = useAuth()
 
-   React.useEffect(() => {
-      console.log('Screen openend')
-   }, [])
-
    return (
       <View style={{ height: '100%' }}>
          <iframe
@@ -16,6 +12,7 @@ const Keycloak = ({ type }) => {
             title="Add Details"
             height={600}
             frameBorder="0"
+            rel="preload"
          ></iframe>
       </View>
    )
