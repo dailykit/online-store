@@ -341,9 +341,11 @@ const Cart = ({ cart }) => {
    return (
       <StyledCart>
          <CartHeader>
-            <CartHeaderTextLeft>Total Items</CartHeaderTextLeft>
+            <CartHeaderTextLeft>Total</CartHeaderTextLeft>
             <CartHeaderTextRight>
-               {cart.cartInfo.products.length}
+               {`${cart.cartInfo.products.length} Item${
+                  cart.cartInfo.products.length > 1 ? 's' : ''
+               }`}
             </CartHeaderTextRight>
          </CartHeader>
          <CartItems>
@@ -553,10 +555,10 @@ const StyledCheckout = styled.View`
 
 const CheckoutSection = styled.View`
    position: relative;
-   margin-left: ${width > 768 ? '25px' : '0px'};
+   margin-left: ${width > 768 ? '16px' : '0px'};
    background: #fff;
    margin-bottom: ${width > 768 ? '20px' : '8px'};
-   padding: ${width > 768 ? '35px 40px 39px' : '10px'};
+   padding: ${width > 768 ? '16px 28px' : '10px'};
    border-radius: 4px;
 `
 
