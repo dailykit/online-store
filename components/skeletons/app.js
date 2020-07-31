@@ -11,7 +11,12 @@ const AppSkeleton = () => {
          Animated.sequence([
             Animated.timing(fadeAnim, {
                toValue: 1,
-               duration: 2000,
+               duration: 1000,
+               delay: 500,
+            }),
+            Animated.timing(fadeAnim, {
+               toValue: 0,
+               duration: 1000,
                delay: 500,
             }),
          ])

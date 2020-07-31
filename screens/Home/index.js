@@ -30,6 +30,7 @@ import { AsyncStorage } from 'react-native-web'
 import BottomNav from '../../components/CheckoutBar'
 import CheckoutBar from '../../components/CheckoutBar'
 import AppSkeleton from '../../components/skeletons/app'
+import MenuSkeleton from '../../components/skeletons/menu'
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
@@ -177,19 +178,7 @@ const Home = props => {
                   </Carousel>
                </View>
             )}
-            {menuLoading && (
-               <View
-                  style={{
-                     flex: 1,
-                     justifyContent: 'center',
-                     alignItems: 'center',
-                     backgroundColor: '#fff',
-                  }}
-               >
-                  <Spinner size="large" />
-               </View>
-            )}
-
+            {menuLoading && <MenuSkeleton />}
             {Boolean(menuData.length) && (
                <View style={[styles.picker_container, { marginBottom: 4 }]}>
                   <ScrollView
