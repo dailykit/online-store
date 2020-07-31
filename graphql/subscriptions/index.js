@@ -190,6 +190,7 @@ export const ORDERS = gql`
          tax
          tip
          itemTotal
+         created_at
          orderInventoryProducts {
             inventoryProduct {
                id
