@@ -36,6 +36,7 @@ export const DrawerContextProvider = ({ children }) => {
             params,
             saved,
             setSaved,
+            setDrawerView,
          }}
       >
          {children}

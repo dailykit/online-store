@@ -49,6 +49,7 @@ const AddDetails = ({ params }) => {
                height={600}
                frameBorder="0"
                rel="preload"
+               id="dailykey"
                onLoad={() => setLoading(false)}
             ></iframe>
          </ScrollView>
