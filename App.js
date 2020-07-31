@@ -41,6 +41,7 @@ import { ThemeProvider } from 'styled-components'
 import { ToastProvider } from 'react-native-styled-toast'
 
 import DrawerLayout from './components/DrawerLayout'
+import AppSkeleton from './components/skeletons/app'
 
 const httpLink = new HttpLink({
    uri: HASURA_URL,
@@ -153,13 +154,7 @@ const App = () => {
    }, [])
 
    if (isLoading) {
-      return (
-         <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-         >
-            <Spinner size="large" />
-         </View>
-      )
+      return <AppSkeleton />
    } else {
       return (
          <Suspense fallback={<Spinner size="large" />}>
