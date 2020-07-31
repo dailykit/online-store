@@ -51,6 +51,7 @@ import CategoryProductsPage from '../screens/CategoryProductsPage'
 import Recipe from '../screens/Recipe'
 import Search from '../screens/Search'
 import { useCartContext } from '../context/cart'
+import LoginSuccess from '../screens/LoginSuccess'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -62,7 +63,7 @@ const Loader = () => (
 )
 
 export default function OnboardingStack(props) {
-   const { user } = useAuth()
+   const { user, isInitialized } = useAuth()
    const { setCustomer, setCustomerDetails, setCart } = useCartContext()
    const {
       setBrand,
@@ -357,6 +358,7 @@ export default function OnboardingStack(props) {
             creatingCustomer,
             fetchingCart,
             fetchingCustomerDetails,
+            !isInitialized,
          ].some(loading => loading)
       )
    }, [
@@ -365,6 +367,7 @@ export default function OnboardingStack(props) {
       creatingCustomer,
       fetchingCart,
       fetchingCustomerDetails,
+      isInitialized,
    ])
 
    return (
@@ -413,6 +416,13 @@ function AppStack(props) {
          <Stack.Screen
             name="Home"
             component={Home}
+            options={{
+               headerShown: false,
+            }}
+         />
+         <Stack.Screen
+            name="login-success"
+            component={LoginSuccess}
             options={{
                headerShown: false,
             }}
