@@ -9,8 +9,6 @@ const AddDetails = ({ params }) => {
 
    const { setIsDrawerOpen, setSaved } = useDrawerContext()
 
-   const [loading, setLoading] = React.useState(true)
-
    React.useEffect(() => {
       let eventMethod = window.addEventListener
          ? 'addEventListener'
@@ -32,17 +30,6 @@ const AddDetails = ({ params }) => {
    return (
       <React.Fragment>
          <ScrollView style={{ height: '100%' }}>
-            {loading && (
-               <View
-                  style={{
-                     flex: 1,
-                     alignItems: 'center',
-                     justifyContent: 'center',
-                  }}
-               >
-                  <Spinner />
-               </View>
-            )}
             <iframe
                src={`${DAILYKEY_URL}/${path || ''}`}
                title="Add Details"
@@ -50,7 +37,6 @@ const AddDetails = ({ params }) => {
                frameBorder="0"
                rel="preload"
                id="dailykey"
-               onLoad={() => setLoading(false)}
             ></iframe>
          </ScrollView>
       </React.Fragment>
