@@ -13,15 +13,11 @@ export const DefaultPaymentFloater = ({ navigation }) => {
    const [card, setCard] = React.useState(undefined)
 
    React.useEffect(() => {
-      console.log('Checking card...')
       if (cart && customerDetails) {
-         console.log('Cart and cusDet presetn')
-
          const card = customerDetails.stripePaymentMethods.find(
             card => card.stripePaymentMethodId === cart.paymentMethodId
          )
          if (card) {
-            console.log('Card found')
             setCard(card)
          }
       }
