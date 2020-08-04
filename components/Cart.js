@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { Ionicons, Feather } from '@expo/vector-icons'
 import { useCartContext } from '../context/cart'
-import { uuid, useStoreToast, discountedPrice } from '../utils'
+import { uuid, useStoreToast, discountedPrice, priceSort } from '../utils'
 import { useMutation } from '@apollo/react-hooks'
 import EStyleSheet, { child } from 'react-native-extended-stylesheet'
 import { CREATE_CART, UPDATE_CART } from '../graphql/mutations'
@@ -74,9 +74,19 @@ const Cart = ({
             comboProductItems.reduce(
                (acc, product) =>
                   acc +
-                  parseFloat(product.unitPrice) +
+                  parseFloat(
+                     discountedPrice({
+                        value: product.unitPrice,
+                        discount: product.discount,
+                     })
+                  ) +
                   product.modifiers.reduce(
-                     (acc, modifier) => acc + parseFloat(modifier.price),
+                     (acc, modifier) =>
+                        acc +
+                        discountedPrice({
+                           value: modifier.price,
+                           discount: modifier.discount,
+                        }),
                      0
                   ),
                0
@@ -119,7 +129,8 @@ const Cart = ({
          if (tunnelItem) {
             if (type === 'comboProduct') {
                console.log(comboProductItems)
-               const unitPrice = comboProductItems.reduce(
+               const price = priceShown
+               const priceWithoutDiscount = comboProductItems.reduce(
                   (acc, product) =>
                      acc +
                      parseFloat(product.unitPrice) +
@@ -129,16 +140,16 @@ const Cart = ({
                      ),
                   0
                )
-               const totalPrice = parseFloat((unitPrice * quantity).toFixed(2))
+               const totalPrice = parseFloat((price * quantity).toFixed(2))
                total = total + totalPrice
                products.push({
                   cartItemId: uuid(),
                   name: product.name,
                   id: product.id,
                   components: comboProductItems,
-                  discount: 0,
+                  discount: price - priceWithoutDiscount,
                   totalPrice,
-                  unitPrice,
+                  unitPrice: price,
                   quantity,
                   type,
                   specialInstructions: '',
@@ -146,6 +157,12 @@ const Cart = ({
             } else {
                console.log('cartItem', cartItem)
                const price = priceShown
+               const priceWithoutDiscount =
+                  parseFloat(cartItem.price) +
+                  cartItem.modifiers.reduce(
+                     (acc, modifier) => acc + parseFloat(modifier.price),
+                     0
+                  )
                const item = {
                   cartItemId: uuid(),
                   type,
@@ -156,7 +173,7 @@ const Cart = ({
                      (parseFloat(price) * quantity).toFixed(2)
                   ),
                   modifiers: cartItem.modifiers,
-                  discount: cartItem.discount,
+                  discount: price - priceWithoutDiscount,
                   specialInstructions: '',
                }
                delete item.price
