@@ -14,7 +14,6 @@ import { DefaultPaymentFloater } from '../../components/DefaultFloater'
 const Summary = lazy(() => import('../../components/Summary'))
 import { useCartContext } from '../../context/cart'
 import { height, width } from '../../utils/Scalaing'
-import { styles } from './styles'
 import Header from '../../components/Header'
 import { useDrawerContext } from '../../context/drawer'
 import { useAppContext } from '../../context/app'
@@ -851,6 +850,10 @@ const CartItemPrice = styled.Text`
 const CartBilling = styled.View`
    padding: ${width > 768 ? '10px 30px' : '10px'};
    background: #fff;
+   shadow-opacity: 0.75;
+   shadow-radius: 5px;
+   shadow-color: #ccc;
+   shadow-offset: -5px 0px;
 `
 
 const CartBillingHeading = styled.Text`
