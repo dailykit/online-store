@@ -62,14 +62,14 @@ const ServingSelect = ({
                         { textDecorationLine: 'line-through' },
                      ]}
                   >
-                     $ {price}
+                     $ {price.toFixed(2)}
                   </Text>
                   <Text style={[styles.price_text, { marginLeft: 16 }]}>
-                     $ {discountedPrice({ value: price, discount })}
+                     $ {discountedPrice({ value: price, discount }).toFixed(2)}
                   </Text>
                </>
             ) : (
-               <Text style={styles.price_text}>$ {price}</Text>
+               <Text style={styles.price_text}>$ {price.toFixed(2)}</Text>
             )}
          </View>
          <View style={styles.servingSelectContainer_three}>
