@@ -147,7 +147,7 @@ const Cart = ({
                   name: product.name,
                   id: product.id,
                   components: comboProductItems,
-                  discount: price - priceWithoutDiscount,
+                  discount: priceWithoutDiscount - price,
                   totalPrice,
                   unitPrice: price,
                   quantity,
@@ -173,7 +173,7 @@ const Cart = ({
                      (parseFloat(price) * quantity).toFixed(2)
                   ),
                   modifiers: cartItem.modifiers,
-                  discount: price - priceWithoutDiscount,
+                  discount: priceWithoutDiscount - price,
                   specialInstructions: '',
                }
                delete item.price
