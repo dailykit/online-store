@@ -2,6 +2,7 @@ import { Feather, MaterialIcons } from '@expo/vector-icons'
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppContext } from '../context/app'
+import { discountedPrice } from '../utils'
 
 const ServingSelect = ({
    index,
@@ -9,14 +10,8 @@ const ServingSelect = ({
    setServingIndex,
    size,
    price,
-   display,
-   type,
-   id,
+   discount,
    setProductOption,
-   customizableProduct,
-   simpleRecipeProductId,
-   name,
-   typeSelected,
    setSelectedOption,
 }) => {
    const { visual } = useAppContext()
@@ -49,7 +44,23 @@ const ServingSelect = ({
             </Text>
          </View>
          <View style={styles.servingSelectContainer_two}>
-            <Text style={styles.price_text}>$ {price}</Text>
+            {discount ? (
+               <>
+                  <Text
+                     style={[
+                        styles.price_text,
+                        { textDecorationLine: 'line-through' },
+                     ]}
+                  >
+                     $ {price}
+                  </Text>
+                  <Text style={[styles.price_text, { marginLeft: 16 }]}>
+                     $ {discountedPrice({ price, discount })}
+                  </Text>
+               </>
+            ) : (
+               <Text style={styles.price_text}>$ {price}</Text>
+            )}
          </View>
          <View style={styles.servingSelectContainer_three}>
             {isSelected && (
@@ -92,6 +103,7 @@ const styles = StyleSheet.create({
    },
    servingSelectContainer_two: {
       flex: 2,
+      flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
    },
