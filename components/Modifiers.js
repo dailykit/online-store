@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { CheckBox } from 'react-native-elements'
 import { useAppContext } from '../context/app'
+import { discountedPrice } from '../utils'
 
 const Modifiers = ({ data, onModifersSelected, onValidityChange }) => {
    const { visual } = useAppContext()
@@ -124,7 +125,14 @@ const Modifiers = ({ data, onModifersSelected, onValidityChange }) => {
                </CategoryName>
                {category.options.map(option => (
                   <CheckBox
-                     title={`${option.name} $${option.price}`}
+                     title={`${option.name} $${
+                        option.discount
+                           ? discountedPrice({
+                                value: option.price,
+                                discount: option.discount,
+                             }).toFixed(2)
+                           : option.price
+                     }`}
                      checked={Boolean(
                         selected.find(
                            modifier =>
