@@ -34,7 +34,7 @@ const SimpleProductItem = ({
             serving: option.simpleRecipeYield.yield.serving,
          },
          price: parseFloat(option.price[0].value),
-         discount: option.price[0].discount,
+         discount: parseFloat(option.price[0].discount),
          modifiers: [],
       })
       setcartItem({
@@ -45,7 +45,7 @@ const SimpleProductItem = ({
             serving: option.simpleRecipeYield.yield.serving,
          },
          price: parseFloat(option.price[0].value),
-         discount: option.price[0].discount,
+         discount: parseFloat(option.price[0].discount),
          modifiers: [],
       })
    }
@@ -63,8 +63,8 @@ const SimpleProductItem = ({
          let objToPush = {
             id: product.id,
             name: product.name,
-            price: option?.price[0].value,
-            discount: option.price[0].discount,
+            price: parseFloat(option?.price[0].value),
+            discount: parseFloat(option.price[0].discount),
             image: product.assets?.images[0],
             option: {
                id: option?.id, // product option id

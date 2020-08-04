@@ -3,6 +3,7 @@ import { Text } from 'react-native'
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed'
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded'
 import { priceSort } from '../../utils'
+import { parse } from 'graphql'
 
 const CustomizableProductItem = ({
    isSelected,
@@ -45,6 +46,7 @@ const CustomizableProductItem = ({
          delete newItem.option.type
       }
       newItem.price = parseFloat(option.price[0].value)
+      newItem.discount = parseFloat(option.price[0].discount)
       newItem.id = slaveProduct.id
       newItem.customizableProductOptionId = customizableOptionId
       newItem.name = `[${product.name}] ${slaveProduct.name}`
@@ -96,7 +98,8 @@ const CustomizableProductItem = ({
             customizableProductOptionId: default_product?.id,
             id: default_product.id,
             name: default_product.name,
-            price: _default_option?.price[0]?.value,
+            price: parseFloat(_default_option?.price[0]?.value),
+            discount: parseFloat(_default_option?.price[0].discount),
             image: default_product.assets?.images[0],
             option: {
                id: _default_option?.id, // product option id
@@ -112,7 +115,7 @@ const CustomizableProductItem = ({
          }
          setobjToAdd(objToAddToCart)
          if (!tunnelItem && independantItem) {
-            setPrice(_default_option?.price[0])
+            setPrice(_default_option?.price[0].value)
             if (_default_option.price[0].discount)
                setDiscount(parseFloat(_default_option.price[0].discount))
             setcardData(product)

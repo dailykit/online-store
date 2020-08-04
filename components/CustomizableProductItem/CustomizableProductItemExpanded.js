@@ -122,7 +122,10 @@ const Item = ({
                         onPress={() => {
                            setisSelected(_key)
                            setProductOption(
-                              simpleRecipeProduct?.defaultSimpleRecipeProductOption,
+                              simpleRecipeProduct?.defaultSimpleRecipeProductOption ||
+                                 simpleRecipeProduct.simpleRecipeProductOptions.sort(
+                                    priceSort
+                                 )[0],
                               simpleRecipeProduct,
                               'simpleRecipeProduct',
                               item.id
@@ -318,7 +321,12 @@ const Item = ({
                                           item_data.simpleRecipeYield.yield
                                              .serving
                                        }
-                                       price={item_data.price[0].value}
+                                       price={parseFloat(
+                                          item_data.price[0].value
+                                       )}
+                                       discount={parseFloat(
+                                          item_data.price[0].discount
+                                       )}
                                        display={
                                           typeSelected === 'mealKit'
                                              ? 'Meal Kit'
@@ -367,7 +375,10 @@ const Item = ({
                         onPress={() => {
                            setisSelected(_key)
                            setProductOption(
-                              inventoryProduct?.defaultInventoryProductOption,
+                              inventoryProduct?.defaultInventoryProductOption ||
+                                 inventoryProduct.inventoryProductOptions.sort(
+                                    priceSort
+                                 )[0],
                               inventoryProduct,
                               'inventoryProduct',
                               item.id
@@ -488,7 +499,12 @@ const Item = ({
                                           setServingIndex(index)
                                        }
                                        size={item_data.label}
-                                       price={item_data.price[0].value}
+                                       price={parseFloat(
+                                          item_data.price[0].value
+                                       )}
+                                       discount={parseFloat(
+                                          item_data.price[0].discount
+                                       )}
                                        setSelectedOption={() =>
                                           setSelectedOption(item_data)
                                        }
