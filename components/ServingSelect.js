@@ -65,7 +65,7 @@ const ServingSelect = ({
                      $ {price}
                   </Text>
                   <Text style={[styles.price_text, { marginLeft: 16 }]}>
-                     $ {discountedPrice({ price, discount })}
+                     $ {discountedPrice({ value: price, discount })}
                   </Text>
                </>
             ) : (
