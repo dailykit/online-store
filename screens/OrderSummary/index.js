@@ -518,7 +518,9 @@ const Cart = ({ cart }) => {
                               ).toFixed(2)}
                            </CartItemDiscount>
                         )}
-                        <CartItemPrice>$ {product.totalPrice}</CartItemPrice>
+                        <CartItemPrice>
+                           $ {product.totalPrice.toFixed(2)}
+                        </CartItemPrice>
                      </CartItemPriceContainer>
                   </CartItemRight>
                </CartItem>

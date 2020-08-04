@@ -73,9 +73,17 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
             if (busy) return
             setBusy(true)
             if (cart) {
+               const priceWithoutDiscount = product.defaultCartItem.unitPrice
                const products = [
                   ...cart.cartInfo.products,
-                  product.defaultCartItem,
+                  {
+                     ...product.defaultCartItem,
+                     unitPrice: price,
+                     totalPrice: price,
+                     discount: parseFloat(
+                        (priceWithoutDiscount - price).toFixed(2)
+                     ),
+                  },
                ]
                const total = products.reduce(
                   (acc, product) => acc + parseFloat(product.totalPrice),
@@ -94,9 +102,21 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                   },
                })
             } else {
+               const priceWithoutDiscount = product.defaultCartItem.unitPrice
+               const products = [
+                  ...cart.cartInfo.products,
+                  {
+                     ...product.defaultCartItem,
+                     unitPrice: price,
+                     totalPrice: price,
+                     discount: parseFloat(
+                        (priceWithoutDiscount - price).toFixed(2)
+                     ),
+                  },
+               ]
                const cartInfo = {
-                  products: [product.defaultCartItem],
-                  total: product.defaultCartItem.totalPrice,
+                  products,
+                  total: parseFloat(price.toFixed(2)),
                }
                createCart({
                   variables: {
@@ -133,6 +153,18 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const originalPrice = (discountPrice, discount) => {
       return parseFloat(discountPrice / (1 - parseFloat(discount / 100)))
    }
+
+   React.useEffect(() => {
+      if (!product.isPopupAllowed) {
+         setDiscount(parseFloat(product.defaultCartItem.discount))
+         setPrice(
+            discountedPrice({
+               value: product.defaultCartItem.unitPrice,
+               discount: product.defaultCartItem.discount,
+            })
+         )
+      }
+   }, [])
 
    return (
       <>
@@ -303,16 +335,47 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                               $ {originalPrice(price, discount).toFixed(2)}
                            </Text>
                            <Text style={styles.price_text}>
-                              ${price.toFixed(2)}
+                              ${price?.toFixed(2)}
                            </Text>
                         </>
                      ) : (
                         <Text style={styles.price_text}>
-                           $ {price.toFixed(2)}
+                           $ {price?.toFixed(2)}
                         </Text>
                      )}
                   </View>
                )}
+               {['comboProduct', 'customizableProduct'].includes(
+                  product?.__typename.split('_')[1]
+               ) &&
+                  !product.isPopupAllowed && (
+                     <View style={styles.price}>
+                        {discount ? (
+                           <>
+                              <Text
+                                 style={[
+                                    styles.price_text,
+                                    {
+                                       textDecoration: 'line-through',
+                                       marginRight: '0.5rem',
+                                       fontSize: '0.9rem',
+                                       fontWeight: 'normal',
+                                    },
+                                 ]}
+                              >
+                                 $ {originalPrice(price, discount).toFixed(2)}
+                              </Text>
+                              <Text style={styles.price_text}>
+                                 ${price?.toFixed(2)}
+                              </Text>
+                           </>
+                        ) : (
+                           <Text style={styles.price_text}>
+                              $ {price?.toFixed(2)}
+                           </Text>
+                        )}
+                     </View>
+                  )}
                <View style={styles.add_to_cart_container}>
                   <TouchableOpacity
                      onPress={addToCart}
