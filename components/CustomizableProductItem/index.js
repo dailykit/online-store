@@ -16,6 +16,7 @@ const CustomizableProductItem = ({
    setcardData,
    setcartItem,
    setPrice,
+   setDiscount,
    name,
    product,
    refId,
@@ -111,7 +112,9 @@ const CustomizableProductItem = ({
          }
          setobjToAdd(objToAddToCart)
          if (!tunnelItem && independantItem) {
-            setPrice(_default_option?.price[0]?.value)
+            setPrice(_default_option?.price[0])
+            if (_default_option.price[0].discount)
+               setDiscount(parseFloat(_default_option.price[0].discount))
             setcardData(product)
          }
          if (tunnelItem && isSelected) {

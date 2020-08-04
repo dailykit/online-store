@@ -7,6 +7,7 @@ const SimpleProductItem = ({
    openModal,
    navigation,
    setPrice,
+   setDiscount,
    independantItem,
    setcartItem,
    setcardData,
@@ -80,6 +81,8 @@ const SimpleProductItem = ({
          setobjToAdd(objToPush)
          if (!tunnelItem && independantItem) {
             setPrice(discountedPrice(option?.price[0]))
+            if (option.price[0].discount)
+               setDiscount(parseFloat(option.price[0].discount))
             setcardData(product)
          }
          if (tunnelItem && isSelected) {

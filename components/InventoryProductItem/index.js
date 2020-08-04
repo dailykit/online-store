@@ -8,6 +8,7 @@ const InventoryProductItem = ({
    showInfo,
    navigation,
    setPrice,
+   setDiscount,
    tunnelItem,
    independantItem,
    setcartItem,
@@ -69,6 +70,8 @@ const InventoryProductItem = ({
       setobjToAdd(objToPush)
       if (!tunnelItem && independantItem) {
          setPrice(discountedPrice(option.price[0]))
+         if (option.price[0].discount)
+            setDiscount(parseFloat(option.price[0].discount))
          setcardData(product)
       }
       if (tunnelItem && isSelected) {
