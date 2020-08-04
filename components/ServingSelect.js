@@ -36,6 +36,16 @@ const ServingSelect = ({
             },
          ]}
       >
+         {Boolean(discount) && (
+            <View
+               style={[
+                  styles.discountBanner,
+                  { backgroundColor: visual.color },
+               ]}
+            >
+               <Text style={styles.discountBannerText}>{discount}% off</Text>
+            </View>
+         )}
          <View style={styles.servingSelectContainer_one}>
             <Feather size={14} name="user" />
             <Text style={{ fontWeight: 'bold' }}>
@@ -93,6 +103,7 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       marginBottom: 5,
       borderColor: '#fff',
+      position: 'relative',
    },
    servingSelectContainer_one: {
       flex: 7,
@@ -111,6 +122,14 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+   },
+   discountBanner: {
+      position: 'absolute',
+      paddding: 2,
+   },
+   discountBannerText: {
+      color: '#fff',
+      fontSize: '0.7rem',
    },
 })
 
