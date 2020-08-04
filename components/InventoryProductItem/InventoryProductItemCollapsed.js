@@ -166,8 +166,8 @@ const InventoryProductCollapsed = ({
                            isSelected={servingIndex == key ? true : false}
                            setServingIndex={index => setServingIndex(index)}
                            size={item_data.label}
-                           price={item_data.price[0].value}
-                           discount={item_data.price[0].discount}
+                           price={parseFloat(item_data.price[0].value)}
+                           discount={parseFloat(item_data.price[0].discount)}
                            setProductOption={() => setProductOption(item_data)}
                            id={item_data.id}
                            setSelectedOption={() =>
