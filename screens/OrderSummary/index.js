@@ -508,7 +508,18 @@ const Cart = ({ cart }) => {
                            />
                         </CartItemQuantityButton>
                      </CartItemQuantity>
-                     <CartItemPrice>$ {product.totalPrice}</CartItemPrice>
+                     <CartItemPriceContainer>
+                        {Boolean(product.discount) && (
+                           <CartItemDiscount>
+                              ${' '}
+                              {(
+                                 product.discount * product.quantity +
+                                 product.totalPrice
+                              ).toFixed(2)}
+                           </CartItemDiscount>
+                        )}
+                        <CartItemPrice>$ {product.totalPrice}</CartItemPrice>
+                     </CartItemPriceContainer>
                   </CartItemRight>
                </CartItem>
             ))}
@@ -804,11 +815,20 @@ const CartItemQuantityValue = styled.Text`
    color: #93808c;
 `
 
+const CartItemPriceContainer = styled.View`
+   min-width: 50px;
+   text-align: right;
+`
+
+const CartItemDiscount = styled.Text`
+   text-decoration: line-through;
+   font-size: 13px;
+   color: #535665;
+`
+
 const CartItemPrice = styled.Text`
    font-size: 13px;
    color: #535665;
-   min-width: 50px;
-   text-align: right;
 `
 
 const CartBilling = styled.View`
