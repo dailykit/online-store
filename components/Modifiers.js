@@ -53,6 +53,7 @@ const Modifiers = ({ data, onModifersSelected, onValidityChange }) => {
                      category: category.name,
                      name: option.name,
                      price: option.price,
+                     discount: option.discount,
                      productId: option.productId,
                      productType: option.productType,
                   },
@@ -63,6 +64,7 @@ const Modifiers = ({ data, onModifersSelected, onValidityChange }) => {
                   category: category.name,
                   name: option.name,
                   price: option.price,
+                  discount: option.discount,
                   productId: option.productId,
                   productType: option.productType,
                }
@@ -79,6 +81,7 @@ const Modifiers = ({ data, onModifersSelected, onValidityChange }) => {
                      category: category.name,
                      name: option.name,
                      price: option.price,
+                     discount: option.discount,
                      productId: option.productId,
                      productType: option.productType,
                   },
