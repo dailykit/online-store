@@ -137,32 +137,46 @@ const Checkout = ({ cart, navigation }) => {
                      </CTAContainer>
                   </>
                ) : (
-                  <CustomerDetails>
-                     <View>
-                        <CustomerName>{`${
-                           cart.customerInfo?.customerFirstName || ''
-                        } ${
-                           cart.customerInfo?.customerLastName || ''
-                        }`}</CustomerName>
-                        <CustomerPhone>{`Phone: ${
-                           cart.customerInfo?.customerPhone || '-'
-                        }`}</CustomerPhone>
-                        <CustomerEmail>{`Email: ${
-                           cart.customerInfo?.customerEmail || '-'
-                        }`}</CustomerEmail>
-                     </View>
-                     <TouchableOpacity
-                        onPress={() =>
-                           open('AddDetails', { path: 'profile/create' })
-                        }
-                     >
-                        <Feather
-                           name="edit"
-                           size={width > 768 ? 24 : 16}
-                           color="#93959F"
-                        />
-                     </TouchableOpacity>
-                  </CustomerDetails>
+                  <>
+                     {cart.customerInfo?.customerFirstName ? (
+                        <CustomerDetails>
+                           <View>
+                              <CustomerName>{`${
+                                 cart.customerInfo?.customerFirstName || ''
+                              } ${
+                                 cart.customerInfo?.customerLastName || ''
+                              }`}</CustomerName>
+                              <CustomerPhone>{`Phone: ${
+                                 cart.customerInfo?.customerPhone || '-'
+                              }`}</CustomerPhone>
+                              <CustomerEmail>{`Email: ${
+                                 cart.customerInfo?.customerEmail || '-'
+                              }`}</CustomerEmail>
+                           </View>
+                           <TouchableOpacity
+                              onPress={() =>
+                                 open('AddDetails', { path: 'profile/create' })
+                              }
+                           >
+                              <Feather
+                                 name="edit"
+                                 size={width > 768 ? 24 : 16}
+                                 color="#93959F"
+                              />
+                           </TouchableOpacity>
+                        </CustomerDetails>
+                     ) : (
+                        <BasicDetailsCTA
+                           onPress={() =>
+                              open('AddDetails', { path: 'profile/create' })
+                           }
+                        >
+                           <BasicDetailsCTAText>
+                              Add your Info
+                           </BasicDetailsCTAText>
+                        </BasicDetailsCTA>
+                     )}
+                  </>
                )}
             </CheckoutSectionContent>
          </CheckoutSection>
@@ -327,9 +341,11 @@ const Cart = ({ cart }) => {
    return (
       <StyledCart>
          <CartHeader>
-            <CartHeaderTextLeft>Total Items</CartHeaderTextLeft>
+            <CartHeaderTextLeft>Total</CartHeaderTextLeft>
             <CartHeaderTextRight>
-               {cart.cartInfo.products.length}
+               {`${cart.cartInfo.products.length} Item${
+                  cart.cartInfo.products.length > 1 ? 's' : ''
+               }`}
             </CartHeaderTextRight>
          </CartHeader>
          <CartItems>
@@ -501,7 +517,9 @@ const Cart = ({ cart }) => {
             <CartBillingHeading>Bill Details</CartBillingHeading>
             <CartBillingDetail>
                <CartBillingDetailText>Item Total</CartBillingDetailText>
-               <CartBillingDetailText>$ {cart.itemTotal}</CartBillingDetailText>
+               <CartBillingDetailText>
+                  $ {cart.itemTotal.toFixed(2)}
+               </CartBillingDetailText>
             </CartBillingDetail>
             <CartBillingDetail>
                <CartBillingDetailText>Delivery Fee</CartBillingDetailText>
@@ -518,7 +536,7 @@ const Cart = ({ cart }) => {
          <Divider color="#282c3f" height="2px" />
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
-            <CartFooterText>$ {cart.totalPrice}</CartFooterText>
+            <CartFooterText>$ {cart.totalPrice.toFixed(2)}</CartFooterText>
          </CartFooter>
       </StyledCart>
    )
@@ -539,10 +557,10 @@ const StyledCheckout = styled.View`
 
 const CheckoutSection = styled.View`
    position: relative;
-   margin-left: ${width > 768 ? '25px' : '0px'};
+   margin-left: ${width > 768 ? '16px' : '0px'};
    background: #fff;
    margin-bottom: ${width > 768 ? '20px' : '8px'};
-   padding: ${width > 768 ? '35px 40px 39px' : '10px'};
+   padding: ${width > 768 ? '16px 28px' : '10px'};
    border-radius: 4px;
 `
 
@@ -584,6 +602,23 @@ const Button = styled.TouchableOpacity`
 const ButtonText = styled.Text`
    color: ${props => props.color || '#60b246'};
    font-weight: 500;
+`
+
+const BasicDetailsCTA = styled.TouchableOpacity`
+   width: 100%:
+   background-color: #fff;
+   align-items: center;
+   justify-content: center;
+   shadow-opacity: 0.75;
+   shadow-radius: 5px;
+   shadow-color: #ccc;
+   shadow-offset: 1px 1px;
+   border-radius: 2px;
+`
+
+const BasicDetailsCTAText = styled.Text`
+   color: #666;
+   margin: 12px auto;
 `
 
 const CustomerDetails = styled.View`

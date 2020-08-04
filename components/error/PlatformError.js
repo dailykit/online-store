@@ -68,8 +68,8 @@ const CTAContainer = styled.View`
 const CTA = styled.TouchableOpacity`
    padding: 8px;
    background-color: ${props =>
-      props.highlight ? props.color || '#efefef' : '#fff'};
-   border: 1px solid ${props => props.color || '#efefef'};
+      props.highlight ? props.color || '#E9ECEE' : '#fff'};
+   border: 1px solid ${props => props.color || '#E9ECEE'};
    border-radius: 2px;
    margin: 8px;
 `

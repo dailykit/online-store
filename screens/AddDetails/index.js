@@ -2,6 +2,7 @@ import React from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import { DAILYKEY_URL } from 'react-native-dotenv'
 import { useDrawerContext } from '../../context/drawer'
+import { View, Spinner } from 'native-base'
 
 const AddDetails = ({ params }) => {
    const { path } = params
@@ -34,6 +35,8 @@ const AddDetails = ({ params }) => {
                title="Add Details"
                height={600}
                frameBorder="0"
+               rel="preload"
+               id="dailykey"
             ></iframe>
          </ScrollView>
       </React.Fragment>

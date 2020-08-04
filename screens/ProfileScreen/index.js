@@ -24,12 +24,12 @@ export default ({ navigation }) => {
       return <Auth navigation={navigation} />
    }
 
-   if (!customerDetails) {
-      return <PlatformError navigation={navigation} />
-   }
+   // if (!customerDetails) {
+   //    return <PlatformError navigation={navigation} />
+   // }
 
    return (
-      <View style={{ backgroundColor: '#fff', height: '100%' }}>
+      <View style={{ backgroundColor: '#E9ECEE', height: '100%' }}>
          <Header title="Home" navigation={navigation} />
          <View style={styles.container}>
             <View style={styles.userDetailsContainer}>
@@ -65,7 +65,11 @@ export default ({ navigation }) => {
             <ScrollView>
                {/* Address card */}
                <TouchableOpacity
-                  onPress={() => open('EditAddress')}
+                  onPress={() =>
+                     customerDetails?.customerAddresses?.length
+                        ? open('EditAddress')
+                        : open('AddDetails', { path: 'address/create' })
+                  }
                   style={styles.card}
                >
                   <Text style={styles.cardTitle}>My Addresses</Text>
@@ -102,7 +106,11 @@ export default ({ navigation }) => {
                </TouchableOpacity>
                {/* Payment Card */}
                <TouchableOpacity
-                  onPress={() => open('SelectPaymentMethod')}
+                  onPress={() =>
+                     customerDetails?.stripePaymentMethods?.length
+                        ? open('SelectPaymentMethod')
+                        : open('AddDetails', { path: 'card/create' })
+                  }
                   style={styles.card}
                >
                   <Text style={styles.cardTitle}>My Payment cards</Text>

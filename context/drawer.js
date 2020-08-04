@@ -18,13 +18,13 @@ export const DrawerContextProvider = ({ children }) => {
       setIsDrawerOpen(true)
    }
 
-   React.useEffect(() => {
-      if (isAuthenticated) {
-         if (window.location !== window.parent.location) {
-            window.parent.location.reload()
-         }
-      }
-   }, [isAuthenticated])
+   // React.useEffect(() => {
+   //    if (isAuthenticated) {
+   //       if (window.location !== window.parent.location) {
+   //          window.parent.location.reload()
+   //       }
+   //    }
+   // }, [isAuthenticated])
 
    return (
       <DrawerContext.Provider
@@ -36,6 +36,7 @@ export const DrawerContextProvider = ({ children }) => {
             params,
             saved,
             setSaved,
+            setDrawerView,
          }}
       >
          {children}

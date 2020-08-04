@@ -13,19 +13,15 @@ export const DefaultPaymentFloater = ({ navigation }) => {
    const [card, setCard] = React.useState(undefined)
 
    React.useEffect(() => {
-      console.log('Checking card...')
       if (cart && customerDetails) {
-         console.log('Cart and cusDet presetn')
-
          const card = customerDetails.stripePaymentMethods.find(
             card => card.stripePaymentMethodId === cart.paymentMethodId
          )
          if (card) {
-            console.log('Card found')
             setCard(card)
          }
       }
-   }, [cart])
+   }, [cart, cart.paymentMethodId])
 
    return (
       <TouchableOpacity
@@ -52,7 +48,11 @@ export const DefaultPaymentFloater = ({ navigation }) => {
          </View>
          <View style={styles.cardNumberSelectedContainer}>
             <View>
-               <Feather name="edit" size={16} color="#333" />
+               <Feather
+                  name="edit"
+                  size={width > 768 ? 24 : 16}
+                  color="#93959F"
+               />
             </View>
          </View>
       </TouchableOpacity>
@@ -88,7 +88,11 @@ export const DefaultAddressFloater = ({ navigation }) => {
          </View>
          <View style={styles.cardNumberSelectedContainer}>
             <View>
-               <Feather name="edit" size={16} color="#333" />
+               <Feather
+                  name="edit"
+                  size={width > 768 ? 24 : 16}
+                  color="#93959F"
+               />
             </View>
          </View>
       </TouchableOpacity>
@@ -100,6 +104,16 @@ const styles = EStyleSheet.create({
       backgroundColor: '#fff',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      shadowColor: '#000',
+      shadowOffset: {
+         width: 0,
+         height: 1,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 2.22,
+      elevation: 3,
+      padding: 8,
+      borderRadius: 2,
    },
    title: {
       fontSize: '$m',

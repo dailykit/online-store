@@ -24,6 +24,7 @@ const DrawerLayout = () => {
       drawerView,
       isDrawerOpen,
       setIsDrawerOpen,
+      setDrawerView,
       params,
    } = useDrawerContext()
    const { setCustomerDetails } = useCartContext()
@@ -52,6 +53,16 @@ const DrawerLayout = () => {
    React.useEffect(() => {
       if (!isDrawerOpen && drawerView === 'AddDetails') {
          fetchDetails()
+      }
+   }, [isDrawerOpen])
+
+   React.useEffect(() => {
+      if (
+         !isDrawerOpen &&
+         ['AddDetails', 'Login', 'Register'].includes(drawerView)
+      ) {
+         console.log('Clearing iFrame')
+         setDrawerView(undefined)
       }
    }, [isDrawerOpen])
 
