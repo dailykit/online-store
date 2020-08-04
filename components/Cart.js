@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { Ionicons, Feather } from '@expo/vector-icons'
 import { useCartContext } from '../context/cart'
-import { uuid, useStoreToast } from '../utils'
+import { uuid, useStoreToast, discountedPrice } from '../utils'
 import { useMutation } from '@apollo/react-hooks'
 import EStyleSheet, { child } from 'react-native-extended-stylesheet'
 import { CREATE_CART, UPDATE_CART } from '../graphql/mutations'
@@ -48,9 +48,19 @@ const Cart = ({
    React.useEffect(() => {
       if (cartItem) {
          setPriceShown(
-            parseFloat(cartItem.price) +
+            parseFloat(
+               discountedPrice({
+                  value: cartItem.price,
+                  discount: cartItem.discount,
+               })
+            ) +
                cartItem.modifiers.reduce(
-                  (acc, modifier) => acc + parseFloat(modifier.price),
+                  (acc, modifier) =>
+                     acc +
+                     discountedPrice({
+                        value: modifier.price,
+                        discount: modifier.discount,
+                     }),
                   0
                )
          )
@@ -135,12 +145,7 @@ const Cart = ({
                })
             } else {
                console.log('cartItem', cartItem)
-               const price =
-                  parseFloat(cartItem.price) +
-                  cartItem.modifiers.reduce(
-                     (acc, modifier) => acc + parseFloat(modifier.price),
-                     0
-                  )
+               const price = priceShown
                const item = {
                   cartItemId: uuid(),
                   type,
@@ -151,7 +156,7 @@ const Cart = ({
                      (parseFloat(price) * quantity).toFixed(2)
                   ),
                   modifiers: cartItem.modifiers,
-                  discount: 0,
+                  discount: cartItem.discount,
                   specialInstructions: '',
                }
                delete item.price

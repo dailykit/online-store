@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed'
-import { priceSort } from '../../utils'
+import { priceSort, discountedPrice } from '../../utils'
 
 const SimpleProductItem = ({
    _id,
@@ -33,6 +33,7 @@ const SimpleProductItem = ({
             serving: option.simpleRecipeYield.yield.serving,
          },
          price: parseFloat(option.price[0].value),
+         discount: option.price[0].discount,
          modifiers: [],
       })
       setcartItem({
@@ -43,6 +44,7 @@ const SimpleProductItem = ({
             serving: option.simpleRecipeYield.yield.serving,
          },
          price: parseFloat(option.price[0].value),
+         discount: option.price[0].discount,
          modifiers: [],
       })
    }
@@ -61,6 +63,7 @@ const SimpleProductItem = ({
             id: product.id,
             name: product.name,
             price: option?.price[0].value,
+            discount: option.price[0].discount,
             image: product.assets?.images[0],
             option: {
                id: option?.id, // product option id
@@ -76,7 +79,7 @@ const SimpleProductItem = ({
          }
          setobjToAdd(objToPush)
          if (!tunnelItem && independantItem) {
-            setPrice(option?.price[0]?.value)
+            setPrice(discountedPrice(option?.price[0]))
             setcardData(product)
          }
          if (tunnelItem && isSelected) {
