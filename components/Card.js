@@ -130,6 +130,10 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
       }
    }
 
+   const originalPrice = (discountPrice, discount) => {
+      return parseFloat(discountPrice / (1 - parseFloat(discount / 100)))
+   }
+
    return (
       <>
          {cardData && (
@@ -282,7 +286,30 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                   product?.__typename.split('_')[1]
                ) && (
                   <View style={styles.price}>
-                     <Text style={styles.price_text}>$ {price}</Text>
+                     {discount ? (
+                        <>
+                           <Text
+                              style={[
+                                 styles.price_text,
+                                 {
+                                    textDecoration: 'line-through',
+                                    marginRight: '0.5rem',
+                                    fontSize: '0.9rem',
+                                    fontWeight: 'normal',
+                                 },
+                              ]}
+                           >
+                              $ {originalPrice(price, discount).toFixed(2)}
+                           </Text>
+                           <Text style={styles.price_text}>
+                              ${price.toFixed(2)}
+                           </Text>
+                        </>
+                     ) : (
+                        <Text style={styles.price_text}>
+                           $ {price.toFixed(2)}
+                        </Text>
+                     )}
                   </View>
                )}
                <View style={styles.add_to_cart_container}>
