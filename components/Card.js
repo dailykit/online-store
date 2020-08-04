@@ -169,7 +169,8 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                <View
                   style={{
                      position: 'absolute',
-                     right: 0,
+                     top: 4,
+                     right: 4,
                      alignItems: 'center',
                      justifyContent: 'center',
                      backgroundColor: visual.color,
