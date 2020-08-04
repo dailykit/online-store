@@ -546,6 +546,15 @@ const Cart = ({ cart }) => {
          </CartBilling>
          <Divider color="#282c3f" height="2px" />
          <CartFooter>
+            <CartDiscountText>YOU SAVED</CartDiscountText>
+            <CartDiscountText>
+               ${' '}
+               {cart.cartInfo.products
+                  .reduce((acc, item) => acc + item.discount, 0)
+                  .toFixed(2)}
+            </CartDiscountText>
+         </CartFooter>
+         <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
             <CartFooterText>$ {cart.totalPrice.toFixed(2)}</CartFooterText>
          </CartFooter>
@@ -873,4 +882,8 @@ const CartFooter = styled.View`
 const CartFooterText = styled.Text`
    font-weight: 600;
    color: #282c3f;
+`
+
+const CartDiscountText = styled(CartFooterText)`
+   color: #60b246;
 `
