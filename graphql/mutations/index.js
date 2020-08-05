@@ -79,3 +79,23 @@ export const UPDATE_CUSTOMER = gql`
       }
    }
 `
+
+export const CREATE_CUSTOMER_ADDRESS = gql`
+   mutation platform_createCustomerAddress(
+      $object: platform_customerAddress_insert_input!
+   ) {
+      platform_createCustomerAddress(object: $object) {
+         id
+         lat
+         lng
+         line1
+         line2
+         city
+         state
+         country
+         zipcode
+         label
+         notes
+      }
+   }
+`

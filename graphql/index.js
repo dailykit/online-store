@@ -18,6 +18,7 @@ import {
    UPDATE_CART,
    CREATE_CART,
    UPDATE_CUSTOMER,
+   CREATE_CUSTOMER_ADDRESS,
 } from './mutations'
 
 import {
@@ -36,6 +37,7 @@ import {
 export {
    CUSTOMER,
    UPDATE_CUSTOMER,
+   CREATE_CUSTOMER_ADDRESS,
    CUSTOMER_DETAILS,
    GET_MENU,
    COMBO_PRODUCT,
