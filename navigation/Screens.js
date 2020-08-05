@@ -7,7 +7,7 @@ import {
    useQuery,
 } from '@apollo/react-hooks'
 import * as axios from 'axios'
-import { CLIENTID, DAILYOS_SERVER_URL } from 'react-native-dotenv'
+import { CLIENTID, DAILYOS_SERVER_URL, MAPS_API_KEY } from 'react-native-dotenv'
 
 import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
@@ -52,6 +52,7 @@ import Recipe from '../screens/Recipe'
 import Search from '../screens/Search'
 import { useCartContext } from '../context/cart'
 import LoginSuccess from '../screens/LoginSuccess'
+import { useScript } from '../utils/useScript'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -63,6 +64,12 @@ const Loader = () => (
 )
 
 export default function OnboardingStack(props) {
+   const [mapsLoaded, mapsError] = useScript(
+      `https://maps.googleapis.com/maps/api/js?key=${MAPS_API_KEY}`
+   )
+
+   if (mapsError) console.log('Error loading Maps:', mapsError)
+
    const { user, isInitialized } = useAuth()
    const { setCustomer, setCustomerDetails, setCart } = useCartContext()
    const {
@@ -280,27 +287,29 @@ export default function OnboardingStack(props) {
                   data.platform_customerByClients[0].customer
                )
                setCustomerDetails(data.platform_customerByClients[0].customer)
-               updateCart({
-                  variables: {
-                     id: cartId,
-                     set: {
-                        customerInfo: {
-                           customerFirstName:
-                              data.platform_customerByClients[0].customer
-                                 ?.firstName,
-                           customerLastName:
-                              data.platform_customerByClients[0].customer
-                                 ?.lastName,
-                           customerPhone:
-                              data.platform_customerByClients[0].customer
-                                 ?.phoneNumber,
-                           customerEmail:
-                              data.platform_customerByClients[0].customer
-                                 ?.email,
+               if (cartId) {
+                  updateCart({
+                     variables: {
+                        id: cartId,
+                        set: {
+                           customerInfo: {
+                              customerFirstName:
+                                 data.platform_customerByClients[0].customer
+                                    ?.firstName,
+                              customerLastName:
+                                 data.platform_customerByClients[0].customer
+                                    ?.lastName,
+                              customerPhone:
+                                 data.platform_customerByClients[0].customer
+                                    ?.phoneNumber,
+                              customerEmail:
+                                 data.platform_customerByClients[0].customer
+                                    ?.email,
+                           },
                         },
                      },
-                  },
-               })
+                  })
+               }
             } else {
                console.log('No customer data found!')
             }
