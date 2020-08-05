@@ -332,7 +332,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                                  },
                               ]}
                            >
-                              $ {originalPrice(price, discount).toFixed(2)}
+                              $ {originalPrice(price, discount)?.toFixed(2)}
                            </Text>
                            <Text style={styles.price_text}>
                               ${price?.toFixed(2)}
@@ -363,7 +363,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                                     },
                                  ]}
                               >
-                                 $ {originalPrice(price, discount).toFixed(2)}
+                                 $ {originalPrice(price, discount)?.toFixed(2)}
                               </Text>
                               <Text style={styles.price_text}>
                                  ${price?.toFixed(2)}
