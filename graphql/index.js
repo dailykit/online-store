@@ -13,7 +13,12 @@ import {
    FETCH_CART,
 } from './queries'
 
-import { CREATE_CUSTOMER, UPDATE_CART, CREATE_CART } from './mutations'
+import {
+   CREATE_CUSTOMER,
+   UPDATE_CART,
+   CREATE_CART,
+   UPDATE_CUSTOMER,
+} from './mutations'
 
 import {
    CUSTOMER,
@@ -30,6 +35,7 @@ import {
 
 export {
    CUSTOMER,
+   UPDATE_CUSTOMER,
    CUSTOMER_DETAILS,
    GET_MENU,
    COMBO_PRODUCT,

@@ -61,3 +61,21 @@ export const UPDATE_CART = gql`
       }
    }
 `
+
+export const UPDATE_CUSTOMER = gql`
+   mutation platform_updateCustomer(
+      $keycloakId: String!
+      $_set: platform_customer_set_input!
+   ) {
+      platform_updateCustomer(
+         _set: $_set
+         pk_columns: { keycloakId: $keycloakId }
+      ) {
+         email
+         lastName
+         firstName
+         keycloakId
+         phoneNumber
+      }
+   }
+`

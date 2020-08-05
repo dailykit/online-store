@@ -52,7 +52,10 @@ const DrawerLayout = () => {
 
    //Effects
    React.useEffect(() => {
-      if (!isDrawerOpen && drawerView === 'AddDetails') {
+      if (
+         !isDrawerOpen &&
+         ['AddDetails', 'DailyKeyBackup'].includes(drawerView)
+      ) {
          fetchDetails()
       }
    }, [isDrawerOpen])
