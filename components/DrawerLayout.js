@@ -18,6 +18,7 @@ import { useAuth } from '../context/auth'
 import Fulfillment from './Fulfillment'
 import Keycloak from '../screens/Keycloak'
 import { Feather } from '@expo/vector-icons'
+import DailyKeyBackup from '../screens/DailyKeyBackup'
 
 const DrawerLayout = () => {
    const {
@@ -75,6 +76,8 @@ const DrawerLayout = () => {
             return <SelectPaymentMethod />
          case 'AddDetails':
             return <AddDetails params={params} />
+         case 'DailyKeyBackup':
+            return <DailyKeyBackup params={params} />
          case 'Safety':
             return <SafetyScreen />
          case 'Fulfillment':
@@ -111,6 +114,27 @@ const DrawerLayout = () => {
                style={{ position: 'absolute', right: 0, top: -40 }}
             />
          </TouchableOpacity>
+         {drawerView === 'AddDetails' && (
+            <TouchableOpacity
+               style={{
+                  width: width > 1280 ? 640 : width,
+                  position: 'relative',
+                  marginHorizontal: 'auto',
+               }}
+               onPress={() => setDrawerView('DailyKeyBackup')}
+            >
+               <Text
+                  style={{
+                     position: 'absolute',
+                     left: 0,
+                     top: -30,
+                     color: '#fff',
+                  }}
+               >
+                  Click here!
+               </Text>
+            </TouchableOpacity>
+         )}
          <View style={width > 1280 ? styles.container : styles.phoneContainer}>
             <View
                style={width > 1280 ? styles.component : styles.phoneComponent}
