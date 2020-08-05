@@ -134,7 +134,7 @@ const DrawerLayout = () => {
                      color: '#fff',
                   }}
                >
-                  Click here!
+                  Trouble with DailyKEY? Click here!
                </Text>
             </TouchableOpacity>
          )}

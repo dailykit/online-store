@@ -99,3 +99,12 @@ export const CREATE_CUSTOMER_ADDRESS = gql`
       }
    }
 `
+
+export const CREATE_STRIPE_PAYMENT_METHOD = gql`
+   mutation paymentMethod($object: platform_stripePaymentMethod_insert_input!) {
+      paymentMethod: platform_createStripePaymentMethod(object: $object) {
+         keycloakId
+         stripePaymentMethodId
+      }
+   }
+`

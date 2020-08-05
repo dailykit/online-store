@@ -1277,3 +1277,11 @@ export const SEARCH_PRODUCTS = gql`
       }
    }
 `
+
+export const STRIPE_PK = gql`
+   query StripePublishableKey {
+      organizations {
+         stripePublishableKey
+      }
+   }
+`

@@ -1,25 +1,52 @@
 import React from 'react'
 import styled, { css } from 'styled-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import { Elements, CardElement } from '@stripe/react-stripe-js'
+import { loadStripe } from '@stripe/stripe-js'
+
 import { useCartContext } from '../../context/cart'
 import { useAppContext } from '../../context/app'
-import { UPDATE_CUSTOMER, CREATE_CUSTOMER_ADDRESS } from '../../graphql'
-import { useMutation } from '@apollo/react-hooks'
+import {
+   UPDATE_CUSTOMER,
+   CREATE_CUSTOMER_ADDRESS,
+   STRIPE_PK,
+   CREATE_STRIPE_PAYMENT_METHOD,
+} from '../../graphql'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import { useDrawerContext } from '../../context/drawer'
 import { useAuth } from '../../context/auth'
-
 import { MAPS_API_KEY } from 'react-native-dotenv'
 import { useScript } from '../../utils/useScript'
+import { View, Spinner } from 'native-base'
+import axios from 'axios'
 
 const DailyKeyBackup = ({ params }) => {
    const { path } = params
 
    const { customerDetails } = useCartContext()
+   const [stripePK, setStripePK] = React.useState(undefined)
+
+   useQuery(STRIPE_PK, {
+      onCompleted: data => {
+         if (data.organizations) {
+            console.log(
+               'DailyKeyBackup -> data.organizations',
+               data.organizations
+            )
+            setStripePK(data.organizations[0].stripePublishableKey)
+         }
+      },
+      onError: error => {
+         console.log('Stripe key error: ', error)
+      },
+   })
 
    return (
       <Wrapper>
          <Header>
-            <HeaderText> Secured and Powered By </HeaderText>
+            <HeaderText>
+               Your details will be saved securely with DailyKEY!
+            </HeaderText>
             {/* <HeaderImage source={require('../../assets/imgs/dailykey.png')} /> */}
          </Header>
          <Body>
@@ -30,7 +57,7 @@ const DailyKeyBackup = ({ params }) => {
             </CustomerInfo>
             {path.includes('profile') && <Profile />}
             {path.includes('address') && <Address />}
-            {path.includes('card') && <Card />}
+            {path.includes('card') && <Card stripePK={stripePK} />}
          </Body>
       </Wrapper>
    )
@@ -109,6 +136,7 @@ const Profile = () => {
                <FormFieldInput
                   onChangeText={text => setFirstName(text)}
                   value={firstName}
+                  editable={true}
                />
             </FormField>
             <FormField>
@@ -116,6 +144,7 @@ const Profile = () => {
                <FormFieldInput
                   onChangeText={text => setLastName(text)}
                   value={lastName}
+                  editable={true}
                />
             </FormField>
             <FormField>
@@ -123,6 +152,7 @@ const Profile = () => {
                <FormFieldInput
                   onChangeText={text => setPhone(text)}
                   value={phone}
+                  editable={true}
                />
             </FormField>
             <FormField>
@@ -364,12 +394,179 @@ const Address = () => {
    )
 }
 
-const Card = () => {
+const CARD_ELEMENT_OPTIONS = {
+   style: {
+      base: {
+         color: '#111',
+         fontSize: '16px',
+         '::placeholder': {
+            color: '#aab7c4',
+         },
+      },
+      invalid: {
+         color: '#fa755a',
+         iconColor: '#fa755a',
+      },
+   },
+}
+
+const Card = ({ stripePK }) => {
+   console.log('Card -> stripePK', stripePK)
+   const stripePromise = loadStripe(stripePK)
+
+   const { customerDetails } = useCartContext()
+   const { visual } = useAppContext()
+   const { setSaved, setIsDrawerOpen } = useDrawerContext()
+   const { user } = useAuth()
+
+   const [intent, setIntent] = React.useState(null)
+   const [status, setStatus] = React.useState('LOADING')
+   const [error, setError] = React.useState('')
+   const [name, setName] = React.useState('')
+   const [saving, setSaving] = React.useState(false)
+   const [updateCustomer] = useMutation(UPDATE_CUSTOMER)
+   const [createPaymentMethod] = useMutation(CREATE_STRIPE_PAYMENT_METHOD)
+
+   React.useEffect(() => {
+      if (customerDetails.stripeCustomerId) {
+         ;(async () => {
+            try {
+               const intent = await createSetupIntent(
+                  customerDetails.stripeCustomerId
+               )
+               if (intent.id) {
+                  setIntent(intent)
+                  setStatus('SUCCESS')
+               } else {
+                  setStatus('ERROR')
+               }
+            } catch (error) {
+               setStatus('ERROR')
+            }
+         })()
+      }
+   }, [customerDetails])
+
+   const save = async e => {
+      try {
+         e.preventDefault()
+         console.log('Trying to save...')
+
+         setSaving(true)
+         if (!stripe || !elements) {
+            console.log('No stripe or elements')
+            setSaving(false)
+            return
+         }
+         const result = await stripe.confirmCardSetup(intent.client_secret, {
+            payment_method: {
+               card: elements.getElement(CardElement),
+               billing_details: {
+                  name,
+               },
+            },
+         })
+
+         if (result.error) {
+            console.log('Result = error')
+
+            throw Error(result.error)
+         } else {
+            console.log('Result: ', result)
+
+            const { setupIntent } = result
+            if (setupIntent.status === 'succeeded') {
+               const { data: { success, data = {} } = {} } = await axios.get(
+                  `${PAYMENTS_API_URL}/api/payment-method/${setupIntent.payment_method}`
+               )
+               if (success) {
+                  const {
+                     data: { paymentMethod = {} } = {},
+                  } = await createPaymentMethod({
+                     variables: {
+                        object: {
+                           last4: data.card.last4,
+                           brand: data.card.brand,
+                           country: data.card.country,
+                           funding: data.card.funding,
+                           expYear: data.card.exp_year,
+                           cvcCheck: data.card.cvc_check,
+                           expMonth: data.card.exp_month,
+                           stripePaymentMethodId: data.id,
+                           keycloakId: user.sub || user.id,
+                           cardHolderName: data.billing_details.name,
+                        },
+                     },
+                  })
+                  if (!customer.defaultPaymentMethodId) {
+                     await updateCustomer({
+                        variables: {
+                           keycloakId: user.sub || user.id,
+                           _set: {
+                              defaultPaymentMethodId: data.id,
+                           },
+                        },
+                     })
+                  }
+                  setSaved({
+                     success: true,
+                     type: 'create_card',
+                     data: {
+                        paymentMethodId: paymentMethod.stripePaymentMethodId,
+                     },
+                  })
+                  setIsDrawerOpen(false)
+               } else {
+                  // TODO: delete stripe payment method on failure
+                  throw Error("Couldn't complete card setup, please try again")
+               }
+            } else {
+               throw Error("Couldn't complete card setup, please try again")
+            }
+         }
+      } catch (error) {
+         setError(error.message)
+      } finally {
+         setSaving(false)
+      }
+   }
+
+   if (status === 'LOADING' || !stripePK) {
+      return (
+         <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+         >
+            <Spinner />
+         </View>
+      )
+   }
+
    return (
       <>
          <ContentHeader>
             <ContentHeaderText>Add a new Card</ContentHeaderText>
          </ContentHeader>
+         <Elements stripe={stripePromise}>
+            <Form>
+               <FormField>
+                  <FormFieldLabel>Card Holder Name</FormFieldLabel>
+                  <FormFieldInput
+                     onChangeText={text => setName(text)}
+                     value={name}
+                     editable={true}
+                  />
+               </FormField>
+               <FormField>
+                  <CardElement
+                     options={CARD_ELEMENT_OPTIONS}
+                     onChange={({ error }) => setError(error?.message || '')}
+                  />
+               </FormField>
+            </Form>
+            <CTA color={visual.color} onPress={save} disabled={saving}>
+               <CTAText>{saving ? 'Saving...' : 'Save'}</CTAText>
+            </CTA>
+         </Elements>
       </>
    )
 }
