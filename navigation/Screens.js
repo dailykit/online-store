@@ -243,7 +243,7 @@ export default function OnboardingStack(props) {
          if (
             cartId &&
             data.updateCart.returning[0].customerId &&
-            data.updateCart.returning[0].customerInfo
+            data.updateCart.returning[0].customerInfo?.customerEmail
          ) {
             console.log('Cleared local storage!')
             setCartId(null)
