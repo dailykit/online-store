@@ -558,9 +558,7 @@ const Cart = ({ cart }) => {
          </CartBilling>
          <Divider color="#282c3f" height="2px" />
          {Boolean(
-            cart.cartInfo.products
-               .reduce((acc, item) => acc + item.discount, 0)
-               .toFixed(2)
+            cart.cartInfo.products.reduce((acc, item) => acc + item.discount, 0)
          ) && (
             <CartFooter>
                <CartDiscountText>YOU SAVED</CartDiscountText>
