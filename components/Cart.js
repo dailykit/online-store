@@ -339,7 +339,7 @@ export const CartSummary = ({ navigation, text }) => {
 
    const pay = () => {
       if (cart.isValid.status) {
-         open('PaymentProcessing', { navigation })
+         open('Payment', { navigation })
       } else {
          if (Platform.OS == 'android')
             ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT)

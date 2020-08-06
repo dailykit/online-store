@@ -288,6 +288,7 @@ export default function OnboardingStack(props) {
                )
                setCustomerDetails(data.platform_customerByClients[0].customer)
                if (cartId) {
+                  console.log('Updating Cart with Customer Data')
                   updateCart({
                      variables: {
                         id: cartId,
@@ -533,13 +534,13 @@ function AppStack(props) {
                headerShown: false,
             }}
          />
-         <Stack.Screen
+         {/* <Stack.Screen
             name="PaymentProcessing"
             component={PaymentProcessing}
             options={{
                headerShown: false,
             }}
-         />
+         /> */}
          {/* <Stack.Screen
             name="Add Details"
             component={AddDetails}
