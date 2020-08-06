@@ -280,6 +280,12 @@ const Cart = ({ cart }) => {
             const index = products.findIndex(
                item => item.cartItemId === product.cartItemId
             )
+            products[index].discount = parseFloat(
+               (
+                  (products[index].discount / products[index].quantity) *
+                  quantity
+               ).toFixed(2)
+            )
             products[index].quantity = quantity
             products[index].totalPrice = products[index].unitPrice * quantity
             const total = products.reduce(
