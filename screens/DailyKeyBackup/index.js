@@ -57,7 +57,7 @@ const DailyKeyBackup = ({ params }) => {
             </CustomerInfo>
             {path.includes('profile') && <Profile />}
             {path.includes('address') && <Address />}
-            {path.includes('card') && <Card stripePK={stripePK} />}
+            {path.includes('card') && stripePK && <Card stripePK={stripePK} />}
          </Body>
       </Wrapper>
    )
