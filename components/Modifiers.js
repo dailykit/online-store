@@ -4,7 +4,7 @@ import { CheckBox } from 'react-native-elements'
 import { useAppContext } from '../context/app'
 import { discountedPrice } from '../utils'
 
-const Modifiers = ({ data, onModifersSelected, onValidityChange }) => {
+const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
    const { visual } = useAppContext()
 
    const [selected, setSelected] = React.useState([])
@@ -105,7 +105,7 @@ const Modifiers = ({ data, onModifersSelected, onValidityChange }) => {
          onValidityChange(isValid.current)
          if (isValid.current) {
             console.log('Selected: ', selected)
-            onModifersSelected(selected)
+            onModifiersSelected(selected)
          }
       })()
    }, [selected])

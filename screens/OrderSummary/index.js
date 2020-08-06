@@ -424,7 +424,7 @@ const Cart = ({ cart }) => {
                               ellipsizeMode="tail"
                               numberOfLines={1}
                            >
-                              {`${product.option.type.SRPType()} x${
+                              {`${product.option.type?.SRPType()} x${
                                  product.option.serving
                               }`}
                            </CartItemLabel>

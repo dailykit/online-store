@@ -20,7 +20,7 @@ const Item = ({
    setProductOption,
    refId,
    refType,
-   onModifersSelected,
+   onModifiersSelected,
    onValidityChange,
 }) => {
    const { visual } = useAppContext()
@@ -357,7 +357,7 @@ const Item = ({
                            {selectedOption?.modifier && (
                               <Modifiers
                                  data={selectedOption.modifier.data}
-                                 onModifersSelected={onModifersSelected}
+                                 onModifiersSelected={onModifiersSelected}
                                  onValidityChange={onValidityChange}
                               />
                            )}
@@ -524,7 +524,7 @@ const Item = ({
                            {selectedOption?.modifier && (
                               <Modifiers
                                  data={selectedOption.modifier.data}
-                                 onModifersSelected={onModifersSelected}
+                                 onModifiersSelected={onModifiersSelected}
                                  onValidityChange={onValidityChange}
                               />
                            )}

@@ -101,7 +101,7 @@ const InventoryProductItem = ({
          setSelected={setSelected}
          isSelected={isSelected}
          refId={refId}
-         onModifersSelected={modifiersHandler}
+         onModifiersSelected={modifiersHandler}
          onValidityChange={onModifiersValidityChange}
       />
    )

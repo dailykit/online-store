@@ -19,7 +19,7 @@ const SimpleProductItemCollapsed = ({
    showInfo,
    refId,
    refType,
-   onModifersSelected,
+   onModifiersSelected,
    onValidityChange,
 }) => {
    const [typeSelected, setTypeSelected] = useState('')
@@ -244,7 +244,7 @@ const SimpleProductItemCollapsed = ({
                {selectedOption?.modifier && (
                   <Modifiers
                      data={selectedOption.modifier.data}
-                     onModifersSelected={onModifersSelected}
+                     onModifiersSelected={onModifiersSelected}
                      onValidityChange={onValidityChange}
                   />
                )}

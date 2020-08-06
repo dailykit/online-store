@@ -16,7 +16,7 @@ const InventoryProductCollapsed = ({
    showInfo,
    isSelected,
    refId,
-   onModifersSelected,
+   onModifiersSelected,
    onValidityChange,
 }) => {
    const { visual } = useAppContext()
@@ -180,7 +180,7 @@ const InventoryProductCollapsed = ({
                {selectedOption?.modifier && (
                   <Modifiers
                      data={selectedOption.modifier.data}
-                     onModifersSelected={onModifersSelected}
+                     onModifiersSelected={onModifiersSelected}
                      onValidityChange={onValidityChange}
                   />
                )}

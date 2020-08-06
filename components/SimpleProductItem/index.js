@@ -108,7 +108,7 @@ const SimpleProductItem = ({
          isSelected={isSelected}
          refId={refId}
          refType={refType}
-         onModifersSelected={modifiersHandler}
+         onModifiersSelected={modifiersHandler}
          onValidityChange={onModifiersValidityChange}
       />
    )
