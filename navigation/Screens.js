@@ -165,7 +165,7 @@ export default function OnboardingStack(props) {
    )
 
    // Mutations
-   const [createCustomer, { laoding: creatingCustomer }] = useMutation(
+   const [createCustomer, { loading: creatingCustomer }] = useMutation(
       CREATE_CUSTOMER,
       {
          onCompleted: data => {
@@ -292,6 +292,12 @@ export default function OnboardingStack(props) {
                      variables: {
                         id: cartId,
                         set: {
+                           stripeCustomerId:
+                              data.platform_customerByClients[0].customer
+                                 .stripeCustomerId || null,
+                           paymentMethodId:
+                              data.platform_customerByClients[0].customer
+                                 .defaultPaymentMethodId || null,
                            customerInfo: {
                               customerFirstName:
                                  data.platform_customerByClients[0].customer
