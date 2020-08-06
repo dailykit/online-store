@@ -64,9 +64,8 @@ const DrawerLayout = () => {
    React.useEffect(() => {
       if (
          !isDrawerOpen &&
-         ['AddDetails', 'Login', 'Register'].includes(drawerView)
+         ['AddDetails', 'Login', 'Register', 'Payment'].includes(drawerView)
       ) {
-         console.log('Clearing iFrame')
          setDrawerView(undefined)
       }
    }, [isDrawerOpen])
