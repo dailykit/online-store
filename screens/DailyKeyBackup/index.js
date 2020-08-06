@@ -72,13 +72,13 @@ const Profile = () => {
    const { user } = useAuth()
 
    const [firstName, setFirstName] = React.useState(
-      customerDetails.firstName || ''
+      customerDetails?.firstName || ''
    )
    const [lastName, setLastName] = React.useState(
-      customerDetails.lastName || ''
+      customerDetails?.lastName || ''
    )
-   const [phone, setPhone] = React.useState(customerDetails.phoneNumber || '')
-   const [email, setEmail] = React.useState(customerDetails.email || '')
+   const [phone, setPhone] = React.useState(customerDetails?.phoneNumber || '')
+   const [email, setEmail] = React.useState(customerDetails?.email || '')
 
    const [saving, setSaving] = React.useState(false)
    const [error, setError] = React.useState('')
@@ -241,7 +241,7 @@ const Address = () => {
             },
          })
          if (address.id) {
-            if (!customerDetails.defaultCustomerAddress) {
+            if (!customerDetails?.defaultCustomerAddress) {
                updateCustomer({
                   variables: {
                      keycloakId: user.sub || user.id,
@@ -428,11 +428,11 @@ const Card = ({ stripePK }) => {
    const [createPaymentMethod] = useMutation(CREATE_STRIPE_PAYMENT_METHOD)
 
    React.useEffect(() => {
-      if (customerDetails.stripeCustomerId) {
+      if (customerDetails?.stripeCustomerId) {
          ;(async () => {
             try {
                const intent = await createSetupIntent(
-                  customerDetails.stripeCustomerId
+                  customerDetails?.stripeCustomerId
                )
                if (intent.id) {
                   setIntent(intent)
