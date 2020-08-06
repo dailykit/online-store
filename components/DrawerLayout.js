@@ -116,7 +116,7 @@ const DrawerLayout = () => {
                name="x"
                size={28}
                color="#fff"
-               style={{ position: 'absolute', right: 0, top: -40 }}
+               style={{ position: 'absolute', right: 8, top: -40 }}
             />
          </TouchableOpacity>
          {drawerView === 'AddDetails' && (
@@ -131,7 +131,7 @@ const DrawerLayout = () => {
                <Text
                   style={{
                      position: 'absolute',
-                     left: 0,
+                     left: 8,
                      top: -30,
                      color: '#fff',
                   }}
@@ -170,7 +170,6 @@ const styles = StyleSheet.create({
       margin: 0,
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
-      overflow: 'hidden',
    },
    container: {
       height: height * 0.8,
