@@ -34,16 +34,20 @@ const PaymentProcessing = ({ navigation }) => {
 
    //Effects
    React.useEffect(() => {
-      updateCart({
-         variables: {
-            id: cart.id,
-            set: {
-               status: 'PROCESS',
-               amount: cart.totalPrice,
+      if (cart?.id) {
+         updateCart({
+            variables: {
+               id: cart.id,
+               set: {
+                  status: 'PROCESS',
+                  amount: cart.totalPrice,
+               },
             },
-         },
-      })
-      setCartId(cart.id)
+         })
+         setCartId(cart.id)
+      } else {
+         navigation.navigate('Home')
+      }
    }, [])
 
    React.useEffect(() => {
@@ -57,6 +61,8 @@ const PaymentProcessing = ({ navigation }) => {
                   return setProgress('Confirming order...')
                } else {
                   return setTimeout(() => {
+                     setCartId(undefined)
+                     setProgress('Sending your order...')
                      navigation.navigate('Order', {
                         orderId: data.cartByPK.orderId,
                      })
