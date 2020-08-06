@@ -236,8 +236,7 @@ const Checkout = ({ cart, navigation }) => {
                      disabled={!cart.isValid.status}
                      color={visual.color}
                      onPress={() =>
-                        cart.isValid.status &&
-                        navigation.navigate('PaymentProcessing')
+                        cart.isValid.status && open('Payment', { navigation })
                      }
                   >
                      <CTAText>PAY ${cart.totalPrice}</CTAText>

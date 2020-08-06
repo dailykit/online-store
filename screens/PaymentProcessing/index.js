@@ -56,25 +56,29 @@ const PaymentProcessing = ({ navigation }) => {
       if (data) {
          switch (data.cartByPK.paymentStatus) {
             case 'PENDING': {
-               return setProgress('Processing your payment...')
+               setProgress('Processing your payment...')
+               break
             }
             case 'SUCCEEDED': {
                if (data.cartByPK.status !== 'ORDER_PLACED') {
-                  return setProgress('Confirming order...')
+                  setProgress('Confirming order...')
+                  break
                } else {
-                  return setTimeout(() => {
+                  setTimeout(() => {
                      navigation.navigate('Order', {
                         orderId: data.cartByPK.orderId,
                      })
                      setIsDrawerOpen(false)
                   }, 2000)
+                  break
                }
             }
             case 'FAILED': {
-               return setProgress('Payment failed :(')
+               setProgress('Payment failed :(')
+               break
             }
             default: {
-               return setProgress('Something is not right...')
+               setProgress('Something is not right...')
             }
          }
       }
