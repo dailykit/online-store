@@ -7,10 +7,12 @@ import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 import { styles } from './styles'
 import { Feather } from '@expo/vector-icons'
 import { useAppContext } from '../../context/app'
+import { useDrawerContext } from '../../context/drawer'
 
 const PaymentProcessing = ({ navigation }) => {
    const { cart } = useCartContext()
    const { visual } = useAppContext()
+   const { setIsDrawerOpen } = useDrawerContext()
 
    const [cartId, setCartId] = React.useState(undefined)
    const [progress, setProgress] = React.useState('Sending your order...')
@@ -61,11 +63,10 @@ const PaymentProcessing = ({ navigation }) => {
                   return setProgress('Confirming order...')
                } else {
                   return setTimeout(() => {
-                     setCartId(undefined)
-                     setProgress('Sending your order...')
                      navigation.navigate('Order', {
                         orderId: data.cartByPK.orderId,
                      })
+                     setIsDrawerOpen(false)
                   }, 2000)
                }
             }

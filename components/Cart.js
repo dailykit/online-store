@@ -335,10 +335,11 @@ const Cart = ({
 export const CartSummary = ({ navigation, text }) => {
    const { cart } = useCartContext()
    const { visual } = useAppContext()
+   const { open } = useDrawerContext()
 
    const pay = () => {
       if (cart.isValid.status) {
-         navigation.navigate('PaymentProcessing')
+         open('PaymentProcessing', { navigation })
       } else {
          if (Platform.OS == 'android')
             ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT)

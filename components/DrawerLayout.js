@@ -19,6 +19,7 @@ import Fulfillment from './Fulfillment'
 import Keycloak from '../screens/Keycloak'
 import { Feather } from '@expo/vector-icons'
 import DailyKeyBackup from '../screens/DailyKeyBackup'
+import PaymentProcessing from '../screens/PaymentProcessing'
 
 const DrawerLayout = () => {
    const {
@@ -89,6 +90,8 @@ const DrawerLayout = () => {
             return <Keycloak type="login" />
          case 'Register':
             return <Keycloak type="register" />
+         case 'Payment':
+            return <PaymentProcessing {...params} />
          default:
             return <Text>Oops! No such component.</Text>
       }
