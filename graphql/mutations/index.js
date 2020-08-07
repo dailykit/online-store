@@ -6,6 +6,52 @@ export const CREATE_CUSTOMER = gql`
          id
          email
          keycloakId
+         platform_customer {
+            email
+            firstName
+            lastName
+            phoneNumber
+            stripeCustomerId
+            customerAddresses {
+               id
+               line1
+               line2
+               state
+               zipcode
+               city
+               country
+               notes
+               lat
+               lng
+            }
+            defaultCustomerAddress {
+               id
+               line1
+               line2
+               state
+               zipcode
+               city
+               country
+               notes
+               lat
+               lng
+            }
+            stripePaymentMethods {
+               stripePaymentMethodId
+               last4
+               expMonth
+               expYear
+               brand
+            }
+            defaultPaymentMethodId
+            defaultStripePaymentMethod {
+               stripePaymentMethodId
+               last4
+               expMonth
+               expYear
+               brand
+            }
+         }
       }
    }
 `
@@ -105,6 +151,16 @@ export const CREATE_STRIPE_PAYMENT_METHOD = gql`
       paymentMethod: platform_createStripePaymentMethod(object: $object) {
          keycloakId
          stripePaymentMethodId
+      }
+   }
+`
+
+export const DELETE_CARTS = gql`
+   mutation DeleteCarts($ids: [Int!]) {
+      deleteCarts(where: { id: { _in: $ids } }) {
+         returning {
+            id
+         }
       }
    }
 `

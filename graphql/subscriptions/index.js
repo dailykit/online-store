@@ -174,32 +174,34 @@ export const STORE_SETTINGS = gql`
    }
 `
 
-export const CUSTOMER = gql`
-   subscription Customers($keycloakId: String!, $email: String!) {
-      customers(
-         where: { email: { _eq: $email }, keycloakId: { _eq: $keycloakId } }
+export const CART = gql`
+   subscription Carts($customerId: Int!) {
+      cart(
+         where: {
+            status: { _eq: "PENDING" }
+            customerId: { _eq: $customerId }
+            cartSource: { _eq: "a-la-carte" }
+         }
+         order_by: { created_at: desc }
       ) {
          id
-         orderCarts(where: { status: { _eq: "PENDING" } }) {
-            id
-            address
-            customerInfo
-            cartInfo
-            customerId
-            isValid
-            paymentMethodId
-            stripeCustomerId
-            fulfillmentInfo
-            deliveryPrice
-            itemTotal
-            tip
-            taxPercent
-            tax
-            totalPrice
-            status
-            paymentStatus
-            orderId
-         }
+         address
+         customerInfo
+         cartInfo
+         customerId
+         isValid
+         paymentMethodId
+         stripeCustomerId
+         fulfillmentInfo
+         deliveryPrice
+         itemTotal
+         tip
+         taxPercent
+         tax
+         totalPrice
+         status
+         paymentStatus
+         orderId
       }
    }
 `

@@ -61,20 +61,13 @@ export const SIMPLE_RECIPE = gql`
    }
 `
 
-export const CUSTOMERS = gql`
-   query Customers($dailyKeyID: String!, $email: String!) {
-      customers(
-         where: { dailyKeyUserId: { _eq: $dailyKeyID }, email: { _eq: $email } }
-      ) {
+export const CUSTOMER = gql`
+   query Customer($keycloakId: String!) {
+      customer(keycloakId: $keycloakId) {
          id
-      }
-   }
-`
-
-export const CUSTOMER_DETAILS = gql`
-   query CustomerDetails($keycloakId: String!) {
-      platform_customerByClients(where: { keycloakId: { _eq: $keycloakId } }) {
-         customer {
+         email
+         keycloakId
+         platform_customer {
             email
             firstName
             lastName

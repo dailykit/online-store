@@ -21,7 +21,7 @@ import Fulfillment from '../../components/Fulfillment'
 import { useAuth } from '../../context/auth'
 import styled from 'styled-components/native'
 import { useMutation } from '@apollo/react-hooks'
-import { UPDATE_CART } from '../../graphql'
+import { UPDATE_CART, DELETE_CARTS } from '../../graphql'
 import AppSkeleton from '../../components/skeletons/app'
 import DrawerLayout from '../../components/DrawerLayout'
 import { Accordion } from 'native-base'
@@ -29,11 +29,7 @@ import { useStoreToast } from '../../utils'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
-   const { open } = useDrawerContext()
    const { visual, masterLoading } = useAppContext()
-   const { isAuthenticated } = useAuth()
-
-   const [editing, setEditing] = React.useState(false)
 
    String.prototype.SRPType = function () {
       return this === 'readyToEat' ? 'Ready to Eat' : 'Meal Kit'
@@ -260,6 +256,16 @@ const Cart = ({ cart }) => {
 
    const { toastr } = useStoreToast()
 
+   const [deleteCarts] = useMutation(DELETE_CARTS, {
+      onCompleted: data => {
+         console.log('Carts deleted: ', data.deleteCarts.returning)
+         AsyncStorage.clear()
+      },
+      onError: error => {
+         console.log('Deleteing carts error: ', error)
+      },
+   })
+
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
          console.log('Cart updated!')
@@ -329,16 +335,28 @@ const Cart = ({ cart }) => {
          products: newCartItems,
          total,
       }
-      const { data } = await updateCart({
-         variables: {
-            id: cart.id,
-            set: {
-               cartInfo: cartInfo,
+      // Check if cart empty
+      if (cartInfo.products.length) {
+         const { data } = await updateCart({
+            variables: {
+               id: cart.id,
+               set: {
+                  cartInfo: cartInfo,
+               },
             },
-         },
-      })
-      if (data) {
-         toastr('success', 'Item removed!')
+         })
+         if (data) {
+            toastr('success', 'Item removed!')
+         }
+      } else {
+         const { data } = await deleteCarts({
+            variables: {
+               ids: [cart.id],
+            },
+         })
+         if (data) {
+            toastr('success', 'Item removed!')
+         }
       }
    }
 

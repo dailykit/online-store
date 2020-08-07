@@ -40,10 +40,11 @@ import { Spinner } from 'native-base'
 import {
    CREATE_CUSTOMER,
    CUSTOMER,
-   CUSTOMER_DETAILS,
    STORE_SETTINGS,
    FETCH_CART,
    UPDATE_CART,
+   CART,
+   DELETE_CARTS,
 } from '../graphql'
 import { useAppContext } from '../context/app'
 import ProductPage from '../screens/ProductPage'
@@ -53,6 +54,7 @@ import Search from '../screens/Search'
 import { useCartContext } from '../context/cart'
 import LoginSuccess from '../screens/LoginSuccess'
 import { useScript } from '../utils/useScript'
+import { mergeCarts } from '../utils'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -71,7 +73,13 @@ export default function OnboardingStack(props) {
    if (mapsError) console.log('Error loading Maps:', mapsError)
 
    const { user, isInitialized } = useAuth()
-   const { setCustomer, setCustomerDetails, setCart } = useCartContext()
+   const {
+      customer,
+      cart,
+      setCustomer,
+      setCustomerDetails,
+      setCart,
+   } = useCartContext()
    const {
       setBrand,
       setVisual,
@@ -79,13 +87,12 @@ export default function OnboardingStack(props) {
       setAvailability,
       setMenuData,
       setMasterLoading,
-      menuLoading,
       setMenuLoading,
    } = useAppContext()
 
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
 
-   // Query
+   // Query for settings
    const { loading: settingsLoading, error: settingsError } = useSubscription(
       STORE_SETTINGS,
       {
@@ -164,23 +171,29 @@ export default function OnboardingStack(props) {
       }
    )
 
-   // Mutations
+   // Mutation for creating customer
    const [createCustomer, { loading: creatingCustomer }] = useMutation(
       CREATE_CUSTOMER,
       {
+         refetchQueries: ['customer'],
          onCompleted: data => {
+            setCustomer(data.createCustomer)
+            setCustomerDetails(data.createCustomer.platform_customer)
+            // Check for any pending cart
             if (cartId) {
                updateCart({
                   variables: {
                      id: cartId,
                      set: {
                         customerId: data.createCustomer.id,
-                        customerKeycloakId: user.sub || user.id,
+                        customerKeycloakId: data.createCustomer.keycloakId,
+                        stripeCustomerId: null,
+                        customerInfo: null,
                      },
                   },
                })
             }
-            console.log('Customer created')
+            console.log('Customer created: ', data.createCustomer)
          },
          onError: error => {
             console.log(error)
@@ -188,23 +201,40 @@ export default function OnboardingStack(props) {
       }
    )
 
-   // Subscription
-   const { error, loading: fetchingCustomer } = useSubscription(CUSTOMER, {
+   // Query Customer and Data from platform
+   const { error, loading: fetchingCustomer } = useQuery(CUSTOMER, {
       variables: {
          keycloakId: user.sub || user.userid,
-         email: user.email,
       },
-      onSubscriptionData: data => {
-         const customers = data.subscriptionData.data.customers
-         if (customers.length) {
-            setCustomer(customers[0])
+      onCompleted: data => {
+         console.log('Customer:', data)
+         if (data.customer) {
+            setCustomer(data.customer)
+            setCustomerDetails(data.customer.platform_customer)
+            // Update any pending cart
             if (cartId) {
                updateCart({
                   variables: {
                      id: cartId,
                      set: {
-                        customerId: customers[0].id,
-                        customerKeycloakId: user.sub || user.id,
+                        customerId: data.customer.id,
+                        customerKeycloakId: data.customer.keycloakId,
+                        stripeCustomerId:
+                           data.customer.platform_customer?.stripeCustomerId ||
+                           null,
+                        paymentMethodId:
+                           data.customer.platform_customer
+                              ?.defaultPaymentMethodId || null,
+                        customerInfo: {
+                           customerFirstName:
+                              data.customer.platform_customer?.firstName,
+                           customerLastName:
+                              data.customer.platform_customer?.lastName,
+                           customerPhone:
+                              data.customer.platform_customer?.phoneNumber,
+                           customerEmail:
+                              data.customer.platform_customer?.email,
+                        },
                      },
                   },
                })
@@ -224,7 +254,45 @@ export default function OnboardingStack(props) {
       },
    })
 
-   if (error) console.log('Subscription error: ', error)
+   // Mutation for deleting carts
+   const [deleteCarts] = useMutation(DELETE_CARTS, {
+      onCompleted: data => {
+         console.log('Carts deleted: ', data.deleteCarts.returning)
+      },
+      onError: error => {
+         console.log('Deleteing carts error: ', error)
+      },
+   })
+
+   // Subscription for Cart when logged in
+   const { loading: subscribingCart } = useSubscription(CART, {
+      variables: {
+         customerId: customer?.id,
+      },
+      onSubscriptionData: data => {
+         if (data.subscriptionData.data.cart.length > 1) {
+            const [mergedCart, mergedCartIds] = mergeCarts(
+               data.subscriptionData.data.cart
+            )
+            console.log('mergedCart', mergedCart)
+            updateCart({
+               variables: {
+                  id: mergedCart.id,
+                  set: {
+                     cartInfo: mergedCart.cartInfo,
+                  },
+               },
+            })
+            deleteCarts({
+               variables: {
+                  ids: mergedCartIds,
+               },
+            })
+         } else {
+            setCart(data.subscriptionData.data.cart[0])
+         }
+      },
+   })
 
    const [fetchCart, { loading: fetchingCart }] = useLazyQuery(FETCH_CART, {
       onCompleted: data => {
@@ -238,17 +306,8 @@ export default function OnboardingStack(props) {
    })
 
    const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: data => {
+      onCompleted: () => {
          console.log('Cart updated!')
-         if (
-            cartId &&
-            data.updateCart.returning[0].customerId &&
-            data.updateCart.returning[0].customerInfo?.customerEmail
-         ) {
-            console.log('Cleared local storage!')
-            setCartId(null)
-            AsyncStorage.clear()
-         }
       },
       onError: error => {
          console.log(error)
@@ -256,9 +315,6 @@ export default function OnboardingStack(props) {
    })
 
    React.useEffect(() => {
-      if (user.sub || user.userid) {
-         customerDetails()
-      }
       ;(async () => {
          const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
          console.log('Pending Cart ID: ', cartId)
@@ -273,57 +329,13 @@ export default function OnboardingStack(props) {
       })()
    }, [user])
 
-   // Query
-   const [customerDetails, { loading: fetchingCustomerDetails }] = useLazyQuery(
-      CUSTOMER_DETAILS,
-      {
-         variables: {
-            keycloakId: user.sub || user.userid,
-         },
-         onCompleted: data => {
-            if (data.platform_customerByClients?.length) {
-               console.log(
-                  'platform -> data',
-                  data.platform_customerByClients[0].customer
-               )
-               setCustomerDetails(data.platform_customerByClients[0].customer)
-               if (cartId) {
-                  console.log('Updating Cart with Customer Data')
-                  updateCart({
-                     variables: {
-                        id: cartId,
-                        set: {
-                           stripeCustomerId:
-                              data.platform_customerByClients[0].customer
-                                 .stripeCustomerId || null,
-                           paymentMethodId:
-                              data.platform_customerByClients[0].customer
-                                 .defaultPaymentMethodId || null,
-                           customerInfo: {
-                              customerFirstName:
-                                 data.platform_customerByClients[0].customer
-                                    ?.firstName,
-                              customerLastName:
-                                 data.platform_customerByClients[0].customer
-                                    ?.lastName,
-                              customerPhone:
-                                 data.platform_customerByClients[0].customer
-                                    ?.phoneNumber,
-                              customerEmail:
-                                 data.platform_customerByClients[0].customer
-                                    ?.email,
-                           },
-                        },
-                     },
-                  })
-               }
-            } else {
-               console.log('No customer data found!')
-            }
-         },
-         fetchPolicy: 'cache-and-network',
+   React.useEffect(() => {
+      if (cartId && cart?.customerId && cart?.customerInfo?.customerEmail) {
+         console.log('Cleared local storage!')
+         setCartId(null)
+         AsyncStorage.clear()
       }
-   )
+   }, [cart])
 
    const fetchData = async date => {
       try {
@@ -373,7 +385,7 @@ export default function OnboardingStack(props) {
             fetchingCustomer,
             creatingCustomer,
             fetchingCart,
-            fetchingCustomerDetails,
+            subscribingCart,
             !isInitialized,
          ].some(loading => loading)
       )
@@ -382,7 +394,7 @@ export default function OnboardingStack(props) {
       fetchingCustomer,
       creatingCustomer,
       fetchingCart,
-      fetchingCustomerDetails,
+      subscribingCart,
       isInitialized,
    ])
 
