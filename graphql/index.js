@@ -21,6 +21,7 @@ import {
    UPDATE_CUSTOMER,
    CREATE_CUSTOMER_ADDRESS,
    CREATE_STRIPE_PAYMENT_METHOD,
+   DELETE_CARTS,
 } from './mutations'
 
 import {
@@ -66,4 +67,5 @@ export {
    INVENTORY_PRODUCT,
    FETCH_CART,
    STRIPE_PK,
+   DELETE_CARTS,
 }

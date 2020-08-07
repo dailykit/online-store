@@ -178,7 +178,7 @@ export const CART = gql`
    subscription Carts($customerId: Int!) {
       cart(
          where: { status: { _eq: "PENDING" }, customerId: { _eq: $customerId } }
-         order_by: { created_at: asc }
+         order_by: { created_at: desc }
       ) {
          id
          address

@@ -59,3 +59,17 @@ export const useStoreToast = () => {
 
    return { toastr }
 }
+
+export const mergeCarts = carts => {
+   const masterCart = carts.shift()
+   const ids = []
+   for (let cart of carts) {
+      masterCart.cartInfo.total += cart.cartInfo.total
+      masterCart.cartInfo.products = [
+         ...masterCart.cartInfo.products,
+         ...cart.cartInfo.products,
+      ]
+      ids.push(cart.id)
+   }
+   return [masterCart, ids]
+}

@@ -44,6 +44,7 @@ import {
    FETCH_CART,
    UPDATE_CART,
    CART,
+   DELETE_CARTS,
 } from '../graphql'
 import { useAppContext } from '../context/app'
 import ProductPage from '../screens/ProductPage'
@@ -53,6 +54,7 @@ import Search from '../screens/Search'
 import { useCartContext } from '../context/cart'
 import LoginSuccess from '../screens/LoginSuccess'
 import { useScript } from '../utils/useScript'
+import { mergeCarts } from '../utils'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -252,13 +254,43 @@ export default function OnboardingStack(props) {
       },
    })
 
+   // Mutation for deleting carts
+   const [deleteCarts] = useMutation(DELETE_CARTS, {
+      onCompleted: data => {
+         console.log('Carts deleted: ', data.deleteCarts.returning)
+      },
+      onError: error => {
+         console.log('Deleteing carts error: ', error)
+      },
+   })
+
    // Subscription for Cart when logged in
    const { loading: subscribingCart } = useSubscription(CART, {
       variables: {
          customerId: customer?.id,
       },
       onSubscriptionData: data => {
-         setCart(data.subscriptionData.data.cart[0])
+         if (data.subscriptionData.data.cart.length > 1) {
+            const [mergedCart, mergedCartIds] = mergeCarts(
+               data.subscriptionData.data.cart
+            )
+            console.log('mergedCart', mergedCart)
+            updateCart({
+               variables: {
+                  id: mergedCart.id,
+                  set: {
+                     cartInfo: mergedCart.cartInfo,
+                  },
+               },
+            })
+            deleteCarts({
+               variables: {
+                  ids: mergedCartIds,
+               },
+            })
+         } else {
+            setCart(data.subscriptionData.data.cart[0])
+         }
       },
    })
 

@@ -154,3 +154,13 @@ export const CREATE_STRIPE_PAYMENT_METHOD = gql`
       }
    }
 `
+
+export const DELETE_CARTS = gql`
+   mutation DeleteCarts($ids: [Int!]) {
+      deleteCarts(where: { id: { _in: $ids } }) {
+         returning {
+            id
+         }
+      }
+   }
+`
