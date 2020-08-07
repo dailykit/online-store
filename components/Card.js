@@ -104,7 +104,6 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
             } else {
                const priceWithoutDiscount = product.defaultCartItem.unitPrice
                const products = [
-                  ...cart.cartInfo.products,
                   {
                      ...product.defaultCartItem,
                      unitPrice: price,
