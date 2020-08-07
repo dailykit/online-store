@@ -13,7 +13,7 @@ import AddDetails from '../screens/AddDetails'
 import SafetyScreen from '../screens/SafetyScreen'
 import { useCartContext } from '../context/cart'
 import { useLazyQuery } from '@apollo/react-hooks'
-import { CUSTOMER_DETAILS } from '../graphql'
+import { CUSTOMER } from '../graphql'
 import { useAuth } from '../context/auth'
 import Fulfillment from './Fulfillment'
 import Keycloak from '../screens/Keycloak'
@@ -33,14 +33,14 @@ const DrawerLayout = () => {
    const { user } = useAuth()
 
    // Query
-   const [fetchDetails] = useLazyQuery(CUSTOMER_DETAILS, {
+   const [fetchDetails] = useLazyQuery(CUSTOMER, {
       variables: {
          keycloakId: user.sub || user.userid,
       },
       onCompleted: data => {
          console.log('platform -> data', data)
-         if (data.platform_customerByClients?.length) {
-            setCustomerDetails(data.platform_customerByClients[0].customer)
+         if (data.customer.platform_customer) {
+            setCustomerDetails(data.customer.platform_customer)
          } else {
             console.log('No customer data found!')
          }

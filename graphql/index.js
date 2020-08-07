@@ -1,5 +1,4 @@
 import {
-   CUSTOMER_DETAILS,
    GET_MENU,
    COMBO_PRODUCT,
    CUSTOMIZABLE_PRODUCT,
@@ -12,6 +11,7 @@ import {
    CUSTOMIZABLE_PRODUCTS,
    FETCH_CART,
    STRIPE_PK,
+   CUSTOMER,
 } from './queries'
 
 import {
@@ -24,7 +24,6 @@ import {
 } from './mutations'
 
 import {
-   CUSTOMER,
    SAFETY_CHECK,
    CART_BY_PK,
    STORE_SETTINGS,
@@ -34,14 +33,15 @@ import {
    PREORDER_DELIVERY,
    ONDEMAND_DELIVERY,
    ORDER,
+   CART,
 } from './subscriptions'
 
 export {
+   CART,
    CUSTOMER,
    UPDATE_CUSTOMER,
    CREATE_CUSTOMER_ADDRESS,
    CREATE_STRIPE_PAYMENT_METHOD,
-   CUSTOMER_DETAILS,
    GET_MENU,
    COMBO_PRODUCT,
    CUSTOMIZABLE_PRODUCT,
