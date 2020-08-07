@@ -91,7 +91,9 @@ const Profile = () => {
       customerDetails?.lastName || ''
    )
    const [phone, setPhone] = React.useState(customerDetails?.phoneNumber || '')
-   const [email, setEmail] = React.useState(customerDetails?.email || '')
+   const [email, setEmail] = React.useState(
+      customerDetails?.email || 'Already saved!'
+   )
 
    const [saving, setSaving] = React.useState(false)
    const [error, setError] = React.useState('')
