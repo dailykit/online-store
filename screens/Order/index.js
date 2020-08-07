@@ -58,7 +58,7 @@ const Order = ({ route, navigation }) => {
             </View>
          ) : (
             <>
-               {order ? (
+               {Object.keys(order).length > 0 ? (
                   <ScrollView style={{ flex: 1 }}>
                      <View style={styles.container}>
                         {/* Order Heading */}
@@ -97,7 +97,7 @@ const Order = ({ route, navigation }) => {
                               marginBottom: 20,
                            }}
                         >
-                           {order.fulfillmentType.includes('DELIVERY') ? (
+                           {order?.fulfillmentType?.includes('DELIVERY') ? (
                               <Delivery order={order} />
                            ) : (
                               <Pickup order={order} />
