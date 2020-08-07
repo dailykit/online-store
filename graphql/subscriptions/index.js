@@ -177,7 +177,11 @@ export const STORE_SETTINGS = gql`
 export const CART = gql`
    subscription Carts($customerId: Int!) {
       cart(
-         where: { status: { _eq: "PENDING" }, customerId: { _eq: $customerId } }
+         where: {
+            status: { _eq: "PENDING" }
+            customerId: { _eq: $customerId }
+            cartSource: { _eq: "a-la-carte" }
+         }
          order_by: { created_at: desc }
       ) {
          id
