@@ -19,8 +19,8 @@ const AddDetails = ({ params }) => {
       eventer(messageEvent, e => {
          if (e.origin !== DAILYKEY_URL) return
          let message = JSON.parse(e.data)
-         console.log(message)
          if (message.success) {
+            console.log(message)
             setSaved(message)
             setIsDrawerOpen(false)
          }

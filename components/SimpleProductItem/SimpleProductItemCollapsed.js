@@ -19,7 +19,7 @@ const SimpleProductItemCollapsed = ({
    showInfo,
    refId,
    refType,
-   onModifersSelected,
+   onModifiersSelected,
    onValidityChange,
 }) => {
    const [typeSelected, setTypeSelected] = useState('')
@@ -224,7 +224,8 @@ const SimpleProductItemCollapsed = ({
                            isSelected={servingIndex == key ? true : false}
                            setServingIndex={index => setServingIndex(index)}
                            size={item_data.simpleRecipeYield.yield.serving}
-                           price={item_data.price[0].value}
+                           price={parseFloat(item_data.price[0].value)}
+                           discount={parseFloat(item_data.price[0].discount)}
                            display={
                               typeSelected === 'mealKit'
                                  ? 'Meal Kit'
@@ -243,7 +244,7 @@ const SimpleProductItemCollapsed = ({
                {selectedOption?.modifier && (
                   <Modifiers
                      data={selectedOption.modifier.data}
-                     onModifersSelected={onModifersSelected}
+                     onModifiersSelected={onModifiersSelected}
                      onValidityChange={onValidityChange}
                   />
                )}

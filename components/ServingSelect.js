@@ -2,6 +2,7 @@ import { Feather, MaterialIcons } from '@expo/vector-icons'
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppContext } from '../context/app'
+import { discountedPrice } from '../utils'
 
 const ServingSelect = ({
    index,
@@ -9,14 +10,8 @@ const ServingSelect = ({
    setServingIndex,
    size,
    price,
-   display,
-   type,
-   id,
+   discount,
    setProductOption,
-   customizableProduct,
-   simpleRecipeProductId,
-   name,
-   typeSelected,
    setSelectedOption,
 }) => {
    const { visual } = useAppContext()
@@ -41,6 +36,16 @@ const ServingSelect = ({
             },
          ]}
       >
+         {Boolean(discount) && (
+            <View
+               style={[
+                  styles.discountBanner,
+                  { backgroundColor: visual.color },
+               ]}
+            >
+               <Text style={styles.discountBannerText}>{discount}% off</Text>
+            </View>
+         )}
          <View style={styles.servingSelectContainer_one}>
             <Feather size={14} name="user" />
             <Text style={{ fontWeight: 'bold' }}>
@@ -49,7 +54,23 @@ const ServingSelect = ({
             </Text>
          </View>
          <View style={styles.servingSelectContainer_two}>
-            <Text style={styles.price_text}>$ {price}</Text>
+            {discount ? (
+               <>
+                  <Text
+                     style={[
+                        styles.price_text,
+                        { textDecorationLine: 'line-through' },
+                     ]}
+                  >
+                     $ {price.toFixed(2)}
+                  </Text>
+                  <Text style={[styles.price_text, { marginLeft: 16 }]}>
+                     $ {discountedPrice({ value: price, discount }).toFixed(2)}
+                  </Text>
+               </>
+            ) : (
+               <Text style={styles.price_text}>$ {price.toFixed(2)}</Text>
+            )}
          </View>
          <View style={styles.servingSelectContainer_three}>
             {isSelected && (
@@ -82,6 +103,7 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       marginBottom: 5,
       borderColor: '#fff',
+      position: 'relative',
    },
    servingSelectContainer_one: {
       flex: 7,
@@ -92,6 +114,7 @@ const styles = StyleSheet.create({
    },
    servingSelectContainer_two: {
       flex: 2,
+      flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
    },
@@ -99,6 +122,14 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
+   },
+   discountBanner: {
+      position: 'absolute',
+      paddding: 2,
+   },
+   discountBannerText: {
+      color: '#fff',
+      fontSize: '0.7rem',
    },
 })
 

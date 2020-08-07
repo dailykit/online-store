@@ -13,7 +13,7 @@ export const DefaultPaymentFloater = ({ navigation }) => {
    const [card, setCard] = React.useState(undefined)
 
    React.useEffect(() => {
-      if (cart && customerDetails) {
+      if (cart?.paymentMethodId && customerDetails) {
          const card = customerDetails.stripePaymentMethods.find(
             card => card.stripePaymentMethodId === cart.paymentMethodId
          )
@@ -21,7 +21,7 @@ export const DefaultPaymentFloater = ({ navigation }) => {
             setCard(card)
          }
       }
-   }, [cart, cart.paymentMethodId])
+   }, [cart?.paymentMethodId, customerDetails])
 
    return (
       <TouchableOpacity

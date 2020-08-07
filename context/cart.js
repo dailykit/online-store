@@ -35,6 +35,7 @@ export const CartContextProvider = ({ children }) => {
                variables: {
                   id: cart.id,
                   set: {
+                     stripeCustomerId: customerDetails?.stripeCustomerId,
                      paymentMethodId: saved.data.paymentMethodId,
                   },
                },

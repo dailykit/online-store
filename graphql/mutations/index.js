@@ -61,3 +61,50 @@ export const UPDATE_CART = gql`
       }
    }
 `
+
+export const UPDATE_CUSTOMER = gql`
+   mutation platform_updateCustomer(
+      $keycloakId: String!
+      $_set: platform_customer_set_input!
+   ) {
+      platform_updateCustomer(
+         _set: $_set
+         pk_columns: { keycloakId: $keycloakId }
+      ) {
+         email
+         lastName
+         firstName
+         keycloakId
+         phoneNumber
+      }
+   }
+`
+
+export const CREATE_CUSTOMER_ADDRESS = gql`
+   mutation platform_createCustomerAddress(
+      $object: platform_customerAddress_insert_input!
+   ) {
+      platform_createCustomerAddress(object: $object) {
+         id
+         lat
+         lng
+         line1
+         line2
+         city
+         state
+         country
+         zipcode
+         label
+         notes
+      }
+   }
+`
+
+export const CREATE_STRIPE_PAYMENT_METHOD = gql`
+   mutation paymentMethod($object: platform_stripePaymentMethod_insert_input!) {
+      paymentMethod: platform_createStripePaymentMethod(object: $object) {
+         keycloakId
+         stripePaymentMethodId
+      }
+   }
+`

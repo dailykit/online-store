@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, ScrollView } from 'react-native'
+import { View, ScrollView, Text } from 'react-native'
 import { Header } from '../../components'
 import { CategoryBanner } from '../../components/CategoryBanner'
 import Products from '../../components/Products'
@@ -11,9 +11,15 @@ import AppSkeleton from '../../components/skeletons/app'
 import { useAppContext } from '../../context/app'
 
 const CategoryProductsPage = ({ navigation, route }) => {
-   const { data, category } = route.params
+   const { category } = route.params
 
-   const { masterLoading } = useAppContext()
+   const { masterLoading, menuData } = useAppContext()
+   const [index, setIndex] = React.useState(-1)
+
+   React.useEffect(() => {
+      const i = menuData.findIndex(categoryObj => categoryObj.name === category)
+      setIndex(i)
+   }, [menuData, category])
 
    if (masterLoading) {
       return <AppSkeleton />
@@ -42,31 +48,61 @@ const CategoryProductsPage = ({ navigation, route }) => {
                }}
                showsHorizontalScrollIndicator={false}
             >
-               {data.map((category, key) => (
+               {menuData.map((category, key) => (
                   <CategoriesButton
                      title={category.name}
                      key={key}
                      id={key}
-                     length={data?.length}
+                     length={menuData?.length}
                      onPress={() =>
                         navigation.navigate('CategoryProductsPage', {
-                           data,
-                           category,
+                           category: category.name,
                         })
                      }
                   />
                ))}
             </ScrollView>
          </View>
-         <CategoryBanner title={category.title} showLink={false} />
-         <ScrollView>
-            <Products
-               navigation={navigation}
-               category={category}
-               horizontal={false}
-            />
-            <Footer />
-         </ScrollView>
+         {index === -1 ? (
+            <>
+               <View
+                  style={{
+                     flex: 1,
+                     alignItems: 'center',
+                     justifyContent: 'center',
+                     padding: 20,
+                  }}
+               >
+                  <Text
+                     style={{
+                        fontSize: '1.2rem',
+                        color: '#666',
+                        fontWeight: 'bold',
+                     }}
+                  >
+                     This may be a category in your head but not on our store!
+                     Choose another.
+                  </Text>
+               </View>
+               <Footer />
+            </>
+         ) : (
+            <>
+               <CategoryBanner title={category} showLink={false} />
+               <ScrollView>
+                  <Products
+                     navigation={navigation}
+                     category={
+                        menuData.filter(
+                           categoryObj => categoryObj.name === category
+                        )[0] || {}
+                     }
+                     horizontal={false}
+                  />
+                  <Footer />
+               </ScrollView>
+            </>
+         )}
          {width < 768 && <CheckoutBar navigation={navigation} />}
       </>
    )
