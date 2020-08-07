@@ -1,7 +1,12 @@
 import React from 'react'
 import styled, { css } from 'styled-components/native'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
-import { Elements, CardElement } from '@stripe/react-stripe-js'
+import {
+   Elements,
+   CardElement,
+   useElements,
+   useStripe,
+} from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 
 import { useCartContext } from '../../context/cart'
@@ -19,12 +24,14 @@ import { MAPS_API_KEY } from 'react-native-dotenv'
 import { useScript } from '../../utils/useScript'
 import { View, Spinner } from 'native-base'
 import axios from 'axios'
+import { createSetupIntent, cancelSetupIntent } from './api'
+import { PAYMENTS_API_URL } from 'react-native-dotenv'
 
 const DailyKeyBackup = ({ params }) => {
    const { path } = params
 
    const { customerDetails } = useCartContext()
-   const [stripePK, setStripePK] = React.useState(undefined)
+   const [stripePromise, setStripePromise] = React.useState(undefined)
 
    useQuery(STRIPE_PK, {
       onCompleted: data => {
@@ -33,7 +40,9 @@ const DailyKeyBackup = ({ params }) => {
                'DailyKeyBackup -> data.organizations',
                data.organizations
             )
-            setStripePK(data.organizations[0].stripePublishableKey)
+            setStripePromise(
+               loadStripe(data.organizations[0].stripePublishableKey)
+            )
          }
       },
       onError: error => {
@@ -57,7 +66,11 @@ const DailyKeyBackup = ({ params }) => {
             </CustomerInfo>
             {path.includes('profile') && <Profile />}
             {path.includes('address') && <Address />}
-            {path.includes('card') && stripePK && <Card stripePK={stripePK} />}
+            {path.includes('card') && stripePromise && (
+               <Elements stripe={stripePromise}>
+                  <Card />
+               </Elements>
+            )}
          </Body>
       </Wrapper>
    )
@@ -410,14 +423,13 @@ const CARD_ELEMENT_OPTIONS = {
    },
 }
 
-const Card = ({ stripePK }) => {
-   console.log('Card -> stripePK', stripePK)
-   const stripePromise = loadStripe(stripePK)
-
+const Card = () => {
    const { customerDetails } = useCartContext()
    const { visual } = useAppContext()
    const { setSaved, setIsDrawerOpen } = useDrawerContext()
    const { user } = useAuth()
+   const stripe = useStripe()
+   const elements = useElements()
 
    const [intent, setIntent] = React.useState(null)
    const [status, setStatus] = React.useState('LOADING')
@@ -428,12 +440,14 @@ const Card = ({ stripePK }) => {
    const [createPaymentMethod] = useMutation(CREATE_STRIPE_PAYMENT_METHOD)
 
    React.useEffect(() => {
+      console.log('Running intent code: ', customerDetails)
       if (customerDetails?.stripeCustomerId) {
          ;(async () => {
             try {
                const intent = await createSetupIntent(
                   customerDetails?.stripeCustomerId
                )
+               console.log('Intent: ', intent)
                if (intent.id) {
                   setIntent(intent)
                   setStatus('SUCCESS')
@@ -445,7 +459,7 @@ const Card = ({ stripePK }) => {
             }
          })()
       }
-   }, [customerDetails])
+   }, [])
 
    const save = async e => {
       try {
@@ -498,7 +512,7 @@ const Card = ({ stripePK }) => {
                         },
                      },
                   })
-                  if (!customer.defaultPaymentMethodId) {
+                  if (!customerDetails.defaultPaymentMethodId) {
                      await updateCustomer({
                         variables: {
                            keycloakId: user.sub || user.id,
@@ -525,13 +539,14 @@ const Card = ({ stripePK }) => {
             }
          }
       } catch (error) {
+         console.log(error)
          setError(error.message)
       } finally {
          setSaving(false)
       }
    }
 
-   if (status === 'LOADING' || !stripePK) {
+   if (status === 'LOADING') {
       return (
          <View
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
@@ -546,27 +561,25 @@ const Card = ({ stripePK }) => {
          <ContentHeader>
             <ContentHeaderText>Add a new Card</ContentHeaderText>
          </ContentHeader>
-         <Elements stripe={stripePromise}>
-            <Form>
-               <FormField>
-                  <FormFieldLabel>Card Holder Name</FormFieldLabel>
-                  <FormFieldInput
-                     onChangeText={text => setName(text)}
-                     value={name}
-                     editable={true}
-                  />
-               </FormField>
-               <FormField>
-                  <CardElement
-                     options={CARD_ELEMENT_OPTIONS}
-                     onChange={({ error }) => setError(error?.message || '')}
-                  />
-               </FormField>
-            </Form>
-            <CTA color={visual.color} onPress={save} disabled={saving}>
-               <CTAText>{saving ? 'Saving...' : 'Save'}</CTAText>
-            </CTA>
-         </Elements>
+         <Form>
+            <FormField>
+               <FormFieldLabel>Card Holder Name</FormFieldLabel>
+               <FormFieldInput
+                  onChangeText={text => setName(text)}
+                  value={name}
+                  editable={true}
+               />
+            </FormField>
+            <FormField>
+               <CardElement
+                  options={CARD_ELEMENT_OPTIONS}
+                  onChange={({ error }) => setError(error?.message || '')}
+               />
+            </FormField>
+         </Form>
+         <CTA color={visual.color} onPress={save} disabled={saving}>
+            <CTAText>{saving ? 'Saving...' : 'Save'}</CTAText>
+         </CTA>
       </>
    )
 }
