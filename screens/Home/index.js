@@ -201,8 +201,7 @@ const Home = props => {
                               props.navigation.navigate(
                                  'CategoryProductsPage',
                                  {
-                                    data: menuData,
-                                    category,
+                                    category: category.name,
                                  }
                               )
                            }
@@ -218,8 +217,6 @@ const Home = props => {
                         <CategoryBanner
                            navigation={props.navigation}
                            title={category.name}
-                           category={category}
-                           data={menuData}
                            showLink={true}
                         />
                         <Products

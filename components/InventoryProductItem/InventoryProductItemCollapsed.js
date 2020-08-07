@@ -16,7 +16,7 @@ const InventoryProductCollapsed = ({
    showInfo,
    isSelected,
    refId,
-   onModifersSelected,
+   onModifiersSelected,
    onValidityChange,
 }) => {
    const { visual } = useAppContext()
@@ -166,7 +166,8 @@ const InventoryProductCollapsed = ({
                            isSelected={servingIndex == key ? true : false}
                            setServingIndex={index => setServingIndex(index)}
                            size={item_data.label}
-                           price={item_data.price[0].value}
+                           price={parseFloat(item_data.price[0].value)}
+                           discount={parseFloat(item_data.price[0].discount)}
                            setProductOption={() => setProductOption(item_data)}
                            id={item_data.id}
                            setSelectedOption={() =>
@@ -179,7 +180,7 @@ const InventoryProductCollapsed = ({
                {selectedOption?.modifier && (
                   <Modifiers
                      data={selectedOption.modifier.data}
-                     onModifersSelected={onModifersSelected}
+                     onModifiersSelected={onModifiersSelected}
                      onValidityChange={onValidityChange}
                   />
                )}

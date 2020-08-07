@@ -18,6 +18,8 @@ import { useAuth } from '../context/auth'
 import Fulfillment from './Fulfillment'
 import Keycloak from '../screens/Keycloak'
 import { Feather } from '@expo/vector-icons'
+import DailyKeyBackup from '../screens/DailyKeyBackup'
+import PaymentProcessing from '../screens/PaymentProcessing'
 
 const DrawerLayout = () => {
    const {
@@ -51,7 +53,10 @@ const DrawerLayout = () => {
 
    //Effects
    React.useEffect(() => {
-      if (!isDrawerOpen && drawerView === 'AddDetails') {
+      if (
+         !isDrawerOpen &&
+         ['AddDetails', 'DailyKeyBackup'].includes(drawerView)
+      ) {
          fetchDetails()
       }
    }, [isDrawerOpen])
@@ -59,9 +64,8 @@ const DrawerLayout = () => {
    React.useEffect(() => {
       if (
          !isDrawerOpen &&
-         ['AddDetails', 'Login', 'Register'].includes(drawerView)
+         ['AddDetails', 'Login', 'Register', 'Payment'].includes(drawerView)
       ) {
-         console.log('Clearing iFrame')
          setDrawerView(undefined)
       }
    }, [isDrawerOpen])
@@ -75,6 +79,8 @@ const DrawerLayout = () => {
             return <SelectPaymentMethod />
          case 'AddDetails':
             return <AddDetails params={params} />
+         case 'DailyKeyBackup':
+            return <DailyKeyBackup params={params} />
          case 'Safety':
             return <SafetyScreen />
          case 'Fulfillment':
@@ -83,6 +89,8 @@ const DrawerLayout = () => {
             return <Keycloak type="login" />
          case 'Register':
             return <Keycloak type="register" />
+         case 'Payment':
+            return <PaymentProcessing {...params} />
          default:
             return <Text>Oops! No such component.</Text>
       }
@@ -108,9 +116,30 @@ const DrawerLayout = () => {
                name="x"
                size={28}
                color="#fff"
-               style={{ position: 'absolute', right: 0, top: -40 }}
+               style={{ position: 'absolute', right: 8, top: -40 }}
             />
          </TouchableOpacity>
+         {drawerView === 'AddDetails' && (
+            <TouchableOpacity
+               style={{
+                  width: width > 1280 ? 640 : width,
+                  position: 'relative',
+                  marginHorizontal: 'auto',
+               }}
+               onPress={() => setDrawerView('DailyKeyBackup')}
+            >
+               <Text
+                  style={{
+                     position: 'absolute',
+                     left: 8,
+                     top: -30,
+                     color: '#fff',
+                  }}
+               >
+                  Trouble with DailyKEY? Click here!
+               </Text>
+            </TouchableOpacity>
+         )}
          <View style={width > 1280 ? styles.container : styles.phoneContainer}>
             <View
                style={width > 1280 ? styles.component : styles.phoneComponent}
@@ -141,7 +170,6 @@ const styles = StyleSheet.create({
       margin: 0,
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
-      overflow: 'hidden',
    },
    container: {
       height: height * 0.8,

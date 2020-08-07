@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import InventoryProductCollapsed from './InventoryProductItemCollapsed'
-import { priceSort } from '../../utils'
+import { priceSort, discountedPrice } from '../../utils'
 
 const InventoryProductItem = ({
    _id,
@@ -8,6 +8,7 @@ const InventoryProductItem = ({
    showInfo,
    navigation,
    setPrice,
+   setDiscount,
    tunnelItem,
    independantItem,
    setcartItem,
@@ -28,12 +29,14 @@ const InventoryProductItem = ({
          ...objToAdd,
          option: { id: option.id, label: option.label },
          price: option.price[0].value,
+         discount: option.price[0].discount,
          modifiers: [],
       })
       setcartItem({
          ...objToAdd,
          option: { id: option.id, label: option.label },
          price: option.price[0].value,
+         discount: option.price[0].discount,
          modifiers: [],
       })
    }
@@ -51,6 +54,7 @@ const InventoryProductItem = ({
          id: product?.id,
          name: product?.name,
          price: option.price[0]?.value,
+         discount: option.price[0].discount,
          image: product?.assets?.images[0],
          option: {
             id: option?.id, // product option id
@@ -65,7 +69,9 @@ const InventoryProductItem = ({
       }
       setobjToAdd(objToPush)
       if (!tunnelItem && independantItem) {
-         setPrice(option?.price[0]?.value)
+         setPrice(discountedPrice(option.price[0]))
+         if (option.price[0].discount)
+            setDiscount(parseFloat(option.price[0].discount))
          setcardData(product)
       }
       if (tunnelItem && isSelected) {
@@ -95,7 +101,7 @@ const InventoryProductItem = ({
          setSelected={setSelected}
          isSelected={isSelected}
          refId={refId}
-         onModifersSelected={modifiersHandler}
+         onModifiersSelected={modifiersHandler}
          onValidityChange={onModifiersValidityChange}
       />
    )

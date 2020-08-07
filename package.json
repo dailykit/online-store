@@ -22,6 +22,8 @@
       "@react-navigation/drawer": "5.4.1",
       "@react-navigation/native": "5.1.5",
       "@react-navigation/stack": "5.2.10",
+      "@stripe/react-stripe-js": "^1.1.2",
+      "@stripe/stripe-js": "^1.8.0",
       "@ui-kitten/components": "^5.0.0-alpha.1",
       "apollo-boost": "^0.4.9",
       "apollo-link-ws": "^1.0.20",
@@ -51,6 +53,7 @@
       "react-native-extended-stylesheet": "^0.12.0",
       "react-native-gesture-handler": "~1.6.0",
       "react-native-get-random-values": "^1.4.0",
+      "react-native-google-places-autocomplete": "^1.8.0",
       "react-native-maps": "0.26.1",
       "react-native-modal": "^11.5.6",
       "react-native-reanimated": "~1.7.0",
@@ -71,8 +74,10 @@
    "devDependencies": {
       "@babel/plugin-proposal-class-properties": "^7.8.3",
       "babel-preset-expo": "^8.1.0",
+      "css-loader": "^4.2.1",
       "customize-cra": "^0.9.1",
-      "react-app-rewired": "^2.1.5"
+      "react-app-rewired": "^2.1.5",
+      "ttf-loader": "^1.0.2"
    },
    "author": "Sunny Dhama",
    "license": "MIT"

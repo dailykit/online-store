@@ -13,7 +13,6 @@ const Footer = () => {
             flexDirection: width > 768 ? 'row' : 'column',
             alignItems: 'center',
             padding: 60,
-            flex: 1,
             justifyContent: 'space-between',
          }}
       >

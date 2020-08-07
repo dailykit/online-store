@@ -67,7 +67,7 @@ export default ({ navigation }) => {
             <Text style={styles.heading}>Order History</Text>
             <ScrollView style={styles.container}>
                {data?.orders
-                  .filter(order => order?.deliveryInfo)
+                  .filter(order => order?.orderCart)
                   .map(order => (
                      <>
                         <TouchableOpacity

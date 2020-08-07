@@ -15,42 +15,8 @@ export const ORDER = gql`
          tax
          tip
          itemTotal
-         orderInventoryProducts {
-            inventoryProduct {
-               id
-               name
-               assets
-            }
-            inventoryProductOption {
-               label
-               price
-            }
-         }
-         orderMealKitProducts {
-            simpleRecipeProduct {
-               id
-               name
-               assets
-            }
-            simpleRecipeProductOption {
-               price
-               simpleRecipeYield {
-                  yield
-               }
-            }
-         }
-         orderReadyToEatProducts {
-            simpleRecipeProduct {
-               id
-               name
-               assets
-            }
-            simpleRecipeProductOption {
-               price
-               simpleRecipeYield {
-                  yield
-               }
-            }
+         orderCart {
+            cartInfo
          }
       }
    }
@@ -191,42 +157,8 @@ export const ORDERS = gql`
          tip
          itemTotal
          created_at
-         orderInventoryProducts {
-            inventoryProduct {
-               id
-               name
-               assets
-            }
-            inventoryProductOption {
-               label
-               price
-            }
-         }
-         orderMealKitProducts {
-            simpleRecipeProduct {
-               id
-               name
-               assets
-            }
-            simpleRecipeProductOption {
-               price
-               simpleRecipeYield {
-                  yield
-               }
-            }
-         }
-         orderReadyToEatProducts {
-            simpleRecipeProduct {
-               id
-               name
-               assets
-            }
-            simpleRecipeProductOption {
-               price
-               simpleRecipeYield {
-                  yield
-               }
-            }
+         orderCart {
+            cartInfo
          }
       }
    }
