@@ -330,7 +330,7 @@ export default function OnboardingStack(props) {
    }, [user])
 
    React.useEffect(() => {
-      if (cartId && cart?.customerId && cart?.customerInfo?.customerEmail) {
+      if (cartId && cart?.customerId) {
          console.log('Cleared local storage!')
          setCartId(null)
          AsyncStorage.clear()
