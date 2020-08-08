@@ -1,9 +1,8 @@
-import React from 'react'
-import EStyleSheet from 'react-native-extended-stylesheet'
-import { Accordion } from 'native-base'
-import { View, Text, Image } from 'react-native'
 import * as moment from 'moment'
-
+import { Accordion } from 'native-base'
+import React from 'react'
+import { Image, Text, View } from 'react-native'
+import EStyleSheet from 'react-native-extended-stylesheet'
 import defaultProductImage from '../assets/imgs/default-product-image.png'
 
 const OrderCard = ({ order, less }) => {

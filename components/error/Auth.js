@@ -1,10 +1,10 @@
 import React from 'react'
 import { View } from 'react-native'
 import styled from 'styled-components/native'
-import { width } from '../../utils/Scalaing'
-import Header from '../Header'
 import { useAppContext } from '../../context/app'
 import { useDrawerContext } from '../../context/drawer'
+import { width } from '../../utils/Scalaing'
+import Header from '../Header'
 
 const Auth = ({ navigation }) => {
    const { visual } = useAppContext()

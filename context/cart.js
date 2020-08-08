@@ -1,22 +1,20 @@
+import { useMutation, useSubscription } from '@apollo/react-hooks'
 import React, { useState } from 'react'
 import {
-   PREORDER_PICKUP,
+   ONDEMAND_DELIVERY,
    ONDEMAND_PICKUP,
    PREORDER_DELIVERY,
-   ONDEMAND_DELIVERY,
+   PREORDER_PICKUP,
    UPDATE_CART,
 } from '../graphql'
-import { useSubscription, useMutation } from '@apollo/react-hooks'
-
 import {
    generateDeliverySlots,
-   isDeliveryAvailable,
-   generatePickUpSlots,
-   isPickUpAvailable,
    generateMiniSlots,
-   makeDoubleDigit,
-   getDistance,
+   generatePickUpSlots,
    generateTimeStamp,
+   getDistance,
+   isDeliveryAvailable,
+   isPickUpAvailable,
 } from '../utils/fulfillment'
 import { useAppContext } from './app'
 import { useDrawerContext } from './drawer'

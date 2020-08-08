@@ -1,20 +1,17 @@
-import { Feather, MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
-
-import { styles } from './styles'
-import ServingSelect from '../ServingSelect'
+import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
+import { priceSort } from '../../utils'
 import { width } from '../../utils/Scalaing'
 import Modifiers from '../Modifiers'
-import { priceSort } from '../../utils'
-
-import defaultProductImage from '../../assets/imgs/default-product-image.png'
+import ServingSelect from '../ServingSelect'
+import { styles } from './styles'
 
 const SimpleProductItemCollapsed = ({
    navigation,
    data: simpleRecipeProduct,
-   label,
    tunnelItem,
    setProductOption,
    isSelected,

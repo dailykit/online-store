@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from 'styled-components/native'
 import { CheckBox } from 'react-native-elements'
+import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { discountedPrice } from '../utils'
 

@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
-import { Image, Text, TouchableOpacity, View, Platform } from 'react-native'
-import ServingSelect from '../ServingSelect'
-import { styles } from './styles'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
+import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
+import { priceSort } from '../../utils'
 import { width } from '../../utils/Scalaing'
 import Modifiers from '../Modifiers'
-import { priceSort } from '../../utils'
-
-import defaultProductImage from '../../assets/imgs/default-product-image.png'
+import ServingSelect from '../ServingSelect'
+import { styles } from './styles'
 
 const InventoryProductCollapsed = ({
    data: inventoryProduct,

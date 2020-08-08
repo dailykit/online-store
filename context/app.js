@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { useSubscription } from '@apollo/react-hooks'
-import { STORE_SETTINGS } from '../graphql'
 
 const AppContext = React.createContext()
 

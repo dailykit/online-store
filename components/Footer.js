@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { Text, View } from 'react-native'
 import { useAppContext } from '../context/app'
 import { width } from '../utils/Scalaing'
 

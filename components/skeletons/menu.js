@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from 'styled-components/native'
 import { Animated } from 'react-native'
+import styled from 'styled-components/native'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
 

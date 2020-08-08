@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native'
+import { priceSort } from '../../utils'
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed'
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded'
-import { priceSort } from '../../utils'
-import { parse } from 'graphql'
 
 const CustomizableProductItem = ({
    isSelected,
@@ -18,7 +17,6 @@ const CustomizableProductItem = ({
    setcartItem,
    setPrice,
    setDiscount,
-   name,
    product,
    refId,
    refType,

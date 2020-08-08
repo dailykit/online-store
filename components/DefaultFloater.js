@@ -1,11 +1,10 @@
-import { AntDesign, Ionicons, Feather } from '@expo/vector-icons'
+import { AntDesign, Feather } from '@expo/vector-icons'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import { useCartContext } from '../context/cart'
-
-import { height, width } from '../utils/Scalaing'
 import { useDrawerContext } from '../context/drawer'
+import { height, width } from '../utils/Scalaing'
 
 export const DefaultPaymentFloater = ({ navigation }) => {
    const { cart, customerDetails } = useCartContext()

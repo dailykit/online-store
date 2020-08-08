@@ -1,13 +1,11 @@
 import { useMutation, useSubscription } from '@apollo/react-hooks'
-import { Spinner } from 'native-base'
-import { Text, View } from 'native-base'
-import React from 'react'
-import { useCartContext } from '../../context/cart'
-import { CART_BY_PK, UPDATE_CART } from '../../graphql'
-import { styles } from './styles'
 import { Feather } from '@expo/vector-icons'
+import { Spinner, Text, View } from 'native-base'
+import React from 'react'
 import { useAppContext } from '../../context/app'
+import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
+import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 
 const PaymentProcessing = ({ navigation }) => {
    const { cart } = useCartContext()

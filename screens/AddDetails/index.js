@@ -1,8 +1,7 @@
 import React from 'react'
-import { ScrollView } from 'react-native-gesture-handler'
 import { DAILYKEY_URL } from 'react-native-dotenv'
+import { ScrollView } from 'react-native-gesture-handler'
 import { useDrawerContext } from '../../context/drawer'
-import { View, Spinner } from 'native-base'
 
 const AddDetails = ({ params }) => {
    const { path } = params

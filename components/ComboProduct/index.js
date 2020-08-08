@@ -1,15 +1,15 @@
+import { Feather } from '@expo/vector-icons'
 import React, { useState } from 'react'
-import { View, Text, Image } from 'react-native'
+import { Image, Text, View } from 'react-native'
+import Carousel from 'react-native-banner-carousel'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useAppContext } from '../../context/app'
+import { priceSort } from '../../utils'
+import { width } from '../../utils/Scalaing'
 import CustomizableProductItem from '../CustomizableProductItem'
 import InventoryProductItem from '../InventoryProductItem'
 import SimpleProductItem from '../SimpleProductItem'
 import { styles } from './styles'
-import { width } from '../../utils/Scalaing'
-import { useAppContext } from '../../context/app'
-import Carousel from 'react-native-banner-carousel'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Feather } from '@expo/vector-icons'
-import { priceSort } from '../../utils'
 
 const ComboProduct = ({
    tunnelItem,

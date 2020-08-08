@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import PlatformError from './error/PlatformError'
 
 export default class index extends Component {

@@ -1,7 +1,8 @@
-import { AntDesign } from '@expo/vector-icons'
-import React, { useState, lazy } from 'react'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import React, { lazy, useState } from 'react'
+import { ScrollView, View } from 'react-native'
 import Cart, { ComboProductItemProceed } from '../../components/Cart'
+import { height } from '../../utils/Scalaing'
+import { styles } from './styles'
 const ComboProduct = lazy(() => import('../../components/ComboProduct'))
 const CustomizableProductItem = lazy(() =>
    import('../../components/CustomizableProductItem')
@@ -12,8 +13,6 @@ const InventoryProductItem = lazy(() =>
 const SimpleProductItem = lazy(() =>
    import('../../components/SimpleProductItem')
 )
-import { height } from '../../utils/Scalaing'
-import { styles } from './styles'
 
 const ModalContent = ({
    showInfo,

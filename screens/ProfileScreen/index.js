@@ -1,14 +1,14 @@
+import { Feather } from '@expo/vector-icons'
 import React from 'react'
+import { TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
 import { Header } from '../../components'
-import { width } from '../../utils/Scalaing'
-import { Feather } from '@expo/vector-icons'
-import { TouchableOpacity } from 'react-native'
+import Auth from '../../components/error/Auth'
+import AppSkeleton from '../../components/skeletons/app'
 import { useAppContext } from '../../context/app'
 import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
-import AppSkeleton from '../../components/skeletons/app'
-import Auth from '../../components/error/Auth'
+import { width } from '../../utils/Scalaing'
 
 const ProfileScreen = ({ navigation }) => {
    const { visual, masterLoading } = useAppContext()

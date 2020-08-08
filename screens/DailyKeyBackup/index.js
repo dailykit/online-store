@@ -1,31 +1,29 @@
-import React from 'react'
-import styled, { css } from 'styled-components/native'
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import { useMutation, useQuery } from '@apollo/react-hooks'
 import {
-   Elements,
    CardElement,
+   Elements,
    useElements,
    useStripe,
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-
-import { useCartContext } from '../../context/cart'
-import { useAppContext } from '../../context/app'
-import {
-   UPDATE_CUSTOMER,
-   CREATE_CUSTOMER_ADDRESS,
-   STRIPE_PK,
-   CREATE_STRIPE_PAYMENT_METHOD,
-} from '../../graphql'
-import { useMutation, useQuery } from '@apollo/react-hooks'
-import { useDrawerContext } from '../../context/drawer'
-import { useAuth } from '../../context/auth'
-import { MAPS_API_KEY } from 'react-native-dotenv'
-import { useScript } from '../../utils/useScript'
-import { View, Spinner } from 'native-base'
 import axios from 'axios'
-import { createSetupIntent, cancelSetupIntent } from './api'
-import { PAYMENTS_API_URL } from 'react-native-dotenv'
+import { Spinner, View } from 'native-base'
+import React from 'react'
+import { MAPS_API_KEY, PAYMENTS_API_URL } from 'react-native-dotenv'
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import styled, { css } from 'styled-components/native'
+import { useAppContext } from '../../context/app'
+import { useAuth } from '../../context/auth'
+import { useCartContext } from '../../context/cart'
+import { useDrawerContext } from '../../context/drawer'
+import {
+   CREATE_CUSTOMER_ADDRESS,
+   CREATE_STRIPE_PAYMENT_METHOD,
+   STRIPE_PK,
+   UPDATE_CUSTOMER,
+} from '../../graphql'
+import { useScript } from '../../utils/useScript'
+import { createSetupIntent } from './api'
 
 const DailyKeyBackup = ({ params }) => {
    const { path } = params

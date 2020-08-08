@@ -1,69 +1,47 @@
-import React, { useState, useEffect } from 'react'
-import { View, Dimensions, AsyncStorage, ActivityIndicator } from 'react-native'
 import {
    useLazyQuery,
    useMutation,
-   useSubscription,
    useQuery,
+   useSubscription,
 } from '@apollo/react-hooks'
-import * as axios from 'axios'
-import { CLIENTID, DAILYOS_SERVER_URL, MAPS_API_KEY } from 'react-native-dotenv'
-
-import { createStackNavigator } from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-
+import { createStackNavigator } from '@react-navigation/stack'
+import * as axios from 'axios'
+import React from 'react'
+import { AsyncStorage } from 'react-native'
+import { CLIENTID, DAILYOS_SERVER_URL, MAPS_API_KEY } from 'react-native-dotenv'
+import { useAppContext } from '../context/app'
+// Auth Context
+import { useAuth } from '../context/auth'
+import { useCartContext } from '../context/cart'
+import {
+   CART,
+   CREATE_CUSTOMER,
+   CUSTOMER,
+   DELETE_CARTS,
+   FETCH_CART,
+   STORE_SETTINGS,
+   UPDATE_CART,
+} from '../graphql'
+import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
 import Home from '../screens/Home'
-import AddToCart from '../screens/AddToCart'
-import OrderSummary from '../screens/OrderSummary'
+import LoginSuccess from '../screens/LoginSuccess'
 import Order from '../screens/Order'
-import { SafetyScreen } from '../screens/SafetyScreen'
-import ProfileScreen from '../screens/ProfileScreen'
 import OrderHistory from '../screens/OrderHistory'
+import OrderSummary from '../screens/OrderSummary'
+import ProductPage from '../screens/ProductPage'
+import ProfileScreen from '../screens/ProfileScreen'
+import Recipe from '../screens/Recipe'
+import Search from '../screens/Search'
+import { mergeCarts } from '../utils'
+import { width } from '../utils/Scalaing'
+import { useScript } from '../utils/useScript'
 // drawer
 import CustomDrawerContent from './Menu'
 
-// Auth Context
-import { useAuth } from '../context/auth'
-
-// header for screens
-import { Header } from '../components'
-import Delivery from '../screens/Delivery'
-import { EditAddress } from '../screens/EditAddress'
-import { SelectPaymentMethod } from '../screens/SelectPaymentMethod'
-import { Text } from 'native-base'
-
-import { height, width } from '../utils/Scalaing'
-import PaymentProcessing from '../screens/PaymentProcessing'
-import AddDetails from '../screens/AddDetails'
-import { Spinner } from 'native-base'
-import {
-   CREATE_CUSTOMER,
-   CUSTOMER,
-   STORE_SETTINGS,
-   FETCH_CART,
-   UPDATE_CART,
-   CART,
-   DELETE_CARTS,
-} from '../graphql'
-import { useAppContext } from '../context/app'
-import ProductPage from '../screens/ProductPage'
-import CategoryProductsPage from '../screens/CategoryProductsPage'
-import Recipe from '../screens/Recipe'
-import Search from '../screens/Search'
-import { useCartContext } from '../context/cart'
-import LoginSuccess from '../screens/LoginSuccess'
-import { useScript } from '../utils/useScript'
-import { mergeCarts } from '../utils'
-
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
-
-const Loader = () => (
-   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Spinner size="large" />
-   </View>
-)
 
 export default function OnboardingStack(props) {
    const [mapsLoaded, mapsError] = useScript(
@@ -477,13 +455,6 @@ function AppStack(props) {
             }}
          />
          <Stack.Screen
-            name="AddToCart"
-            component={AddToCart}
-            options={{
-               headerShown: false,
-            }}
-         />
-         <Stack.Screen
             name="OrderSummary"
             component={OrderSummary}
             options={{
@@ -504,34 +475,6 @@ function AppStack(props) {
                headerShown: false,
             }}
          />
-         {/* <Stack.Screen
-            name="SafetyScreen"
-            component={SafetyScreen}
-            options={{
-               headerShown: false,
-            }}
-         /> */}
-         <Stack.Screen
-            name="DeliveryScreen"
-            component={Delivery}
-            options={{
-               headerShown: false,
-            }}
-         />
-         {/* <Stack.Screen
-            name="EditAddressScreen"
-            component={EditAddress}
-            options={{
-               headerShown: false,
-            }}
-         />
-         <Stack.Screen
-            name="SelectPaymentMethodScreen"
-            component={SelectPaymentMethod}
-            options={{
-               headerShown: false,
-            }}
-         /> */}
          <Stack.Screen
             name="ProfileScreen"
             component={ProfileScreen}
@@ -546,20 +489,6 @@ function AppStack(props) {
                headerShown: false,
             }}
          />
-         {/* <Stack.Screen
-            name="PaymentProcessing"
-            component={PaymentProcessing}
-            options={{
-               headerShown: false,
-            }}
-         /> */}
-         {/* <Stack.Screen
-            name="Add Details"
-            component={AddDetails}
-            options={{
-               headerShown: false,
-            }}
-         /> */}
       </Drawer.Navigator>
    )
 }

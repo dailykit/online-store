@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
-import { Spinner } from 'native-base'
-import { Button } from 'native-base'
+import { Button, Spinner } from 'native-base'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'

@@ -1,6 +1,6 @@
 import React from 'react'
-import styled from 'styled-components/native'
 import { Animated } from 'react-native'
+import styled from 'styled-components/native'
 import { height, width } from '../../utils/Scalaing'
 
 const AppSkeleton = () => {

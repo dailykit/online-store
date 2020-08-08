@@ -1,24 +1,18 @@
-import { Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { MaterialIcons } from '@expo/vector-icons'
 import React, { useState } from 'react'
-import { Text, TouchableOpacity, View, Image } from 'react-native'
-import InventoryProductCollapsed from '../InventoryProductItem/InventoryProductItemCollapsed'
-import ServingSelect from '../ServingSelect'
-import SimpleProductItemCollapsed from '../SimpleProductItem/SimpleProductItemCollapsed'
-import { stylesExpanded as styles } from './styles'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
+import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
+import { priceSort } from '../../utils'
 import { width } from '../../utils/Scalaing'
 import Modifiers from '../Modifiers'
-import { priceSort } from '../../utils'
-
-import defaultProductImage from '../../assets/imgs/default-product-image.png'
+import ServingSelect from '../ServingSelect'
+import { stylesExpanded as styles } from './styles'
 
 const Item = ({
    _id,
    navigation,
-   setExpanded,
    data,
-   independantItem,
-   numberOfOptions,
    tunnelItem,
    setProductOption,
    refId,

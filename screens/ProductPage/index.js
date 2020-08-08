@@ -1,27 +1,25 @@
+import { useLazyQuery } from '@apollo/react-hooks'
+import { Spinner } from 'native-base'
 import React from 'react'
 import {
-   SafeAreaView,
-   View,
    Image,
-   Text,
+   SafeAreaView,
    StyleSheet,
+   Text,
    TouchableOpacity,
+   View,
 } from 'react-native'
-import { Header } from '../../components'
-import { useLazyQuery } from '@apollo/react-hooks'
-import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../../graphql'
-import { Spinner } from 'native-base'
 import { ScrollView } from 'react-native-gesture-handler'
-import { height, width } from '../../utils/Scalaing'
-import { Drawer } from '../../components/Drawer'
-import { Feather } from '@expo/vector-icons'
-import { useAppContext } from '../../context/app'
-import HeaderBack from '../../components/HeaderBack'
-import AddToCart from '../AddToCart'
-import CheckoutBar from '../../components/CheckoutBar'
-import AppSkeleton from '../../components/skeletons/app'
-
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
+import { Header } from '../../components'
+import CheckoutBar from '../../components/CheckoutBar'
+import { Drawer } from '../../components/Drawer'
+import HeaderBack from '../../components/HeaderBack'
+import AppSkeleton from '../../components/skeletons/app'
+import { useAppContext } from '../../context/app'
+import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../../graphql'
+import { width } from '../../utils/Scalaing'
+import AddToCart from '../AddToCart'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params

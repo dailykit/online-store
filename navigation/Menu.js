@@ -1,10 +1,9 @@
+import { Feather } from '@expo/vector-icons'
 import React from 'react'
-import { Image, ScrollView, View, TouchableOpacity } from 'react-native'
+import { Image, ScrollView, TouchableOpacity, View } from 'react-native'
+import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
-import { Feather } from '@expo/vector-icons'
-
-import styled from 'styled-components/native'
 import { useDrawerContext } from '../context/drawer'
 
 function CustomDrawerContent({

@@ -1,8 +1,6 @@
+import { Feather } from '@expo/vector-icons'
 import React from 'react'
 import styled from 'styled-components/native'
-
-import { useAppContext } from '../../context/app'
-import { Feather } from '@expo/vector-icons'
 
 const LoginSuccess = () => {
    const sendMessage = () => {

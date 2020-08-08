@@ -1,9 +1,9 @@
+import { Feather } from '@expo/vector-icons'
 import Modal from 'modal-enhanced-react-native-web'
 import React from 'react'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import AddToCart from '../screens/AddToCart'
 import { height, width } from '../utils/Scalaing'
-import { Feather } from '@expo/vector-icons'
 
 export const Drawer = ({
    navigation,

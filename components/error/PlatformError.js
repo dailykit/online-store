@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, Image } from 'react-native'
+import { View } from 'react-native'
 import styled from 'styled-components/native'
+import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
 import Header from '../Header'
-import { useAppContext } from '../../context/app'
 
 const PlatformError = ({ navigation }) => {
    const { visual } = useAppContext()

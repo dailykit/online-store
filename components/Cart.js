@@ -1,32 +1,27 @@
+import { useMutation } from '@apollo/react-hooks'
+import { Feather, Ionicons } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import {
-   Text,
-   View,
-   StyleSheet,
-   Dimensions,
-   TouchableOpacity,
-   ToastAndroid,
    Platform,
+   StyleSheet,
+   Text,
+   ToastAndroid,
+   TouchableOpacity,
+   View,
 } from 'react-native'
-import { Ionicons, Feather } from '@expo/vector-icons'
-import { useCartContext } from '../context/cart'
-import { uuid, useStoreToast, discountedPrice, priceSort } from '../utils'
-import { useMutation } from '@apollo/react-hooks'
-import EStyleSheet, { child } from 'react-native-extended-stylesheet'
-import { CREATE_CART, UPDATE_CART } from '../graphql/mutations'
-
-import { height, width } from '../utils/Scalaing'
-import { useAppContext } from '../context/app'
-import { useDrawerContext } from '../context/drawer'
-import { useAuth } from '../context/auth'
-
 import { AsyncStorage } from 'react-native-web'
+import { useAppContext } from '../context/app'
+import { useAuth } from '../context/auth'
+import { useCartContext } from '../context/cart'
+import { useDrawerContext } from '../context/drawer'
+import { CREATE_CART, UPDATE_CART } from '../graphql/mutations'
+import { discountedPrice, useStoreToast, uuid } from '../utils'
+import { width } from '../utils/Scalaing'
 
 const Cart = ({
    navigation,
    text,
    cartItem,
-   to,
    tunnelItem,
    type,
    comboProductItems,

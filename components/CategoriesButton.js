@@ -1,8 +1,8 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity } from 'react-native'
-import { width } from '../utils/Scalaing'
+import { Text, TouchableOpacity } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import { useAppContext } from '../context/app'
+import { width } from '../utils/Scalaing'
 
 const CategoriesButton = ({ title, id, onPress }) => {
    const { visual } = useAppContext()

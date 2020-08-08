@@ -1,23 +1,15 @@
-import { withNavigation } from '@react-navigation/compat'
-import React from 'react'
-import {
-   StyleSheet,
-   Text,
-   TouchableOpacity,
-   View,
-   TextInput,
-} from 'react-native'
-import argonTheme from '../constants/Theme'
-import { useCartContext } from '../context/cart'
-import { width } from '../utils/Scalaing'
-import Icon from './Icon'
-import { useAppContext } from '../context/app'
-
-import styled from 'styled-components/native'
-import { useDrawerContext } from '../context/drawer'
-import { useAuth } from '../context/auth'
 import { Feather } from '@expo/vector-icons'
 import { useIsDrawerOpen } from '@react-navigation/drawer'
+import React from 'react'
+import { Text, View } from 'react-native'
+import styled from 'styled-components/native'
+import argonTheme from '../constants/Theme'
+import { useAppContext } from '../context/app'
+import { useAuth } from '../context/auth'
+import { useCartContext } from '../context/cart'
+import { useDrawerContext } from '../context/drawer'
+import { width } from '../utils/Scalaing'
+import Icon from './Icon'
 
 const BasketButton = ({ isWhite }) => {
    const { cart } = useCartContext()

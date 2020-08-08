@@ -1,9 +1,8 @@
 import React from 'react'
-import { Image, Text, View, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
-import { height, width } from '../utils/Scalaing'
-import { ProgressBarAndroid } from 'react-native-web'
 import { useAppContext } from '../context/app'
+import { width } from '../utils/Scalaing'
 
 export const CategoryBanner = ({ navigation, title, showLink }) => {
    const { visual } = useAppContext()

@@ -1,6 +1,7 @@
-import { useSubscription, useMutation } from '@apollo/react-hooks'
-import { MaterialIcons, Feather } from '@expo/vector-icons'
+import { useMutation, useSubscription } from '@apollo/react-hooks'
+import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { Picker } from '@react-native-community/picker'
+import { Spinner } from 'native-base'
 import React from 'react'
 import {
    ScrollView,
@@ -10,6 +11,8 @@ import {
    View,
 } from 'react-native'
 import { useAppContext } from '../context/app'
+import { useCartContext } from '../context/cart'
+import { useDrawerContext } from '../context/drawer'
 import {
    ONDEMAND_DELIVERY,
    ONDEMAND_PICKUP,
@@ -17,26 +20,20 @@ import {
    PREORDER_PICKUP,
    UPDATE_CART,
 } from '../graphql'
-
 import {
    generateDeliverySlots,
-   isDeliveryAvailable,
-   generatePickUpSlots,
-   isPickUpAvailable,
    generateMiniSlots,
-   makeDoubleDigit,
-   getDistance,
+   generatePickUpSlots,
    generateTimeStamp,
+   getDistance,
+   isDeliveryAvailable,
+   isPickUpAvailable,
 } from '../utils/fulfillment'
-import { useCartContext } from '../context/cart'
-import { useDrawerContext } from '../context/drawer'
-import { Spinner } from 'native-base'
 import { DefaultAddressFloater } from './DefaultFloater'
 
 const Fulfillment = ({ navigation, setEditing }) => {
    const { visual, availability } = useAppContext()
    const { cart } = useCartContext()
-   const { setIsDrawerOpen } = useDrawerContext()
    const [distance, setDistance] = React.useState(0)
    const [type, setType] = React.useState('')
    const [time, setTime] = React.useState('')

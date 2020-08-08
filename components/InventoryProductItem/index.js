@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { discountedPrice, priceSort } from '../../utils'
 import InventoryProductCollapsed from './InventoryProductItemCollapsed'
-import { priceSort, discountedPrice } from '../../utils'
 
 const InventoryProductItem = ({
    _id,
@@ -15,7 +15,6 @@ const InventoryProductItem = ({
    setcardData,
    setSelected,
    isSelected,
-   name,
    label,
    product,
    refId,

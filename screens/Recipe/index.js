@@ -1,21 +1,20 @@
-import { useQuery, useLazyQuery } from '@apollo/react-hooks'
-import { Spinner, Tab, Tabs } from 'native-base'
+import { useLazyQuery, useQuery } from '@apollo/react-hooks'
+import { Spinner } from 'native-base'
 import React from 'react'
-import { Image, ScrollView, Text, View, TouchableOpacity } from 'react-native'
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
+import CheckoutBar from '../../components/CheckoutBar'
+import { Drawer } from '../../components/Drawer'
+import Header from '../../components/Header'
+import AppSkeleton from '../../components/skeletons/app'
+import { useAppContext } from '../../context/app'
 import {
-   SIMPLE_RECIPE,
-   SIMPLE_PRODUCT,
-   CUSTOMIZABLE_PRODUCT,
    COMBO_PRODUCT,
+   CUSTOMIZABLE_PRODUCT,
+   SIMPLE_PRODUCT,
+   SIMPLE_RECIPE,
 } from '../../graphql'
 import { height, width } from '../../utils/Scalaing'
-import { FlatList } from 'react-native'
-import { useAppContext } from '../../context/app'
-import Header from '../../components/Header'
-import { Drawer } from '../../components/Drawer'
-import CheckoutBar from '../../components/CheckoutBar'
-import AppSkeleton from '../../components/skeletons/app'
 
 const Recipe = ({ route, navigation }) => {
    let { recipeId, refId, refType } = route.params

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
+import { discountedPrice, priceSort } from '../../utils'
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed'
-import { priceSort, discountedPrice } from '../../utils'
 
 const SimpleProductItem = ({
    _id,
@@ -14,7 +14,6 @@ const SimpleProductItem = ({
    tunnelItem,
    setSelected,
    isSelected,
-   name,
    label,
    product,
    showInfo,

@@ -1,33 +1,29 @@
-import { Ionicons, Feather } from '@expo/vector-icons'
-import React, { lazy } from 'react'
+import { useMutation } from '@apollo/react-hooks'
+import { Feather } from '@expo/vector-icons'
 import moment from 'moment'
+import { Accordion } from 'native-base'
+import React from 'react'
 import {
+   AsyncStorage,
    SafeAreaView,
    ScrollView,
    Text,
    TouchableOpacity,
    View,
-   AsyncStorage,
 } from 'react-native'
-import { DefaultPaymentFloater } from '../../components/DefaultFloater'
-
-const Summary = lazy(() => import('../../components/Summary'))
-import { useCartContext } from '../../context/cart'
-import { height, width } from '../../utils/Scalaing'
-import Header from '../../components/Header'
-import { useDrawerContext } from '../../context/drawer'
-import { useAppContext } from '../../context/app'
-import Fulfillment from '../../components/Fulfillment'
-import { useAuth } from '../../context/auth'
 import styled from 'styled-components/native'
-import { useMutation } from '@apollo/react-hooks'
-import { UPDATE_CART, DELETE_CARTS } from '../../graphql'
-import AppSkeleton from '../../components/skeletons/app'
-import DrawerLayout from '../../components/DrawerLayout'
-import { Accordion } from 'native-base'
-import { useStoreToast } from '../../utils'
-
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
+import { DefaultPaymentFloater } from '../../components/DefaultFloater'
+import Fulfillment from '../../components/Fulfillment'
+import Header from '../../components/Header'
+import AppSkeleton from '../../components/skeletons/app'
+import { useAppContext } from '../../context/app'
+import { useAuth } from '../../context/auth'
+import { useCartContext } from '../../context/cart'
+import { useDrawerContext } from '../../context/drawer'
+import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
+import { useStoreToast } from '../../utils'
+import { width } from '../../utils/Scalaing'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()

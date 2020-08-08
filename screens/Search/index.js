@@ -1,23 +1,16 @@
-import React from 'react'
-import {
-   View,
-   Text,
-   TextInput,
-   TouchableOpacity,
-   ScrollView,
-   FlatList,
-} from 'react-native'
-import styled from 'styled-components/native'
-import Header from '../../components/Header'
-import { useAppContext } from '../../context/app'
 import { useLazyQuery } from '@apollo/react-hooks'
-import { SEARCH_PRODUCTS } from '../../graphql/queries'
 import { Feather } from '@expo/vector-icons'
-import { width } from '../../utils/Scalaing'
+import React from 'react'
+import { FlatList, View } from 'react-native'
+import styled from 'styled-components/native'
 import { Card } from '../../components'
-import CardSkeleton from '../../components/skeletons/card'
 import CheckoutBar from '../../components/CheckoutBar'
+import Header from '../../components/Header'
 import AppSkeleton from '../../components/skeletons/app'
+import CardSkeleton from '../../components/skeletons/card'
+import { useAppContext } from '../../context/app'
+import { SEARCH_PRODUCTS } from '../../graphql/queries'
+import { width } from '../../utils/Scalaing'
 
 const Search = ({ navigation }) => {
    const { menuData, masterLoading } = useAppContext()

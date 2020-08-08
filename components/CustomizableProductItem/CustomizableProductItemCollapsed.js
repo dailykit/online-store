@@ -1,28 +1,11 @@
-import { Ionicons } from '@expo/vector-icons'
 import React from 'react'
-import { Text, TouchableOpacity, View, Image } from 'react-native'
-import InventoryProductCollapsed from '../InventoryProductItem/InventoryProductItemCollapsed'
-import SimpleProductItemCollapsed from '../SimpleProductItem/SimpleProductItemCollapsed'
-import { stylesCollapsed as styles } from './styles'
+import { Image, Text, View } from 'react-native'
 import Carousel from 'react-native-banner-carousel'
+import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
 
-import defaultProductImage from '../../assets/imgs/default-product-image.png'
-
-const CustomizableProductItemCollapsed = ({
-   _id,
-   setSelected,
-   isLast,
-   navigation,
-   setExpanded,
-   data,
-   label,
-   independantItem,
-   numberOfOptions,
-   tunnelItem,
-   product,
-}) => {
+const CustomizableProductItemCollapsed = ({ product }) => {
    const { visual } = useAppContext()
 
    const [optionImages, setOptionImages] = React.useState([])

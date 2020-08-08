@@ -1,36 +1,22 @@
+import { Feather } from '@expo/vector-icons'
 import { Spinner } from 'native-base'
-import { Dimensions } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React from 'react'
+import { Dimensions, Image, ScrollView, Text, View } from 'react-native'
 import Carousel from 'react-native-banner-carousel'
-import {
-   Image,
-   ScrollView,
-   SectionList,
-   Text,
-   TouchableOpacity,
-   View,
-   ListView,
-} from 'react-native'
 // Change number to edit: 3 (shit package)
-import { Header, Icon } from '../../components'
+import { Header } from '../../components'
 import Cart from '../../components/Cart'
+import CategoriesButton from '../../components/CategoriesButton'
 import { CategoryBanner } from '../../components/CategoryBanner'
+import CheckoutBar from '../../components/CheckoutBar'
+import Footer from '../../components/Footer'
 import Products from '../../components/Products'
 import { SafetyBanner } from '../../components/SafetyBanner'
-import { useAppContext } from '../../context/app'
-import { useAuth } from '../../context/auth'
-import { useCartContext } from '../../context/cart'
-import { height, width } from '../../utils/Scalaing'
-import { styles } from './styles'
-import CategoriesButton from '../../components/CategoriesButton'
-import Footer from '../../components/Footer'
-import { Feather } from '@expo/vector-icons'
-
-import { AsyncStorage } from 'react-native-web'
-import BottomNav from '../../components/CheckoutBar'
-import CheckoutBar from '../../components/CheckoutBar'
 import AppSkeleton from '../../components/skeletons/app'
 import MenuSkeleton from '../../components/skeletons/menu'
+import { useAppContext } from '../../context/app'
+import { height, width } from '../../utils/Scalaing'
+import { styles } from './styles'
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3

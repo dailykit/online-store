@@ -1,14 +1,14 @@
 import React from 'react'
-import { View, ScrollView, Text } from 'react-native'
+import { ScrollView, Text, View } from 'react-native'
 import { Header } from '../../components'
-import { CategoryBanner } from '../../components/CategoryBanner'
-import Products from '../../components/Products'
-import { width } from '../../utils/Scalaing'
 import CategoriesButton from '../../components/CategoriesButton'
-import Footer from '../../components/Footer'
+import { CategoryBanner } from '../../components/CategoryBanner'
 import CheckoutBar from '../../components/CheckoutBar'
+import Footer from '../../components/Footer'
+import Products from '../../components/Products'
 import AppSkeleton from '../../components/skeletons/app'
 import { useAppContext } from '../../context/app'
+import { width } from '../../utils/Scalaing'
 
 const CategoryProductsPage = ({ navigation, route }) => {
    const { category } = route.params
