@@ -55,7 +55,7 @@ export default ({ navigation }) => {
                   <TouchableOpacity
                      style={{ marginLeft: 24 }}
                      onPress={() =>
-                        open('AddDetails', { path: 'profile/create' })
+                        open('DailyKeyBackup', { path: 'profile/create' })
                      }
                   >
                      <Feather name="edit" size={24} />
@@ -68,7 +68,7 @@ export default ({ navigation }) => {
                   onPress={() =>
                      customerDetails?.customerAddresses?.length
                         ? open('EditAddress')
-                        : open('AddDetails', { path: 'address/create' })
+                        : open('DailyKeyBackup', { path: 'address/create' })
                   }
                   style={styles.card}
                >
@@ -109,7 +109,7 @@ export default ({ navigation }) => {
                   onPress={() =>
                      customerDetails?.stripePaymentMethods?.length
                         ? open('SelectPaymentMethod')
-                        : open('AddDetails', { path: 'card/create' })
+                        : open('DailyKeyBackup', { path: 'card/create' })
                   }
                   style={styles.card}
                >
@@ -133,24 +133,6 @@ export default ({ navigation }) => {
                      </View>
                   </View>
                </TouchableOpacity>
-               {/* Order History Card */}
-               {/* <TouchableOpacity onPress={() => {}} style={styles.card}>
-          <Text style={styles.cardTitle}>Order History</Text>
-          <View style={styles.content}>
-            <View style={styles.cardNumberTextContainer}>
-              <Text style={[styles.cardNumberText, { color: 'grey' }]}>
-                0 orders so far
-              </Text>
-            </View>
-            <View style={styles.cardNumberSelectedContainer}>
-              <View>
-                <Text>
-                  <Ionicons size={20} name='ios-arrow-forward' />
-                </Text>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity> */}
             </ScrollView>
          </View>
       </View>

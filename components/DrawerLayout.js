@@ -119,14 +119,14 @@ const DrawerLayout = () => {
                style={{ position: 'absolute', right: 8, top: -40 }}
             />
          </TouchableOpacity>
-         {drawerView === 'AddDetails' && (
+         {drawerView === 'DailyKeyBackup' && (
             <TouchableOpacity
                style={{
                   width: width > 1280 ? 640 : width,
                   position: 'relative',
                   marginHorizontal: 'auto',
                }}
-               onPress={() => setDrawerView('DailyKeyBackup')}
+               onPress={() => setDrawerView('AddDetails')}
             >
                <Text
                   style={{
@@ -136,7 +136,7 @@ const DrawerLayout = () => {
                      color: '#fff',
                   }}
                >
-                  Trouble with DailyKEY? Click here!
+                  Trouble with adding details? Click here!
                </Text>
             </TouchableOpacity>
          )}

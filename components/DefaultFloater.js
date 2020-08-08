@@ -28,7 +28,7 @@ export const DefaultPaymentFloater = ({ navigation }) => {
          onPress={() => {
             customerDetails?.stripePaymentMethods?.length
                ? open('SelectPaymentMethod')
-               : open('AddDetails', { path: 'card/create' })
+               : open('DailyKeyBackup', { path: 'card/create' })
          }}
          style={styles.conatiner}
       >
@@ -68,7 +68,7 @@ export const DefaultAddressFloater = ({ navigation }) => {
          onPress={() => {
             customerDetails?.customerAddresses?.length
                ? open('EditAddress')
-               : open('AddDetails', { path: 'address/create' })
+               : open('DailyKeyBackup', { path: 'address/create' })
          }}
          style={styles.conatiner}
       >
