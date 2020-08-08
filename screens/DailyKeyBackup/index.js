@@ -79,7 +79,7 @@ const DailyKeyBackup = ({ params }) => {
 export default DailyKeyBackup
 
 const Profile = () => {
-   const { customerDetails } = useCartContext()
+   const { customer, customerDetails } = useCartContext()
    const { visual } = useAppContext()
    const { setSaved, setIsDrawerOpen } = useDrawerContext()
    const { user } = useAuth()
@@ -92,7 +92,7 @@ const Profile = () => {
    )
    const [phone, setPhone] = React.useState(customerDetails?.phoneNumber || '')
    const [email, setEmail] = React.useState(
-      customerDetails?.email || 'Already saved!'
+      customerDetails?.email || customer?.email || 'Already saved!'
    )
 
    const [saving, setSaving] = React.useState(false)
@@ -197,6 +197,7 @@ const Address = () => {
 
    const [populated, setPopulated] = React.useState(undefined)
    const [saving, setSaving] = React.useState(false)
+   const [formError, setFormError] = React.useState('')
 
    const formatAddress = async address => {
       const response = await fetch(
@@ -242,9 +243,29 @@ const Address = () => {
       }
    }
 
+   const validateFields = () => {
+      if (
+         populated &&
+         populated.line1 &&
+         populated.city &&
+         populated.state &&
+         populated.country &&
+         populated.zipcode
+      ) {
+         return true
+      } else {
+         return false
+      }
+   }
+
    const save = async () => {
       try {
          setSaving(true)
+         setFormError('')
+         if (!validateFields()) {
+            setFormError('Please fill in the required fields!')
+            return
+         }
          const {
             data: { platform_createCustomerAddress: address = {} } = {},
          } = await createCustomerAddress({
@@ -276,10 +297,20 @@ const Address = () => {
             throw Error('An error occured, please try again!')
          }
       } catch (err) {
-         setError(err.message)
+         setFormError(err.message)
       } finally {
          setSaving(false)
       }
+   }
+
+   if (!loaded) {
+      return (
+         <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+         >
+            <Spinner />
+         </View>
+      )
    }
 
    return (
@@ -287,6 +318,7 @@ const Address = () => {
          <ContentHeader>
             <ContentHeaderText>Add a new Address</ContentHeaderText>
          </ContentHeader>
+         {Boolean(formError) && <Error>{formError}</Error>}
          <Form>
             {loaded && !error && (
                <FormField>
@@ -326,7 +358,7 @@ const Address = () => {
                </FormField>
             )}
             <FormField>
-               <FormFieldLabel>Address Line 1</FormFieldLabel>
+               <FormFieldLabel>Address Line 1*</FormFieldLabel>
                <FormFieldInput
                   onChangeText={text =>
                      setPopulated({ ...populated, line1: text })
@@ -337,7 +369,7 @@ const Address = () => {
             </FormField>
             <Grid>
                <FormField>
-                  <FormFieldLabel>City</FormFieldLabel>
+                  <FormFieldLabel>City*</FormFieldLabel>
                   <FormFieldInput
                      onChangeText={text =>
                         setPopulated({ ...populated, city: text })
@@ -348,7 +380,7 @@ const Address = () => {
                   />
                </FormField>
                <FormField>
-                  <FormFieldLabel>State</FormFieldLabel>
+                  <FormFieldLabel>State*</FormFieldLabel>
                   <FormFieldInput
                      onChangeText={text =>
                         setPopulated({ ...populated, state: text })
@@ -360,7 +392,7 @@ const Address = () => {
             </Grid>
             <Grid>
                <FormField>
-                  <FormFieldLabel>Country</FormFieldLabel>
+                  <FormFieldLabel>Country*</FormFieldLabel>
                   <FormFieldInput
                      onChangeText={text =>
                         setPopulated({ ...populated, country: text })
@@ -371,7 +403,7 @@ const Address = () => {
                   />
                </FormField>
                <FormField>
-                  <FormFieldLabel>Zip Code</FormFieldLabel>
+                  <FormFieldLabel>Zip Code*</FormFieldLabel>
                   <FormFieldInput
                      onChangeText={text =>
                         setPopulated({ ...populated, zipcode: text })
@@ -382,13 +414,14 @@ const Address = () => {
                </FormField>
             </Grid>
             <FormField>
-               <FormFieldLabel>Save As</FormFieldLabel>
+               <FormFieldLabel>Save As (Label)</FormFieldLabel>
                <FormFieldInput
                   onChangeText={text =>
                      setPopulated({ ...populated, label: text })
                   }
                   value={populated?.label || ''}
                   editable={Boolean(populated)}
+                  placeholder="Home, Office, etc."
                />
             </FormField>
             <FormField>
@@ -402,7 +435,11 @@ const Address = () => {
                />
             </FormField>
          </Form>
-         <CTA color={visual.color} onPress={save} disabled={saving}>
+         <CTA
+            color={visual.color}
+            onPress={save}
+            disabled={saving || !populated}
+         >
             <CTAText>{saving ? 'Saving...' : 'Save'}</CTAText>
          </CTA>
       </>
@@ -467,11 +504,16 @@ const Card = () => {
       try {
          e.preventDefault()
          console.log('Trying to save...')
-
+         setError('')
          setSaving(true)
          if (!stripe || !elements) {
             console.log('No stripe or elements')
+            setError('Unknown error occured! Please try again later.')
             setSaving(false)
+            return
+         }
+         if (!name || !intent) {
+            setError('All fields are required!')
             return
          }
          const result = await stripe.confirmCardSetup(intent.client_secret, {
@@ -563,6 +605,7 @@ const Card = () => {
          <ContentHeader>
             <ContentHeaderText>Add a new Card</ContentHeaderText>
          </ContentHeader>
+         {Boolean(error) && <Error>{error}</Error>}
          <Form>
             <FormField>
                <FormFieldLabel>Card Holder Name</FormFieldLabel>
@@ -586,7 +629,9 @@ const Card = () => {
    )
 }
 
-const Wrapper = styled.View``
+const Wrapper = styled.View`
+   flex: 1;
+`
 
 const Header = styled.View`
    text-align: center;
@@ -602,7 +647,8 @@ const HeaderText = styled.Text`
 const HeaderImage = styled.Image``
 
 const Body = styled.ScrollView`
-   padding: 0.75rem;
+   padding: 1rem;
+   flex: 1;
 `
 
 const CustomerInfo = styled.View`
@@ -672,6 +718,7 @@ const CTA = styled.TouchableOpacity`
    border-radius: 0.25rem;
    align-items: center;
    justify-content: center;
+   opacity: ${props => (props.disabled ? 0.6 : 1)};
 `
 
 const CTAText = styled.Text`
