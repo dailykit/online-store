@@ -385,7 +385,11 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                      <Text style={styles.add_to_card_text}>
                         {busy ? '...' : 'ADD'}
                         {product.isPopupAllowed && (
-                           <Feather size={width > 768 ? 14 : 10} name="plus" />
+                           <Feather
+                              size={10}
+                              name="plus"
+                              style={{ position: 'absolute' }}
+                           />
                         )}
                      </Text>
                   </TouchableOpacity>
