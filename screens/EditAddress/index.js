@@ -72,7 +72,9 @@ export default ({ navigation }) => {
                      padding: 8,
                      justifyContent: 'center',
                   }}
-                  onPress={() => open('AddDetails', { path: 'address/create' })}
+                  onPress={() =>
+                     open('DailyKeyBackup', { path: 'address/create' })
+                  }
                >
                   <Text style={{ color: '#fff' }}>Add Address</Text>
                </Button>
@@ -149,7 +151,7 @@ export default ({ navigation }) => {
                padding: 8,
                justifyContent: 'center',
             }}
-            onPress={() => open('AddDetails', { path: 'address/create' })}
+            onPress={() => open('DailyKeyBackup', { path: 'address/create' })}
          >
             <Text style={{ color: '#fff' }}>Add Address</Text>
          </Button>
