@@ -229,8 +229,8 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
             <View style={styles.item_parent_container}>
                {product?.__typename.includes('comboProduct') && (
                   <>
-                     <View>
-                        <Text style={styles.is_customizable}>Combo</Text>
+                     <View style={styles.tagContainer}>
+                        <Text style={styles.tag}>Combo</Text>
                      </View>
                      <ComboProduct
                         label={label}
@@ -246,10 +246,8 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                {product?.__typename.includes('customizableProduct') && (
                   <>
                      {cardData && (
-                        <View>
-                           <Text style={styles.is_customizable}>
-                              Customizable
-                           </Text>
+                        <View style={styles.tagContainer}>
+                           <Text style={styles.tag}>Customizable</Text>
                         </View>
                      )}
                      <CustomizableProductItem
@@ -420,10 +418,23 @@ const styles = EStyleSheet.create({
       fontSize: '$l',
       fontWeight: 'bold',
    },
-   is_customizable: {
-      fontSize: '$s',
+   item_parent_container: {
+      position: 'relative',
+   },
+   tagContainer: {
+      padding: 2,
+      backgroundColor: '#fff',
+      position: 'absolute',
+      top: 4,
+      left: 4,
+      zIndex: 10,
+      borderRadius: 2,
+   },
+   tag: {
+      fontSize: '$xs',
       color: 'gray',
-      textAlign: 'right',
+      textAlign: 'left',
+      textTransform: 'uppercase',
    },
    bottom_container: {
       flex: 1,
