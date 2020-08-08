@@ -75,7 +75,10 @@ const SimpleProductItemCollapsed = ({
                   <View
                      style={[
                         styles.item_container_one,
-                        { height: width > 768 || tunnelItem ? 150 : 120 },
+                        {
+                           minHeight: width > 768 || tunnelItem ? 150 : 120,
+                           maxHeight: width > 768 || tunnelItem ? 150 : 120,
+                        },
                      ]}
                   >
                      <Image

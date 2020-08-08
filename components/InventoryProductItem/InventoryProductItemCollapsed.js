@@ -74,7 +74,10 @@ const InventoryProductCollapsed = ({
                <View
                   style={[
                      styles.item_container_one,
-                     { height: width > 768 || tunnelItem ? 150 : 120 },
+                     {
+                        minHeight: width > 768 || tunnelItem ? 150 : 120,
+                        maxHeight: width > 768 || tunnelItem ? 150 : 120,
+                     },
                   ]}
                >
                   <Text style={styles.item_image_title}>{label}</Text>

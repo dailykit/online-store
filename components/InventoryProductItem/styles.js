@@ -37,8 +37,8 @@ export const styles = EStyleSheet.create({
    },
    item_image: {
       flex: 1,
-      height: null,
-      width: null,
+      height: '100%',
+      width: '100%',
       resizeMode: 'contain',
    },
    item_title: {

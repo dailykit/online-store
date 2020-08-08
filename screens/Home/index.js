@@ -169,7 +169,7 @@ const Home = props => {
                               style={{
                                  width: BannerWidth,
                                  height: BannerHeight,
-                                 size: 'cover',
+                                 resizeMode: 'cover',
                               }}
                               source={{ uri: slide.url }}
                            />
