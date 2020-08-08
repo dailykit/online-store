@@ -76,7 +76,9 @@ export default ({ navigation }) => {
                      padding: 8,
                      justifyContent: 'center',
                   }}
-                  onPress={() => open('AddDetails', { path: 'card/create' })}
+                  onPress={() =>
+                     open('DailyKeyBackup', { path: 'card/create' })
+                  }
                >
                   <Text style={{ color: '#fff' }}>Add Card</Text>
                </Button>
@@ -155,7 +157,7 @@ export default ({ navigation }) => {
                padding: 8,
                justifyContent: 'center',
             }}
-            onPress={() => open('AddDetails', { path: 'card/create' })}
+            onPress={() => open('DailyKeyBackup', { path: 'card/create' })}
          >
             <Text style={{ color: '#fff' }}>Add Card</Text>
          </Button>
