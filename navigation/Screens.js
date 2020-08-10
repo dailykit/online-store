@@ -50,7 +50,7 @@ export default function OnboardingStack(props) {
 
    if (mapsError) console.log('Error loading Maps:', mapsError)
 
-   const { user, isInitialized, isAuthenticated } = useAuth()
+   const { user, isInitialized } = useAuth()
    const {
       customer,
       cart,
@@ -375,23 +375,6 @@ export default function OnboardingStack(props) {
       subscribingCart,
       isInitialized,
    ])
-
-   React.useEffect(() => {
-      console.log('Checking Auth...')
-      console.log(!window.location.pathname.includes('login-success'))
-      console.log('window.location', window.location)
-      console.log('window.parent.location', window.parent.location)
-      if (
-         isAuthenticated &&
-         !window.location.pathname.includes('login-success')
-      ) {
-         console.log('Logged in and not on success page...')
-         if (window.location !== window.parent.location) {
-            console.log('Reloading...')
-            window.parent.location.reload()
-         }
-      }
-   }, [isAuthenticated])
 
    return (
       <>

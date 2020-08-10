@@ -17,6 +17,7 @@ import MenuSkeleton from '../../components/skeletons/menu'
 import { useAppContext } from '../../context/app'
 import { height, width } from '../../utils/Scalaing'
 import { styles } from './styles'
+import { useAuth } from '../../context/auth'
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
@@ -30,6 +31,25 @@ const Home = props => {
       menuLoading,
       masterLoading,
    } = useAppContext()
+
+   const { isAuthenticated } = useAuth()
+
+   React.useEffect(() => {
+      console.log('Checking Auth...')
+      console.log(!window.location.pathname.includes('login-success'))
+      console.log('window.location', window.location)
+      console.log('window.parent.location', window.parent.location)
+      if (
+         isAuthenticated &&
+         !window.location.pathname.includes('login-success')
+      ) {
+         console.log('Logged in and not on success page...')
+         if (window.location !== window.parent.location) {
+            console.log('Reloading...')
+            window.parent.location.reload()
+         }
+      }
+   }, [isAuthenticated])
 
    const isStoreOpen = () => {
       const current = new Date()
