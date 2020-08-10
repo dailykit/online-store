@@ -379,7 +379,7 @@ export default function OnboardingStack(props) {
    React.useEffect(() => {
       if (
          isAuthenticated &&
-         window.location.pathname.includes('login-success')
+         !window.location.pathname.includes('login-success')
       ) {
          if (window.location !== window.parent.location) {
             window.parent.location.reload()
