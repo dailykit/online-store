@@ -357,6 +357,14 @@ export default function OnboardingStack(props) {
    }, [availability])
 
    React.useEffect(() => {
+      console.log([
+         settingsLoading,
+         fetchingCustomer,
+         creatingCustomer,
+         fetchingCart,
+         subscribingCart,
+         isInitialized,
+      ])
       setMasterLoading(
          [
             settingsLoading,

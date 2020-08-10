@@ -36,7 +36,6 @@ const Home = props => {
 
    React.useEffect(() => {
       console.log('Checking Auth...')
-      console.log(window.location.pathname)
       console.log('window.location', window.location)
       console.log('window.parent.location', window.parent.location)
       if (
