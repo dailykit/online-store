@@ -50,7 +50,7 @@ export default function OnboardingStack(props) {
 
    if (mapsError) console.log('Error loading Maps:', mapsError)
 
-   const { user, isInitialized } = useAuth()
+   const { user, isInitialized, isAuthenticated } = useAuth()
    const {
       customer,
       cart,
