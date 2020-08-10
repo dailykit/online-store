@@ -23,7 +23,7 @@ const LoginSuccess = () => {
       <Wrapper>
          <Feather name="log-in" size={32} color="#666" />
          <AuthText>You've been logged in successfully!</AuthText>
-         <ReloadText>You will be rediected shortly.</ReloadText>
+         <ReloadText>You will be redirected shortly.</ReloadText>
          <ReloadCTA onPress={sendMessage}>
             <ReloadCTAText>Didn't redirect? Click here.</ReloadCTAText>
          </ReloadCTA>

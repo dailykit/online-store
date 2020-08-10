@@ -376,6 +376,17 @@ export default function OnboardingStack(props) {
       isInitialized,
    ])
 
+   React.useEffect(() => {
+      if (
+         isAuthenticated &&
+         window.location.pathname.includes('login-success')
+      ) {
+         if (window.location !== window.parent.location) {
+            window.parent.location.reload()
+         }
+      }
+   }, [isAuthenticated])
+
    return (
       <>
          <Stack.Navigator mode="card" headerMode="none">
