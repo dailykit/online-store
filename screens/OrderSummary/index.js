@@ -148,7 +148,9 @@ const Checkout = ({ cart, navigation }) => {
                            </View>
                            <TouchableOpacity
                               onPress={() =>
-                                 open('AddDetails', { path: 'profile/create' })
+                                 open('DailyKeyBackup', {
+                                    path: 'profile/create',
+                                 })
                               }
                            >
                               <Feather
@@ -161,7 +163,7 @@ const Checkout = ({ cart, navigation }) => {
                      ) : (
                         <BasicDetailsCTA
                            onPress={() =>
-                              open('AddDetails', { path: 'profile/create' })
+                              open('DailyKeyBackup', { path: 'profile/create' })
                            }
                         >
                            <BasicDetailsCTAText>
