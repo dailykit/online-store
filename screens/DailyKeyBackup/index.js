@@ -495,6 +495,8 @@ const Card = () => {
                setStatus('ERROR')
             }
          })()
+      } else {
+         console.log('No stripe customer ID!')
       }
    }, [])
 
