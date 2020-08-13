@@ -1,6 +1,12 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import React, { useState } from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import {
+   Image,
+   Text,
+   TouchableOpacity,
+   View,
+   ImageBackground,
+} from 'react-native'
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
 import { priceSort } from '../../utils'
@@ -145,14 +151,24 @@ const Item = ({
                            showInfo={true}
                         /> */}
                         <View style={styles.item_container}>
-                           <View
+                           <ImageBackground
+                              source={{
+                                 uri: tunnelItem
+                                    ? simpleRecipeProduct?.assets?.images[0]
+                                       ? simpleRecipeProduct?.assets?.images[0]
+                                       : defaultProductImage
+                                    : '#fff',
+                              }}
                               style={[
                                  styles.item_container_one,
                                  {
-                                    height:
+                                    minHeight:
+                                       width > 768 || tunnelItem ? 150 : 120,
+                                    maxHeight:
                                        width > 768 || tunnelItem ? 150 : 120,
                                  },
                               ]}
+                              blurRadius={10}
                            >
                               <Image
                                  source={{
@@ -162,7 +178,7 @@ const Item = ({
                                  }}
                                  style={styles.item_image}
                               />
-                           </View>
+                           </ImageBackground>
                            <View style={[styles.item_container_two]}>
                               <View
                                  style={{
@@ -397,11 +413,24 @@ const Item = ({
                            navigation={navigation}
                            showInfo={true}
                         /> */}
-                        <View
+                        <ImageBackground
+                           source={{
+                              uri: tunnelItem
+                                 ? inventoryProduct?.assets?.images[0]
+                                    ? inventoryProduct?.assets?.images[0]
+                                    : defaultProductImage
+                                 : '#fff',
+                           }}
                            style={[
                               styles.item_container_one,
-                              { height: width > 768 || tunnelItem ? 150 : 120 },
+                              {
+                                 minHeight:
+                                    width > 768 || tunnelItem ? 150 : 120,
+                                 maxHeight:
+                                    width > 768 || tunnelItem ? 150 : 120,
+                              },
                            ]}
+                           blurRadius={10}
                         >
                            <Image
                               source={{
@@ -411,7 +440,7 @@ const Item = ({
                               }}
                               style={styles.item_image}
                            />
-                        </View>
+                        </ImageBackground>
                         <View style={[styles.item_container_two]}>
                            <View
                               style={{

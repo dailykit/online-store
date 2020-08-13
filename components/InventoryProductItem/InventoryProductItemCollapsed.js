@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import {
+   Image,
+   Text,
+   TouchableOpacity,
+   View,
+   ImageBackground,
+} from 'react-native'
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
 import { priceSort } from '../../utils'
@@ -72,7 +78,14 @@ const InventoryProductCollapsed = ({
                   },
                ]}
             >
-               <View
+               <ImageBackground
+                  source={{
+                     uri: tunnelItem
+                        ? inventoryProduct?.assets?.images[0]
+                           ? inventoryProduct?.assets?.images[0]
+                           : defaultProductImage
+                        : '#fff',
+                  }}
                   style={[
                      styles.item_container_one,
                      {
@@ -80,6 +93,7 @@ const InventoryProductCollapsed = ({
                         maxHeight: width > 768 || tunnelItem ? 150 : 120,
                      },
                   ]}
+                  blurRadius={10}
                >
                   <Text style={styles.item_image_title}>{label}</Text>
                   <Image
@@ -90,7 +104,7 @@ const InventoryProductCollapsed = ({
                      }}
                      style={styles.item_image}
                   />
-               </View>
+               </ImageBackground>
                <View
                   style={[
                      styles.item_container_two,

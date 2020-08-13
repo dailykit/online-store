@@ -512,6 +512,8 @@ const Card = () => {
             setSaving(false)
             return
          }
+         console.log('Name: ', name)
+         console.log('Intent: ', intent)
          if (!name || !intent) {
             setError('All fields are required!')
             return

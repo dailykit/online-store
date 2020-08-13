@@ -1,6 +1,12 @@
 import { MaterialIcons } from '@expo/vector-icons'
 import React, { useState } from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import {
+   Image,
+   Text,
+   TouchableOpacity,
+   View,
+   ImageBackground,
+} from 'react-native'
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
 import { priceSort } from '../../utils'
@@ -71,7 +77,14 @@ const SimpleProductItemCollapsed = ({
                ]}
             >
                <View style={styles.item_container}>
-                  <View
+                  <ImageBackground
+                     source={{
+                        uri: tunnelItem
+                           ? simpleRecipeProduct?.assets?.images[0]
+                              ? simpleRecipeProduct?.assets?.images[0]
+                              : defaultProductImage
+                           : '#fff',
+                     }}
                      style={[
                         styles.item_container_one,
                         {
@@ -79,6 +92,7 @@ const SimpleProductItemCollapsed = ({
                            maxHeight: width > 768 || tunnelItem ? 150 : 120,
                         },
                      ]}
+                     blurRadius={10}
                   >
                      <Image
                         source={{
@@ -91,7 +105,7 @@ const SimpleProductItemCollapsed = ({
                            { resizeMode: tunnelItem ? 'contain' : 'cover' },
                         ]}
                      />
-                  </View>
+                  </ImageBackground>
                   <View
                      style={[
                         styles.item_container_two,
