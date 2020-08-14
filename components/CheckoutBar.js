@@ -22,7 +22,7 @@ const CheckoutBar = ({ navigation }) => {
                      }`}</StatsCount>
                      <StatsPrice>
                         <StatsPriceExact>
-                           $ {cart.cartInfo.total}
+                           $ {cart.cartInfo.total?.toFixed(2)}
                         </StatsPriceExact>
                         <StatsPriceTrail>plus taxes</StatsPriceTrail>
                      </StatsPrice>
