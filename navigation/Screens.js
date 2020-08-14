@@ -149,6 +149,37 @@ export default function OnboardingStack(props) {
       }
    )
 
+   // Subscription for Cart when logged in
+   const { loading: subscribingCart } = useSubscription(CART, {
+      variables: {
+         customerId: customer?.id,
+      },
+      skip: !Boolean(customer?.id),
+      onSubscriptionData: data => {
+         if (data.subscriptionData.data.cart.length > 1) {
+            const [mergedCart, mergedCartIds] = mergeCarts(
+               data.subscriptionData.data.cart
+            )
+            console.log('mergedCart', mergedCart)
+            updateCart({
+               variables: {
+                  id: mergedCart.id,
+                  set: {
+                     cartInfo: mergedCart.cartInfo,
+                  },
+               },
+            })
+            deleteCarts({
+               variables: {
+                  ids: mergedCartIds,
+               },
+            })
+         } else {
+            setCart(data.subscriptionData.data.cart[0])
+         }
+      },
+   })
+
    // Mutation for creating customer
    const [createCustomer, { loading: creatingCustomer }] = useMutation(
       CREATE_CUSTOMER,
@@ -243,37 +274,6 @@ export default function OnboardingStack(props) {
       },
       onError: error => {
          console.log('Deleteing carts error: ', error)
-      },
-   })
-
-   // Subscription for Cart when logged in
-   const { loading: subscribingCart } = useSubscription(CART, {
-      variables: {
-         customerId: customer?.id,
-      },
-      skip: !Boolean(customer?.id),
-      onSubscriptionData: data => {
-         if (data.subscriptionData.data.cart.length > 1) {
-            const [mergedCart, mergedCartIds] = mergeCarts(
-               data.subscriptionData.data.cart
-            )
-            console.log('mergedCart', mergedCart)
-            updateCart({
-               variables: {
-                  id: mergedCart.id,
-                  set: {
-                     cartInfo: mergedCart.cartInfo,
-                  },
-               },
-            })
-            deleteCarts({
-               variables: {
-                  ids: mergedCartIds,
-               },
-            })
-         } else {
-            setCart(data.subscriptionData.data.cart[0])
-         }
       },
    })
 

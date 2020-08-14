@@ -67,8 +67,6 @@ export const CartContextProvider = ({ children }) => {
       }
    }, [saved])
 
-   console.log('Brand Location: ', availability?.location)
-
    // From Hasura
    const [customer, setCustomer] = useState(undefined)
    const [cart, setCart] = useState(undefined)

@@ -33,7 +33,8 @@ const CustomizableProductItemCollapsed = ({ product }) => {
                <Image
                   style={{
                      flex: 1,
-                     height: width > 768 ? 150 : 120,
+                     maxHeight: width > 768 ? 150 : 120,
+                     minHeight: width > 768 ? 150 : 120,
                      width: '100%',
                      resizeMode: 'cover',
                   }}
@@ -60,7 +61,8 @@ const CustomizableProductItemCollapsed = ({ product }) => {
                         <Image
                            style={{
                               flex: 1,
-                              height: width > 768 ? 150 : 120,
+                              minHeight: width > 768 ? 150 : 120,
+                              maxHeight: width > 768 ? 150 : 120,
                               width: '100%',
                               resizeMode: 'contain',
                               marginHorizontal: 'auto',
