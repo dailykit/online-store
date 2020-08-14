@@ -154,7 +154,7 @@ export default function OnboardingStack(props) {
       variables: {
          customerId: customer?.id,
       },
-      skip: !Boolean(customer?.id),
+      // skip: !Boolean(customer?.id),
       onSubscriptionData: data => {
          if (data.subscriptionData.data.cart.length > 1) {
             const [mergedCart, mergedCartIds] = mergeCarts(
@@ -184,7 +184,6 @@ export default function OnboardingStack(props) {
    const [createCustomer, { loading: creatingCustomer }] = useMutation(
       CREATE_CUSTOMER,
       {
-         refetchQueries: ['customer'],
          onCompleted: data => {
             setCustomer(data.createCustomer)
             setCustomerDetails(data.createCustomer.platform_customer)
@@ -288,7 +287,7 @@ export default function OnboardingStack(props) {
       },
    })
 
-   const [updateCart] = useMutation(UPDATE_CART, {
+   const [updateCart, { loading: updatingCart }] = useMutation(UPDATE_CART, {
       onCompleted: () => {
          console.log('Cart updated!')
       },
@@ -362,22 +361,34 @@ export default function OnboardingStack(props) {
    }, [availability])
 
    React.useEffect(() => {
-      console.log([
+      console.log(
+         'settingsLoading',
          settingsLoading,
+         'fetchingCustomer',
          fetchingCustomer,
+         'creatingCustomer',
          creatingCustomer,
+         'fetchingCart',
          fetchingCart,
-         subscribingCart,
+         'updatingCart',
+         updatingCart,
+         'isInitialized',
          isInitialized,
-      ])
+         'user',
+         Object.keys(user).length,
+         'subscribingCart',
+         subscribingCart
+      )
       setMasterLoading(
          [
             settingsLoading,
             fetchingCustomer,
             creatingCustomer,
             fetchingCart,
-            subscribingCart,
+            updatingCart,
             !isInitialized,
+            !Object.keys(user).length,
+            subscribingCart,
          ].some(loading => loading)
       )
    }, [
@@ -385,8 +396,10 @@ export default function OnboardingStack(props) {
       fetchingCustomer,
       creatingCustomer,
       fetchingCart,
-      subscribingCart,
+      updatingCart,
       isInitialized,
+      user,
+      subscribingCart,
    ])
 
    return (
