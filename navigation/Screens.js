@@ -50,7 +50,7 @@ export default function OnboardingStack(props) {
 
    if (mapsError) console.log('Error loading Maps:', mapsError)
 
-   const { user, isInitialized } = useAuth()
+   const { user, isInitialized, isAuthenticated } = useAuth()
    const {
       customer,
       cart,
@@ -370,8 +370,6 @@ export default function OnboardingStack(props) {
          creatingCustomer,
          'fetchingCart',
          fetchingCart,
-         'updatingCart',
-         updatingCart,
          'isInitialized',
          isInitialized,
          'user',
@@ -379,27 +377,34 @@ export default function OnboardingStack(props) {
          'subscribingCart',
          subscribingCart
       )
-      setMasterLoading(
-         [
-            settingsLoading,
-            fetchingCustomer,
-            creatingCustomer,
-            fetchingCart,
-            updatingCart,
-            !isInitialized,
-            !Object.keys(user).length,
-            subscribingCart,
-         ].some(loading => loading)
-      )
+      if (isInitialized && isAuthenticated) {
+         setMasterLoading(
+            [
+               settingsLoading,
+               fetchingCustomer,
+               creatingCustomer,
+               fetchingCart,
+               !isInitialized,
+               !Object.keys(user).length,
+               subscribingCart,
+            ].some(loading => loading)
+         )
+      } else {
+         setMasterLoading(
+            [settingsLoading, fetchingCart, !isInitialized].some(
+               loading => loading
+            )
+         )
+      }
    }, [
       settingsLoading,
       fetchingCustomer,
       creatingCustomer,
       fetchingCart,
-      updatingCart,
       isInitialized,
       user,
       subscribingCart,
+      isAuthenticated,
    ])
 
    return (
