@@ -12,7 +12,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
 
    const checkValidity = async () => {
       const requiredModifers = data.categories.filter(
-         category => category.isRequired
+         category => category.isRequired && category.isActive
       )
       if (!requiredModifers.length) {
          // can proceed without modifers
@@ -113,47 +113,53 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
    return (
       <Wrapper>
          <Heading>Available Add-Ons:</Heading>
-         {data.categories.map(category => (
-            <Category>
-               <CategoryName>
-                  {`${category.name}${category.isRequired ? '*' : ''}`}
-                  <CategoryCondition>
-                     {category.type === 'single'
-                        ? `Choose one`
-                        : `Choose Min: ${category.limits.min} Max: ${category.limits.max}`}
-                  </CategoryCondition>
-               </CategoryName>
-               {category.options.map(option => (
-                  <CheckBox
-                     title={`${option.name} $${
-                        option.discount
-                           ? discountedPrice({
-                                value: option.price,
-                                discount: option.discount,
-                             }).toFixed(2)
-                           : option.price
-                     }`}
-                     checked={Boolean(
-                        selected.find(
-                           modifier =>
-                              modifier.category === category.name &&
-                              modifier.name === option.name
-                        )
-                     )}
-                     checkedIcon={
-                        category.type === 'single'
-                           ? 'dot-circle-o'
-                           : 'check-square-o'
-                     }
-                     uncheckedIcon={
-                        category.type === 'single' ? 'circle-o' : 'square-o'
-                     }
-                     checkedColor={visual.color}
-                     onPress={() => handleSelection(category, option)}
-                  />
-               ))}
-            </Category>
-         ))}
+         {data.categories
+            .filter(category => category.isActive)
+            .map(category => (
+               <Category>
+                  <CategoryName>
+                     {`${category.name}${category.isRequired ? '*' : ''}`}
+                     <CategoryCondition>
+                        {category.type === 'single'
+                           ? `Choose one`
+                           : `Choose Min: ${category.limits.min} Max: ${category.limits.max}`}
+                     </CategoryCondition>
+                  </CategoryName>
+                  {category.options
+                     .filter(option => option.isActive)
+                     .map(option => (
+                        <CheckBox
+                           title={`${option.name} $${
+                              option.discount
+                                 ? discountedPrice({
+                                      value: option.price,
+                                      discount: option.discount,
+                                   }).toFixed(2)
+                                 : option.price
+                           }`}
+                           checked={Boolean(
+                              selected.find(
+                                 modifier =>
+                                    modifier.category === category.name &&
+                                    modifier.name === option.name
+                              )
+                           )}
+                           checkedIcon={
+                              category.type === 'single'
+                                 ? 'dot-circle-o'
+                                 : 'check-square-o'
+                           }
+                           uncheckedIcon={
+                              category.type === 'single'
+                                 ? 'circle-o'
+                                 : 'square-o'
+                           }
+                           checkedColor={visual.color}
+                           onPress={() => handleSelection(category, option)}
+                        />
+                     ))}
+               </Category>
+            ))}
       </Wrapper>
    )
 }
