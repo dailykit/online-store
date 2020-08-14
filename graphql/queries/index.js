@@ -113,6 +113,32 @@ export const CUSTOMER = gql`
                brand
             }
          }
+         orderCarts(
+            where: {
+               status: { _eq: "PENDING" }
+               cartSource: { _eq: "a-la-carte" }
+            }
+            order_by: { created_at: desc }
+         ) {
+            id
+            address
+            customerInfo
+            cartInfo
+            customerId
+            isValid
+            paymentMethodId
+            stripeCustomerId
+            fulfillmentInfo
+            deliveryPrice
+            itemTotal
+            tip
+            taxPercent
+            tax
+            totalPrice
+            status
+            paymentStatus
+            orderId
+         }
       }
    }
 `

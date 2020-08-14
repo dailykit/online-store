@@ -189,6 +189,10 @@ export default function OnboardingStack(props) {
          if (data.customer) {
             setCustomer(data.customer)
             setCustomerDetails(data.customer.platform_customer)
+            if (data.customer.orderCarts.length) {
+               console.log('Found cart with customer...')
+               setCart(data.customer.orderCarts[0])
+            }
             // Update any pending cart
             if (cartId) {
                updateCart({
@@ -247,6 +251,7 @@ export default function OnboardingStack(props) {
       variables: {
          customerId: customer?.id,
       },
+      skip: !Boolean(customer?.id),
       onSubscriptionData: data => {
          if (data.subscriptionData.data.cart.length > 1) {
             const [mergedCart, mergedCartIds] = mergeCarts(
