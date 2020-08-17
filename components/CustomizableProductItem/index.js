@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native'
+import { priceSort } from '../../utils'
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed'
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded'
 
@@ -15,55 +16,52 @@ const CustomizableProductItem = ({
    setcardData,
    setcartItem,
    setPrice,
-   name,
+   setDiscount,
    product,
    refId,
    refType,
    comboProductComponent,
+   onModifiersValidityChange,
 }) => {
    const [expanded, setExpanded] = useState(false)
    const [numberOfOptions, setnumberOfOptions] = useState(0)
    const [objToAdd, setobjToAdd] = useState({})
 
-   const setproductOptionId = (
-      id,
-      price,
-      componentProductId,
-      name,
+   const setProductOption = (
+      option,
+      slaveProduct,
       type,
-      typeSelected,
-      customizableProductOptionId
+      customizableOptionId
    ) => {
-      console.log(
-         'Adding Customizable: ',
-         componentProductId,
-         name,
-         type,
-         customizableProductOptionId
-      )
+      console.log(option, product, type, customizableOptionId)
       let newItem = objToAdd
-      newItem.option.id = id
-      if (typeSelected) {
-         newItem.option.type = typeSelected
-      }
-      newItem.price = price
-      newItem.id = componentProductId
-      if (customizableProductOptionId) {
-         newItem.customizableProductOptionId = customizableProductOptionId
-      }
-      newItem.name = `[${product.name}] ${name}`
-      if (type) {
-         newItem.type = type
-         const option = product.customizableProductOptions.find(
-            option => option[type]
-         )
-         newItem.image = option[type].assets?.images[0]
-      }
-      if (newItem.type === 'inventoryProduct') {
+      newItem.option.id = option.id
+      if (type === 'simpleRecipeProduct') {
+         newItem.option.type = option.type
+         newItem.option.serving = option.simpleRecipeYield.yield.serving
+         delete newItem.option.label
+      } else {
+         newItem.option.label = option.label
          delete newItem.option.type
+         delete newItem.option.serving
       }
-      setobjToAdd(newItem)
-      setcartItem(newItem)
+      newItem.price = parseFloat(option.price[0].value)
+      newItem.discount = parseFloat(option.price[0].discount)
+      newItem.id = slaveProduct.id
+      newItem.customizableProductOptionId = customizableOptionId
+      newItem.name = `[${product.name}] ${slaveProduct.name}`
+      newItem.type = type
+      const cusOption = product.customizableProductOptions.find(
+         option => option[type]
+      )
+      newItem.image = cusOption[type].assets?.images[0]
+      setobjToAdd({ ...newItem, modifiers: [] })
+      setcartItem({ ...newItem, modifiers: [] })
+   }
+
+   const modifiersHandler = modifiers => {
+      setobjToAdd({ ...objToAdd, modifiers })
+      setcartItem({ ...objToAdd, modifiers })
    }
 
    useEffect(() => {
@@ -80,7 +78,9 @@ const CustomizableProductItem = ({
          if (product.customizableProductOptions[0]?.inventoryProduct !== null) {
             default_product =
                product?.customizableProductOptions[0]?.inventoryProduct
-            _default_option = default_product.inventoryProductOptions[0]
+            _default_option =
+               default_product.defaultInventoryProductOption ||
+               default_product.inventoryProductOptions.sort(priceSort)[0]
             _type = 'inventoryProduct'
          }
          if (
@@ -88,7 +88,9 @@ const CustomizableProductItem = ({
          ) {
             default_product =
                product?.customizableProductOptions[0]?.simpleRecipeProduct
-            _default_option = default_product.simpleRecipeProductOptions[0]
+            _default_option =
+               default_product.defaultSimpleRecipeProductOption ||
+               default_product.simpleRecipeProductOptions.sort(priceSort)[0]
             _type = 'simpleRecipeProduct'
          }
          let objToAddToCart = {
@@ -96,12 +98,14 @@ const CustomizableProductItem = ({
             customizableProductOptionId: default_product?.id,
             id: default_product.id,
             name: default_product.name,
-            price: _default_option?.price[0]?.value,
+            price: parseFloat(_default_option?.price[0]?.value),
+            discount: parseFloat(_default_option?.price[0].discount),
             image: default_product.assets?.images[0],
             option: {
                id: _default_option?.id, // product option id
                type: _default_option?.type,
             },
+            modifiers: [],
             type: _type,
          }
          if (comboProductComponent) {
@@ -111,7 +115,9 @@ const CustomizableProductItem = ({
          }
          setobjToAdd(objToAddToCart)
          if (!tunnelItem && independantItem) {
-            setPrice(_default_option?.price[0]?.value)
+            setPrice(_default_option?.price[0].value)
+            if (_default_option.price[0].discount)
+               setDiscount(parseFloat(_default_option.price[0].discount))
             setcardData(product)
          }
          if (tunnelItem && isSelected) {
@@ -151,9 +157,11 @@ const CustomizableProductItem = ({
             independantItem={independantItem ? true : false}
             numberOfOptions={numberOfOptions}
             tunnelItem={tunnelItem && isSelected}
-            setproductOptionId={setproductOptionId}
+            setProductOption={setProductOption}
             refId={refId}
             refType={refType}
+            onModifiersSelected={modifiersHandler}
+            onValidityChange={onModifiersValidityChange}
          />
       )
    }

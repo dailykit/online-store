@@ -1,24 +1,26 @@
+import { useMutation } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
+import { AsyncStorage } from 'react-native-web'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
+import { useCartContext } from '../context/cart'
+import { useDrawerContext } from '../context/drawer'
+import { CREATE_CART, UPDATE_CART } from '../graphql'
+import { discountedPrice, useStoreToast } from '../utils'
 import { width } from '../utils/Scalaing'
 import ComboProduct from './ComboProduct'
 import CustomizableProductItem from './CustomizableProductItem'
 import { Drawer } from './Drawer'
 import InventoryProductItem from './InventoryProductItem'
 import SimpleProductItem from './SimpleProductItem'
-import { useDrawerContext } from '../context/drawer'
-import { useCartContext } from '../context/cart'
-import { useMutation } from '@apollo/react-hooks'
-import { UPDATE_CART, CREATE_CART } from '../graphql'
-import { AsyncStorage } from 'react-native-web'
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [busy, setBusy] = useState(false)
    const [price, setPrice] = useState(0)
+   const [discount, setDiscount] = useState(0)
    const [cardItem, setcardItem] = useState(null) // obj to push to jaguar
    const [cardData, setcardData] = useState(null) // obj to pass to add to cart modal
    const [isModalVisible, setIsModalVisible] = useState(false)
@@ -28,17 +30,21 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const { open } = useDrawerContext()
    const [isHovered, setIsHovered] = React.useState(false)
 
+   const { toastr } = useStoreToast()
+
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
          console.log('Product added!')
          setBusy(false)
+         toastr('success', 'Item added!')
          if (!customer) {
             setCart(data.updateCart.returning[0])
          }
       },
       onError: error => {
          console.log(error)
+         toastr('error', error.message)
          setBusy(false)
       },
    })
@@ -46,6 +52,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
       onCompleted: data => {
          console.log('Cart created!')
          setBusy(false)
+         toastr('success', 'Item added!')
          if (!customer) {
             AsyncStorage.setItem('PENDING_CART_ID', data.createCart.id)
             setCart(data.createCart)
@@ -53,6 +60,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
       },
       onError: error => {
          console.log(error)
+         toastr('error', error.message)
          setBusy(false)
       },
    })
@@ -65,9 +73,17 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
             if (busy) return
             setBusy(true)
             if (cart) {
+               const priceWithoutDiscount = product.defaultCartItem.unitPrice
                const products = [
                   ...cart.cartInfo.products,
-                  product.defaultCartItem,
+                  {
+                     ...product.defaultCartItem,
+                     unitPrice: price,
+                     totalPrice: price,
+                     discount: parseFloat(
+                        (priceWithoutDiscount - price).toFixed(2)
+                     ),
+                  },
                ]
                const total = products.reduce(
                   (acc, product) => acc + parseFloat(product.totalPrice),
@@ -86,9 +102,20 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                   },
                })
             } else {
+               const priceWithoutDiscount = product.defaultCartItem.unitPrice
+               const products = [
+                  {
+                     ...product.defaultCartItem,
+                     unitPrice: price,
+                     totalPrice: price,
+                     discount: parseFloat(
+                        (priceWithoutDiscount - price).toFixed(2)
+                     ),
+                  },
+               ]
                const cartInfo = {
-                  products: [product.defaultCartItem],
-                  total: product.defaultCartItem.totalPrice,
+                  products,
+                  total: parseFloat(price.toFixed(2)),
                }
                createCart({
                   variables: {
@@ -122,6 +149,22 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
       }
    }
 
+   const originalPrice = (discountPrice, discount) => {
+      return parseFloat(discountPrice / (1 - parseFloat(discount / 100)))
+   }
+
+   React.useEffect(() => {
+      if (!product.isPopupAllowed) {
+         setDiscount(parseFloat(product.defaultCartItem.discount))
+         setPrice(
+            discountedPrice({
+               value: product.defaultCartItem.unitPrice,
+               discount: product.defaultCartItem.discount,
+            })
+         )
+      }
+   }, [])
+
    return (
       <>
          {cardData && (
@@ -147,16 +190,39 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                   shadowOpacity: isHovered ? 0.3 : 0.1,
                   shadowRadius: 4.65,
                   elevation: isHovered ? 24 : 4,
+                  position: 'relative',
                },
             ]}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
          >
+            {Boolean(discount) && (
+               <View
+                  style={{
+                     position: 'absolute',
+                     top: 4,
+                     right: 4,
+                     backgroundColor: visual.color,
+                     zIndex: 100,
+                     padding: 2,
+                     borderRadius: 2,
+                  }}
+               >
+                  <Text
+                     style={{
+                        fontSize: '0.8rem',
+                        color: '#fff',
+                     }}
+                  >
+                     {discount}% off
+                  </Text>
+               </View>
+            )}
             <View style={styles.item_parent_container}>
                {product?.__typename.includes('comboProduct') && (
                   <>
-                     <View>
-                        <Text style={styles.is_customizable}>Combo</Text>
+                     <View style={styles.tagContainer}>
+                        <Text style={styles.tag}>Combo</Text>
                      </View>
                      <ComboProduct
                         label={label}
@@ -172,10 +238,8 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                {product?.__typename.includes('customizableProduct') && (
                   <>
                      {cardData && (
-                        <View>
-                           <Text style={styles.is_customizable}>
-                              Customizable
-                           </Text>
+                        <View style={styles.tagContainer}>
+                           <Text style={styles.tag}>Customizable</Text>
                         </View>
                      )}
                      <CustomizableProductItem
@@ -187,6 +251,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         product={product}
                         {...restProps}
                         setPrice={price => setPrice(price)}
+                        setDiscount={setDiscount}
                      />
                   </>
                )}
@@ -209,6 +274,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         product={product}
                         {...restProps}
                         setPrice={price => setPrice(price)}
+                        setDiscount={setDiscount}
                      />
                   </>
                )}
@@ -231,6 +297,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         product={product}
                         {...restProps}
                         setPrice={price => setPrice(price)}
+                        setDiscount={setDiscount}
                      />
                   </>
                )}
@@ -241,9 +308,63 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                   product?.__typename.split('_')[1]
                ) && (
                   <View style={styles.price}>
-                     <Text style={styles.price_text}>$ {price}</Text>
+                     {discount ? (
+                        <>
+                           <Text
+                              style={[
+                                 styles.price_text,
+                                 {
+                                    textDecoration: 'line-through',
+                                    marginRight: '0.5rem',
+                                    fontSize: '0.9rem',
+                                    fontWeight: 'normal',
+                                 },
+                              ]}
+                           >
+                              $ {originalPrice(price, discount)?.toFixed(2)}
+                           </Text>
+                           <Text style={styles.price_text}>
+                              ${price?.toFixed(2)}
+                           </Text>
+                        </>
+                     ) : (
+                        <Text style={styles.price_text}>
+                           $ {price?.toFixed(2)}
+                        </Text>
+                     )}
                   </View>
                )}
+               {['comboProduct', 'customizableProduct'].includes(
+                  product?.__typename.split('_')[1]
+               ) &&
+                  !product.isPopupAllowed && (
+                     <View style={styles.price}>
+                        {discount ? (
+                           <>
+                              <Text
+                                 style={[
+                                    styles.price_text,
+                                    {
+                                       textDecoration: 'line-through',
+                                       marginRight: '0.5rem',
+                                       fontSize: '0.9rem',
+                                       fontWeight: 'normal',
+                                    },
+                                 ]}
+                              >
+                                 $ {originalPrice(price, discount)?.toFixed(2)}
+                              </Text>
+                              <Text style={styles.price_text}>
+                                 ${price?.toFixed(2)}
+                              </Text>
+                           </>
+                        ) : (
+                           <Text style={styles.price_text}>
+                              $ {price?.toFixed(2)}
+                           </Text>
+                        )}
+                     </View>
+                  )}
                <View style={styles.add_to_cart_container}>
                   <TouchableOpacity
                      onPress={addToCart}
@@ -256,7 +377,11 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                      <Text style={styles.add_to_card_text}>
                         {busy ? '...' : 'ADD'}
                         {product.isPopupAllowed && (
-                           <Feather size={width > 768 ? 14 : 10} name="plus" />
+                           <Feather
+                              size={10}
+                              name="plus"
+                              style={{ position: 'absolute' }}
+                           />
                         )}
                      </Text>
                   </TouchableOpacity>
@@ -289,20 +414,30 @@ const styles = EStyleSheet.create({
       fontSize: '$l',
       fontWeight: 'bold',
    },
-   is_customizable: {
-      fontSize: '$s',
-      color: 'gray',
-      textAlign: 'right',
-   },
    item_parent_container: {
-      flex: 5,
+      position: 'relative',
+   },
+   tagContainer: {
+      padding: 2,
+      backgroundColor: '#fff',
+      position: 'absolute',
+      top: 4,
+      left: 4,
+      zIndex: 10,
+      borderRadius: 2,
+   },
+   tag: {
+      fontSize: '$xs',
+      color: 'gray',
+      textAlign: 'left',
+      textTransform: 'uppercase',
    },
    bottom_container: {
       flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'row',
-      paddingTop: width > 768 ? 20 : 16,
+      paddingVertical: 5,
       paddingHorizontal: width > 768 ? '1rem' : '0.5rem',
    },
    item_details: {

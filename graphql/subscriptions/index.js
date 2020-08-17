@@ -15,42 +15,8 @@ export const ORDER = gql`
          tax
          tip
          itemTotal
-         orderInventoryProducts {
-            inventoryProduct {
-               id
-               name
-               assets
-            }
-            inventoryProductOption {
-               label
-               price
-            }
-         }
-         orderMealKitProducts {
-            simpleRecipeProduct {
-               id
-               name
-               assets
-            }
-            simpleRecipeProductOption {
-               price
-               simpleRecipeYield {
-                  yield
-               }
-            }
-         }
-         orderReadyToEatProducts {
-            simpleRecipeProduct {
-               id
-               name
-               assets
-            }
-            simpleRecipeProductOption {
-               price
-               simpleRecipeYield {
-                  yield
-               }
-            }
+         orderCart {
+            cartInfo
          }
       }
    }
@@ -190,42 +156,9 @@ export const ORDERS = gql`
          tax
          tip
          itemTotal
-         orderInventoryProducts {
-            inventoryProduct {
-               id
-               name
-               assets
-            }
-            inventoryProductOption {
-               label
-               price
-            }
-         }
-         orderMealKitProducts {
-            simpleRecipeProduct {
-               id
-               name
-               assets
-            }
-            simpleRecipeProductOption {
-               price
-               simpleRecipeYield {
-                  yield
-               }
-            }
-         }
-         orderReadyToEatProducts {
-            simpleRecipeProduct {
-               id
-               name
-               assets
-            }
-            simpleRecipeProductOption {
-               price
-               simpleRecipeYield {
-                  yield
-               }
-            }
+         created_at
+         orderCart {
+            cartInfo
          }
       }
    }
@@ -241,32 +174,34 @@ export const STORE_SETTINGS = gql`
    }
 `
 
-export const CUSTOMER = gql`
-   subscription Customers($keycloakId: String!, $email: String!) {
-      customers(
-         where: { email: { _eq: $email }, keycloakId: { _eq: $keycloakId } }
+export const CART = gql`
+   subscription Carts($customerId: Int!) {
+      cart(
+         where: {
+            status: { _eq: "PENDING" }
+            customerId: { _eq: $customerId }
+            cartSource: { _eq: "a-la-carte" }
+         }
+         order_by: { created_at: desc }
       ) {
          id
-         orderCarts(where: { status: { _eq: "PENDING" } }) {
-            id
-            address
-            customerInfo
-            cartInfo
-            customerId
-            isValid
-            paymentMethodId
-            stripeCustomerId
-            fulfillmentInfo
-            deliveryPrice
-            itemTotal
-            tip
-            taxPercent
-            tax
-            totalPrice
-            status
-            paymentStatus
-            orderId
-         }
+         address
+         customerInfo
+         cartInfo
+         customerId
+         isValid
+         paymentMethodId
+         stripeCustomerId
+         fulfillmentInfo
+         deliveryPrice
+         itemTotal
+         tip
+         taxPercent
+         tax
+         totalPrice
+         status
+         paymentStatus
+         orderId
       }
    }
 `

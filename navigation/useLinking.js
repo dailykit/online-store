@@ -12,16 +12,16 @@ export default function (containerRef) {
                   path: '/',
                },
                ProfileScreen: {
-                  path: 'profile',
+                  path: 'ProfileScreen',
                },
                OrderHistory: {
-                  path: 'orders',
+                  path: 'OrderHistory',
                },
                OrderSummary: {
-                  path: 'cart',
+                  path: 'OrderSummary',
                },
                ProductPage: {
-                  path: 'product',
+                  path: 'ProductPage',
                   parse: {
                      id: Number,
                      type: String,
@@ -29,21 +29,19 @@ export default function (containerRef) {
                },
                Search: {
                   path: 'Search',
+               },
+               Recipe: {
+                  path: 'Recipe',
                   parse: {
-                     query: String,
+                     recipeId: Number,
+                     refId: Number,
+                     refType: String,
                   },
                },
                CategoryProductsPage: {
-                  path: 'categories',
+                  path: 'CategoryProductsPage',
                   parse: {
-                     data: data => JSON.parse(decodeURIComponent(data)),
-                     category: category =>
-                        JSON.parse(decodeURIComponent(category)),
-                  },
-                  stringify: {
-                     data: data => encodeURIComponent(JSON.stringify(data)),
-                     category: category =>
-                        encodeURIComponent(JSON.stringify(category)),
+                     category: String,
                   },
                },
             },

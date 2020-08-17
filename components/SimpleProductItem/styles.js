@@ -4,10 +4,7 @@ import { height, width } from '../../utils/Scalaing'
 export const styles = EStyleSheet.create({
    item_container: {
       flexDirection: 'column',
-      paddingBottom: 5,
-      marginBottom: 2,
-      // paddingHorizontal: 10,
-      marginTop: 4,
+      paddingVertical: 4,
       borderBottomWidth: 0,
       backgroundColor: '#fff',
       borderBottomColor: '#fff',
@@ -15,7 +12,6 @@ export const styles = EStyleSheet.create({
    item_container_one: {
       flex: 4,
       position: 'relative',
-      // paddingTop: 20,
    },
    item_container_two: {
       flex: 1.3,
@@ -41,8 +37,8 @@ export const styles = EStyleSheet.create({
    },
    item_image: {
       flex: 1,
-      height: null,
-      width: null,
+      height: '100%',
+      width: '100%',
       resizeMode: 'cover',
    },
    item_title: {

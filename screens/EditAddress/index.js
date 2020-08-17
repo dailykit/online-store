@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
-import { Spinner } from 'native-base'
-import { Button } from 'native-base'
+import { Button, Spinner } from 'native-base'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -72,7 +71,9 @@ export default ({ navigation }) => {
                      padding: 8,
                      justifyContent: 'center',
                   }}
-                  onPress={() => open('AddDetails', { path: 'address/create' })}
+                  onPress={() =>
+                     open('DailyKeyBackup', { path: 'address/create' })
+                  }
                >
                   <Text style={{ color: '#fff' }}>Add Address</Text>
                </Button>
@@ -149,7 +150,7 @@ export default ({ navigation }) => {
                padding: 8,
                justifyContent: 'center',
             }}
-            onPress={() => open('AddDetails', { path: 'address/create' })}
+            onPress={() => open('DailyKeyBackup', { path: 'address/create' })}
          >
             <Text style={{ color: '#fff' }}>Add Address</Text>
          </Button>

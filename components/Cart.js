@@ -1,48 +1,99 @@
+import { useMutation } from '@apollo/react-hooks'
+import { Feather, Ionicons } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import {
-   Text,
-   View,
-   StyleSheet,
-   Dimensions,
-   TouchableOpacity,
-   ToastAndroid,
    Platform,
+   StyleSheet,
+   Text,
+   ToastAndroid,
+   TouchableOpacity,
+   View,
 } from 'react-native'
-import { Ionicons, Feather } from '@expo/vector-icons'
-import { useCartContext } from '../context/cart'
-import { uuid } from '../utils'
-import { useMutation } from '@apollo/react-hooks'
-import EStyleSheet, { child } from 'react-native-extended-stylesheet'
-import { CREATE_CART, UPDATE_CART } from '../graphql/mutations'
-
-import { height, width } from '../utils/Scalaing'
-import { useAppContext } from '../context/app'
-import { useDrawerContext } from '../context/drawer'
-import { useAuth } from '../context/auth'
-
 import { AsyncStorage } from 'react-native-web'
+import { useAppContext } from '../context/app'
+import { useAuth } from '../context/auth'
+import { useCartContext } from '../context/cart'
+import { useDrawerContext } from '../context/drawer'
+import { CREATE_CART, UPDATE_CART } from '../graphql/mutations'
+import { discountedPrice, useStoreToast, uuid } from '../utils'
+import { width } from '../utils/Scalaing'
 
 const Cart = ({
    navigation,
    text,
    cartItem,
-   to,
    tunnelItem,
    type,
    comboProductItems,
    setIsModalVisible,
    product,
+   isDisabled,
 }) => {
    const { cart, customerDetails, customer, setCart } = useCartContext()
    const { visual } = useAppContext()
    const { open } = useDrawerContext()
    const { isAuthenticated, login, user } = useAuth()
 
+   const { toastr } = useStoreToast()
+
    const [quantity, setQuantity] = useState(1)
+
+   const [priceShown, setPriceShown] = React.useState(0)
+
+   React.useEffect(() => {
+      if (cartItem) {
+         setPriceShown(
+            parseFloat(
+               discountedPrice({
+                  value: cartItem.price,
+                  discount: cartItem.discount,
+               })
+            ) +
+               cartItem.modifiers.reduce(
+                  (acc, modifier) =>
+                     acc +
+                     discountedPrice({
+                        value: modifier.price,
+                        discount: modifier.discount,
+                     }),
+                  0
+               )
+         )
+         setQuantity(1)
+      }
+   }, [cartItem])
+
+   React.useEffect(() => {
+      if (comboProductItems?.length && type === 'comboProduct') {
+         setPriceShown(
+            comboProductItems.reduce(
+               (acc, product) =>
+                  acc +
+                  parseFloat(
+                     discountedPrice({
+                        value: product.unitPrice,
+                        discount: product.discount,
+                     })
+                  ) +
+                  product.modifiers.reduce(
+                     (acc, modifier) =>
+                        acc +
+                        discountedPrice({
+                           value: modifier.price,
+                           discount: modifier.discount,
+                        }),
+                     0
+                  ),
+               0
+            )
+         )
+      }
+   }, [comboProductItems])
 
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
          console.log('Product added!')
+         toastr('success', 'Item added!')
          if (!customer) {
             console.log(data.updateCart)
             setCart(data.updateCart.returning[0])
@@ -55,6 +106,7 @@ const Cart = ({
    const [createCart] = useMutation(CREATE_CART, {
       onCompleted: data => {
          console.log('Cart created!')
+         toastr('success', 'Item added!')
          if (!customer) {
             AsyncStorage.setItem('PENDING_CART_ID', data.createCart.id)
             setCart(data.createCart)
@@ -71,38 +123,60 @@ const Cart = ({
          let total = parseFloat(cart?.cartInfo?.total) || 0
          if (tunnelItem) {
             if (type === 'comboProduct') {
-               const unitPrice = comboProductItems.reduce(
-                  (acc, product) => acc + parseFloat(product.unitPrice),
+               console.log(comboProductItems)
+               const price = priceShown
+               const priceWithoutDiscount = comboProductItems.reduce(
+                  (acc, product) =>
+                     acc +
+                     parseFloat(product.unitPrice) +
+                     product.modifiers.reduce(
+                        (acc, modifier) => acc + parseFloat(modifier.price),
+                        0
+                     ),
                   0
                )
-               const totalPrice = parseFloat((unitPrice * quantity).toFixed(2))
+               const totalPrice = parseFloat((price * quantity).toFixed(2))
                total = total + totalPrice
                products.push({
                   cartItemId: uuid(),
                   name: product.name,
                   id: product.id,
                   components: comboProductItems,
-                  discount: 0,
+                  discount: parseFloat(
+                     ((priceWithoutDiscount - price) * quantity).toFixed(2)
+                  ),
                   totalPrice,
-                  unitPrice,
+                  unitPrice: price,
                   quantity,
                   type,
                   specialInstructions: '',
                })
             } else {
+               console.log('cartItem', cartItem)
+               const price = priceShown
+               const priceWithoutDiscount =
+                  parseFloat(cartItem.price) +
+                  cartItem.modifiers.reduce(
+                     (acc, modifier) => acc + parseFloat(modifier.price),
+                     0
+                  )
                const item = {
                   cartItemId: uuid(),
                   type,
                   ...cartItem,
                   quantity,
-                  unitPrice: parseFloat(parseFloat(cartItem.price).toFixed(2)),
+                  unitPrice: parseFloat(parseFloat(price).toFixed(2)),
                   totalPrice: parseFloat(
-                     (parseFloat(cartItem.price) * quantity).toFixed(2)
+                     (parseFloat(price) * quantity).toFixed(2)
                   ),
-                  discount: 0,
+                  modifiers: cartItem.modifiers,
+                  discount: parseFloat(
+                     ((priceWithoutDiscount - price) * quantity).toFixed(2)
+                  ),
                   specialInstructions: '',
                }
                delete item.price
+               console.log(item)
                products.push(item)
                total = total + parseFloat(item.totalPrice)
             }
@@ -223,24 +297,19 @@ const Cart = ({
                               fontSize: 16,
                            }}
                         >
-                           $
-                           {type === 'comboProduct'
-                              ? (
-                                   comboProductItems.reduce(
-                                      (acc, product) =>
-                                         acc + parseFloat(product.unitPrice),
-                                      0
-                                   ) * quantity
-                                ).toFixed(2)
-                              : (cartItem?.price * quantity).toFixed(2)}
+                           ${(priceShown * quantity).toFixed(2)}
                         </Text>
                      </View>
                   </View>
                )}
             </View>
             <TouchableOpacity
-               style={styles.container_right}
+               style={[
+                  styles.container_right,
+                  { opacity: isDisabled ? 0.3 : 1 },
+               ]}
                onPress={handleAddToCart}
+               disabled={isDisabled}
             >
                <Text style={styles.text}>
                   {text}
@@ -261,10 +330,11 @@ const Cart = ({
 export const CartSummary = ({ navigation, text }) => {
    const { cart } = useCartContext()
    const { visual } = useAppContext()
+   const { open } = useDrawerContext()
 
    const pay = () => {
       if (cart.isValid.status) {
-         navigation.navigate('PaymentProcessing')
+         open('Payment', { navigation })
       } else {
          if (Platform.OS == 'android')
             ToastAndroid.show(cart.isValid.error, ToastAndroid.SHORT)
@@ -319,17 +389,22 @@ export const ComboProductItemProceed = ({
    text,
    setCurrentComboProductIndex,
    currentComboProductIndex,
+   isDisabled,
 }) => {
    const { visual } = useAppContext()
    return (
       <View style={[styles.outerContainer, { width: '100%' }]}>
          <TouchableOpacity
+            disabled={isDisabled}
             onPress={() => {
                setCurrentComboProductIndex(currentComboProductIndex + 1)
             }}
             style={[
                styles.container,
-               { backgroundColor: visual.color || '#3fa4ff' },
+               {
+                  backgroundColor: visual.color || '#3fa4ff',
+                  opacity: isDisabled ? 0.7 : 1,
+               },
             ]}
          >
             <View style={[styles.container_left, { flex: 4 }]}>

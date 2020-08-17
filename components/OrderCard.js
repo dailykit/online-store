@@ -1,8 +1,9 @@
-import React from 'react'
-import EStyleSheet from 'react-native-extended-stylesheet'
-import { Accordion } from 'native-base'
-import { View, Text, Image } from 'react-native'
 import * as moment from 'moment'
+import { Accordion } from 'native-base'
+import React from 'react'
+import { Image, Text, View } from 'react-native'
+import EStyleSheet from 'react-native-extended-stylesheet'
+import defaultProductImage from '../assets/imgs/default-product-image.png'
 
 const OrderCard = ({ order, less }) => {
    const whatColor = status => {
@@ -45,6 +46,10 @@ const OrderCard = ({ order, less }) => {
          default:
             return 'CALL US'
       }
+   }
+
+   String.prototype.SRPType = function () {
+      return this === 'readyToEat' ? 'Ready to Eat' : 'Meal Kit'
    }
 
    return (
@@ -101,20 +106,13 @@ const OrderCard = ({ order, less }) => {
             dataArray={[
                {
                   title: `${
-                     order.orderInventoryProducts.length +
-                     order.orderMealKitProducts.length +
-                     order.orderReadyToEatProducts.length
+                     order.orderCart.cartInfo.products.length || 'NA'
                   }  Item${
-                     order.orderInventoryProducts.length +
-                        order.orderMealKitProducts.length +
-                        order.orderReadyToEatProducts.length >
-                     1
-                        ? 's'
-                        : ''
+                     order.orderCart.cartInfo.products.length > 1 ? 's' : ''
                   }`,
                   content: (
                      <View style={{ width: '100%' }}>
-                        {order.orderInventoryProducts.map(product => (
+                        {order.orderCart.cartInfo.products.map(product => (
                            <View style={styles.product}>
                               <View
                                  style={{
@@ -125,8 +123,7 @@ const OrderCard = ({ order, less }) => {
                                  <Image
                                     source={{
                                        uri:
-                                          product.inventoryProduct?.assets
-                                             ?.images[0],
+                                          product.image || defaultProductImage,
                                     }}
                                     style={{
                                        height: 60,
@@ -137,104 +134,36 @@ const OrderCard = ({ order, less }) => {
                                     }}
                                  />
                                  <View style={styles.productInfo}>
-                                    <Text>{product.inventoryProduct.name}</Text>
-                                    <Text style={styles.productOption}>
-                                       {product.inventoryProductOption.label}
-                                    </Text>
+                                    <Text>{product.name}</Text>
+                                    <View
+                                       style={{
+                                          flexDirection: 'row',
+                                          alignItems: 'center',
+                                       }}
+                                    >
+                                       <Text
+                                          style={styles.productOption}
+                                          ellipsizeMode="tail"
+                                          numberOfLines={1}
+                                       >
+                                          {product.type ===
+                                             'simpleRecipeProduct' &&
+                                             `${product.option.type?.SRPType()} x${
+                                                product.option.serving
+                                             }`}
+                                          {product.type ===
+                                             'inventoryProduct' &&
+                                             `${product.option.label}`}
+                                       </Text>
+                                       <Text style={styles.quantity}>
+                                          Qty: {product.quantity}
+                                       </Text>
+                                    </View>
                                  </View>
                               </View>
                               <Text style={styles.productPrice}>
-                                 ${' '}
-                                 {product.inventoryProductOption.price[0].value}
+                                 $ {product.totalPrice.toFixed(2)}
                               </Text>
-                           </View>
-                        ))}
-                        {order.orderMealKitProducts.map(product => (
-                           <View style={styles.product}>
-                              <View
-                                 style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                 }}
-                              >
-                                 <Image
-                                    source={{
-                                       uri:
-                                          product.simpleRecipeProduct?.assets
-                                             ?.images[0],
-                                    }}
-                                    style={{
-                                       height: 60,
-                                       width: 60,
-                                       resizeMode: 'cover',
-                                       marginRight: 8,
-                                       borderRadius: 4,
-                                    }}
-                                 />
-                                 <View style={styles.productInfo}>
-                                    <Text>
-                                       {product.simpleRecipeProduct.name}
-                                    </Text>
-                                    <Text style={styles.productOption}>
-                                       Meal Kit Serving:{' '}
-                                       {
-                                          product.simpleRecipeProductOption
-                                             .simpleRecipeYield.yield.serving
-                                       }
-                                    </Text>
-                                 </View>
-                              </View>
-                              <Text style={styles.productPrice}>
-                                 ${' '}
-                                 {
-                                    product.simpleRecipeProductOption.price[0]
-                                       .value
-                                 }
-                              </Text>
-                           </View>
-                        ))}
-                        {order.orderReadyToEatProducts.map(product => (
-                           <View style={styles.product}>
-                              <View
-                                 style={{
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                 }}
-                              >
-                                 <Image
-                                    source={{
-                                       uri:
-                                          product.simpleRecipeProduct?.assets
-                                             ?.images[0],
-                                    }}
-                                    style={{
-                                       height: 60,
-                                       width: 60,
-                                       resizeMode: 'cover',
-                                       marginRight: 8,
-                                       borderRadius: 4,
-                                    }}
-                                 />
-                                 <View style={styles.productInfo}>
-                                    <Text>
-                                       {product.simpleRecipeProduct.name}
-                                    </Text>
-                                    <Text style={styles.productOption}>
-                                       Ready to Eat Serving:{' '}
-                                       {
-                                          product.simpleRecipeProductOption
-                                             .simpleRecipeYield.yield.serving
-                                       }
-                                    </Text>
-                                 </View>
-                                 <Text style={styles.productPrice}>
-                                    ${' '}
-                                    {
-                                       product.simpleRecipeProductOption
-                                          .price[0].value
-                                    }
-                                 </Text>
-                              </View>
                            </View>
                         ))}
                      </View>
@@ -347,6 +276,11 @@ const styles = EStyleSheet.create({
    productOption: {
       fontSize: '$s',
       color: '#666',
+   },
+   quantity: {
+      fontSize: '$s',
+      color: '#666',
+      marginLeft: 16,
    },
    productPrice: {
       fontSize: '$m',

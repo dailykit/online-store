@@ -1,9 +1,8 @@
-import React from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
-import styled from 'styled-components/native'
 import { Feather } from '@expo/vector-icons'
-import { useCartContext } from '../context/cart'
+import React from 'react'
+import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
+import { useCartContext } from '../context/cart'
 
 const CheckoutBar = ({ navigation }) => {
    const { visual } = useAppContext()
@@ -23,7 +22,7 @@ const CheckoutBar = ({ navigation }) => {
                      }`}</StatsCount>
                      <StatsPrice>
                         <StatsPriceExact>
-                           $ {cart.cartInfo.total}
+                           $ {cart.cartInfo.total?.toFixed(2)}
                         </StatsPriceExact>
                         <StatsPriceTrail>plus taxes</StatsPriceTrail>
                      </StatsPrice>

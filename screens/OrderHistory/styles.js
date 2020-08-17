@@ -20,12 +20,13 @@ export const styles = EStyleSheet.create({
    },
    container: {
       flex: 1,
-      backgroundColor: '#fff',
+      backgroundColor: '#E9ECEE',
       paddingHorizontal: width > 768 ? '20%' : 0,
    },
    card: {
       padding: width > 768 ? 8 : 12,
       marginBottom: 20,
+      backgroundColor: '#fff',
       borderRadius: 4,
       shadowColor: '#666',
       shadowOffset: {

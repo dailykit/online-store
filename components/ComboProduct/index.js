@@ -1,14 +1,15 @@
+import { Feather } from '@expo/vector-icons'
 import React, { useState } from 'react'
-import { View, Text, Image } from 'react-native'
+import { Image, Text, View } from 'react-native'
+import Carousel from 'react-native-banner-carousel'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import { useAppContext } from '../../context/app'
+import { priceSort } from '../../utils'
+import { width } from '../../utils/Scalaing'
 import CustomizableProductItem from '../CustomizableProductItem'
 import InventoryProductItem from '../InventoryProductItem'
 import SimpleProductItem from '../SimpleProductItem'
 import { styles } from './styles'
-import { width } from '../../utils/Scalaing'
-import { useAppContext } from '../../context/app'
-import Carousel from 'react-native-banner-carousel'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { Feather } from '@expo/vector-icons'
 
 const ComboProduct = ({
    tunnelItem,
@@ -20,6 +21,7 @@ const ComboProduct = ({
    setCurrentComboProductIndex,
    setPrice,
    product,
+   onModifiersValidityChange,
 }) => {
    const [selected, setSelected] = useState(0)
 
@@ -32,12 +34,12 @@ const ComboProduct = ({
          if (component.inventoryProduct) {
             return (
                component.inventoryProduct?.assets?.images[0] ||
-               'https://via.placeholder.com/120'
+               require('../../assets/imgs/default-product-image.png')
             )
          } else if (component.simpleRecipeProduct) {
             return (
                component.simpleRecipeProduct?.assets?.images[0] ||
-               'https://via.placeholder.com/120'
+               require('../../assets/imgs/default-product-image.png')
             )
          } else {
             if (
@@ -47,13 +49,13 @@ const ComboProduct = ({
                return (
                   component.customizableProduct.defaultCustomizableProductOption
                      .inventoryProduct?.assets?.images[0] ||
-                  'https://via.placeholder.com/120'
+                  require('../../assets/imgs/default-product-image.png')
                )
             } else {
                return (
                   component.customizableProduct.defaultCustomizableProductOption
                      .simpleRecipeProduct?.assets?.images[0] ||
-                  'https://via.placeholder.com/120'
+                  require('../../assets/imgs/default-product-image.png')
                )
             }
          }
@@ -68,16 +70,18 @@ const ComboProduct = ({
             price =
                price +
                parseFloat(
-                  product.inventoryProduct.inventoryProductOptions[0].price[0]
-                     .value
+                  product.inventoryProduct.inventoryProductOptions.sort(
+                     priceSort
+                  )[0].price[0].value
                )
          }
          if (product.simpleRecipeProductId !== null) {
             price =
                price +
                parseFloat(
-                  product.simpleRecipeProduct.simpleRecipeProductOptions[0]
-                     .price[0].value
+                  product.simpleRecipeProduct.simpleRecipeProductOptions.sort(
+                     priceSort
+                  )[0].price[0].value
                )
          }
          if (product.customizableProductId !== null) {
@@ -181,6 +185,9 @@ const ComboProduct = ({
                                  id: el.id,
                                  label: el.label,
                               }}
+                              onModifiersValidityChange={
+                                 onModifiersValidityChange
+                              }
                            />
                         )
                      }
@@ -211,6 +218,9 @@ const ComboProduct = ({
                                  id: el.id,
                                  label: el.label,
                               }}
+                              onModifiersValidityChange={
+                                 onModifiersValidityChange
+                              }
                            />
                         )
                      }
@@ -241,6 +251,9 @@ const ComboProduct = ({
                                  id: el.id,
                                  label: el.label,
                               }}
+                              onModifiersValidityChange={
+                                 onModifiersValidityChange
+                              }
                            />
                         )
                      }
@@ -265,7 +278,7 @@ const ComboProduct = ({
                      autoplayTimeout={3000}
                      loop
                      index={0}
-                     pageSize={120}
+                     pageSize="100%"
                   >
                      {optionImages.map((slide, index) => (
                         <View

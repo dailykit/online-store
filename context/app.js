@@ -17,15 +17,25 @@ export const AppContextProvider = ({ children }) => {
    })
    const [availability, setAvailability] = useState(undefined)
 
+   const [menuData, setMenuData] = React.useState([])
+   const [masterLoading, setMasterLoading] = React.useState(true)
+   const [menuLoading, setMenuLoading] = React.useState(false)
+
    return (
       <AppContext.Provider
          value={{
-            visual,
             setVisual,
-            brand,
+            visual,
             setBrand,
-            availability,
+            brand,
             setAvailability,
+            availability,
+            menuData,
+            setMenuData,
+            masterLoading,
+            setMasterLoading,
+            menuLoading,
+            setMenuLoading,
          }}
       >
          {children}

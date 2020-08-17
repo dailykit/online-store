@@ -1,23 +1,15 @@
-import { withNavigation } from '@react-navigation/compat'
-import React from 'react'
-import {
-   StyleSheet,
-   Text,
-   TouchableOpacity,
-   View,
-   TextInput,
-} from 'react-native'
-import argonTheme from '../constants/Theme'
-import { useCartContext } from '../context/cart'
-import { width } from '../utils/Scalaing'
-import Icon from './Icon'
-import { useAppContext } from '../context/app'
-
-import styled from 'styled-components/native'
-import { useDrawerContext } from '../context/drawer'
-import { useAuth } from '../context/auth'
 import { Feather } from '@expo/vector-icons'
 import { useIsDrawerOpen } from '@react-navigation/drawer'
+import React from 'react'
+import { Text, View } from 'react-native'
+import styled from 'styled-components/native'
+import argonTheme from '../constants/Theme'
+import { useAppContext } from '../context/app'
+import { useAuth } from '../context/auth'
+import { useCartContext } from '../context/cart'
+import { useDrawerContext } from '../context/drawer'
+import { width } from '../utils/Scalaing'
+import Icon from './Icon'
 
 const BasketButton = ({ isWhite }) => {
    const { cart } = useCartContext()
@@ -86,18 +78,9 @@ const WebNav = ({ navigation }) => {
             <NavLink>
                <NavLinkText>About Us</NavLinkText>
             </NavLink>
-            <SearchContainer>
+            <SearchContainer onPress={() => navigation.navigate('Search')}>
                <Feather name="search" size={18} color="#aaa" />
-               <Search
-                  selectionColor={visual.color}
-                  onChangeText={text => setQuery(text)}
-                  value={query}
-                  placeholder="Search"
-                  onKeyPress={e =>
-                     e.charCode === 13 &&
-                     navigation.navigate('Search', { query })
-                  }
-               />
+               <SearchText>Search</SearchText>
             </SearchContainer>
          </NavLeft>
          <NavRight>
@@ -120,7 +103,13 @@ const WebNav = ({ navigation }) => {
                </NavButton>
             ) : (
                <>
-                  <NavButton color={visual.color} onPress={() => open('Login')}>
+                  <NavButton
+                     color={visual.color}
+                     onPress={() => {
+                        console.log('Login clicked')
+                        open('Login')
+                     }}
+                  >
                      <NavLinkText white>Login</NavLinkText>
                   </NavButton>
                   <NavButton
@@ -155,9 +144,7 @@ const MobileNav = ({ navigation }) => {
             </NavLink>
          </NavLeft>
          <NavRight>
-            <NavLink
-               onPress={() => navigation.navigate('Search', { query: '' })}
-            >
+            <NavLink onPress={() => navigation.navigate('Search')}>
                <Feather name="search" size={16} />
             </NavLink>
          </NavRight>
@@ -198,19 +185,16 @@ const NavLinkText = styled.Text`
    color: ${props => (props.white ? '#fff' : '#111')};
 `
 
-const SearchContainer = styled.View`
+const SearchContainer = styled.TouchableOpacity`
    flex-direction: row;
    margin-left: 32px;
-   border: 1px solid #aaa;
-   border-radius: 5px;
-   align-items: center;
-   padding: 5px;
+   align-items: baseline;
 `
 
-const Search = styled.TextInput`
+const SearchText = styled.Text`
    font-size: 1.1rem;
-   outline: none;
    margin-left: 8px;
+   color: #666;
 `
 
 const NavRight = styled.View`

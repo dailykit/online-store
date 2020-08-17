@@ -1,6 +1,5 @@
-import React from 'react'
 import Keycloak from 'keycloak-js'
-
+import React from 'react'
 // No. of times this file  had to be editied(cuz this package is garbage): 8
 import { CLIENTID } from 'react-native-dotenv'
 
@@ -40,13 +39,48 @@ export const AuthProvider = ({ children }) => {
 
    React.useEffect(() => {
       initialize()
-      setLoginUrl(keycloak.createLoginUrl())
-      setRegisterUrl(keycloak.createRegisterUrl())
+      setLoginUrl(
+         keycloak.createLoginUrl({
+            redirectUri: `${window.location.origin}/store/login-success`,
+         })
+      )
+      setRegisterUrl(
+         keycloak.createRegisterUrl({
+            redirectUri: `${window.location.origin}/store/login-success`,
+         })
+      )
    }, [])
 
-   const login = () => keycloak.login()
-   const logout = () => keycloak.logout()
-   const register = () => keycloak.register()
+   React.useEffect(() => {
+      if (window) {
+         let eventMethod = window.addEventListener
+            ? 'addEventListener'
+            : 'attachEvent'
+         let eventer = window[eventMethod]
+         let messageEvent =
+            eventMethod === 'attachEvent' ? 'onmessage' : 'message'
+
+         eventer(messageEvent, e => {
+            if (e.origin !== window.origin) return
+            try {
+               if (e.data.loginSuccess) {
+                  initialize()
+               }
+            } catch (error) {}
+         })
+      }
+   }, [])
+
+   const login = () =>
+      keycloak.login({
+         redirectUri: `${window.location.origin}/store/login-success`,
+      })
+   const logout = () =>
+      keycloak.logout({ redirectUri: `${window.location.origin}/store` })
+   const register = () =>
+      keycloak.register({
+         redirectUri: `${window.location.origin}/store/login-success`,
+      })
 
    return (
       <AuthContext.Provider

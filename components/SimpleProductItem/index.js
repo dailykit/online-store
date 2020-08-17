@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { discountedPrice, priceSort } from '../../utils'
 import SimpleProductItemCollapsed from './SimpleProductItemCollapsed'
 
 const SimpleProductItem = ({
@@ -6,42 +7,70 @@ const SimpleProductItem = ({
    openModal,
    navigation,
    setPrice,
+   setDiscount,
    independantItem,
    setcartItem,
    setcardData,
    tunnelItem,
    setSelected,
    isSelected,
-   name,
    label,
    product,
    showInfo,
    refId,
    refType,
    comboProductComponent,
+   onModifiersValidityChange,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
-   const setProductOptionId = (id, price, typeSelected) => {
-      let newItem = objToAdd
-      newItem.option.id = id
-      newItem.option.type = typeSelected
-      newItem.price = price
-      setobjToAdd(newItem)
-      setcartItem(newItem)
+   const setProductOption = option => {
+      setobjToAdd({
+         ...objToAdd,
+         option: {
+            id: option.id,
+            type: option.type,
+            serving: option.simpleRecipeYield.yield.serving,
+         },
+         price: parseFloat(option.price[0].value),
+         discount: parseFloat(option.price[0].discount),
+         modifiers: [],
+      })
+      setcartItem({
+         ...objToAdd,
+         option: {
+            id: option.id,
+            type: option.type,
+            serving: option.simpleRecipeYield.yield.serving,
+         },
+         price: parseFloat(option.price[0].value),
+         discount: parseFloat(option.price[0].discount),
+         modifiers: [],
+      })
+   }
+
+   const modifiersHandler = modifiers => {
+      setobjToAdd({ ...objToAdd, modifiers })
+      setcartItem({ ...objToAdd, modifiers })
    }
 
    React.useEffect(() => {
-      if (product.defaultSimpleRecipeProductOption.id) {
+      if (product) {
+         const option =
+            product.defaultSimpleRecipeProductOption ||
+            product.simpleRecipeProductOptions.sort(priceSort)[0]
          let objToPush = {
             id: product.id,
             name: product.name,
-            price: product.defaultSimpleRecipeProductOption?.price[0].value,
+            price: parseFloat(option?.price[0].value),
+            discount: parseFloat(option.price[0].discount),
             image: product.assets?.images[0],
             option: {
-               id: product.defaultSimpleRecipeProductOption?.id, // product option id
-               type: product.defaultSimpleRecipeProductOption?.type,
+               id: option?.id, // product option id
+               type: option?.type,
+               serving: option?.simpleRecipeYield.yield.serving,
             },
+            modifiers: [],
             type: 'simpleRecipeProduct',
          }
          if (comboProductComponent) {
@@ -50,7 +79,9 @@ const SimpleProductItem = ({
          }
          setobjToAdd(objToPush)
          if (!tunnelItem && independantItem) {
-            setPrice(product.defaultSimpleRecipeProductOption?.price[0]?.value)
+            setPrice(discountedPrice(option?.price[0]))
+            if (option.price[0].discount)
+               setDiscount(parseFloat(option.price[0].discount))
             setcardData(product)
          }
          if (tunnelItem && isSelected) {
@@ -71,11 +102,13 @@ const SimpleProductItem = ({
          navigation={navigation}
          label={label}
          tunnelItem={tunnelItem}
-         setProductOptionId={setProductOptionId}
+         setProductOption={setProductOption}
          setSelected={setSelected}
          isSelected={isSelected}
          refId={refId}
          refType={refType}
+         onModifiersSelected={modifiersHandler}
+         onValidityChange={onModifiersValidityChange}
       />
    )
 }

@@ -1,6 +1,6 @@
-import { useSubscription, useLazyQuery } from '@apollo/react-hooks'
+import { useLazyQuery } from '@apollo/react-hooks'
 import React from 'react'
-import { FlatList, StyleSheet, View, SafeAreaView } from 'react-native'
+import { FlatList, SafeAreaView, StyleSheet } from 'react-native'
 import {
    COMBO_PRODUCTS,
    CUSTOMIZABLE_PRODUCTS,

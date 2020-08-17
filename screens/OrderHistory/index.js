@@ -1,18 +1,20 @@
-import { Divider } from '@ui-kitten/components'
+import { useSubscription } from '@apollo/react-hooks'
 import { Spinner } from 'native-base'
-import * as moment from 'moment'
-import { Accordion } from 'native-base'
 import React from 'react'
-import { ScrollView, Text, TouchableOpacity, View, Image } from 'react-native'
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Header } from '../../components'
+import Auth from '../../components/error/Auth'
+import PlatformError from '../../components/error/PlatformError'
+import OrderCard from '../../components/OrderCard'
+import AppSkeleton from '../../components/skeletons/app'
+import { useAppContext } from '../../context/app'
 import { useCartContext } from '../../context/cart'
 import { ORDERS } from '../../graphql'
 import { styles } from './styles'
-import { useSubscription } from '@apollo/react-hooks'
-import { Header } from '../../components'
-import OrderCard from '../../components/OrderCard'
 
 export default ({ navigation }) => {
-   const { customer } = useCartContext()
+   const { customer, customerDetails } = useCartContext()
+   const { masterLoading } = useAppContext()
 
    // Query
    const { data, loading, error } = useSubscription(ORDERS, {
@@ -20,6 +22,18 @@ export default ({ navigation }) => {
          id: customer?.id,
       },
    })
+
+   if (masterLoading) {
+      return <AppSkeleton />
+   }
+
+   if (!customer) {
+      return <Auth navigation={navigation} />
+   }
+
+   if (!customerDetails) {
+      return <PlatformError navigation={navigation} />
+   }
 
    if (loading) {
       return (
@@ -44,13 +58,13 @@ export default ({ navigation }) => {
    }
 
    return (
-      <View style={{ backgroundColor: '#fff', flex: 1 }}>
+      <View style={{ backgroundColor: '#E9ECEE', flex: 1 }}>
          <Header title="Home" navigation={navigation} />
          <View style={styles.outerContainer}>
             <Text style={styles.heading}>Order History</Text>
             <ScrollView style={styles.container}>
                {data?.orders
-                  .filter(order => order?.deliveryInfo)
+                  .filter(order => order?.orderCart)
                   .map(order => (
                      <>
                         <TouchableOpacity

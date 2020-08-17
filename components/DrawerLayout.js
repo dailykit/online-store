@@ -1,42 +1,42 @@
-import React from 'react'
-import Modal from 'modal-enhanced-react-native-web'
-import { StyleSheet, Text, View } from 'react-native'
-import { useDrawerContext } from '../context/drawer'
-import { height, width } from '../utils/Scalaing'
-
-// Screens
-import ProfileScreen from '../screens/ProfileScreen'
-import EditAddress from '../screens/EditAddress'
-import SelectPaymentMethod from '../screens/SelectPaymentMethod'
-import OrderHistory from '../screens/OrderHistory'
-import AddDetails from '../screens/AddDetails'
-import SafetyScreen from '../screens/SafetyScreen'
-import { useCartContext } from '../context/cart'
 import { useLazyQuery } from '@apollo/react-hooks'
-import { CUSTOMER_DETAILS } from '../graphql'
+import { Feather } from '@expo/vector-icons'
+import Modal from 'modal-enhanced-react-native-web'
+import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAuth } from '../context/auth'
-import Fulfillment from './Fulfillment'
+import { useCartContext } from '../context/cart'
+import { useDrawerContext } from '../context/drawer'
+import { CUSTOMER } from '../graphql'
+import AddDetails from '../screens/AddDetails'
+import DailyKeyBackup from '../screens/DailyKeyBackup'
+import EditAddress from '../screens/EditAddress'
 import Keycloak from '../screens/Keycloak'
+import PaymentProcessing from '../screens/PaymentProcessing'
+import SafetyScreen from '../screens/SafetyScreen'
+import SelectPaymentMethod from '../screens/SelectPaymentMethod'
+import { height, width } from '../utils/Scalaing'
+import Fulfillment from './Fulfillment'
 
 const DrawerLayout = () => {
    const {
       drawerView,
       isDrawerOpen,
       setIsDrawerOpen,
+      setDrawerView,
       params,
    } = useDrawerContext()
    const { setCustomerDetails } = useCartContext()
    const { user } = useAuth()
 
    // Query
-   const [fetchDetails] = useLazyQuery(CUSTOMER_DETAILS, {
+   const [fetchDetails] = useLazyQuery(CUSTOMER, {
       variables: {
          keycloakId: user.sub || user.userid,
       },
       onCompleted: data => {
          console.log('platform -> data', data)
-         if (data.platform_customerByClients?.length) {
-            setCustomerDetails(data.platform_customerByClients[0].customer)
+         if (data.customer.platform_customer) {
+            setCustomerDetails(data.customer.platform_customer)
          } else {
             console.log('No customer data found!')
          }
@@ -49,8 +49,20 @@ const DrawerLayout = () => {
 
    //Effects
    React.useEffect(() => {
-      if (!isDrawerOpen && drawerView === 'AddDetails') {
+      if (
+         !isDrawerOpen &&
+         ['AddDetails', 'DailyKeyBackup'].includes(drawerView)
+      ) {
          fetchDetails()
+      }
+   }, [isDrawerOpen])
+
+   React.useEffect(() => {
+      if (
+         !isDrawerOpen &&
+         ['AddDetails', 'Login', 'Register', 'Payment'].includes(drawerView)
+      ) {
+         setDrawerView(undefined)
       }
    }, [isDrawerOpen])
 
@@ -63,6 +75,8 @@ const DrawerLayout = () => {
             return <SelectPaymentMethod />
          case 'AddDetails':
             return <AddDetails params={params} />
+         case 'DailyKeyBackup':
+            return <DailyKeyBackup params={params} />
          case 'Safety':
             return <SafetyScreen />
          case 'Fulfillment':
@@ -71,6 +85,8 @@ const DrawerLayout = () => {
             return <Keycloak type="login" />
          case 'Register':
             return <Keycloak type="register" />
+         case 'Payment':
+            return <PaymentProcessing {...params} />
          default:
             return <Text>Oops! No such component.</Text>
       }
@@ -84,6 +100,42 @@ const DrawerLayout = () => {
             setIsDrawerOpen(false)
          }}
       >
+         <TouchableOpacity
+            style={{
+               width: width > 1280 ? 640 : width,
+               position: 'relative',
+               marginHorizontal: 'auto',
+            }}
+            onPress={() => setIsDrawerOpen(false)}
+         >
+            <Feather
+               name="x"
+               size={28}
+               color="#fff"
+               style={{ position: 'absolute', right: 8, top: -40 }}
+            />
+         </TouchableOpacity>
+         {drawerView === 'DailyKeyBackup' && (
+            <TouchableOpacity
+               style={{
+                  width: width > 1280 ? 640 : width,
+                  position: 'relative',
+                  marginHorizontal: 'auto',
+               }}
+               onPress={() => setDrawerView('AddDetails')}
+            >
+               <Text
+                  style={{
+                     position: 'absolute',
+                     left: 8,
+                     top: -30,
+                     color: '#fff',
+                  }}
+               >
+                  Trouble with adding details? Click here!
+               </Text>
+            </TouchableOpacity>
+         )}
          <View style={width > 1280 ? styles.container : styles.phoneContainer}>
             <View
                style={width > 1280 ? styles.component : styles.phoneComponent}
@@ -114,7 +166,6 @@ const styles = StyleSheet.create({
       margin: 0,
       borderTopLeftRadius: 10,
       borderTopRightRadius: 10,
-      overflow: 'hidden',
    },
    container: {
       height: height * 0.8,

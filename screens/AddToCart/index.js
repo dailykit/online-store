@@ -1,7 +1,8 @@
-import { AntDesign } from '@expo/vector-icons'
-import React, { useState, lazy } from 'react'
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import React, { lazy, useState } from 'react'
+import { ScrollView, View } from 'react-native'
 import Cart, { ComboProductItemProceed } from '../../components/Cart'
+import { height } from '../../utils/Scalaing'
+import { styles } from './styles'
 const ComboProduct = lazy(() => import('../../components/ComboProduct'))
 const CustomizableProductItem = lazy(() =>
    import('../../components/CustomizableProductItem')
@@ -12,8 +13,6 @@ const InventoryProductItem = lazy(() =>
 const SimpleProductItem = lazy(() =>
    import('../../components/SimpleProductItem')
 )
-import { height } from '../../utils/Scalaing'
-import { styles } from './styles'
 
 const ModalContent = ({
    showInfo,
@@ -34,6 +33,8 @@ const ModalContent = ({
       data?.comboProductComponents?.length || 0
    )
    const [currentComboProductIndex, setCurrentComboProductIndex] = useState(0)
+
+   const [isDisabled, setIsDisabled] = React.useState(false)
 
    const selectComponent = item => {
       console.log('Item recived: ', item)
@@ -75,6 +76,9 @@ const ModalContent = ({
                      name={data.name}
                      id={id}
                      product={data}
+                     onModifiersValidityChange={isValid =>
+                        setIsDisabled(!isValid)
+                     }
                      {...restProps}
                   />
                )}
@@ -87,6 +91,9 @@ const ModalContent = ({
                      isSelected
                      id={id}
                      product={data}
+                     onModifiersValidityChange={isValid =>
+                        setIsDisabled(!isValid)
+                     }
                      {...restProps}
                   />
                )}
@@ -100,6 +107,9 @@ const ModalContent = ({
                      isSelected
                      id={id}
                      product={data}
+                     onModifiersValidityChange={isValid =>
+                        setIsDisabled(!isValid)
+                     }
                      {...restProps}
                   />
                )}
@@ -110,11 +120,14 @@ const ModalContent = ({
                      }}
                      showInfo={showInfo}
                      navigation={navigation}
-                     independantItem
+                     independantItem={true}
                      tunnelItem
                      isSelected
                      id={id}
                      product={data}
+                     onModifiersValidityChange={isValid =>
+                        setIsDisabled(!isValid)
+                     }
                      {...restProps}
                   />
                )}
@@ -133,6 +146,7 @@ const ModalContent = ({
                   tunnelItem
                   type={type}
                   setIsModalVisible={setIsModalVisible}
+                  isDisabled={isDisabled}
                />
             )}
             {type == 'comboProduct' &&
@@ -147,6 +161,7 @@ const ModalContent = ({
                      tunnelItem
                      type={type}
                      setIsModalVisible={setIsModalVisible}
+                     isDisabled={isDisabled}
                   />
                )}
             {type == 'comboProduct' &&
@@ -154,6 +169,7 @@ const ModalContent = ({
                   <ComboProductItemProceed
                      setCurrentComboProductIndex={setCurrentComboProductIndex}
                      currentComboProductIndex={currentComboProductIndex}
+                     isDisabled={isDisabled}
                   />
                )}
          </View>

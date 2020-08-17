@@ -1,26 +1,11 @@
-import { Ionicons } from '@expo/vector-icons'
 import React from 'react'
-import { Text, TouchableOpacity, View, Image } from 'react-native'
-import InventoryProductCollapsed from '../InventoryProductItem/InventoryProductItemCollapsed'
-import SimpleProductItemCollapsed from '../SimpleProductItem/SimpleProductItemCollapsed'
-import { stylesCollapsed as styles } from './styles'
+import { Image, Text, View } from 'react-native'
 import Carousel from 'react-native-banner-carousel'
+import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scalaing'
 
-const CustomizableProductItemCollapsed = ({
-   _id,
-   setSelected,
-   isLast,
-   navigation,
-   setExpanded,
-   data,
-   label,
-   independantItem,
-   numberOfOptions,
-   tunnelItem,
-   product,
-}) => {
+const CustomizableProductItemCollapsed = ({ product }) => {
    const { visual } = useAppContext()
 
    const [optionImages, setOptionImages] = React.useState([])
@@ -29,13 +14,12 @@ const CustomizableProductItemCollapsed = ({
       const images = product.customizableProductOptions.map(option => {
          if (option.inventoryProduct) {
             return (
-               option.inventoryProduct?.assets?.images[0] ||
-               'https://via.placeholder.com/120'
+               option.inventoryProduct?.assets?.images[0] || defaultProductImage
             )
          } else {
             return (
                option.simpleRecipeProduct?.assets?.images[0] ||
-               'https://via.placeholder.com/120'
+               defaultProductImage
             )
          }
       })
@@ -49,7 +33,8 @@ const CustomizableProductItemCollapsed = ({
                <Image
                   style={{
                      flex: 1,
-                     height: width > 768 ? 150 : 120,
+                     maxHeight: width > 768 ? 150 : 120,
+                     minHeight: width > 768 ? 150 : 120,
                      width: '100%',
                      resizeMode: 'cover',
                   }}
@@ -61,7 +46,7 @@ const CustomizableProductItemCollapsed = ({
                   autoplayTimeout={3000}
                   loop
                   index={0}
-                  pageSize={120}
+                  pageSize="100%"
                >
                   {optionImages.map((slide, index) => (
                      <View
@@ -76,7 +61,8 @@ const CustomizableProductItemCollapsed = ({
                         <Image
                            style={{
                               flex: 1,
-                              height: width > 768 ? 150 : 120,
+                              minHeight: width > 768 ? 150 : 120,
+                              maxHeight: width > 768 ? 150 : 120,
                               width: '100%',
                               resizeMode: 'contain',
                               marginHorizontal: 'auto',

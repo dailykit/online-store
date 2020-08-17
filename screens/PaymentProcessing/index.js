@@ -1,16 +1,16 @@
 import { useMutation, useSubscription } from '@apollo/react-hooks'
-import { Spinner } from 'native-base'
-import { Text, View } from 'native-base'
-import React from 'react'
-import { useCartContext } from '../../context/cart'
-import { CART_BY_PK, UPDATE_CART } from '../../graphql'
-import { styles } from './styles'
 import { Feather } from '@expo/vector-icons'
+import { Spinner, Text, View } from 'native-base'
+import React from 'react'
 import { useAppContext } from '../../context/app'
+import { useCartContext } from '../../context/cart'
+import { useDrawerContext } from '../../context/drawer'
+import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 
 const PaymentProcessing = ({ navigation }) => {
    const { cart } = useCartContext()
    const { visual } = useAppContext()
+   const { setIsDrawerOpen } = useDrawerContext()
 
    const [cartId, setCartId] = React.useState(undefined)
    const [progress, setProgress] = React.useState('Sending your order...')
@@ -34,40 +34,49 @@ const PaymentProcessing = ({ navigation }) => {
 
    //Effects
    React.useEffect(() => {
-      updateCart({
-         variables: {
-            id: cart.id,
-            set: {
-               status: 'PROCESS',
-               amount: cart.totalPrice,
+      if (cart?.id) {
+         updateCart({
+            variables: {
+               id: cart.id,
+               set: {
+                  status: 'PROCESS',
+                  amount: cart.totalPrice,
+               },
             },
-         },
-      })
-      setCartId(cart.id)
+         })
+         setCartId(cart.id)
+      } else {
+         navigation.navigate('Home')
+      }
    }, [])
 
    React.useEffect(() => {
       if (data) {
          switch (data.cartByPK.paymentStatus) {
             case 'PENDING': {
-               return setProgress('Processing your payment...')
+               setProgress('Processing your payment...')
+               break
             }
             case 'SUCCEEDED': {
                if (data.cartByPK.status !== 'ORDER_PLACED') {
-                  return setProgress('Confirming order...')
+                  setProgress('Confirming order...')
+                  break
                } else {
-                  return setTimeout(() => {
+                  setTimeout(() => {
                      navigation.navigate('Order', {
                         orderId: data.cartByPK.orderId,
                      })
+                     setIsDrawerOpen(false)
                   }, 2000)
+                  break
                }
             }
             case 'FAILED': {
-               return setProgress('Payment failed :(')
+               setProgress('Payment failed :(')
+               break
             }
             default: {
-               return setProgress('Something is not right...')
+               setProgress('Something is not right...')
             }
          }
       }

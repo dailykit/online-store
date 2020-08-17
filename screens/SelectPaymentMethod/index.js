@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
-import { Spinner } from 'native-base'
-import { Button } from 'native-base'
+import { Button, Spinner } from 'native-base'
 import React from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import CreditCardInput from '../../components/CreditCardInput'
@@ -77,7 +76,9 @@ export default ({ navigation }) => {
                      padding: 8,
                      justifyContent: 'center',
                   }}
-                  onPress={() => open('AddDetails', { path: 'card/create' })}
+                  onPress={() =>
+                     open('DailyKeyBackup', { path: 'card/create' })
+                  }
                >
                   <Text style={{ color: '#fff' }}>Add Card</Text>
                </Button>
@@ -156,7 +157,7 @@ export default ({ navigation }) => {
                padding: 8,
                justifyContent: 'center',
             }}
-            onPress={() => open('AddDetails', { path: 'card/create' })}
+            onPress={() => open('DailyKeyBackup', { path: 'card/create' })}
          >
             <Text style={{ color: '#fff' }}>Add Card</Text>
          </Button>

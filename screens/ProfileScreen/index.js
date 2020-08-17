@@ -1,131 +1,266 @@
-import { Feather, Ionicons, AntDesign } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import React from 'react'
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import HeaderBack from '../../components/HeaderBack'
+import { TouchableOpacity } from 'react-native'
+import styled from 'styled-components/native'
+import { Header } from '../../components'
+import Auth from '../../components/error/Auth'
+import AppSkeleton from '../../components/skeletons/app'
+import { useAppContext } from '../../context/app'
 import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
-import { styles } from './styles'
-import { Header } from '../../components'
+import { width } from '../../utils/Scalaing'
 
-export default ({ navigation }) => {
+const ProfileScreen = ({ navigation }) => {
+   const { visual, masterLoading } = useAppContext()
+   const { customer, customerDetails } = useCartContext()
+
+   if (masterLoading) {
+      return <AppSkeleton />
+   }
+
+   if (!customer) {
+      return <Auth navigation={navigation} />
+   }
+
+   return (
+      <Container>
+         <Header title="Home" navigation={navigation} />
+         <Wrapper>
+            <Banner color={visual.color}>
+               <BannerHello>Hello</BannerHello>
+               {Boolean(customerDetails?.firstName) && (
+                  <BannerName>{`${customerDetails?.firstName || ''} ${
+                     customerDetails?.lastName || ''
+                  }`}</BannerName>
+               )}
+            </Banner>
+            <PersonalDetails />
+            <Addresses />
+            <Cards />
+         </Wrapper>
+      </Container>
+   )
+}
+
+export default ProfileScreen
+
+const PersonalDetails = () => {
+   const { visual } = useAppContext()
+   const { customer, customerDetails } = useCartContext()
+   const { open } = useDrawerContext()
+
+   return (
+      <Section>
+         <SectionHeader>
+            <SectionHeading>Personal Details</SectionHeading>
+            <TouchableOpacity
+               onPress={() =>
+                  open('DailyKeyBackup', { path: 'profile/create' })
+               }
+            >
+               <Feather name="edit" color="#666" size={20} />
+            </TouchableOpacity>
+         </SectionHeader>
+         <SectionBody>
+            <SectionTile>
+               <Feather name="phone" color={visual.color} size={16} />
+               <SectionTileText>
+                  {customerDetails?.phoneNumber || '-'}
+               </SectionTileText>
+            </SectionTile>
+            <SectionTile>
+               <Feather name="mail" color={visual.color} size={16} />
+               <SectionTileText>
+                  {customerDetails?.email || customer?.email || '-'}
+               </SectionTileText>
+            </SectionTile>
+         </SectionBody>
+      </Section>
+   )
+}
+
+const Addresses = () => {
+   const { visual } = useAppContext()
    const { customerDetails } = useCartContext()
    const { open } = useDrawerContext()
 
    return (
-      <View style={{ backgroundColor: '#fff', height: '100%' }}>
-         <Header title="Home" navigation={navigation} />
-         <View style={styles.container}>
-            <View style={styles.userDetailsContainer}>
-               <View style={styles.avatar}>
-                  <Image
-                     source={{ uri: 'https://picsum.photos/200' }}
-                     style={styles.image}
-                  />
-               </View>
-               <View
-                  style={{
-                     flexDirection: 'row',
-                     alignItems: 'center',
-                  }}
+      <Section>
+         <SectionHeader>
+            <SectionHeading>
+               Addresses ({customerDetails?.customerAddresses?.length || 0})
+            </SectionHeading>
+            <TouchableOpacity
+               onPress={() =>
+                  customerDetails?.customerAddresses?.length
+                     ? open('EditAddress')
+                     : open('DailyKeyBackup', { path: 'address/create' })
+               }
+            >
+               <Feather name="edit" color="#666" size={20} />
+            </TouchableOpacity>
+         </SectionHeader>
+         <SectionBody>
+            {customerDetails?.defaultCustomerAddress ? (
+               <>
+                  <SectionTileLabel>Showing Default</SectionTileLabel>
+                  <SectionTile>
+                     <Feather name="home" color={visual.color} size={16} />
+                     <SectionTileText
+                        ellipsizeMode="tail"
+                        numberOfLines={1}
+                     >{`${customerDetails.defaultCustomerAddress.line1}, ${customerDetails.defaultCustomerAddress.city}, ${customerDetails.defaultCustomerAddress.city}, ${customerDetails.defaultCustomerAddress.state}, ${customerDetails.defaultCustomerAddress.country} - ${customerDetails.defaultCustomerAddress.zipcode}`}</SectionTileText>
+                  </SectionTile>
+               </>
+            ) : (
+               <ButtonTile
+                  onPress={() =>
+                     open('DailyKeyBackup', { path: 'address/create' })
+                  }
                >
-                  <Text style={styles.userName}>
-                     {`${customerDetails?.firstName || ''} ${
-                        customerDetails?.lastName || ''
-                     }`}
-                  </Text>
-                  <TouchableOpacity
-                     style={{ marginLeft: 24 }}
-                     onPress={() =>
-                        open('AddDetails', { path: 'profile/create' })
-                     }
-                  >
-                     <Feather name="edit" size={24} />
-                  </TouchableOpacity>
-               </View>
-            </View>
-            <ScrollView>
-               {/* Address card */}
-               <TouchableOpacity
-                  onPress={() => open('EditAddress')}
-                  style={styles.card}
-               >
-                  <Text style={styles.cardTitle}>My Addresses</Text>
-                  <Text style={styles.default}>DEFAULT</Text>
-                  <View style={styles.content}>
-                     <View style={styles.cardNumberTextContainer}>
-                        <Text style={styles.cardNumberText}>
-                           {customerDetails?.defaultCustomerAddress ? (
-                              <React.Fragment>
-                                 {customerDetails.defaultCustomerAddress.line1 +
-                                    ', ' +
-                                    customerDetails.defaultCustomerAddress
-                                       .line2 +
-                                    ', ' +
-                                    customerDetails.defaultCustomerAddress
-                                       .city +
-                                    ', ' +
-                                    customerDetails.defaultCustomerAddress
-                                       .state}
-                              </React.Fragment>
-                           ) : (
-                              <React.Fragment>NA</React.Fragment>
-                           )}
-                        </Text>
-                     </View>
-                     <View style={styles.cardNumberSelectedContainer}>
-                        <View>
-                           <Text>
-                              <Ionicons size={20} name="ios-arrow-forward" />
-                           </Text>
-                        </View>
-                     </View>
-                  </View>
-               </TouchableOpacity>
-               {/* Payment Card */}
-               <TouchableOpacity
-                  onPress={() => open('SelectPaymentMethod')}
-                  style={styles.card}
-               >
-                  <Text style={styles.cardTitle}>My Payment cards</Text>
-                  <Text style={styles.default}>DEFAULT</Text>
-                  <View style={styles.content}>
-                     <View style={styles.cardNumberTextContainer}>
-                        <Text style={styles.cardNumberText}>
-                           <AntDesign name="creditcard" /> {'  '}
-                           XXXX XXXX XXXX{' '}
-                           {customerDetails?.defaultStripePaymentMethod
-                              ?.last4 || 'XXXX'}
-                        </Text>
-                     </View>
-                     <View style={styles.cardNumberSelectedContainer}>
-                        <View>
-                           <Text>
-                              <Ionicons size={20} name="ios-arrow-forward" />
-                           </Text>
-                        </View>
-                     </View>
-                  </View>
-               </TouchableOpacity>
-               {/* Order History Card */}
-               {/* <TouchableOpacity onPress={() => {}} style={styles.card}>
-          <Text style={styles.cardTitle}>Order History</Text>
-          <View style={styles.content}>
-            <View style={styles.cardNumberTextContainer}>
-              <Text style={[styles.cardNumberText, { color: 'grey' }]}>
-                0 orders so far
-              </Text>
-            </View>
-            <View style={styles.cardNumberSelectedContainer}>
-              <View>
-                <Text>
-                  <Ionicons size={20} name='ios-arrow-forward' />
-                </Text>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity> */}
-            </ScrollView>
-         </View>
-      </View>
+                  <ButtonTileText>Add an Address</ButtonTileText>
+               </ButtonTile>
+            )}
+         </SectionBody>
+      </Section>
    )
 }
+
+const Cards = () => {
+   const { visual } = useAppContext()
+   const { customerDetails } = useCartContext()
+   const { open } = useDrawerContext()
+
+   return (
+      <Section>
+         <SectionHeader>
+            <SectionHeading>
+               Cards ({customerDetails?.stripePaymentMethods?.length || 0})
+            </SectionHeading>
+            <TouchableOpacity
+               onPress={() =>
+                  customerDetails?.stripePaymentMethods?.length
+                     ? open('SelectPaymentMethod')
+                     : open('DailyKeyBackup', { path: 'card/create' })
+               }
+            >
+               <Feather name="edit" color="#666" size={20} />
+            </TouchableOpacity>
+         </SectionHeader>
+         <SectionBody>
+            {customerDetails?.defaultStripePaymentMethod ? (
+               <>
+                  <SectionTileLabel>Showing Default</SectionTileLabel>
+                  <SectionTile>
+                     <Feather
+                        name="credit-card"
+                        color={visual.color}
+                        size={16}
+                     />
+                     <SectionTileText
+                        ellipsizeMode="tail"
+                        numberOfLines={1}
+                     >{`XXXX XXXX XXXX ${customerDetails?.defaultStripePaymentMethod?.last4}`}</SectionTileText>
+                  </SectionTile>
+               </>
+            ) : (
+               <ButtonTile
+                  onPress={() =>
+                     open('DailyKeyBackup', { path: 'card/create' })
+                  }
+               >
+                  <ButtonTileText>Add a card</ButtonTileText>
+               </ButtonTile>
+            )}
+         </SectionBody>
+      </Section>
+   )
+}
+
+const Container = styled.View`
+   background: #e9ecee;
+   flex: 1;
+`
+
+const Wrapper = styled.ScrollView`
+   width: ${width > 768 ? '768px' : width};
+   margin: ${width > 768 ? '10px auto' : '0px'};
+   background: #fff;
+   border-radius: 4px;
+   flex: 1;
+`
+
+const Banner = styled.View`
+   height: ${width > 768 ? '160px' : '120px'};
+   background: ${props => props.color};
+   border-radius: 4px;
+   padding: 0.75rem;
+   margin-bottom: 0.75rem;
+   justify-content: flex-end;
+`
+
+const BannerHello = styled.Text`
+   font-weight: bold;
+   font-size: 1.2rem;
+   color: #fff;
+`
+
+const BannerName = styled.Text`
+   font-weight: bold;
+   font-size: 1.6rem;
+   color: #fff;
+`
+
+const Section = styled.View`
+   border: 1px solid #efefef;
+   padding: 1.25rem;
+   margin: 0.75rem;
+   margin-top: 0;
+   border-radius: 4px;
+`
+
+const SectionHeader = styled.View`
+   flex-direction: row;
+   justify-content: space-between;
+   align-items: center;
+`
+
+const SectionHeading = styled.Text`
+   font-size: 0.9rem;
+   color: #666;
+   font-weight: bold;
+   margin-bottom: 0.75rem;
+`
+
+const SectionBody = styled.View``
+
+const SectionTile = styled.View`
+   flex-direction: row;
+   align-items: center;
+   margin-bottom: 0.5rem;
+`
+
+const SectionTileLabel = styled.Text`
+   text-transform: uppercase;
+   font-size: 0.7rem;
+   color: #666;
+   margin-bottom: 0.25rem;
+`
+
+const SectionTileText = styled.Text`
+   margin-left: 1rem;
+`
+
+const ButtonTile = styled.TouchableOpacity`
+   padding: 0.75rem;
+   text-align: center;
+   shadow-opacity: 0.75;
+   shadow-radius: 5px;
+   shadow-color: #aaa;
+   shadow-offset: 0px 0px;
+   border-radius: 4px;
+`
+
+const ButtonTileText = styled.Text`
+   font-color: #333;
+`

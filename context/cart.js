@@ -1,22 +1,20 @@
+import { useMutation, useSubscription } from '@apollo/react-hooks'
 import React, { useState } from 'react'
 import {
-   PREORDER_PICKUP,
+   ONDEMAND_DELIVERY,
    ONDEMAND_PICKUP,
    PREORDER_DELIVERY,
-   ONDEMAND_DELIVERY,
+   PREORDER_PICKUP,
    UPDATE_CART,
 } from '../graphql'
-import { useSubscription, useMutation } from '@apollo/react-hooks'
-
 import {
    generateDeliverySlots,
-   isDeliveryAvailable,
-   generatePickUpSlots,
-   isPickUpAvailable,
    generateMiniSlots,
-   makeDoubleDigit,
-   getDistance,
+   generatePickUpSlots,
    generateTimeStamp,
+   getDistance,
+   isDeliveryAvailable,
+   isPickUpAvailable,
 } from '../utils/fulfillment'
 import { useAppContext } from './app'
 import { useDrawerContext } from './drawer'
@@ -35,6 +33,7 @@ export const CartContextProvider = ({ children }) => {
                variables: {
                   id: cart.id,
                   set: {
+                     stripeCustomerId: customerDetails?.stripeCustomerId,
                      paymentMethodId: saved.data.paymentMethodId,
                   },
                },
@@ -54,10 +53,10 @@ export const CartContextProvider = ({ children }) => {
                   id: cart.id,
                   set: {
                      customerInfo: {
-                        customerFirstName: saved.data.firstName,
-                        customerLastName: saved.data.lastName,
-                        customerPhone: saved.data.phoneNumber,
-                        customerEmail: saved.data.email,
+                        customerFirstName: saved.data.customerInfo.firstName,
+                        customerLastName: saved.data.customerInfo.lastName,
+                        customerPhone: saved.data.customerInfo.phoneNumber,
+                        customerEmail: saved.data.customerInfo.email,
                      },
                   },
                },
@@ -67,8 +66,6 @@ export const CartContextProvider = ({ children }) => {
          }
       }
    }, [saved])
-
-   console.log('Brand Location: ', availability?.location)
 
    // From Hasura
    const [customer, setCustomer] = useState(undefined)

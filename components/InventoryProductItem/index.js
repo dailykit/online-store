@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { discountedPrice, priceSort } from '../../utils'
 import InventoryProductCollapsed from './InventoryProductItemCollapsed'
 
 const InventoryProductItem = ({
@@ -7,42 +8,58 @@ const InventoryProductItem = ({
    showInfo,
    navigation,
    setPrice,
+   setDiscount,
    tunnelItem,
    independantItem,
    setcartItem,
    setcardData,
    setSelected,
    isSelected,
-   name,
    label,
    product,
    refId,
    comboProductComponent,
+   onModifiersValidityChange,
 }) => {
    const [objToAdd, setobjToAdd] = useState({})
 
-   const setProductOptionId = (id, price) => {
-      let newItem = objToAdd
-      newItem.option.id = id
-      newItem.price = price
-      setobjToAdd(newItem)
-      setcartItem(newItem)
+   const setProductOption = option => {
+      setobjToAdd({
+         ...objToAdd,
+         option: { id: option.id, label: option.label },
+         price: option.price[0].value,
+         discount: option.price[0].discount,
+         modifiers: [],
+      })
+      setcartItem({
+         ...objToAdd,
+         option: { id: option.id, label: option.label },
+         price: option.price[0].value,
+         discount: option.price[0].discount,
+         modifiers: [],
+      })
+   }
+
+   const modifiersHandler = modifiers => {
+      setobjToAdd({ ...objToAdd, modifiers })
+      setcartItem({ ...objToAdd, modifiers })
    }
 
    useEffect(() => {
-      if (
-         product?.inventoryProductOptions === undefined ||
-         !product?.inventoryProductOptions[0]
-      )
-         return
+      const option =
+         product.defaultInventoryProductOption ||
+         product.inventoryProductOptions.sort(priceSort)[0]
       let objToPush = {
          id: product?.id,
          name: product?.name,
-         price: product?.inventoryProductOptions[0]?.price[0]?.value,
+         price: option.price[0]?.value,
+         discount: option.price[0].discount,
          image: product?.assets?.images[0],
          option: {
-            id: product?.inventoryProductOptions[0]?.id, // product option id
+            id: option?.id, // product option id
+            label: option?.label,
          },
+         modifiers: [],
          type: 'inventoryProduct',
       }
       if (comboProductComponent) {
@@ -51,7 +68,9 @@ const InventoryProductItem = ({
       }
       setobjToAdd(objToPush)
       if (!tunnelItem && independantItem) {
-         setPrice(product?.inventoryProductOptions[0]?.price[0]?.value)
+         setPrice(discountedPrice(option.price[0]))
+         if (option.price[0].discount)
+            setDiscount(parseFloat(option.price[0].discount))
          setcardData(product)
       }
       if (tunnelItem && isSelected) {
@@ -60,7 +79,7 @@ const InventoryProductItem = ({
       if (tunnelItem && independantItem) {
          setcartItem(objToPush)
       }
-   }, [])
+   }, [product])
 
    useEffect(() => {
       if (tunnelItem && isSelected && objToAdd?.product?.price) {
@@ -77,10 +96,12 @@ const InventoryProductItem = ({
          navigation={navigation}
          label={label}
          tunnelItem={tunnelItem}
-         setProductOptionId={setProductOptionId}
+         setProductOption={setProductOption}
          setSelected={setSelected}
          isSelected={isSelected}
          refId={refId}
+         onModifiersSelected={modifiersHandler}
+         onValidityChange={onModifiersValidityChange}
       />
    )
 }

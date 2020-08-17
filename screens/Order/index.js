@@ -1,27 +1,27 @@
-import { AntDesign, Feather } from '@expo/vector-icons'
-import React from 'react'
-import { SafeAreaView, ScrollView, Text, View, Image } from 'react-native'
-import { useCartContext } from '../../context/cart'
-import { styles } from './styles'
-import { useAppContext } from '../../context/app'
 import { useSubscription } from '@apollo/react-hooks'
-import { ORDER } from '../../graphql'
-import { Header } from '../../components'
+import * as moment from 'moment'
 import { Spinner } from 'native-base'
-import OrderCard from '../../components/OrderCard'
+import React from 'react'
+import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native'
+import MapView from 'react-native-maps'
 import orderdelivered from '../../assets/imgs/orderdelivered.png'
 import orderpickup from '../../assets/imgs/orderpickup.png'
 import orderpreparing from '../../assets/imgs/orderpreparing.png'
-import MapView from 'react-native-maps'
-import * as moment from 'moment'
-
 import restaurant from '../../assets/imgs/restaurant @1x.png'
+import { Header } from '../../components'
+import Auth from '../../components/error/Auth'
+import OrderCard from '../../components/OrderCard'
+import AppSkeleton from '../../components/skeletons/app'
+import { useAppContext } from '../../context/app'
+import { useCartContext } from '../../context/cart'
+import { ORDER } from '../../graphql'
+import { styles } from './styles'
 
 const Order = ({ route, navigation }) => {
    const { orderId } = route.params
 
-   const { cart } = useCartContext()
-   const { visual, brand } = useAppContext()
+   const { cart, customer } = useCartContext()
+   const { visual, brand, masterLoading } = useAppContext()
 
    // Subscription
    const { data: { order = {} } = {}, loading, error } = useSubscription(
@@ -33,7 +33,14 @@ const Order = ({ route, navigation }) => {
       }
    )
 
-   console.log(order)
+   if (masterLoading) {
+      return <AppSkeleton />
+   }
+
+   if (!customer) {
+      return <Auth navigation={navigation} />
+   }
+
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
@@ -49,7 +56,7 @@ const Order = ({ route, navigation }) => {
             </View>
          ) : (
             <>
-               {order ? (
+               {Object.keys(order).length > 0 ? (
                   <ScrollView style={{ flex: 1 }}>
                      <View style={styles.container}>
                         {/* Order Heading */}
@@ -88,7 +95,7 @@ const Order = ({ route, navigation }) => {
                               marginBottom: 20,
                            }}
                         >
-                           {order.fulfillmentType.includes('DELIVERY') ? (
+                           {order?.fulfillmentType?.includes('DELIVERY') ? (
                               <Delivery order={order} />
                            ) : (
                               <Pickup order={order} />

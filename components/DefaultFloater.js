@@ -1,11 +1,10 @@
-import { AntDesign, Ionicons, Feather } from '@expo/vector-icons'
+import { AntDesign, Feather } from '@expo/vector-icons'
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import { useCartContext } from '../context/cart'
-
-import { height, width } from '../utils/Scalaing'
 import { useDrawerContext } from '../context/drawer'
+import { height, width } from '../utils/Scalaing'
 
 export const DefaultPaymentFloater = ({ navigation }) => {
    const { cart, customerDetails } = useCartContext()
@@ -13,26 +12,22 @@ export const DefaultPaymentFloater = ({ navigation }) => {
    const [card, setCard] = React.useState(undefined)
 
    React.useEffect(() => {
-      console.log('Checking card...')
-      if (cart && customerDetails) {
-         console.log('Cart and cusDet presetn')
-
+      if (cart?.paymentMethodId && customerDetails) {
          const card = customerDetails.stripePaymentMethods.find(
             card => card.stripePaymentMethodId === cart.paymentMethodId
          )
          if (card) {
-            console.log('Card found')
             setCard(card)
          }
       }
-   }, [cart])
+   }, [cart?.paymentMethodId, customerDetails])
 
    return (
       <TouchableOpacity
          onPress={() => {
             customerDetails?.stripePaymentMethods?.length
                ? open('SelectPaymentMethod')
-               : open('AddDetails', { path: 'card/create' })
+               : open('DailyKeyBackup', { path: 'card/create' })
          }}
          style={styles.conatiner}
       >
@@ -52,7 +47,11 @@ export const DefaultPaymentFloater = ({ navigation }) => {
          </View>
          <View style={styles.cardNumberSelectedContainer}>
             <View>
-               <Feather name="edit" size={16} color="#333" />
+               <Feather
+                  name="edit"
+                  size={width > 768 ? 24 : 16}
+                  color="#93959F"
+               />
             </View>
          </View>
       </TouchableOpacity>
@@ -68,7 +67,7 @@ export const DefaultAddressFloater = ({ navigation }) => {
          onPress={() => {
             customerDetails?.customerAddresses?.length
                ? open('EditAddress')
-               : open('AddDetails', { path: 'address/create' })
+               : open('DailyKeyBackup', { path: 'address/create' })
          }}
          style={styles.conatiner}
       >
@@ -88,7 +87,11 @@ export const DefaultAddressFloater = ({ navigation }) => {
          </View>
          <View style={styles.cardNumberSelectedContainer}>
             <View>
-               <Feather name="edit" size={16} color="#333" />
+               <Feather
+                  name="edit"
+                  size={width > 768 ? 24 : 16}
+                  color="#93959F"
+               />
             </View>
          </View>
       </TouchableOpacity>
@@ -100,6 +103,16 @@ const styles = EStyleSheet.create({
       backgroundColor: '#fff',
       flexDirection: 'row',
       justifyContent: 'space-between',
+      shadowColor: '#000',
+      shadowOffset: {
+         width: 0,
+         height: 1,
+      },
+      shadowOpacity: 0.22,
+      shadowRadius: 2.22,
+      elevation: 3,
+      padding: 8,
+      borderRadius: 2,
    },
    title: {
       fontSize: '$m',

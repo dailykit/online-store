@@ -61,20 +61,13 @@ export const SIMPLE_RECIPE = gql`
    }
 `
 
-export const CUSTOMERS = gql`
-   query Customers($dailyKeyID: String!, $email: String!) {
-      customers(
-         where: { dailyKeyUserId: { _eq: $dailyKeyID }, email: { _eq: $email } }
-      ) {
+export const CUSTOMER = gql`
+   query Customer($keycloakId: String!) {
+      customer(keycloakId: $keycloakId) {
          id
-      }
-   }
-`
-
-export const CUSTOMER_DETAILS = gql`
-   query CustomerDetails($keycloakId: String!) {
-      platform_customerByClients(where: { keycloakId: { _eq: $keycloakId } }) {
-         customer {
+         email
+         keycloakId
+         platform_customer {
             email
             firstName
             lastName
@@ -119,6 +112,32 @@ export const CUSTOMER_DETAILS = gql`
                expYear
                brand
             }
+         }
+         orderCarts(
+            where: {
+               status: { _eq: "PENDING" }
+               cartSource: { _eq: "a-la-carte" }
+            }
+            order_by: { created_at: desc }
+         ) {
+            id
+            address
+            customerInfo
+            cartInfo
+            customerId
+            isValid
+            paymentMethodId
+            stripeCustomerId
+            fulfillmentInfo
+            deliveryPrice
+            itemTotal
+            tip
+            taxPercent
+            tax
+            totalPrice
+            status
+            paymentStatus
+            orderId
          }
       }
    }
@@ -177,12 +196,27 @@ export const COMBO_PRODUCT = gql`
                         unitSize
                         unit
                      }
+                     defaultInventoryProductOption {
+                        id
+                        price
+                        quantity
+                        label
+                        inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
+                     }
                      inventoryProductOptions {
                         id
                         price
                         quantity
                         label
                         inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
                      }
                   }
                   simpleRecipeProduct {
@@ -198,6 +232,10 @@ export const COMBO_PRODUCT = gql`
                            yield
                         }
                         simpleRecipeYieldId
+                        modifier {
+                           id
+                           data
+                        }
                      }
                      simpleRecipeProductOptions(
                         where: { isActive: { _eq: true } }
@@ -209,6 +247,10 @@ export const COMBO_PRODUCT = gql`
                            yield
                         }
                         simpleRecipeYieldId
+                        modifier {
+                           id
+                           data
+                        }
                      }
                      simpleRecipe {
                         author
@@ -228,12 +270,27 @@ export const COMBO_PRODUCT = gql`
                description
                name
                tags
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
                inventoryProductOptions {
                   id
                   price
                   quantity
                   label
                   inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
                }
             }
             simpleRecipeProduct {
@@ -249,6 +306,10 @@ export const COMBO_PRODUCT = gql`
                      yield
                   }
                   simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
                }
                simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
                   id
@@ -258,6 +319,10 @@ export const COMBO_PRODUCT = gql`
                      yield
                   }
                   simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
                }
                simpleRecipe {
                   author
@@ -298,12 +363,27 @@ export const CUSTOMIZABLE_PRODUCT = gql`
                   unitSize
                   unit
                }
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
                inventoryProductOptions {
                   id
                   price
                   quantity
                   label
                   inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
                }
             }
             simpleRecipeProduct {
@@ -319,6 +399,10 @@ export const CUSTOMIZABLE_PRODUCT = gql`
                      yield
                   }
                   simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
                }
                simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
                   id
@@ -328,6 +412,10 @@ export const CUSTOMIZABLE_PRODUCT = gql`
                      yield
                   }
                   simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
                }
                simpleRecipe {
                   author
@@ -354,12 +442,27 @@ export const INVENTORY_PRODUCT = gql`
          default
          isPopupAllowed
          defaultCartItem
+         defaultInventoryProductOption {
+            id
+            price
+            quantity
+            label
+            inventoryProductId
+            modifier {
+               id
+               data
+            }
+         }
          inventoryProductOptions {
             id
             price
             quantity
             label
             inventoryProductId
+            modifier {
+               id
+               data
+            }
          }
       }
    }
@@ -384,6 +487,10 @@ export const SIMPLE_PRODUCT = gql`
                yield
             }
             simpleRecipeYieldId
+            modifier {
+               id
+               data
+            }
          }
          simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
             id
@@ -393,6 +500,10 @@ export const SIMPLE_PRODUCT = gql`
                yield
             }
             simpleRecipeYieldId
+            modifier {
+               id
+               data
+            }
          }
          simpleRecipe {
             author
@@ -408,7 +519,9 @@ export const SIMPLE_PRODUCT = gql`
 
 export const INVENTORY_PRODUCTS = gql`
    query InventoryProducts($ids: [Int!]!) {
-      inventoryProducts(where: { id: { _in: $ids } }) {
+      inventoryProducts(
+         where: { id: { _in: $ids }, isPublished: { _eq: true } }
+      ) {
          id
          assets
          default
@@ -425,12 +538,27 @@ export const INVENTORY_PRODUCTS = gql`
             unitSize
             unit
          }
+         defaultInventoryProductOption {
+            id
+            price
+            quantity
+            label
+            inventoryProductId
+            modifier {
+               id
+               data
+            }
+         }
          inventoryProductOptions {
             id
             price
             quantity
             label
             inventoryProductId
+            modifier {
+               id
+               data
+            }
          }
       }
    }
@@ -438,7 +566,9 @@ export const INVENTORY_PRODUCTS = gql`
 
 export const SIMPLE_RECIPE_PRODUCTS = gql`
    query SimpleRecipeProducts($ids: [Int!]!) {
-      simpleRecipeProducts(where: { id: { _in: $ids } }) {
+      simpleRecipeProducts(
+         where: { id: { _in: $ids }, isPublished: { _eq: true } }
+      ) {
          id
          name
          default
@@ -453,6 +583,10 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
                yield
             }
             simpleRecipeYieldId
+            modifier {
+               id
+               data
+            }
          }
          simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
             id
@@ -462,6 +596,10 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
                yield
             }
             simpleRecipeYieldId
+            modifier {
+               id
+               data
+            }
          }
          simpleRecipe {
             author
@@ -477,7 +615,9 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
 
 export const CUSTOMIZABLE_PRODUCTS = gql`
    query CustomizableProducts($ids: [Int!]!) {
-      customizableProducts(where: { id: { _in: $ids } }) {
+      customizableProducts(
+         where: { id: { _in: $ids }, isPublished: { _eq: true } }
+      ) {
          id
          name
          isPopupAllowed
@@ -500,12 +640,27 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
                   unitSize
                   unit
                }
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
                inventoryProductOptions {
                   id
                   price
                   quantity
                   label
                   inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
                }
             }
             simpleRecipeProduct {
@@ -521,6 +676,10 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
                      yield
                   }
                   simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
                }
                simpleRecipeProductOptions {
                   id
@@ -530,6 +689,10 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
                      yield
                   }
                   simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
                }
                simpleRecipe {
                   author
@@ -547,7 +710,7 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
 
 export const COMBO_PRODUCTS = gql`
    query ComboProducts($ids: [Int!]!) {
-      comboProducts(where: { id: { _in: $ids } }) {
+      comboProducts(where: { id: { _in: $ids }, isPublished: { _eq: true } }) {
          id
          name
          isPopupAllowed
@@ -587,12 +750,27 @@ export const COMBO_PRODUCTS = gql`
                         unitSize
                         unit
                      }
+                     defaultInventoryProductOption {
+                        id
+                        price
+                        quantity
+                        label
+                        inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
+                     }
                      inventoryProductOptions {
                         id
                         price
                         quantity
                         label
                         inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
                      }
                   }
                   simpleRecipeProduct {
@@ -608,6 +786,10 @@ export const COMBO_PRODUCTS = gql`
                            yield
                         }
                         simpleRecipeYieldId
+                        modifier {
+                           id
+                           data
+                        }
                      }
                      simpleRecipeProductOptions {
                         id
@@ -617,6 +799,10 @@ export const COMBO_PRODUCTS = gql`
                            yield
                         }
                         simpleRecipeYieldId
+                        modifier {
+                           id
+                           data
+                        }
                      }
                      simpleRecipe {
                         author
@@ -636,12 +822,27 @@ export const COMBO_PRODUCTS = gql`
                description
                name
                tags
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
                inventoryProductOptions {
                   id
                   price
                   quantity
                   label
                   inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
                }
             }
             simpleRecipeProduct {
@@ -657,6 +858,10 @@ export const COMBO_PRODUCTS = gql`
                      yield
                   }
                   simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
                }
                simpleRecipeProductOptions {
                   id
@@ -666,6 +871,10 @@ export const COMBO_PRODUCTS = gql`
                      yield
                   }
                   simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
                }
                simpleRecipe {
                   author
@@ -677,6 +886,421 @@ export const COMBO_PRODUCTS = gql`
                }
             }
          }
+      }
+   }
+`
+
+export const SEARCH_PRODUCTS = gql`
+   query(
+      $comboProducts: [Int!]!
+      $customizableProducts: [Int!]!
+      $simpleRecipeProducts: [Int!]!
+      $inventoryProducts: [Int!]!
+      $name: String!
+      $tag: jsonb!
+   ) {
+      comboProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $comboProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+                  isPublished: { _eq: true }
+               }
+            ]
+         }
+      ) {
+         id
+         name
+         isPopupAllowed
+         defaultCartItem
+         assets
+         comboProductComponents {
+            id
+            label
+            customizableProductId
+            inventoryProductId
+            simpleRecipeProductId
+            customizableProduct {
+               id
+               name
+               defaultCustomizableProductOption {
+                  inventoryProduct {
+                     assets
+                  }
+                  simpleRecipeProduct {
+                     assets
+                  }
+               }
+               customizableProductOptions {
+                  id
+                  inventoryProduct {
+                     id
+                     assets
+                     default
+                     description
+                     name
+                     tags
+                     sachetItem {
+                        unitSize
+                        unit
+                     }
+                     supplierItem {
+                        unitSize
+                        unit
+                     }
+                     defaultInventoryProductOption {
+                        id
+                        price
+                        quantity
+                        label
+                        inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
+                     }
+                     inventoryProductOptions {
+                        id
+                        price
+                        quantity
+                        label
+                        inventoryProductId
+                        modifier {
+                           id
+                           data
+                        }
+                     }
+                  }
+                  simpleRecipeProduct {
+                     name
+                     default
+                     id
+                     assets
+                     defaultSimpleRecipeProductOption {
+                        id
+                        price
+                        type
+                        simpleRecipeYield {
+                           yield
+                        }
+                        simpleRecipeYieldId
+                        modifier {
+                           id
+                           data
+                        }
+                     }
+                     simpleRecipeProductOptions(
+                        where: { isActive: { _eq: true } }
+                     ) {
+                        id
+                        price
+                        type
+                        simpleRecipeYield {
+                           yield
+                        }
+                        simpleRecipeYieldId
+                        modifier {
+                           id
+                           data
+                        }
+                     }
+                     simpleRecipe {
+                        author
+                        cuisine
+                        id
+                        name
+                        show
+                        type
+                     }
+                  }
+               }
+            }
+            inventoryProduct {
+               id
+               assets
+               default
+               description
+               name
+               tags
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
+               inventoryProductOptions {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
+            }
+            simpleRecipeProduct {
+               name
+               default
+               id
+               assets
+               defaultSimpleRecipeProductOption {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
+               }
+               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
+               }
+               simpleRecipe {
+                  author
+                  cuisine
+                  id
+                  name
+                  show
+                  type
+               }
+            }
+         }
+      }
+      customizableProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $customizableProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+                  isPublished: { _eq: true }
+               }
+            ]
+         }
+      ) {
+         id
+         name
+         isPopupAllowed
+         defaultCartItem
+         assets
+         customizableProductOptions {
+            id
+            inventoryProduct {
+               id
+               assets
+               default
+               description
+               name
+               tags
+               sachetItem {
+                  unitSize
+                  unit
+               }
+               supplierItem {
+                  unitSize
+                  unit
+               }
+               defaultInventoryProductOption {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
+               inventoryProductOptions {
+                  id
+                  price
+                  quantity
+                  label
+                  inventoryProductId
+                  modifier {
+                     id
+                     data
+                  }
+               }
+            }
+            simpleRecipeProduct {
+               name
+               default
+               assets
+               id
+               defaultSimpleRecipeProductOption {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
+               }
+               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+                  id
+                  price
+                  type
+                  simpleRecipeYield {
+                     yield
+                  }
+                  simpleRecipeYieldId
+                  modifier {
+                     id
+                     data
+                  }
+               }
+               simpleRecipe {
+                  author
+                  cuisine
+                  id
+                  name
+                  show
+                  type
+               }
+            }
+         }
+      }
+      simpleRecipeProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $simpleRecipeProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+                  isPublished: { _eq: true }
+               }
+            ]
+         }
+      ) {
+         id
+         name
+         default
+         tags
+         description
+         assets
+         isPopupAllowed
+         defaultCartItem
+         defaultSimpleRecipeProductOption {
+            id
+            price
+            type
+            simpleRecipeYield {
+               yield
+            }
+            simpleRecipeYieldId
+            modifier {
+               id
+               data
+            }
+         }
+         simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+            id
+            price
+            type
+            simpleRecipeYield {
+               yield
+            }
+            simpleRecipeYieldId
+            modifier {
+               id
+               data
+            }
+         }
+         simpleRecipe {
+            author
+            cuisine
+            id
+            name
+            show
+            type
+         }
+      }
+      inventoryProducts(
+         where: {
+            _and: [
+               {
+                  id: { _in: $inventoryProducts }
+                  _or: [
+                     { name: { _ilike: $name } }
+                     { tags: { _contains: $tag } }
+                  ]
+                  isPublished: { _eq: true }
+               }
+            ]
+         }
+      ) {
+         id
+         name
+         description
+         tags
+         assets
+         default
+         isPopupAllowed
+         defaultCartItem
+         defaultInventoryProductOption {
+            id
+            price
+            quantity
+            label
+            inventoryProductId
+            modifier {
+               id
+               data
+            }
+         }
+         inventoryProductOptions {
+            id
+            price
+            quantity
+            label
+            inventoryProductId
+            modifier {
+               id
+               data
+            }
+         }
+      }
+   }
+`
+
+export const STRIPE_PK = gql`
+   query StripePublishableKey {
+      organizations {
+         stripePublishableKey
       }
    }
 `

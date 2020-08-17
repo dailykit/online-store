@@ -1,39 +1,40 @@
-import { Ionicons, Feather } from '@expo/vector-icons'
-import React, { lazy } from 'react'
+import { useMutation } from '@apollo/react-hooks'
+import { Feather } from '@expo/vector-icons'
 import moment from 'moment'
+import { Accordion } from 'native-base'
+import React from 'react'
 import {
+   AsyncStorage,
    SafeAreaView,
    ScrollView,
    Text,
    TouchableOpacity,
    View,
-   AsyncStorage,
 } from 'react-native'
-import { DefaultPaymentFloater } from '../../components/DefaultFloater'
-
-const Summary = lazy(() => import('../../components/Summary'))
-import { useCartContext } from '../../context/cart'
-import { height, width } from '../../utils/Scalaing'
-import { styles } from './styles'
-import Header from '../../components/Header'
-import { useDrawerContext } from '../../context/drawer'
-import { useAppContext } from '../../context/app'
-import Fulfillment from '../../components/Fulfillment'
-import { useAuth } from '../../context/auth'
 import styled from 'styled-components/native'
-import { useMutation } from '@apollo/react-hooks'
-import { UPDATE_CART } from '../../graphql'
+import defaultProductImage from '../../assets/imgs/default-product-image.png'
+import { DefaultPaymentFloater } from '../../components/DefaultFloater'
+import Fulfillment from '../../components/Fulfillment'
+import Header from '../../components/Header'
+import AppSkeleton from '../../components/skeletons/app'
+import { useAppContext } from '../../context/app'
+import { useAuth } from '../../context/auth'
+import { useCartContext } from '../../context/cart'
+import { useDrawerContext } from '../../context/drawer'
+import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
+import { useStoreToast } from '../../utils'
+import { width } from '../../utils/Scalaing'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
-   const { open } = useDrawerContext()
-   const { visual } = useAppContext()
-   const { isAuthenticated } = useAuth()
-
-   const [editing, setEditing] = React.useState(false)
+   const { visual, masterLoading } = useAppContext()
 
    String.prototype.SRPType = function () {
       return this === 'readyToEat' ? 'Ready to Eat' : 'Meal Kit'
+   }
+
+   if (masterLoading) {
+      return <AppSkeleton />
    }
 
    return (
@@ -129,32 +130,48 @@ const Checkout = ({ cart, navigation }) => {
                      </CTAContainer>
                   </>
                ) : (
-                  <CustomerDetails>
-                     <View>
-                        <CustomerName>{`${
-                           cart.customerInfo?.customerFirstName || ''
-                        } ${
-                           cart.customerInfo?.customerLastName || ''
-                        }`}</CustomerName>
-                        <CustomerPhone>{`Phone: ${
-                           cart.customerInfo?.customerPhone || '-'
-                        }`}</CustomerPhone>
-                        <CustomerEmail>{`Email: ${
-                           cart.customerInfo?.customerEmail || '-'
-                        }`}</CustomerEmail>
-                     </View>
-                     <TouchableOpacity
-                        onPress={() =>
-                           open('AddDetails', { path: 'profile/create' })
-                        }
-                     >
-                        <Feather
-                           name="edit"
-                           size={width > 768 ? 24 : 16}
-                           color="#93959F"
-                        />
-                     </TouchableOpacity>
-                  </CustomerDetails>
+                  <>
+                     {cart.customerInfo?.customerFirstName ? (
+                        <CustomerDetails>
+                           <View>
+                              <CustomerName>{`${
+                                 cart.customerInfo?.customerFirstName || ''
+                              } ${
+                                 cart.customerInfo?.customerLastName || ''
+                              }`}</CustomerName>
+                              <CustomerPhone>{`Phone: ${
+                                 cart.customerInfo?.customerPhone || '-'
+                              }`}</CustomerPhone>
+                              <CustomerEmail>{`Email: ${
+                                 cart.customerInfo?.customerEmail || '-'
+                              }`}</CustomerEmail>
+                           </View>
+                           <TouchableOpacity
+                              onPress={() =>
+                                 open('DailyKeyBackup', {
+                                    path: 'profile/create',
+                                 })
+                              }
+                           >
+                              <Feather
+                                 name="edit"
+                                 size={width > 768 ? 24 : 16}
+                                 color="#93959F"
+                              />
+                           </TouchableOpacity>
+                        </CustomerDetails>
+                     ) : (
+                        <BasicDetailsCTA
+                           onPress={() =>
+                              open('DailyKeyBackup', { path: 'profile/create' })
+                           }
+                        >
+                           <BasicDetailsCTAText>
+                              Add your Info
+                           </BasicDetailsCTAText>
+                        </BasicDetailsCTA>
+                     )}
+                  </>
                )}
             </CheckoutSectionContent>
          </CheckoutSection>
@@ -215,8 +232,7 @@ const Checkout = ({ cart, navigation }) => {
                      disabled={!cart.isValid.status}
                      color={visual.color}
                      onPress={() =>
-                        cart.isValid.status &&
-                        navigation.navigate('PaymentProcessing')
+                        cart.isValid.status && open('Payment', { navigation })
                      }
                   >
                      <CTAText>PAY ${cart.totalPrice}</CTAText>
@@ -238,6 +254,18 @@ const Cart = ({ cart }) => {
    const { setCart } = useCartContext()
    const { isAuthenticated } = useAuth()
 
+   const { toastr } = useStoreToast()
+
+   const [deleteCarts] = useMutation(DELETE_CARTS, {
+      onCompleted: data => {
+         console.log('Carts deleted: ', data.deleteCarts.returning)
+         AsyncStorage.clear()
+      },
+      onError: error => {
+         console.log('Deleteing carts error: ', error)
+      },
+   })
+
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
          console.log('Cart updated!')
@@ -256,6 +284,12 @@ const Cart = ({ cart }) => {
             let products = cart?.cartInfo?.products
             const index = products.findIndex(
                item => item.cartItemId === product.cartItemId
+            )
+            products[index].discount = parseFloat(
+               (
+                  (products[index].discount / products[index].quantity) *
+                  quantity
+               ).toFixed(2)
             )
             products[index].quantity = quantity
             products[index].totalPrice = products[index].unitPrice * quantity
@@ -283,7 +317,7 @@ const Cart = ({ cart }) => {
       }
    }
 
-   const removeFromCart = product => {
+   const removeFromCart = async product => {
       let products = cart?.cartInfo?.products
       let total
       let newCartItems = products?.filter(
@@ -301,43 +335,174 @@ const Cart = ({ cart }) => {
          products: newCartItems,
          total,
       }
-      updateCart({
-         variables: {
-            id: cart.id,
-            set: {
-               cartInfo: cartInfo,
+      // Check if cart empty
+      if (cartInfo.products.length) {
+         const { data } = await updateCart({
+            variables: {
+               id: cart.id,
+               set: {
+                  cartInfo: cartInfo,
+               },
             },
-         },
-      })
+         })
+         if (data) {
+            toastr('success', 'Item removed!')
+         }
+      } else {
+         const { data } = await deleteCarts({
+            variables: {
+               ids: [cart.id],
+            },
+         })
+         if (data) {
+            toastr('success', 'Item removed!')
+         }
+      }
    }
 
    return (
       <StyledCart>
          <CartHeader>
-            <CartHeaderTextLeft>Total Items</CartHeaderTextLeft>
+            <CartHeaderTextLeft>Total</CartHeaderTextLeft>
             <CartHeaderTextRight>
-               {cart.cartInfo.products.length}
+               {`${cart.cartInfo.products.length} Item${
+                  cart.cartInfo.products.length > 1 ? 's' : ''
+               }`}
             </CartHeaderTextRight>
          </CartHeader>
          <CartItems>
             {cart.cartInfo.products.map(product => (
                <CartItem>
                   <CartItemLeft>
-                     <CartItemImage source={{ uri: product.image }} />
+                     <CartItemImage
+                        source={{
+                           uri: product.image || defaultProductImage,
+                        }}
+                     />
                      <CartItemInfo>
-                        <CartItemName numberOfLines={2} ellipsizeMode="tail">
+                        <CartItemName numberOfLines={1} ellipsizeMode="tail">
                            {product.name}
                         </CartItemName>
                         {product.type === 'comboProduct' &&
                            product.components.map(component => (
-                              <CartItemLabel>
-                                 {`${component.comboProductComponentLabel}: ${component.name}`}
-                              </CartItemLabel>
+                              <>
+                                 <CartItemLabel
+                                    ellipsizeMode="tail"
+                                    numberOfLines={1}
+                                 >
+                                    {`${component.comboProductComponentLabel}: ${component.name}`}
+                                 </CartItemLabel>
+                                 {Boolean(component.modifiers?.length) && (
+                                    <AccordianContainer>
+                                       <Accordion
+                                          dataArray={[
+                                             {
+                                                title: `Add-Ons (${component.modifiers.length})`,
+                                                content: (
+                                                   <>
+                                                      {component.modifiers.map(
+                                                         modifier => (
+                                                            <StyledAccordianContentText
+                                                               ellipsizeMode="tail"
+                                                               numberOfLines={1}
+                                                            >
+                                                               {`${modifier.category} - ${modifier.name}`}
+                                                            </StyledAccordianContentText>
+                                                         )
+                                                      )}
+                                                   </>
+                                                ),
+                                             },
+                                          ]}
+                                          renderHeader={(item, expanded) => (
+                                             <StyledAccordianHeader>
+                                                <StyledAccordianHeaderText>
+                                                   {item.title}
+                                                </StyledAccordianHeaderText>
+                                                <Feather
+                                                   name={
+                                                      expanded
+                                                         ? 'chevron-up'
+                                                         : 'chevron-down'
+                                                   }
+                                                   color="#666"
+                                                   size={14}
+                                                />
+                                             </StyledAccordianHeader>
+                                          )}
+                                          renderContent={item => (
+                                             <StyledAccordianContent>
+                                                {item.content}
+                                             </StyledAccordianContent>
+                                          )}
+                                       />
+                                    </AccordianContainer>
+                                 )}
+                              </>
                            ))}
                         {product.type === 'simpleRecipeProduct' && (
-                           <CartItemLabel>
-                              {`${product.option.type.SRPType()}`}
+                           <CartItemLabel
+                              ellipsizeMode="tail"
+                              numberOfLines={1}
+                           >
+                              {`${product.option.type?.SRPType()} x${
+                                 product.option.serving
+                              }`}
                            </CartItemLabel>
+                        )}
+                        {product.type === 'inventoryProduct' && (
+                           <CartItemLabel
+                              ellipsizeMode="tail"
+                              numberOfLines={1}
+                           >
+                              {`${product.option.label}`}
+                           </CartItemLabel>
+                        )}
+                        {Boolean(product.modifiers?.length) && (
+                           <AccordianContainer>
+                              <Accordion
+                                 dataArray={[
+                                    {
+                                       title: `Add-Ons (${product.modifiers.length})`,
+                                       content: (
+                                          <>
+                                             {product.modifiers.map(
+                                                modifier => (
+                                                   <StyledAccordianContentText
+                                                      ellipsizeMode="tail"
+                                                      numberOfLines={1}
+                                                   >
+                                                      {`${modifier.category} - ${modifier.name}`}
+                                                   </StyledAccordianContentText>
+                                                )
+                                             )}
+                                          </>
+                                       ),
+                                    },
+                                 ]}
+                                 renderHeader={(item, expanded) => (
+                                    <StyledAccordianHeader>
+                                       <StyledAccordianHeaderText>
+                                          {item.title}
+                                       </StyledAccordianHeaderText>
+                                       <Feather
+                                          name={
+                                             expanded
+                                                ? 'chevron-up'
+                                                : 'chevron-down'
+                                          }
+                                          color="#666"
+                                          size={14}
+                                       />
+                                    </StyledAccordianHeader>
+                                 )}
+                                 renderContent={item => (
+                                    <StyledAccordianContent>
+                                       {item.content}
+                                    </StyledAccordianContent>
+                                 )}
+                              />
+                           </AccordianContainer>
                         )}
                      </CartItemInfo>
                   </CartItemLeft>
@@ -369,7 +534,20 @@ const Cart = ({ cart }) => {
                            />
                         </CartItemQuantityButton>
                      </CartItemQuantity>
-                     <CartItemPrice>$ {product.totalPrice}</CartItemPrice>
+                     <CartItemPriceContainer>
+                        {Boolean(product.discount) && (
+                           <CartItemDiscount>
+                              ${' '}
+                              {(
+                                 product.discount * product.quantity +
+                                 product.totalPrice
+                              ).toFixed(2)}
+                           </CartItemDiscount>
+                        )}
+                        <CartItemPrice>
+                           $ {product.totalPrice.toFixed(2)}
+                        </CartItemPrice>
+                     </CartItemPriceContainer>
                   </CartItemRight>
                </CartItem>
             ))}
@@ -378,7 +556,9 @@ const Cart = ({ cart }) => {
             <CartBillingHeading>Bill Details</CartBillingHeading>
             <CartBillingDetail>
                <CartBillingDetailText>Item Total</CartBillingDetailText>
-               <CartBillingDetailText>$ {cart.itemTotal}</CartBillingDetailText>
+               <CartBillingDetailText>
+                  $ {cart.itemTotal.toFixed(2)}
+               </CartBillingDetailText>
             </CartBillingDetail>
             <CartBillingDetail>
                <CartBillingDetailText>Delivery Fee</CartBillingDetailText>
@@ -393,9 +573,22 @@ const Cart = ({ cart }) => {
             </CartBillingDetail>
          </CartBilling>
          <Divider color="#282c3f" height="2px" />
+         {Boolean(
+            cart.cartInfo.products.reduce((acc, item) => acc + item.discount, 0)
+         ) && (
+            <CartFooter>
+               <CartDiscountText>YOU SAVED</CartDiscountText>
+               <CartDiscountText>
+                  ${' '}
+                  {cart.cartInfo.products
+                     .reduce((acc, item) => acc + item.discount, 0)
+                     .toFixed(2)}
+               </CartDiscountText>
+            </CartFooter>
+         )}
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
-            <CartFooterText>$ {cart.totalPrice}</CartFooterText>
+            <CartFooterText>$ {cart.totalPrice.toFixed(2)}</CartFooterText>
          </CartFooter>
       </StyledCart>
    )
@@ -416,10 +609,10 @@ const StyledCheckout = styled.View`
 
 const CheckoutSection = styled.View`
    position: relative;
-   margin-left: ${width > 768 ? '25px' : '0px'};
+   margin-left: ${width > 768 ? '16px' : '0px'};
    background: #fff;
    margin-bottom: ${width > 768 ? '20px' : '8px'};
-   padding: ${width > 768 ? '35px 40px 39px' : '10px'};
+   padding: ${width > 768 ? '16px 28px' : '10px'};
    border-radius: 4px;
 `
 
@@ -461,6 +654,23 @@ const Button = styled.TouchableOpacity`
 const ButtonText = styled.Text`
    color: ${props => props.color || '#60b246'};
    font-weight: 500;
+`
+
+const BasicDetailsCTA = styled.TouchableOpacity`
+   width: 100%:
+   background-color: #fff;
+   align-items: center;
+   justify-content: center;
+   shadow-opacity: 0.75;
+   shadow-radius: 5px;
+   shadow-color: #ccc;
+   shadow-offset: 1px 1px;
+   border-radius: 2px;
+`
+
+const BasicDetailsCTAText = styled.Text`
+   color: #666;
+   margin: 12px auto;
 `
 
 const CustomerDetails = styled.View`
@@ -592,7 +802,7 @@ const CartItemImage = styled.Image`
 const CartItemInfo = styled.View`
    margin-left: 10px;
    margin-right: 5px;
-   max-width: ${width > 768 ? '150px' : '100px'};
+   width: ${width > 768 ? '120px' : '100px'};
 `
 
 const CartItemName = styled.Text`
@@ -601,6 +811,31 @@ const CartItemName = styled.Text`
 `
 
 const CartItemLabel = styled.Text`
+   color: #9c9ea7;
+`
+
+const AccordianContainer = styled.View`
+   margin-top: 4px;
+`
+
+const StyledAccordianHeader = styled.View`
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
+   padding: 4px;
+`
+
+const StyledAccordianHeaderText = styled.Text`
+   font-size: 12px;
+   color: #666;
+`
+
+const StyledAccordianContent = styled.View`
+   padding: 4px;
+`
+
+const StyledAccordianContentText = styled.Text`
+   font-size: 12px;
    color: #9c9ea7;
 `
 
@@ -621,16 +856,29 @@ const CartItemQuantityValue = styled.Text`
    color: #93808c;
 `
 
+const CartItemPriceContainer = styled.View`
+   min-width: 50px;
+   text-align: right;
+`
+
+const CartItemDiscount = styled.Text`
+   text-decoration: line-through;
+   font-size: 13px;
+   color: #535665;
+`
+
 const CartItemPrice = styled.Text`
    font-size: 13px;
    color: #535665;
-   min-width: 50px;
-   text-align: right;
 `
 
 const CartBilling = styled.View`
    padding: ${width > 768 ? '10px 30px' : '10px'};
    background: #fff;
+   shadow-opacity: 0.75;
+   shadow-radius: 5px;
+   shadow-color: #ccc;
+   shadow-offset: -5px 0px;
 `
 
 const CartBillingHeading = styled.Text`
@@ -670,4 +918,8 @@ const CartFooter = styled.View`
 const CartFooterText = styled.Text`
    font-weight: 600;
    color: #282c3f;
+`
+
+const CartDiscountText = styled(CartFooterText)`
+   color: #60b246;
 `

@@ -1,17 +1,17 @@
-import React from 'react';
-import { View } from 'native-base';
-import { StyleSheet } from 'react-native';
-import { height, width } from '../utils/Scalaing';
+import { View } from 'native-base'
+import React from 'react'
+import { StyleSheet } from 'react-native'
+import { height, width } from '../utils/Scalaing'
 
 const Container = ({ children }) => {
    return (
       <View style={styles.container}>
          <View style={styles.content}>{children}</View>
       </View>
-   );
-};
+   )
+}
 
-export default Container;
+export default Container
 
 const styles = StyleSheet.create({
    container: {
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
       maxWidth: 768,
       height: '100%',
    },
-});
+})

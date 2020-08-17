@@ -6,6 +6,52 @@ export const CREATE_CUSTOMER = gql`
          id
          email
          keycloakId
+         platform_customer {
+            email
+            firstName
+            lastName
+            phoneNumber
+            stripeCustomerId
+            customerAddresses {
+               id
+               line1
+               line2
+               state
+               zipcode
+               city
+               country
+               notes
+               lat
+               lng
+            }
+            defaultCustomerAddress {
+               id
+               line1
+               line2
+               state
+               zipcode
+               city
+               country
+               notes
+               lat
+               lng
+            }
+            stripePaymentMethods {
+               stripePaymentMethodId
+               last4
+               expMonth
+               expYear
+               brand
+            }
+            defaultPaymentMethodId
+            defaultStripePaymentMethod {
+               stripePaymentMethodId
+               last4
+               expMonth
+               expYear
+               brand
+            }
+         }
       }
    }
 `
@@ -57,6 +103,63 @@ export const UPDATE_CART = gql`
             status
             paymentStatus
             orderId
+         }
+      }
+   }
+`
+
+export const UPDATE_CUSTOMER = gql`
+   mutation platform_updateCustomer(
+      $keycloakId: String!
+      $_set: platform_customer_set_input!
+   ) {
+      platform_updateCustomer(
+         _set: $_set
+         pk_columns: { keycloakId: $keycloakId }
+      ) {
+         email
+         lastName
+         firstName
+         keycloakId
+         phoneNumber
+      }
+   }
+`
+
+export const CREATE_CUSTOMER_ADDRESS = gql`
+   mutation platform_createCustomerAddress(
+      $object: platform_customerAddress_insert_input!
+   ) {
+      platform_createCustomerAddress(object: $object) {
+         id
+         lat
+         lng
+         line1
+         line2
+         city
+         state
+         country
+         zipcode
+         label
+         notes
+      }
+   }
+`
+
+export const CREATE_STRIPE_PAYMENT_METHOD = gql`
+   mutation paymentMethod($object: platform_stripePaymentMethod_insert_input!) {
+      paymentMethod: platform_createStripePaymentMethod(object: $object) {
+         keycloakId
+         stripePaymentMethodId
+      }
+   }
+`
+
+export const DELETE_CARTS = gql`
+   mutation DeleteCarts($ids: [Int!]) {
+      deleteCarts(where: { id: { _in: $ids } }) {
+         returning {
+            id
          }
       }
    }

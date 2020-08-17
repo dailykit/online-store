@@ -12,6 +12,7 @@ const Keycloak = ({ type }) => {
             title="Add Details"
             height={600}
             frameBorder="0"
+            rel="preload"
          ></iframe>
       </View>
    )
