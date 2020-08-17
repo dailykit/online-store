@@ -110,6 +110,10 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
       })()
    }, [selected])
 
+   React.useEffect(() => {
+      setSelected([])
+   }, [data])
+
    return (
       <Wrapper>
          <Heading>Available Add-Ons:</Heading>
