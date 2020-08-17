@@ -35,9 +35,10 @@ const Search = ({ navigation }) => {
             ...data.simpleRecipeProducts,
             ...data.inventoryProducts,
          ]
-         if (items.length) {
+         if (items.length && query) {
             setProducts(items)
          } else {
+            setProducts([])
             setError('Sorry! No items found.')
          }
       },
@@ -85,20 +86,19 @@ const Search = ({ navigation }) => {
       setMergedData(prepData)
    }
 
-   const handleKeyDown = e => {
-      if (e.which === 27) {
-         navigation.goBack() || navigation.navigate('Home')
-      }
-      if (e.which === 13) {
+   const autoSearch = () => {
+      let timer
+      clearTimeout(timer)
+      timer = setTimeout(() => {
          setError('')
          searchProducts()
-      }
+      }, 500)
    }
 
    React.useEffect(() => {
-      document.addEventListener('keydown', handleKeyDown)
+      document.addEventListener('keyup', autoSearch)
       return () => {
-         document.removeEventListener('keydown', handleKeyDown)
+         document.removeEventListener('keyup', autoSearch)
       }
    }, [])
 
@@ -129,13 +129,16 @@ const Search = ({ navigation }) => {
                      autoFocus={true}
                   />
                </SearchInputWrapper>
-               <EscapeContainer onPress={() => navigation.goBack()}>
+               <EscapeContainer
+                  onPress={() =>
+                     navigation.goBack() || navigation.navigate('Home')
+                  }
+               >
                   <Feather
                      name="x"
                      size={width > 768 ? 28 : 16}
                      color="#3D4157"
                   />
-                  <EscapeText>Esc</EscapeText>
                </EscapeContainer>
             </SearchContainer>
             {Boolean(error) && <Error>{error}</Error>}
