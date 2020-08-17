@@ -202,28 +202,20 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                      position: 'absolute',
                      top: 4,
                      right: 4,
-                     alignItems: 'center',
-                     justifyContent: 'center',
                      backgroundColor: visual.color,
                      zIndex: 100,
-                     width: 32,
-                     height: 32,
-                     borderRadius: 16,
+                     padding: 2,
+                     borderRadius: 2,
                   }}
                >
                   <Text
                      style={{
                         fontSize: '0.8rem',
                         color: '#fff',
-                        fontWeight: 'bold',
                      }}
                   >
-                     {discount}
-                     <Text style={{ fontSize: '0.6rem', fontWeight: 'normal' }}>
-                        %
-                     </Text>
+                     {discount}% off
                   </Text>
-                  <Text style={{ fontSize: '0.6rem', color: '#fff' }}>off</Text>
                </View>
             )}
             <View style={styles.item_parent_container}>
