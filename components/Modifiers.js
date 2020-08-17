@@ -1,5 +1,5 @@
 import React from 'react'
-import { CheckBox } from 'react-native-elements'
+import CheckBox from './form/CheckBox'
 import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { discountedPrice } from '../utils'
@@ -129,7 +129,9 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                      .filter(option => option.isActive)
                      .map(option => (
                         <CheckBox
-                           title={`${option.name} $${
+                           title={`${option.name}`}
+                           image={option.image}
+                           price={`$${
                               option.discount
                                  ? discountedPrice({
                                       value: option.price,
@@ -144,17 +146,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                                     modifier.name === option.name
                               )
                            )}
-                           checkedIcon={
-                              category.type === 'single'
-                                 ? 'dot-circle-o'
-                                 : 'check-square-o'
-                           }
-                           uncheckedIcon={
-                              category.type === 'single'
-                                 ? 'circle-o'
-                                 : 'square-o'
-                           }
-                           checkedColor={visual.color}
+                           color={visual.color}
                            onPress={() => handleSelection(category, option)}
                         />
                      ))}
