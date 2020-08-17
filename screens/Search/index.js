@@ -37,9 +37,12 @@ const Search = ({ navigation }) => {
          ]
          if (items.length && query) {
             setProducts(items)
+            setError('')
          } else {
             setProducts([])
-            setError('Sorry! No items found.')
+            if (query) {
+               setError('Sorry! No items found.')
+            }
          }
       },
       onError: error => {
@@ -90,7 +93,6 @@ const Search = ({ navigation }) => {
       let timer
       clearTimeout(timer)
       timer = setTimeout(() => {
-         setError('')
          searchProducts()
       }, 500)
    }
