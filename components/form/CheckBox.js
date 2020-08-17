@@ -2,9 +2,18 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { Feather } from '@expo/vector-icons'
 
-const CheckBox = ({ type, color, checked, image, title, price, onPress }) => {
+const CheckBox = ({
+   type,
+   disabled,
+   color,
+   checked,
+   image,
+   title,
+   price,
+   onPress,
+}) => {
    return (
-      <Wrapper onPress={onPress}>
+      <Wrapper onPress={onPress} disabled={disabled}>
          <Feather
             name={
                checked
@@ -33,6 +42,7 @@ const Wrapper = styled.TouchableOpacity`
    align-items: center;
    padding: 4px 8px;
    margin-bottom: 8px;
+   opacity: ${props => (props.disabled ? 0.5 : 1)};
 `
 
 const Img = styled.Image`

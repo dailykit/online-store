@@ -130,12 +130,13 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                      </CategoryCondition>
                   </CategoryName>
                   {category.options
-                     .filter(option => option.isActive)
+                     .filter(option => option.isVisible)
                      .map(option => (
                         <CheckBox
                            type={
                               category.type === 'single' ? 'radio' : 'checkbox'
                            }
+                           disabled={!option.isActive}
                            title={`${option.name}`}
                            image={option.image}
                            price={`$${
