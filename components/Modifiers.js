@@ -129,6 +129,9 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                      .filter(option => option.isActive)
                      .map(option => (
                         <CheckBox
+                           type={
+                              category.type === 'single' ? 'radio' : 'checkbox'
+                           }
                            title={`${option.name}`}
                            image={option.image}
                            price={`$${

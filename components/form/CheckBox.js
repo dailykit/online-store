@@ -2,11 +2,19 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { Feather } from '@expo/vector-icons'
 
-const CheckBox = ({ color, checked, image, title, price, onPress }) => {
+const CheckBox = ({ type, color, checked, image, title, price, onPress }) => {
    return (
       <Wrapper onPress={onPress}>
          <Feather
-            name={checked ? 'check-square' : 'square'}
+            name={
+               checked
+                  ? type === 'radio'
+                     ? 'check-circle'
+                     : 'check-square'
+                  : type === 'radio'
+                  ? 'circle'
+                  : 'square'
+            }
             size={20}
             color={checked ? color : '#666'}
             style={{ marginRight: 16 }}
