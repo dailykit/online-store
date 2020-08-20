@@ -24,6 +24,7 @@ import { useDrawerContext } from '../../context/drawer'
 import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
 import { useStoreToast } from '../../utils'
 import { width } from '../../utils/Scalaing'
+import Tip from '../../components/Tip'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
@@ -571,6 +572,7 @@ const Cart = ({ cart }) => {
                <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
                <CartBillingDetailText>$ {cart.tax}</CartBillingDetailText>
             </CartBillingDetail>
+            <Tip cart={cart} />
          </CartBilling>
          <Divider color="#282c3f" height="2px" />
          {Boolean(
@@ -745,7 +747,7 @@ const ErrorText = styled.Text`
 
 const StyledCart = styled.View`
    border-radius: 4px;
-   overflow: hidden;
+   overflow: auto;
 `
 
 const CartHeader = styled.View`
