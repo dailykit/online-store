@@ -747,7 +747,7 @@ const ErrorText = styled.Text`
 
 const StyledCart = styled.View`
    border-radius: 4px;
-   overflow: hidden;
+   overflow: auto;
 `
 
 const CartHeader = styled.View`
