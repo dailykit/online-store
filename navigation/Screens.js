@@ -22,6 +22,7 @@ import {
    FETCH_CART,
    STORE_SETTINGS,
    UPDATE_CART,
+   CREATE_CUSTOMER_WLR,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -202,12 +203,27 @@ export default function OnboardingStack(props) {
                })
             }
             console.log('Customer created: ', data.createCustomer)
+            createCustomerWLR({
+               variables: {
+                  keycloakId: data.createCustomer.keycloakId,
+               },
+            })
          },
          onError: error => {
             console.log(error)
          },
       }
    )
+
+   // Mutation for creating wallet, loyalty points, referral
+   const [createCustomerWLR] = useMutation(CREATE_CUSTOMER_WLR, {
+      onCompleted: data => {
+         console.log('WLC created: ', data)
+      },
+      onError: error => {
+         console.log('WLC creation failed: ', error)
+      },
+   })
 
    // Query Customer and Data from platform
    const { error, loading: fetchingCustomer } = useQuery(CUSTOMER, {

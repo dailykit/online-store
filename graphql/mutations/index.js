@@ -164,3 +164,18 @@ export const DELETE_CARTS = gql`
       }
    }
 `
+
+export const CREATE_CUSTOMER_WLR = gql`
+   mutation CreateCustomerWLR($keycloakId: String!) {
+      createWallet(object: { keycloakId: $keycloakId }) {
+         id
+      }
+      createLoyaltyPoint(object: { keycloakId: $keycloakId }) {
+         id
+      }
+   }
+`
+
+// createCustomerReferral(object: { keycloakId: $keycloakId }) {
+//    id
+// }

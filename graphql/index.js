@@ -22,6 +22,7 @@ import {
    CREATE_CUSTOMER_ADDRESS,
    CREATE_STRIPE_PAYMENT_METHOD,
    DELETE_CARTS,
+   CREATE_CUSTOMER_WLR,
 } from './mutations'
 
 import {
@@ -68,4 +69,5 @@ export {
    FETCH_CART,
    STRIPE_PK,
    DELETE_CARTS,
+   CREATE_CUSTOMER_WLR,
 }
