@@ -1,8 +1,8 @@
 import React from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import styled from 'styled-components/native'
-import { useAppContext } from '../context/app'
-import { UPDATE_CART } from '../graphql'
+import { useAppContext } from '../../../context/app'
+import { UPDATE_CART } from '../../../graphql'
 import { Feather } from '@expo/vector-icons'
 
 const Tip = ({ cart }) => {
