@@ -25,6 +25,7 @@ import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
 import { useStoreToast } from '../../utils'
 import { width } from '../../utils/Scalaing'
 import Tip from './components/Tip'
+import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
@@ -561,6 +562,7 @@ const Cart = ({ cart }) => {
                   $ {cart.itemTotal.toFixed(2)}
                </CartBillingDetailText>
             </CartBillingDetail>
+            <PayWithLoyaltyPoints />
             <CartBillingDetail>
                <CartBillingDetailText>Delivery Fee</CartBillingDetailText>
                <CartBillingDetailText>
