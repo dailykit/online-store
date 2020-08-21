@@ -42,6 +42,7 @@ import { width } from '../utils/Scalaing'
 import { useScript } from '../utils/useScript'
 // drawer
 import CustomDrawerContent from './Menu'
+import { useDrawerContext } from '../context/drawer'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -62,6 +63,7 @@ export default function OnboardingStack(props) {
       setCart,
       setWallet,
       setLoyaltyPoints,
+      setCustomerReferral,
    } = useCartContext()
    const {
       setBrand,
@@ -72,6 +74,7 @@ export default function OnboardingStack(props) {
       setMasterLoading,
       setMenuLoading,
    } = useAppContext()
+   const { open } = useDrawerContext()
 
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
 
@@ -223,6 +226,8 @@ export default function OnboardingStack(props) {
    const [createCustomerWLR] = useMutation(CREATE_CUSTOMER_WLR, {
       onCompleted: data => {
          console.log('WLC created: ', data)
+         setCustomerReferral(data.createCustomerReferral)
+         open('ReferralCode')
       },
       onError: error => {
          console.log('WLC creation failed: ', error)

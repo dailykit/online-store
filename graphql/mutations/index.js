@@ -175,6 +175,20 @@ export const CREATE_CUSTOMER_WLR = gql`
       }
       createCustomerReferral(object: { keycloakId: $keycloakId }) {
          id
+         referralCode
+      }
+   }
+`
+
+export const UPDATE_CUSTOMER_REFERRAL = gql`
+   mutation UpdateCustomerReferral(
+      $id: Int!
+      $set: crm_customerReferral_set_input
+   ) {
+      updateCustomerReferral(pk_columns: { id: $id }, _set: $set) {
+         id
+         referralCode
+         status
       }
    }
 `

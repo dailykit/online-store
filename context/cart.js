@@ -75,6 +75,7 @@ export const CartContextProvider = ({ children }) => {
    // Wallet and Loyalty Points
    const [wallet, setWallet] = useState(undefined)
    const [loyaltyPoints, setLoyaltyPoints] = useState(undefined)
+   const [customerReferral, setCustomerReferral] = useState(undefined)
 
    // local
    const [distance, setDistance] = useState(0)
@@ -286,6 +287,8 @@ export const CartContextProvider = ({ children }) => {
             setWallet,
             loyaltyPoints,
             setLoyaltyPoints,
+            customerReferral,
+            setCustomerReferral,
          }}
       >
          {children}
