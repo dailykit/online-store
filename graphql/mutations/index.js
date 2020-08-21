@@ -173,9 +173,8 @@ export const CREATE_CUSTOMER_WLR = gql`
       createLoyaltyPoint(object: { keycloakId: $keycloakId }) {
          id
       }
+      createCustomerReferral(object: { keycloakId: $keycloakId }) {
+         id
+      }
    }
 `
-
-// createCustomerReferral(object: { keycloakId: $keycloakId }) {
-//    id
-// }
