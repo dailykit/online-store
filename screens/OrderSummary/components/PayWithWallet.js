@@ -3,22 +3,22 @@ import styled from 'styled-components/native'
 import { useCartContext } from '../../../context/cart'
 import { useAppContext } from '../../../context/app'
 
-const PayWithLoyaltyPoints = () => {
-   const { loyaltyPoints } = useCartContext()
+const PayWithWallet = () => {
+   const { wallet } = useCartContext()
    const { visual } = useAppContext()
 
    return (
       <>
-         {Boolean(loyaltyPoints.points) && (
+         {Boolean(wallet.amount) && (
             <Wrapper>
                <Content>
-                  <Header>Use Loyalty Points</Header>
+                  <Header>Pay using Wallet</Header>
                   <AvailableText>
-                     Available: <Points>{loyaltyPoints.points}</Points>
+                     Balance: $<Points>{wallet.amount}</Points>
                   </AvailableText>
                </Content>
                <CTA color={visual.color}>
-                  <CTAText color={visual.color}>Use</CTAText>
+                  <CTAText color={visual.color}>Pay</CTAText>
                </CTA>
             </Wrapper>
          )}
@@ -26,7 +26,7 @@ const PayWithLoyaltyPoints = () => {
    )
 }
 
-export default PayWithLoyaltyPoints
+export default PayWithWallet
 
 const Wrapper = styled.View`
    border: 1px solid #e9e9eb;

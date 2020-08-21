@@ -26,6 +26,7 @@ import { useStoreToast } from '../../utils'
 import { width } from '../../utils/Scalaing'
 import Tip from './components/Tip'
 import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
+import PayWithWallet from './components/PayWithWallet'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
@@ -591,6 +592,9 @@ const Cart = ({ cart }) => {
                </CartDiscountText>
             </CartFooter>
          )}
+         <WalletWrapper>
+            <PayWithWallet />
+         </WalletWrapper>
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
             <CartFooterText>$ {cart.totalPrice.toFixed(2)}</CartFooterText>
@@ -909,6 +913,11 @@ const Divider = styled.View`
    background-color: ${props => props.color || '#e9e9eb'};
    height: ${props => props.height || '1px'};
    margin-bottom: ${props => props.margin || '0px'};
+`
+
+const WalletWrapper = styled.View`
+   padding: ${width > 768 ? '0px 30px' : '0px 10px'};
+   background: #fff;
 `
 
 const CartFooter = styled.View`
