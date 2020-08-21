@@ -236,3 +236,21 @@ export const CART_BY_PK = gql`
       }
    }
 `
+
+export const WALLETS = gql`
+   subscription Wallets($keycloakId: String!) {
+      wallets(where: { keycloakId: { _eq: $keycloakId } }) {
+         id
+         amount
+      }
+   }
+`
+
+export const LOYALTY_POINTS = gql`
+   subscription LoyaltyPoints($keycloakId: String!) {
+      loyaltyPoints(where: { keycloakId: { _eq: $keycloakId } }) {
+         id
+         points
+      }
+   }
+`

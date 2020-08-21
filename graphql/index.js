@@ -36,6 +36,8 @@ import {
    ONDEMAND_DELIVERY,
    ORDER,
    CART,
+   WALLETS,
+   LOYALTY_POINTS,
 } from './subscriptions'
 
 export {
@@ -70,4 +72,6 @@ export {
    STRIPE_PK,
    DELETE_CARTS,
    CREATE_CUSTOMER_WLR,
+   WALLETS,
+   LOYALTY_POINTS,
 }

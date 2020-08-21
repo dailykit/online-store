@@ -23,6 +23,8 @@ import {
    STORE_SETTINGS,
    UPDATE_CART,
    CREATE_CUSTOMER_WLR,
+   WALLETS,
+   LOYALTY_POINTS,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -58,6 +60,8 @@ export default function OnboardingStack(props) {
       setCustomer,
       setCustomerDetails,
       setCart,
+      setWallet,
+      setLoyaltyPoints,
    } = useCartContext()
    const {
       setBrand,
@@ -278,6 +282,33 @@ export default function OnboardingStack(props) {
                   },
                },
             })
+         }
+      },
+   })
+
+   // Subscription for Wallet, Loyalty Points
+   useSubscription(WALLETS, {
+      variables: {
+         keycloakId: user.sub || user.id,
+      },
+      onSubscriptionData: data => {
+         if (data.subscriptionData.data.wallets.length) {
+            console.log('Wallet: ', data.subscriptionData.data.wallets[0])
+            setWallet(data.subscriptionData.data.wallets[0])
+         }
+      },
+   })
+   useSubscription(LOYALTY_POINTS, {
+      variables: {
+         keycloakId: user.sub || user.id,
+      },
+      onSubscriptionData: data => {
+         if (data.subscriptionData.data.loyaltyPoints.length) {
+            console.log(
+               'Loyalty Points: ',
+               data.subscriptionData.data.loyaltyPoints[0]
+            )
+            setLoyaltyPoints(data.subscriptionData.data.loyaltyPoints[0])
          }
       },
    })

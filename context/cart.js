@@ -72,6 +72,9 @@ export const CartContextProvider = ({ children }) => {
    const [cart, setCart] = useState(undefined)
    // From platform
    const [customerDetails, setCustomerDetails] = useState(undefined)
+   // Wallet and Loyalty Points
+   const [wallet, setWallet] = useState(undefined)
+   const [loyaltyPoints, setLoyaltyPoints] = useState(undefined)
 
    // local
    const [distance, setDistance] = useState(0)
@@ -279,6 +282,10 @@ export const CartContextProvider = ({ children }) => {
             setCart,
             customerDetails,
             setCustomerDetails,
+            wallet,
+            setWallet,
+            loyaltyPoints,
+            setLoyaltyPoints,
          }}
       >
          {children}
