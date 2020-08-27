@@ -138,6 +138,13 @@ export default function OnboardingStack(props) {
                   }
                   case 'Location': {
                      availabilityState.location = value.address
+                     return
+                  }
+                  case 'Store Live': {
+                     availabilityState.isStoreLive = value.isStoreLive
+                     availabilityState.isStripeConfigured =
+                        value.isStripeConfigured
+                     return
                   }
                   default: {
                      return

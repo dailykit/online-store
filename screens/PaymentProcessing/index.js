@@ -9,7 +9,7 @@ import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 
 const PaymentProcessing = ({ navigation }) => {
    const { cart, customer } = useCartContext()
-   const { visual } = useAppContext()
+   const { visual, availability } = useAppContext()
    const { setIsDrawerOpen } = useDrawerContext()
 
    const [cartId, setCartId] = React.useState(undefined)
@@ -35,7 +35,16 @@ const PaymentProcessing = ({ navigation }) => {
    //Effects
    React.useEffect(() => {
       if (cart?.id) {
-         if (customer.isTest) {
+         console.log({
+            isTest: customer.isTest,
+            isStoreLive: availability.isStoreLive,
+            isStripeConfigured: availability.isStripeConfigured,
+         })
+         if (
+            customer.isTest ||
+            !availability.isStoreLive ||
+            !availability.isStripeConfigured
+         ) {
             console.log('Test user: Bypassing payments...')
             updateCart({
                variables: {
