@@ -4,15 +4,28 @@ import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { UPDATE_CART } from '../graphql'
 import { Feather } from '@expo/vector-icons'
+import { useAuth } from '../context/auth'
+import { useCartContext } from '../context/cart'
 
 const Tip = ({ cart }) => {
    const { visual } = useAppContext()
+   const { isAuthenticated } = useAuth()
+   const { setCart } = useCartContext()
 
    const [tip, setTip] = React.useState('')
    const [isCustom, setIsCustom] = React.useState(false)
 
    // Mutation
-   const [updateCart] = useMutation(UPDATE_CART)
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: data => {
+         if (!isAuthenticated) {
+            setCart(data.updateCart.returning[0])
+         }
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
 
    const addTip = amount => {
       try {
