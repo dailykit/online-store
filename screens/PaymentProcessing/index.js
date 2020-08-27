@@ -8,7 +8,7 @@ import { useDrawerContext } from '../../context/drawer'
 import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 
 const PaymentProcessing = ({ navigation }) => {
-   const { cart } = useCartContext()
+   const { cart, customer } = useCartContext()
    const { visual } = useAppContext()
    const { setIsDrawerOpen } = useDrawerContext()
 
@@ -35,15 +35,37 @@ const PaymentProcessing = ({ navigation }) => {
    //Effects
    React.useEffect(() => {
       if (cart?.id) {
-         updateCart({
-            variables: {
-               id: cart.id,
-               set: {
-                  status: 'PROCESS',
-                  amount: cart.totalPrice,
+         if (customer.isTest) {
+            console.log('Test user: Bypassing payments...')
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     status: 'TEST_PROCESS',
+                     paymentStatus: 'SUCCEEDED',
+                     amount: cart.totalPrice,
+                     isTest: true,
+                     transactionId: 'pi_1HHW5aGKMRh0bTai1N_TEST',
+                     transactionRemark: {
+                        id: 'pi_1HHW5aGKMRh0bTai1N_TEST',
+                        amount: cart.totalPrice * 100,
+                        object: 'payment_intent',
+                     },
+                  },
                },
-            },
-         })
+            })
+         } else {
+            console.log('Charging through live mode...')
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     status: 'PROCESS',
+                     amount: cart.totalPrice,
+                  },
+               },
+            })
+         }
          setCartId(cart.id)
       } else {
          navigation.navigate('Home')
