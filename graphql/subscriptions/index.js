@@ -139,9 +139,9 @@ export const ONDEMAND_DELIVERY = gql`
 `
 
 export const ORDERS = gql`
-   subscription Orders($id: Int!) {
+   subscription Orders($keycloakId: String!) {
       orders(
-         where: { customerId: { _eq: $id } }
+         where: { keycloakId: { _eq: $keycloakId } }
          order_by: { created_at: desc }
       ) {
          id
