@@ -445,9 +445,9 @@ const Item = ({
                            <View
                               style={{
                                  flexDirection: 'row',
-                                 alignItems: 'center',
                                  minHeight: width > 768 ? 68 : 56,
-                                 alignItems: 'flex-start',
+                                 alignItems: 'center',
+                                 justifyContent: 'space-between',
                               }}
                            >
                               <Text
