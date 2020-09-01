@@ -19,7 +19,7 @@ export default ({ navigation }) => {
    // Query
    const { data, loading, error } = useSubscription(ORDERS, {
       variables: {
-         id: customer?.id,
+         keycloakId: customer?.keycloakId,
       },
    })
 

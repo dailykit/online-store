@@ -65,7 +65,7 @@
       "react-native-web-banner-carousel": "^1.0.6",
       "react-native-web-maps": "^0.2.0",
       "react-native-webview": "^10.1.0",
-      "rrule": "^2.6.4",
+      "rrule": "2.6.4",
       "styled-components": "^5.1.1",
       "styled-system": "^5.1.5",
       "subscriptions-transport-ws": "^0.9.16",

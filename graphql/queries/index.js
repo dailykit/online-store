@@ -67,6 +67,7 @@ export const CUSTOMER = gql`
          id
          email
          keycloakId
+         isTest
          platform_customer {
             email
             firstName

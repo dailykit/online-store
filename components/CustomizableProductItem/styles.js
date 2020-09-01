@@ -23,7 +23,6 @@ export const stylesExpanded = EStyleSheet.create({
    item_container_one: {
       flex: 4,
       position: 'relative',
-      paddingTop: 20,
    },
    item_container_two: {
       flex: 1.3,

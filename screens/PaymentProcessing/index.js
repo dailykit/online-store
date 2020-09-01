@@ -8,8 +8,8 @@ import { useDrawerContext } from '../../context/drawer'
 import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 
 const PaymentProcessing = ({ navigation }) => {
-   const { cart } = useCartContext()
-   const { visual } = useAppContext()
+   const { cart, customer } = useCartContext()
+   const { visual, availability } = useAppContext()
    const { setIsDrawerOpen } = useDrawerContext()
 
    const [cartId, setCartId] = React.useState(undefined)
@@ -35,15 +35,46 @@ const PaymentProcessing = ({ navigation }) => {
    //Effects
    React.useEffect(() => {
       if (cart?.id) {
-         updateCart({
-            variables: {
-               id: cart.id,
-               set: {
-                  status: 'PROCESS',
-                  amount: cart.totalPrice,
-               },
-            },
+         console.log({
+            isTest: customer.isTest,
+            isStoreLive: availability.isStoreLive,
+            isStripeConfigured: availability.isStripeConfigured,
          })
+         if (
+            customer.isTest ||
+            !availability.isStoreLive ||
+            !availability.isStripeConfigured
+         ) {
+            console.log('Test user: Bypassing payments...')
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     status: 'TEST_PROCESS',
+                     paymentStatus: 'SUCCEEDED',
+                     amount: cart.totalPrice,
+                     isTest: true,
+                     transactionId: 'pi_1HHW5aGKMRh0bTai1N_TEST',
+                     transactionRemark: {
+                        id: 'pi_1HHW5aGKMRh0bTai1N_TEST',
+                        amount: cart.totalPrice * 100,
+                        object: 'payment_intent',
+                     },
+                  },
+               },
+            })
+         } else {
+            console.log('Charging through live mode...')
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     status: 'PROCESS',
+                     amount: cart.totalPrice,
+                  },
+               },
+            })
+         }
          setCartId(cart.id)
       } else {
          navigation.navigate('Home')

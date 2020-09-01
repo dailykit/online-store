@@ -54,7 +54,7 @@ const CustomizableProductItemCollapsed = ({ product }) => {
                         style={{
                            flex: 1,
                            position: 'relative',
-                           paddingTop: 20,
+                           // paddingTop: 20,
                            width: width > 768 ? 150 : 120,
                         }}
                      >
