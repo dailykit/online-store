@@ -16,6 +16,7 @@ import SafetyScreen from '../screens/SafetyScreen'
 import SelectPaymentMethod from '../screens/SelectPaymentMethod'
 import { height, width } from '../utils/Scalaing'
 import Fulfillment from './Fulfillment'
+import CouponList from './CouponList'
 
 const DrawerLayout = () => {
    const {
@@ -87,6 +88,8 @@ const DrawerLayout = () => {
             return <Keycloak type="register" />
          case 'Payment':
             return <PaymentProcessing {...params} />
+         case 'CouponList':
+            return <CouponList />
          default:
             return <Text>Oops! No such component.</Text>
       }

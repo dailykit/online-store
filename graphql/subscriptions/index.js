@@ -237,3 +237,20 @@ export const CART_BY_PK = gql`
       }
    }
 `
+
+export const COUPONS = gql`
+   subscription Coupons($cartId: Int!, $keycloakId: String!) {
+      coupons(where: { isActive: { _eq: true } }) {
+         id
+         code
+         isRewardMulti
+         metaDetails
+      }
+   }
+`
+
+// visibilityCondition {
+//    isValid(
+//       args: { params: { cartId: $cartId, keycloakId: $keycloakId } }
+//    )
+// }

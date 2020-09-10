@@ -35,6 +35,7 @@ import {
    ONDEMAND_DELIVERY,
    ORDER,
    CART,
+   COUPONS,
 } from './subscriptions'
 
 export {
@@ -68,4 +69,5 @@ export {
    FETCH_CART,
    STRIPE_PK,
    DELETE_CARTS,
+   COUPONS,
 }
