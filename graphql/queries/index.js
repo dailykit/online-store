@@ -21,6 +21,7 @@ export const FETCH_CART = gql`
          status
          paymentStatus
          orderId
+         couponCode
       }
    }
 `

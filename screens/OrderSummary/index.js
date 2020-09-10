@@ -25,6 +25,7 @@ import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
 import { useStoreToast } from '../../utils'
 import { width } from '../../utils/Scalaing'
 import Tip from '../../components/Tip'
+import Coupon from '../../components/Coupon'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
@@ -554,6 +555,7 @@ const Cart = ({ cart }) => {
             ))}
          </CartItems>
          <CartBilling>
+            <Coupon cart={cart} />
             <CartBillingHeading>Bill Details</CartBillingHeading>
             <CartBillingDetail>
                <CartBillingDetailText>Item Total</CartBillingDetailText>
