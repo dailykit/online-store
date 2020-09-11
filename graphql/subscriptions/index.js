@@ -202,7 +202,6 @@ export const CART = gql`
          status
          paymentStatus
          orderId
-         couponCode
       }
    }
 `

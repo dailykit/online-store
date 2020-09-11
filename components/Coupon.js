@@ -21,6 +21,19 @@ const Coupon = ({ cart }) => {
             keycloakId: customer.keycloakId,
          },
       },
+      onSubscriptionData: ({ subscriptionData: { data = {} } = {} }) => {
+         if (data.orderCartRewards.length) {
+            const isCouponValid = data.orderCartRewards.every(
+               record => record.reward.condition.isValid
+            )
+            if (isCouponValid) {
+               console.log('Coupon is valid!')
+            } else {
+               console.log('Coupon is not valid anymore!')
+               deleteOrderCartRewards()
+            }
+         }
+      },
    })
 
    // Mutation
@@ -35,8 +48,6 @@ const Coupon = ({ cart }) => {
          console.log(err)
       },
    })
-
-   console.log(data)
 
    if (error) console.log(error)
 
