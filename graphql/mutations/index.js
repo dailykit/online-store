@@ -174,3 +174,13 @@ export const CREATE_ORDER_CART_REWARDS = gql`
       }
    }
 `
+
+export const DELETE_ORDER_CART_REWARDS = gql`
+   mutation DeleteOrderCartRewards($cartId: Int!) {
+      deleteOrderCartRewards(where: { orderCartId: { _eq: $cartId } }) {
+         returning {
+            id
+         }
+      }
+   }
+`
