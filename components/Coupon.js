@@ -3,17 +3,37 @@ import styled from 'styled-components/native'
 import { Feather } from '@expo/vector-icons'
 import { useDrawerContext } from '../context/drawer'
 import { useAppContext } from '../context/app'
+import { ORDER_CART_REWARDS } from '../graphql'
+import { useSubscription } from '@apollo/react-hooks'
+import { useCartContext } from '../context/cart'
 
 const Coupon = ({ cart }) => {
+   const { customer } = useCartContext()
    const { open } = useDrawerContext()
    const { visual } = useAppContext()
 
+   const { data, error } = useSubscription(ORDER_CART_REWARDS, {
+      variables: {
+         cartId: cart.id,
+         params: {
+            cartId: cart.id,
+            keycloakId: customer.keycloakId,
+         },
+      },
+   })
+
+   console.log(data)
+
+   if (error) console.log(error)
+
    return (
       <>
-         {cart.couponCode ? (
+         {data?.orderCartRewards?.length ? (
             <Wrapper color={visual.color}>
                <TextContainer>
-                  <CouponCode>{cart.couponCode}</CouponCode>
+                  <CouponCode>
+                     {data.orderCartRewards[0].reward.coupon.code}
+                  </CouponCode>
                   <SubText>Coupon Applied</SubText>
                </TextContainer>
                <RemoveButton>

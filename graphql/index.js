@@ -37,6 +37,7 @@ import {
    ORDER,
    CART,
    COUPONS,
+   ORDER_CART_REWARDS,
 } from './subscriptions'
 
 export {
@@ -72,4 +73,5 @@ export {
    DELETE_CARTS,
    COUPONS,
    CREATE_ORDER_CART_REWARDS,
+   ORDER_CART_REWARDS,
 }

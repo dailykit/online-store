@@ -254,3 +254,20 @@ export const COUPONS = gql`
       }
    }
 `
+
+export const ORDER_CART_REWARDS = gql`
+   subscription OrderCartRewards($cartId: Int!, $params: jsonb) {
+      orderCartRewards(where: { orderCartId: { _eq: $cartId } }) {
+         reward {
+            id
+            coupon {
+               id
+               code
+            }
+            condition {
+               isValid(args: { params: $params })
+            }
+         }
+      }
+   }
+`
