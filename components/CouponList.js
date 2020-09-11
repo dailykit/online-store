@@ -1,15 +1,20 @@
 import React from 'react'
 import styled from 'styled-components/native'
-import { useSubscription } from '@apollo/react-hooks'
-import { COUPONS } from '../graphql'
+import { useMutation, useSubscription } from '@apollo/react-hooks'
+import { COUPONS, CREATE_ORDER_CART_REWARDS } from '../graphql'
 import { useCartContext } from '../context/cart'
 import { Spinner, Text } from 'native-base'
 import { useAppContext } from '../context/app'
 import { Feather } from '@expo/vector-icons'
+import { useDrawerContext } from '../context/drawer'
 
 const CouponList = () => {
    const { cart, customer } = useCartContext()
+   const { setIsDrawerOpen } = useDrawerContext()
 
+   const [applying, setApplying] = React.useState(false)
+
+   // Subscription
    const { data, loading, error } = useSubscription(COUPONS, {
       variables: {
          params: {
@@ -19,7 +24,47 @@ const CouponList = () => {
       },
    })
 
+   console.log(data)
+
    if (error) console.log(error)
+
+   // Mutation
+   const [createOrderCartRewards] = useMutation(CREATE_ORDER_CART_REWARDS, {
+      onCompleted: data => {
+         console.log(data)
+         setIsDrawerOpen(false)
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   // Handler
+   const applyCoupon = coupon => {
+      try {
+         setApplying(true)
+         const objects = []
+         if (coupon.isRewardMulti) {
+            for (const reward in coupon.rewards) {
+               objects.push({ rewardId: reward.id, orderCartId: cart.id })
+            }
+         } else {
+            objects.push({
+               rewardId: coupon.rewards[0].id,
+               orderCartId: cart.id,
+            })
+         }
+         createOrderCartRewards({
+            variables: {
+               objects,
+            },
+         })
+      } catch (err) {
+         console.log(err)
+      } finally {
+         setApplying(false)
+      }
+   }
 
    if (loading) return <Spinner />
 
@@ -28,7 +73,7 @@ const CouponList = () => {
          {data.coupons
             .filter(coupon => coupon.visibilityCondition.isValid)
             .map(coupon => (
-               <Coupon coupon={coupon} />
+               <Coupon coupon={coupon} applyCoupon={applyCoupon} />
             ))}
       </Wrapper>
    )
@@ -36,7 +81,7 @@ const CouponList = () => {
 
 export default CouponList
 
-const Coupon = ({ coupon }) => {
+const Coupon = ({ coupon, applyCoupon }) => {
    const { visual } = useAppContext()
 
    const [isDescVisible, setIsDescVisible] = React.useState(false)
@@ -45,7 +90,7 @@ const Coupon = ({ coupon }) => {
       <CouponContainer>
          <CouponHeader>
             <CouponCode>{coupon.code}</CouponCode>
-            <CTA>
+            <CTA onPress={() => applyCoupon(coupon)}>
                <CTAText color={visual.color}>Apply</CTAText>
             </CTA>
          </CouponHeader>

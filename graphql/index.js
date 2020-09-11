@@ -22,6 +22,7 @@ import {
    CREATE_CUSTOMER_ADDRESS,
    CREATE_STRIPE_PAYMENT_METHOD,
    DELETE_CARTS,
+   CREATE_ORDER_CART_REWARDS,
 } from './mutations'
 
 import {
@@ -70,4 +71,5 @@ export {
    STRIPE_PK,
    DELETE_CARTS,
    COUPONS,
+   CREATE_ORDER_CART_REWARDS,
 }

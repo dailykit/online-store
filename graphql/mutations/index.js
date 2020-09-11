@@ -164,3 +164,13 @@ export const DELETE_CARTS = gql`
       }
    }
 `
+
+export const CREATE_ORDER_CART_REWARDS = gql`
+   mutation OrderCartRewards($objects: [crm_orderCart_rewards_insert_input!]!) {
+      createOrderCartRewards(objects: $objects) {
+         returning {
+            id
+         }
+      }
+   }
+`
