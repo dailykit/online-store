@@ -239,18 +239,18 @@ export const CART_BY_PK = gql`
 `
 
 export const COUPONS = gql`
-   subscription Coupons($cartId: Int!, $keycloakId: String!) {
+   subscription Coupons($params: jsonb) {
       coupons(where: { isActive: { _eq: true } }) {
          id
          code
          isRewardMulti
+         rewards(order_by: { priority: desc }) {
+            id
+         }
          metaDetails
+         visibilityCondition {
+            isValid(args: { params: $params })
+         }
       }
    }
 `
-
-// visibilityCondition {
-//    isValid(
-//       args: { params: { cartId: $cartId, keycloakId: $keycloakId } }
-//    )
-// }

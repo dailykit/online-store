@@ -12,8 +12,10 @@ const CouponList = () => {
 
    const { data, loading, error } = useSubscription(COUPONS, {
       variables: {
-         // cartId: cart.id,
-         // keycloakId: customer.keycloakId,
+         params: {
+            cartId: cart.id,
+            keycloakId: customer.keycloakId,
+         },
       },
    })
 
@@ -23,9 +25,11 @@ const CouponList = () => {
 
    return (
       <Wrapper>
-         {data.coupons.map(coupon => (
-            <Coupon coupon={coupon} />
-         ))}
+         {data.coupons
+            .filter(coupon => coupon.visibilityCondition.isValid)
+            .map(coupon => (
+               <Coupon coupon={coupon} />
+            ))}
       </Wrapper>
    )
 }
