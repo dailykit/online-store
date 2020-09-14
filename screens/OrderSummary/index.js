@@ -574,6 +574,14 @@ const Cart = ({ cart }) => {
                <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
                <CartBillingDetailText>$ {cart.tax}</CartBillingDetailText>
             </CartBillingDetail>
+            {Boolean(cart.discount) && (
+               <CartBillingDetail>
+                  <CartBillingDetailText>Discount</CartBillingDetailText>
+                  <CartBillingDetailText>
+                     - $ {cart.discount}
+                  </CartBillingDetailText>
+               </CartBillingDetail>
+            )}
             <Tip cart={cart} />
          </CartBilling>
          <Divider color="#282c3f" height="2px" />
@@ -584,9 +592,12 @@ const Cart = ({ cart }) => {
                <CartDiscountText>YOU SAVED</CartDiscountText>
                <CartDiscountText>
                   ${' '}
-                  {cart.cartInfo.products
-                     .reduce((acc, item) => acc + item.discount, 0)
-                     .toFixed(2)}
+                  {(
+                     cart.cartInfo.products.reduce(
+                        (acc, item) => acc + item.discount,
+                        0
+                     ) + cart.discount
+                  ).toFixed(2)}
                </CartDiscountText>
             </CartFooter>
          )}
