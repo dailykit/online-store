@@ -7,10 +7,12 @@ import { Spinner, Text } from 'native-base'
 import { useAppContext } from '../context/app'
 import { Feather } from '@expo/vector-icons'
 import { useDrawerContext } from '../context/drawer'
+import { useStoreToast } from '../utils'
 
 const CouponList = () => {
    const { cart, customer } = useCartContext()
    const { setIsDrawerOpen } = useDrawerContext()
+   const { toastr } = useStoreToast()
 
    const [applying, setApplying] = React.useState(false)
 
@@ -32,6 +34,7 @@ const CouponList = () => {
    const [createOrderCartRewards] = useMutation(CREATE_ORDER_CART_REWARDS, {
       onCompleted: data => {
          console.log(data)
+         toastr('success', 'Coupon applied!')
          setIsDrawerOpen(false)
       },
       onError: error => {
@@ -42,6 +45,7 @@ const CouponList = () => {
    // Handler
    const applyCoupon = coupon => {
       try {
+         if (applying) return
          setApplying(true)
          const objects = []
          if (coupon.isRewardMulti) {

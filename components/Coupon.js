@@ -6,11 +6,13 @@ import { useAppContext } from '../context/app'
 import { DELETE_ORDER_CART_REWARDS, ORDER_CART_REWARDS } from '../graphql'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 import { useCartContext } from '../context/cart'
+import { useStoreToast } from '../utils'
 
 const Coupon = ({ cart }) => {
    const { customer } = useCartContext()
    const { open } = useDrawerContext()
    const { visual } = useAppContext()
+   const { toastr } = useStoreToast()
 
    // Subscription
    const { data, error } = useSubscription(ORDER_CART_REWARDS, {
@@ -30,6 +32,7 @@ const Coupon = ({ cart }) => {
                console.log('Coupon is valid!')
             } else {
                console.log('Coupon is not valid anymore!')
+               toastr('error', 'Coupon is not valid!')
                deleteOrderCartRewards()
             }
          }
