@@ -135,7 +135,6 @@ const CouponContainer = styled.View`
 
 const CouponHeader = styled.View`
    margin-bottom: 0.25rem;
-   border-bottom: 1px solid #686b78;
    flex-direction: row;
    align-items: center;
    justify-content: space-between;
