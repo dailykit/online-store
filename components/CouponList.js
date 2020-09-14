@@ -94,7 +94,12 @@ const Coupon = ({ coupon, applyCoupon }) => {
       <CouponContainer>
          <CouponHeader>
             <CouponCode>{coupon.code}</CouponCode>
-            <CTA onPress={() => applyCoupon(coupon)}>
+            <CTA
+               onPress={() => applyCoupon(coupon)}
+               disabled={
+                  !coupon.rewards.every(reward => reward.condition.isValid)
+               }
+            >
                <CTAText color={visual.color}>Apply</CTAText>
             </CTA>
          </CouponHeader>
@@ -143,7 +148,9 @@ const CouponCode = styled.Text`
    font-size: 1.1rem;
 `
 
-const CTA = styled.TouchableOpacity``
+const CTA = styled.TouchableOpacity`
+   opacity: ${props => (props.disabled ? 0.6 : 1)};
+`
 
 const CTAText = styled.Text`
    color: ${props => props.color || '#686b78'};

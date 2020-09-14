@@ -246,6 +246,9 @@ export const COUPONS = gql`
          isRewardMulti
          rewards(order_by: { priority: desc }) {
             id
+            condition {
+               isValid(args: { params: $params })
+            }
          }
          metaDetails
          visibilityCondition {
