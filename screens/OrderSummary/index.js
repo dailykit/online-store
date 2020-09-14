@@ -569,11 +569,6 @@ const Cart = ({ cart }) => {
                   $ {cart.deliveryPrice}
                </CartBillingDetailText>
             </CartBillingDetail>
-            <Divider margin="8px" />
-            <CartBillingDetail>
-               <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
-               <CartBillingDetailText>$ {cart.tax}</CartBillingDetailText>
-            </CartBillingDetail>
             {Boolean(cart.discount) && (
                <CartBillingDetail>
                   <CartBillingDetailText>Discount</CartBillingDetailText>
@@ -582,6 +577,11 @@ const Cart = ({ cart }) => {
                   </CartBillingDetailText>
                </CartBillingDetail>
             )}
+            <Divider margin="8px" />
+            <CartBillingDetail>
+               <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
+               <CartBillingDetailText>$ {cart.tax}</CartBillingDetailText>
+            </CartBillingDetail>
             <Tip cart={cart} />
          </CartBilling>
          <Divider color="#282c3f" height="2px" />
