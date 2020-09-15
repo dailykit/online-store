@@ -77,6 +77,7 @@ export const CREATE_CART = gql`
          status
          paymentStatus
          orderId
+         discount
       }
    }
 `
@@ -103,6 +104,7 @@ export const UPDATE_CART = gql`
             status
             paymentStatus
             orderId
+            discount
          }
       }
    }

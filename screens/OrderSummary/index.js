@@ -557,7 +557,13 @@ const Cart = ({ cart }) => {
             ))}
          </CartItems>
          <CartBilling>
-            <Coupon cart={cart} />
+            {isAuthenticated ? (
+               <Coupon cart={cart} />
+            ) : (
+               <HelpText>
+                  Discount coupons are only available when logged in!
+               </HelpText>
+            )}
             <CartBillingHeading>Bill Details</CartBillingHeading>
             <CartBillingDetail>
                <CartBillingDetailText>Item Total</CartBillingDetailText>
@@ -565,7 +571,6 @@ const Cart = ({ cart }) => {
                   $ {cart.itemTotal.toFixed(2)}
                </CartBillingDetailText>
             </CartBillingDetail>
-            <PayWithLoyaltyPoints />
             <CartBillingDetail>
                <CartBillingDetailText>Delivery Fee</CartBillingDetailText>
                <CartBillingDetailText>
@@ -580,6 +585,7 @@ const Cart = ({ cart }) => {
                   </CartBillingDetailText>
                </CartBillingDetail>
             )}
+            {Boolean(isAuthenticated) && <PayWithLoyaltyPoints />}
             <Divider margin="8px" />
             <CartBillingDetail>
                <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
@@ -604,9 +610,9 @@ const Cart = ({ cart }) => {
                </CartDiscountText>
             </CartFooter>
          )}
-         <WalletWrapper>
+         {/* <WalletWrapper>
             <PayWithWallet />
-         </WalletWrapper>
+         </WalletWrapper> */}
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
             <CartFooterText>$ {cart.totalPrice.toFixed(2)}</CartFooterText>
@@ -948,4 +954,9 @@ const CartFooterText = styled.Text`
 
 const CartDiscountText = styled(CartFooterText)`
    color: #60b246;
+`
+
+const HelpText = styled(CartBillingDetailText)`
+   margin-bottom: 0.5rem;
+   font-style: italic;
 `
