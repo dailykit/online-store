@@ -22,6 +22,9 @@ import {
    FETCH_CART,
    STORE_SETTINGS,
    UPDATE_CART,
+   SIGNUP_CAMPAIGNS,
+   REFERRAL_CAMPAIGNS,
+   UPDATE_CUSTOMER_REFERRAL,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -300,6 +303,61 @@ export default function OnboardingStack(props) {
       },
       onError: error => {
          console.log(error)
+      },
+   })
+
+   // Subscription for Signup and Referral Campaigns
+   useSubscription(SIGNUP_CAMPAIGNS, {
+      skip: Boolean(
+         !customer ||
+            customer?.customerReferralDetails?.signupStatus === 'COMPLETE'
+      ),
+      variables: {
+         params: {
+            keycloakId: customer?.keycloakId,
+         },
+      },
+      onSubscriptionData: data => {
+         if (data.subscriptionData.data.campaigns.length) {
+            const campaign = data.subscriptionData.data.campaigns[0]
+            const rewardValidity = campaign.isRewardMulti
+               ? campaign.rewards.every(reward => reward.condition.isValid)
+               : campaign.rewards[0].condition.isValid
+            if (
+               campaign.condition.isValid &&
+               rewardValidity &&
+               customer?.customerReferralDetails?.signupStatus === 'PENDING'
+            ) {
+               conosle.log('Signup reward applicable!')
+            }
+         }
+      },
+   })
+
+   useSubscription(REFERRAL_CAMPAIGNS, {
+      skip: Boolean(
+         !customer ||
+            customer?.customerReferralDetails?.referralStatus === 'COMPLETE'
+      ),
+      variables: {
+         params: {
+            keycloakId: customer?.keycloakId,
+         },
+      },
+      onSubscriptionData: data => {
+         if (data.subscriptionData.data.campaigns.length) {
+            const campaign = data.subscriptionData.data.campaigns[0]
+            const rewardValidity = campaign.isRewardMulti
+               ? campaign.rewards.every(reward => reward.condition.isValid)
+               : campaign.rewards[0].condition.isValid
+            if (
+               campaign.condition.isValid &&
+               rewardValidity &&
+               customer?.customerReferralDetails?.referralStatus === 'PENDING'
+            ) {
+               conosle.log('Referral reward applicable!')
+            }
+         }
       },
    })
 
