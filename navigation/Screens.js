@@ -358,6 +358,16 @@ export default function OnboardingStack(props) {
       },
    })
 
+   // Mutation for updating customer referral
+   const [updateCustomerReferral] = useMutation(UPDATE_CUSTOMER_REFERRAL, {
+      onCompleted: data => {
+         console.log('Referral record updated!')
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
    // Subscription for Signup and Referral Campaigns
    useSubscription(SIGNUP_CAMPAIGNS, {
       skip: Boolean(
@@ -381,7 +391,15 @@ export default function OnboardingStack(props) {
                   rewardValidity &&
                   customer?.customerReferralDetails?.signupStatus === 'PENDING'
                ) {
-                  conosle.log('Signup reward applicable!')
+                  console.log('Signup reward applicable!')
+                  updateCustomerReferral({
+                     variables: {
+                        id: customer.customerReferralDetails.id,
+                        set: {
+                           signupCampaignId: campaign.id,
+                        },
+                     },
+                  })
                }
             }
          }
@@ -411,7 +429,15 @@ export default function OnboardingStack(props) {
                   customer?.customerReferralDetails?.referralStatus ===
                      'PENDING'
                ) {
-                  conosle.log('Referral reward applicable!')
+                  console.log('Referral reward applicable!')
+                  updateCustomerReferral({
+                     variables: {
+                        id: customer.customerReferralDetails.id,
+                        set: {
+                           referralCampaignId: campaign.id,
+                        },
+                     },
+                  })
                }
             }
          }
