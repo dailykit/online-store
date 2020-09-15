@@ -209,8 +209,6 @@ export const UPDATE_CUSTOMER_REFERRAL = gql`
    ) {
       updateCustomerReferral(pk_columns: { id: $id }, _set: $set) {
          id
-         referralCode
-         status
       }
    }
 `

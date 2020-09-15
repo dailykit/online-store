@@ -28,6 +28,7 @@ import {
    CREATE_CUSTOMER_WLR,
    WALLETS,
    LOYALTY_POINTS,
+   CUSTOMER_REFERRAL,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -66,6 +67,7 @@ export default function OnboardingStack(props) {
       setCart,
       setWallet,
       setLoyaltyPoints,
+      customerReferral,
       setCustomerReferral,
    } = useCartContext()
    const {
@@ -302,6 +304,21 @@ export default function OnboardingStack(props) {
    })
 
    // Subscription for Wallet, Loyalty Points
+   useSubscription(CUSTOMER_REFERRAL, {
+      variables: {
+         keycloakId: user.sub || user.id,
+      },
+      onSubscriptionData: data => {
+         if (data.subscriptionData.data.customerReferrals.length) {
+            console.log(
+               'Customer Referral: ',
+               data.subscriptionData.data.customerReferrals[0]
+            )
+            setCustomerReferral(data.subscriptionData.data.customerReferrals[0])
+         }
+      },
+   })
+
    useSubscription(WALLETS, {
       variables: {
          keycloakId: user.sub || user.id,
@@ -368,20 +385,16 @@ export default function OnboardingStack(props) {
       },
    })
 
-   // Subscription for Signup and Referral Campaigns
-   useSubscription(SIGNUP_CAMPAIGNS, {
-      skip: Boolean(
-         !customer ||
-            customer?.customerReferralDetails?.signupStatus === 'COMPLETE'
-      ),
+   // Queries for Signup and Referral Campaigns
+   const [fetchSignupCampaigns] = useLazyQuery(SIGNUP_CAMPAIGNS, {
       variables: {
          params: {
             keycloakId: customer?.keycloakId,
          },
       },
-      onSubscriptionData: data => {
-         if (data.subscriptionData.data.campaigns.length) {
-            const campaign = data.subscriptionData.data.campaigns[0]
+      onCompleted: data => {
+         if (data.campaigns.length) {
+            const campaign = data.campaigns[0]
             if (campaign.rewards.length) {
                const rewardValidity = campaign.isRewardMulti
                   ? campaign.rewards.every(reward => reward.condition.isValid)
@@ -389,12 +402,12 @@ export default function OnboardingStack(props) {
                if (
                   campaign.condition.isValid &&
                   rewardValidity &&
-                  customer?.customerReferralDetails?.signupStatus === 'PENDING'
+                  customerReferral?.signupStatus === 'PENDING'
                ) {
                   console.log('Signup reward applicable!')
                   updateCustomerReferral({
                      variables: {
-                        id: customer.customerReferralDetails.id,
+                        id: customerReferral.id,
                         set: {
                            signupCampaignId: campaign.id,
                         },
@@ -406,19 +419,15 @@ export default function OnboardingStack(props) {
       },
    })
 
-   useSubscription(REFERRAL_CAMPAIGNS, {
-      skip: Boolean(
-         !customer ||
-            customer?.customerReferralDetails?.referralStatus === 'COMPLETE'
-      ),
+   const [fetchReferralCampaigns] = useLazyQuery(REFERRAL_CAMPAIGNS, {
       variables: {
          params: {
             keycloakId: customer?.keycloakId,
          },
       },
-      onSubscriptionData: data => {
-         if (data.subscriptionData.data.campaigns.length) {
-            const campaign = data.subscriptionData.data.campaigns[0]
+      onCompleted: data => {
+         if (data.campaigns.length) {
+            const campaign = data.campaigns[0]
             if (campaign.rewards.length) {
                const rewardValidity = campaign.isRewardMulti
                   ? campaign.rewards.every(reward => reward.condition.isValid)
@@ -426,13 +435,12 @@ export default function OnboardingStack(props) {
                if (
                   campaign.condition.isValid &&
                   rewardValidity &&
-                  customer?.customerReferralDetails?.referralStatus ===
-                     'PENDING'
+                  customerReferral?.referralStatus === 'PENDING'
                ) {
                   console.log('Referral reward applicable!')
                   updateCustomerReferral({
                      variables: {
-                        id: customer.customerReferralDetails.id,
+                        id: customerReferral.id,
                         set: {
                            referralCampaignId: campaign.id,
                         },
@@ -443,6 +451,19 @@ export default function OnboardingStack(props) {
          }
       },
    })
+
+   React.useEffect(() => {
+      if (customer && customerReferral) {
+         if (customerReferral.signupStatus === 'PENDING') {
+            console.log('Checking for signup campaigns...')
+            fetchSignupCampaigns()
+         }
+         if (customerReferral.referralStatus === 'PENDING') {
+            console.log('Checking for referral campaigns...')
+            fetchReferralCampaigns()
+         }
+      }
+   }, [customer, customerReferral])
 
    React.useEffect(() => {
       ;(async () => {

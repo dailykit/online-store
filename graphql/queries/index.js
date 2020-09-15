@@ -1311,3 +1311,49 @@ export const STRIPE_PK = gql`
       }
    }
 `
+
+export const SIGNUP_CAMPAIGNS = gql`
+   query Campaigns($params: jsonb) {
+      campaigns(
+         order_by: { priority: desc, updated_at: desc }
+         where: { type: { _eq: "Sign Up" } }
+      ) {
+         id
+         condition {
+            isValid(args: { params: $params })
+         }
+         rewards(order_by: { priority: desc }) {
+            id
+            condition {
+               isValid(args: { params: $params })
+            }
+         }
+         isRewardMulti
+         type
+         priority
+      }
+   }
+`
+
+export const REFERRAL_CAMPAIGNS = gql`
+   query Campaigns($params: jsonb) {
+      campaigns(
+         order_by: { priority: desc, updated_at: desc }
+         where: { type: { _eq: "Referral" } }
+      ) {
+         id
+         condition {
+            isValid(args: { params: $params })
+         }
+         rewards(order_by: { priority: desc }) {
+            id
+            condition {
+               isValid(args: { params: $params })
+            }
+         }
+         isRewardMulti
+         type
+         priority
+      }
+   }
+`

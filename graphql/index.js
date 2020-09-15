@@ -12,6 +12,8 @@ import {
    FETCH_CART,
    STRIPE_PK,
    CUSTOMER,
+   SIGNUP_CAMPAIGNS,
+   REFERRAL_CAMPAIGNS,
 } from './queries'
 
 import {
@@ -41,10 +43,9 @@ import {
    CART,
    COUPONS,
    ORDER_CART_REWARDS,
-   SIGNUP_CAMPAIGNS,
-   REFERRAL_CAMPAIGNS,
    WALLETS,
    LOYALTY_POINTS,
+   CUSTOMER_REFERRAL,
 } from './subscriptions'
 
 export {
@@ -88,4 +89,5 @@ export {
    WALLETS,
    LOYALTY_POINTS,
    UPDATE_CUSTOMER_REFERRAL,
+   CUSTOMER_REFERRAL,
 }

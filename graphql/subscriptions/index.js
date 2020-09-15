@@ -258,15 +258,6 @@ export const COUPONS = gql`
    }
 `
 
-export const WALLETS = gql`
-   subscription Wallets($keycloakId: String!) {
-      wallets(where: { keycloakId: { _eq: $keycloakId } }) {
-         id
-         amount
-      }
-   }
-`
-
 export const ORDER_CART_REWARDS = gql`
    subscription OrderCartRewards($cartId: Int!, $params: jsonb) {
       orderCartRewards(where: { orderCartId: { _eq: $cartId } }) {
@@ -284,57 +275,31 @@ export const ORDER_CART_REWARDS = gql`
    }
 `
 
-export const SIGNUP_CAMPAIGNS = gql`
-   subscription Campaigns($params: jsonb) {
-      campaigns(
-         order_by: { priority: desc, updated_at: desc }
-         where: { type: { _eq: "Sign Up" } }
-      ) {
-         id
-         condition {
-            isValid(args: { params: $params })
-         }
-         rewards(order_by: { priority: desc }) {
-            id
-            condition {
-               isValid(args: { params: $params })
-            }
-         }
-         isRewardMulti
-         type
-         priority
-      }
-   }
-`
-
-export const REFERRAL_CAMPAIGNS = gql`
-   subscription Campaigns($params: jsonb) {
-      campaigns(
-         order_by: { priority: desc, updated_at: desc }
-         where: { type: { _eq: "Referral" } }
-      ) {
-         id
-         condition {
-            isValid(args: { params: $params })
-         }
-         rewards(order_by: { priority: desc }) {
-            id
-            condition {
-               isValid(args: { params: $params })
-            }
-         }
-         isRewardMulti
-         type
-         priority
-      }
-   }
-`
-
 export const LOYALTY_POINTS = gql`
    subscription LoyaltyPoints($keycloakId: String!) {
       loyaltyPoints(where: { keycloakId: { _eq: $keycloakId } }) {
          id
          points
+      }
+   }
+`
+
+export const WALLETS = gql`
+   subscription Wallets($keycloakId: String!) {
+      wallets(where: { keycloakId: { _eq: $keycloakId } }) {
+         id
+         amount
+      }
+   }
+`
+
+export const CUSTOMER_REFERRAL = gql`
+   subscription CustomerReferral($keycloakId: String!) {
+      customerReferrals(where: { keycloakId: { _eq: $keycloakId } }) {
+         id
+         signupStatus
+         referralStatus
+         referralCode
       }
    }
 `
