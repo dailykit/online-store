@@ -258,6 +258,15 @@ export const COUPONS = gql`
    }
 `
 
+export const WALLETS = gql`
+   subscription Wallets($keycloakId: String!) {
+      wallets(where: { keycloakId: { _eq: $keycloakId } }) {
+         id
+         amount
+      }
+   }
+`
+
 export const ORDER_CART_REWARDS = gql`
    subscription OrderCartRewards($cartId: Int!, $params: jsonb) {
       orderCartRewards(where: { orderCartId: { _eq: $cartId } }) {
@@ -317,6 +326,15 @@ export const REFERRAL_CAMPAIGNS = gql`
          isRewardMulti
          type
          priority
+      }
+   }
+`
+
+export const LOYALTY_POINTS = gql`
+   subscription LoyaltyPoints($keycloakId: String!) {
+      loyaltyPoints(where: { keycloakId: { _eq: $keycloakId } }) {
+         id
+         points
       }
    }
 `

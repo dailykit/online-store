@@ -16,7 +16,8 @@ import SafetyScreen from '../screens/SafetyScreen'
 import SelectPaymentMethod from '../screens/SelectPaymentMethod'
 import { height, width } from '../utils/Scalaing'
 import Fulfillment from './Fulfillment'
-import CouponList from './CouponList'
+import CouponList from '../screens/OrderSummary/components/CouponList'
+import ReferralCode from './ReferralCode'
 
 const DrawerLayout = () => {
    const {
@@ -92,6 +93,8 @@ const DrawerLayout = () => {
             return <PaymentProcessing {...params} />
          case 'CouponList':
             return <CouponList />
+         case 'ReferralCode':
+            return <ReferralCode />
          default:
             return <Text>Oops! No such component.</Text>
       }

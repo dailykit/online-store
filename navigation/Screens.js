@@ -25,6 +25,9 @@ import {
    SIGNUP_CAMPAIGNS,
    REFERRAL_CAMPAIGNS,
    UPDATE_CUSTOMER_REFERRAL,
+   CREATE_CUSTOMER_WLR,
+   WALLETS,
+   LOYALTY_POINTS,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -42,6 +45,7 @@ import { width } from '../utils/Scalaing'
 import { useScript } from '../utils/useScript'
 // drawer
 import CustomDrawerContent from './Menu'
+import { useDrawerContext } from '../context/drawer'
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -60,6 +64,9 @@ export default function OnboardingStack(props) {
       setCustomer,
       setCustomerDetails,
       setCart,
+      setWallet,
+      setLoyaltyPoints,
+      setCustomerReferral,
    } = useCartContext()
    const {
       setBrand,
@@ -70,6 +77,7 @@ export default function OnboardingStack(props) {
       setMasterLoading,
       setMenuLoading,
    } = useAppContext()
+   const { open } = useDrawerContext()
 
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
 
@@ -212,12 +220,29 @@ export default function OnboardingStack(props) {
                })
             }
             console.log('Customer created: ', data.createCustomer)
+            createCustomerWLR({
+               variables: {
+                  keycloakId: data.createCustomer.keycloakId,
+               },
+            })
          },
          onError: error => {
             console.log(error)
          },
       }
    )
+
+   // Mutation for creating wallet, loyalty points, referral
+   const [createCustomerWLR] = useMutation(CREATE_CUSTOMER_WLR, {
+      onCompleted: data => {
+         console.log('WLC created: ', data)
+         setCustomerReferral(data.createCustomerReferral)
+         open('ReferralCode')
+      },
+      onError: error => {
+         console.log('WLC creation failed: ', error)
+      },
+   })
 
    // Query Customer and Data from platform
    const { error, loading: fetchingCustomer } = useQuery(CUSTOMER, {
@@ -276,6 +301,33 @@ export default function OnboardingStack(props) {
       },
    })
 
+   // Subscription for Wallet, Loyalty Points
+   useSubscription(WALLETS, {
+      variables: {
+         keycloakId: user.sub || user.id,
+      },
+      onSubscriptionData: data => {
+         if (data.subscriptionData.data.wallets.length) {
+            console.log('Wallet: ', data.subscriptionData.data.wallets[0])
+            setWallet(data.subscriptionData.data.wallets[0])
+         }
+      },
+   })
+   useSubscription(LOYALTY_POINTS, {
+      variables: {
+         keycloakId: user.sub || user.id,
+      },
+      onSubscriptionData: data => {
+         if (data.subscriptionData.data.loyaltyPoints.length) {
+            console.log(
+               'Loyalty Points: ',
+               data.subscriptionData.data.loyaltyPoints[0]
+            )
+            setLoyaltyPoints(data.subscriptionData.data.loyaltyPoints[0])
+         }
+      },
+   })
+
    // Mutation for deleting carts
    const [deleteCarts] = useMutation(DELETE_CARTS, {
       onCompleted: data => {
@@ -320,15 +372,17 @@ export default function OnboardingStack(props) {
       onSubscriptionData: data => {
          if (data.subscriptionData.data.campaigns.length) {
             const campaign = data.subscriptionData.data.campaigns[0]
-            const rewardValidity = campaign.isRewardMulti
-               ? campaign.rewards.every(reward => reward.condition.isValid)
-               : campaign.rewards[0].condition.isValid
-            if (
-               campaign.condition.isValid &&
-               rewardValidity &&
-               customer?.customerReferralDetails?.signupStatus === 'PENDING'
-            ) {
-               conosle.log('Signup reward applicable!')
+            if (campaign.rewards.length) {
+               const rewardValidity = campaign.isRewardMulti
+                  ? campaign.rewards.every(reward => reward.condition.isValid)
+                  : campaign.rewards[0].condition.isValid
+               if (
+                  campaign.condition.isValid &&
+                  rewardValidity &&
+                  customer?.customerReferralDetails?.signupStatus === 'PENDING'
+               ) {
+                  conosle.log('Signup reward applicable!')
+               }
             }
          }
       },
@@ -347,15 +401,18 @@ export default function OnboardingStack(props) {
       onSubscriptionData: data => {
          if (data.subscriptionData.data.campaigns.length) {
             const campaign = data.subscriptionData.data.campaigns[0]
-            const rewardValidity = campaign.isRewardMulti
-               ? campaign.rewards.every(reward => reward.condition.isValid)
-               : campaign.rewards[0].condition.isValid
-            if (
-               campaign.condition.isValid &&
-               rewardValidity &&
-               customer?.customerReferralDetails?.referralStatus === 'PENDING'
-            ) {
-               conosle.log('Referral reward applicable!')
+            if (campaign.rewards.length) {
+               const rewardValidity = campaign.isRewardMulti
+                  ? campaign.rewards.every(reward => reward.condition.isValid)
+                  : campaign.rewards[0].condition.isValid
+               if (
+                  campaign.condition.isValid &&
+                  rewardValidity &&
+                  customer?.customerReferralDetails?.referralStatus ===
+                     'PENDING'
+               ) {
+                  conosle.log('Referral reward applicable!')
+               }
             }
          }
       },
