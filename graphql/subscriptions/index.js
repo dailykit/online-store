@@ -300,6 +300,7 @@ export const CUSTOMER_REFERRAL = gql`
          signupStatus
          referralStatus
          referralCode
+         referredByCode
       }
    }
 `
