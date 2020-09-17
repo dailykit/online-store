@@ -222,29 +222,13 @@ export default function OnboardingStack(props) {
                })
             }
             console.log('Customer created: ', data.createCustomer)
-            createCustomerWLR({
-               variables: {
-                  keycloakId: data.createCustomer.keycloakId,
-               },
-            })
+            open('ReferralCode')
          },
          onError: error => {
             console.log(error)
          },
       }
    )
-
-   // Mutation for creating wallet, loyalty points, referral
-   const [createCustomerWLR] = useMutation(CREATE_CUSTOMER_WLR, {
-      onCompleted: data => {
-         console.log('WLC created: ', data)
-         setCustomerReferral(data.createCustomerReferral)
-         open('ReferralCode')
-      },
-      onError: error => {
-         console.log('WLC creation failed: ', error)
-      },
-   })
 
    // Query Customer and Data from platform
    const { error, loading: fetchingCustomer } = useQuery(CUSTOMER, {
@@ -417,6 +401,7 @@ export default function OnboardingStack(props) {
             }
          }
       },
+      fetchPolicy: 'network-only',
    })
 
    const [fetchReferralCampaigns] = useLazyQuery(REFERRAL_CAMPAIGNS, {
@@ -428,6 +413,7 @@ export default function OnboardingStack(props) {
       onCompleted: data => {
          if (data.campaigns.length) {
             const campaign = data.campaigns[0]
+            console.log(campaign)
             if (campaign.rewards.length) {
                const rewardValidity = campaign.isRewardMulti
                   ? campaign.rewards.every(reward => reward.condition.isValid)
@@ -450,6 +436,7 @@ export default function OnboardingStack(props) {
             }
          }
       },
+      fetchPolicy: 'network-only',
    })
 
    React.useEffect(() => {
