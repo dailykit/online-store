@@ -22,10 +22,6 @@ import {
    FETCH_CART,
    STORE_SETTINGS,
    UPDATE_CART,
-   SIGNUP_CAMPAIGNS,
-   REFERRAL_CAMPAIGNS,
-   UPDATE_CUSTOMER_REFERRAL,
-   CREATE_CUSTOMER_WLR,
    WALLETS,
    LOYALTY_POINTS,
    CUSTOMER_REFERRAL,
@@ -358,99 +354,6 @@ export default function OnboardingStack(props) {
          console.log(error)
       },
    })
-
-   // Mutation for updating customer referral
-   const [updateCustomerReferral] = useMutation(UPDATE_CUSTOMER_REFERRAL, {
-      onCompleted: data => {
-         console.log('Referral record updated!')
-      },
-      onError: error => {
-         console.log(error)
-      },
-   })
-
-   // Queries for Signup and Referral Campaigns
-   const [fetchSignupCampaigns] = useLazyQuery(SIGNUP_CAMPAIGNS, {
-      variables: {
-         params: {
-            keycloakId: customer?.keycloakId,
-         },
-      },
-      onCompleted: data => {
-         if (data.campaigns.length) {
-            const campaign = data.campaigns[0]
-            if (campaign.rewards.length) {
-               const rewardValidity = campaign.isRewardMulti
-                  ? campaign.rewards.every(reward => reward.condition.isValid)
-                  : campaign.rewards[0].condition.isValid
-               if (
-                  campaign.condition.isValid &&
-                  rewardValidity &&
-                  customerReferral?.signupStatus === 'PENDING'
-               ) {
-                  console.log('Signup reward applicable!')
-                  updateCustomerReferral({
-                     variables: {
-                        id: customerReferral.id,
-                        set: {
-                           signupCampaignId: campaign.id,
-                        },
-                     },
-                  })
-               }
-            }
-         }
-      },
-      fetchPolicy: 'network-only',
-   })
-
-   const [fetchReferralCampaigns] = useLazyQuery(REFERRAL_CAMPAIGNS, {
-      variables: {
-         params: {
-            keycloakId: customer?.keycloakId,
-         },
-      },
-      onCompleted: data => {
-         if (data.campaigns.length) {
-            const campaign = data.campaigns[0]
-            console.log(campaign)
-            if (campaign.rewards.length) {
-               const rewardValidity = campaign.isRewardMulti
-                  ? campaign.rewards.every(reward => reward.condition.isValid)
-                  : campaign.rewards[0].condition.isValid
-               if (
-                  campaign.condition.isValid &&
-                  rewardValidity &&
-                  customerReferral?.referralStatus === 'PENDING'
-               ) {
-                  console.log('Referral reward applicable!')
-                  updateCustomerReferral({
-                     variables: {
-                        id: customerReferral.id,
-                        set: {
-                           referralCampaignId: campaign.id,
-                        },
-                     },
-                  })
-               }
-            }
-         }
-      },
-      fetchPolicy: 'network-only',
-   })
-
-   React.useEffect(() => {
-      if (customer && customerReferral) {
-         if (customerReferral.signupStatus === 'PENDING') {
-            console.log('Checking for signup campaigns...')
-            fetchSignupCampaigns()
-         }
-         if (customerReferral.referralStatus === 'PENDING') {
-            console.log('Checking for referral campaigns...')
-            fetchReferralCampaigns()
-         }
-      }
-   }, [customer, customerReferral])
 
    React.useEffect(() => {
       ;(async () => {

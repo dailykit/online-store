@@ -18,7 +18,7 @@ const ReferralCode = () => {
    // Mutation
    const [updateCustomerReferral] = useMutation(UPDATE_CUSTOMER_REFERRAL, {
       variables: {
-         id: customerReferral.id,
+         id: customerReferral?.id,
          set: {
             referredByCode: code,
          },
