@@ -42,7 +42,7 @@ export const SIMPLE_RECIPE = gql`
          description
          utensils
          procedures
-         simpleRecipeYields {
+         simpleRecipeYields(order_by: { yield: asc }) {
             id
             yield
             ingredientSachets(where: { isVisible: { _eq: true } }) {
