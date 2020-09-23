@@ -283,6 +283,8 @@ export default function OnboardingStack(props) {
       },
    })
 
+   // if (error) console.log('Customer fetch error: ', error)
+
    // Subscription for Wallet, Loyalty Points
    useSubscription(CUSTOMER_REFERRAL, {
       variables: {
