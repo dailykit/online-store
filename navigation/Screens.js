@@ -25,6 +25,7 @@ import {
    WALLETS,
    LOYALTY_POINTS,
    CUSTOMER_REFERRAL,
+   SHOPS,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -67,6 +68,8 @@ export default function OnboardingStack(props) {
       setCustomerReferral,
    } = useCartContext()
    const {
+      shopId,
+      setShopId,
       setBrand,
       setVisual,
       availability,
@@ -79,10 +82,28 @@ export default function OnboardingStack(props) {
 
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
 
+   // Query for Shop ID
+   useQuery(SHOPS, {
+      variables: {
+         domain: window.location.hostname,
+      },
+      onCompleted: data => {
+         if (data.shops.length) {
+            setShopId(data.shops[0].id)
+         } else {
+            setShopId(1) // default shop id
+         }
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
    // Query for settings
    const { loading: settingsLoading, error: settingsError } = useSubscription(
       STORE_SETTINGS,
       {
+         skip: Boolean(!shopId),
          onSubscriptionData: data => {
             const brandSettings = data.subscriptionData.data.storeSettings.filter(
                setting => setting.type === 'brand'
@@ -386,6 +407,7 @@ export default function OnboardingStack(props) {
          const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
             date,
          })
+         console.log(response.data)
          setMenuData(response.data)
       } catch (err) {
          console.log(err)
@@ -423,6 +445,8 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       console.log(
+         'shopId',
+         shopId,
          'settingsLoading',
          settingsLoading,
          'fetchingCustomer',
@@ -441,6 +465,7 @@ export default function OnboardingStack(props) {
       if (isInitialized && isAuthenticated) {
          setMasterLoading(
             [
+               !shopId,
                settingsLoading,
                fetchingCustomer,
                creatingCustomer,
@@ -452,12 +477,13 @@ export default function OnboardingStack(props) {
          )
       } else {
          setMasterLoading(
-            [settingsLoading, fetchingCart, !isInitialized].some(
+            [!shopId, settingsLoading, fetchingCart, !isInitialized].some(
                loading => loading
             )
          )
       }
    }, [
+      shopId,
       settingsLoading,
       fetchingCustomer,
       creatingCustomer,

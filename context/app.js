@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 const AppContext = React.createContext()
 
 export const AppContextProvider = ({ children }) => {
+   const [shopId, setShopId] = useState(undefined)
    const [visual, setVisual] = useState({
       color: '#3fa4ff',
       slides: [],
@@ -24,6 +25,8 @@ export const AppContextProvider = ({ children }) => {
    return (
       <AppContext.Provider
          value={{
+            shopId,
+            setShopId,
             setVisual,
             visual,
             setBrand,

@@ -1311,3 +1311,11 @@ export const STRIPE_PK = gql`
       }
    }
 `
+
+export const SHOPS = gql`
+   query Shops($domain: String!) {
+      shops(where: { domain: { _eq: $domain } }) {
+         id
+      }
+   }
+`
