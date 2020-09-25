@@ -610,9 +610,11 @@ const Cart = ({ cart }) => {
                </CartDiscountText>
             </CartFooter>
          )}
-         {/* <WalletWrapper>
-            <PayWithWallet />
-         </WalletWrapper> */}
+         {Boolean(isAuthenticated) && (
+            <WalletWrapper>
+               <PayWithWallet />
+            </WalletWrapper>
+         )}
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
             <CartFooterText>$ {cart.totalPrice.toFixed(2)}</CartFooterText>

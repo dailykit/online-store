@@ -9,7 +9,7 @@ const PayWithLoyaltyPoints = () => {
 
    return (
       <>
-         {Boolean(loyaltyPoints.points) && (
+         {Boolean(loyaltyPoints?.points) && (
             <Wrapper>
                <Content>
                   <Header>Use Loyalty Points</Header>

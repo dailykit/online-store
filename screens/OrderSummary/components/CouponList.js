@@ -75,7 +75,7 @@ const CouponList = () => {
    return (
       <Wrapper>
          {data.coupons
-            .filter(coupon => coupon.visibilityCondition.isValid)
+            .filter(coupon => coupon.visibilityCondition?.isValid)
             .map(coupon => (
                <Coupon coupon={coupon} applyCoupon={applyCoupon} />
             ))}
@@ -97,16 +97,18 @@ const Coupon = ({ coupon, applyCoupon }) => {
             <CTA
                onPress={() => applyCoupon(coupon)}
                disabled={
-                  !coupon.rewards.every(reward => reward.condition.isValid)
+                  !coupon.rewards.every(reward => reward.condition?.isValid)
                }
             >
                <CTAText color={visual.color}>Apply</CTAText>
             </CTA>
          </CouponHeader>
-         <TitleText>{coupon.metaDetails.title}</TitleText>
+         <TitleText>{coupon.metaDetails?.title || ''}</TitleText>
          {isDescVisible ? (
             <>
-               <Description>{coupon.metaDetails.description}</Description>
+               <Description>
+                  {coupon.metaDetails?.description || ''}
+               </Description>
                <Button onPress={() => setIsDescVisible(false)}>
                   <Feather name="minus" color="#686b78" />
                   <ButtonText>Show Less</ButtonText>

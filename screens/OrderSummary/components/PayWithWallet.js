@@ -9,12 +9,12 @@ const PayWithWallet = () => {
 
    return (
       <>
-         {Boolean(wallet.amount) && (
+         {Boolean(wallet?.amount) && (
             <Wrapper>
                <Content>
                   <Header>Pay using Wallet</Header>
                   <AvailableText>
-                     Balance: $<Points>{wallet.amount}</Points>
+                     Balance: <Points>$ {wallet.amount}</Points>
                   </AvailableText>
                </Content>
                <CTA color={visual.color}>
