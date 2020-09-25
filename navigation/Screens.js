@@ -26,6 +26,7 @@ import {
    LOYALTY_POINTS,
    CUSTOMER_REFERRAL,
    SHOPS,
+   GET_MENU,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -55,7 +56,9 @@ export default function OnboardingStack(props) {
 
    if (mapsError) console.log('Error loading Maps:', mapsError)
 
-   const { user, isInitialized, isAuthenticated } = useAuth()
+   const [settingsMapped, setSettingsMapped] = React.useState(false)
+
+   const { user, isInitialized, isAuthenticated, keycloak } = useAuth()
    const {
       customer,
       cart,
@@ -182,9 +185,15 @@ export default function OnboardingStack(props) {
                }
             })
             setAvailability({ ...availabilityState })
+            setSettingsMapped(true)
          },
       }
    )
+
+   if (settingsError) {
+      setSettingsMapped(true)
+      console.log(error)
+   }
 
    // Subscription for Cart when logged in
    const { loading: subscribingCart } = useSubscription(CART, {
@@ -401,20 +410,17 @@ export default function OnboardingStack(props) {
       }
    }, [cart])
 
-   const fetchData = async date => {
-      try {
-         setMenuLoading(true)
-         const response = await axios.post(`${DAILYOS_SERVER_URL}/api/menu`, {
-            date,
-         })
-         console.log(response.data)
-         setMenuData(response.data)
-      } catch (err) {
-         console.log(err)
-      } finally {
-         setMenuLoading(false)
-      }
-   }
+   const [fetchMenu, { loading: queryMenuLoading }] = useLazyQuery(GET_MENU, {
+      onCompleted: data => {
+         console.log('MENU:', data.onlineStore_getMenu[0].data.menu)
+         if (data.onlineStore_getMenu[0].data.menu.length) {
+            setMenuData([...data.onlineStore_getMenu[0].data.menu])
+         }
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
 
    const isStoreOpen = () => {
       const current = new Date()
@@ -437,54 +443,63 @@ export default function OnboardingStack(props) {
 
    // Effects
    React.useEffect(() => {
-      if (availability && isStoreOpen()) {
-         const date = new Date(Date.now()).toISOString()
-         fetchData(date)
-      }
-   }, [availability])
+      setMenuLoading(queryMenuLoading)
+   }, [queryMenuLoading])
 
    React.useEffect(() => {
-      console.log(
-         'shopId',
+      if (availability && isStoreOpen() && shopId) {
+         const date = new Date(Date.now()).toISOString()
+         fetchMenu({
+            variables: {
+               params: {
+                  date,
+                  shopId,
+               },
+            },
+         })
+      }
+   }, [availability, shopId])
+
+   React.useEffect(() => {
+      console.table({
          shopId,
-         'settingsLoading',
-         settingsLoading,
-         'fetchingCustomer',
          fetchingCustomer,
-         'creatingCustomer',
          creatingCustomer,
-         'fetchingCart',
          fetchingCart,
-         'isInitialized',
          isInitialized,
-         'user',
-         Object.keys(user).length,
-         'subscribingCart',
-         subscribingCart
-      )
-      if (isInitialized && isAuthenticated) {
-         setMasterLoading(
-            [
-               !shopId,
-               settingsLoading,
-               fetchingCustomer,
-               creatingCustomer,
-               fetchingCart,
-               !isInitialized,
-               !Object.keys(user).length,
-               subscribingCart,
-            ].some(loading => loading)
-         )
+         user: Object.keys(user).length,
+         subscribingCart,
+         settingsMapped,
+      })
+      if (!isInitialized) {
+         setMasterLoading(true)
       } else {
-         setMasterLoading(
-            [!shopId, settingsLoading, fetchingCart, !isInitialized].some(
-               loading => loading
-            )
-         )
+         if (isAuthenticated) {
+            const status = [
+               Boolean(shopId), // 1
+               !fetchingCustomer, // true
+               !creatingCustomer, // true
+               !fetchingCart, // true
+               Object.keys(user).length, // > 0
+               !subscribingCart, // true
+               settingsMapped, // true
+            ].every(notLoading => notLoading)
+            if (status) {
+               setMasterLoading(false)
+            }
+         } else {
+            const status = [
+               Boolean(shopId), // 1
+               settingsMapped, // true
+               !fetchingCart, // true
+            ].every(notLoading => notLoading)
+            if (status) {
+               setMasterLoading(false)
+            }
+         }
       }
    }, [
       shopId,
-      settingsLoading,
       fetchingCustomer,
       creatingCustomer,
       fetchingCart,
@@ -492,6 +507,7 @@ export default function OnboardingStack(props) {
       user,
       subscribingCart,
       isAuthenticated,
+      settingsMapped,
    ])
 
    return (

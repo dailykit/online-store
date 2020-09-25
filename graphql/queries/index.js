@@ -151,13 +151,10 @@ export const CUSTOMER = gql`
 `
 
 export const GET_MENU = gql`
-   query GetMenu($year: Int!, $month: Int!, $day: Int!) {
-      getMenu(year: $year, month: $month, day: $day) {
-         name
-         comboProducts
-         customizableProducts
-         inventoryProducts
-         simpleRecipeProducts
+   query GetMenu($params: jsonb!) {
+      onlineStore_getMenu(args: { params: $params }) {
+         id
+         data
       }
    }
 `

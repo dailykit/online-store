@@ -22,6 +22,10 @@ export const AppContextProvider = ({ children }) => {
    const [masterLoading, setMasterLoading] = React.useState(true)
    const [menuLoading, setMenuLoading] = React.useState(false)
 
+   React.useEffect(() => {
+      console.log('Master loading:', masterLoading)
+   }, [masterLoading])
+
    return (
       <AppContext.Provider
          value={{
