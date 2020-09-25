@@ -1311,8 +1311,14 @@ export const STRIPE_PK = gql`
 
 export const SHOPS = gql`
    query Shops($domain: String!) {
-      shops(where: { domain: { _eq: $domain } }) {
+      shops(
+         where: {
+            _or: [{ domain: { _eq: $domain } }, { isDefault: { _eq: true } }]
+         }
+      ) {
          id
+         isDefault
+         domain
       }
    }
 `

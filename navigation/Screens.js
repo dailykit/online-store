@@ -1,17 +1,15 @@
+import React from 'react'
+import { AsyncStorage } from 'react-native'
+import { CLIENTID, MAPS_API_KEY } from 'react-native-dotenv'
+import { createDrawerNavigator } from '@react-navigation/drawer'
+import { createStackNavigator } from '@react-navigation/stack'
 import {
    useLazyQuery,
    useMutation,
    useQuery,
    useSubscription,
 } from '@apollo/react-hooks'
-import { createDrawerNavigator } from '@react-navigation/drawer'
-import { createStackNavigator } from '@react-navigation/stack'
-import * as axios from 'axios'
-import React from 'react'
-import { AsyncStorage } from 'react-native'
-import { CLIENTID, DAILYOS_SERVER_URL, MAPS_API_KEY } from 'react-native-dotenv'
 import { useAppContext } from '../context/app'
-// Auth Context
 import { useAuth } from '../context/auth'
 import { useCartContext } from '../context/cart'
 import {
@@ -92,9 +90,13 @@ export default function OnboardingStack(props) {
       },
       onCompleted: data => {
          if (data.shops.length) {
-            setShopId(data.shops[0].id)
+            const domain = window.location.hostname
+            const shop =
+               data.shops.find(shop => shop.domain === domain) ||
+               data.shops.find(shop => shop.isDefault)
+            setShopId(shop.id)
          } else {
-            setShopId(1) // default shop id
+            console.log('COULD NOT RESOLVE SHOP')
          }
       },
       onError: error => {
