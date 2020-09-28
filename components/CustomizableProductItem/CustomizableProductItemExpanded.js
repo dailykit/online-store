@@ -68,6 +68,9 @@ const Item = ({
                ].simpleRecipeProduct.simpleRecipeProductOptions.filter(
                   option => option.type === typeSelected
                )[servingIndex]
+               if (!option) {
+                  setServingIndex(0)
+               }
                if (option && tunnelItem) {
                   setProductOption(
                      option,
