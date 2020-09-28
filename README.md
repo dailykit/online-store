@@ -1,6 +1,6 @@
 # Online Store
 
-> A-la-carte store for with DailyOS as backend.
+> A-la-carte store with DailyOS as backend.
 
 ### Feature List
 
