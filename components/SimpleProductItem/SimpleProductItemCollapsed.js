@@ -45,9 +45,12 @@ const SimpleProductItemCollapsed = ({
 
    React.useEffect(() => {
       if (servingIndex !== undefined) {
-         const option = simpleRecipeProduct.simpleRecipeProductOptions.filter(
+         let option = simpleRecipeProduct.simpleRecipeProductOptions.filter(
             option => option.type === typeSelected
          )[servingIndex]
+         if (!option) {
+            setServingIndex(0)
+         }
          if (!option?.modifier && onValidityChange) {
             onValidityChange(true)
          }
