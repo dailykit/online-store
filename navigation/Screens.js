@@ -25,6 +25,7 @@ import {
    CUSTOMER_REFERRAL,
    BRANDS,
    GET_MENU,
+   CREATE_BRAND_CUSTOMER,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -258,6 +259,26 @@ export default function OnboardingStack(props) {
       }
    )
 
+   const [
+      createBrandCustomer,
+      { loading: creatingBrandCustomer },
+   ] = useMutation(CREATE_BRAND_CUSTOMER, {
+      onCompleted: data => {
+         setCustomer({
+            ...customer,
+            brandCustomers: [
+               ...customer.brandCustomers,
+               data.createBrandCustomer,
+            ],
+         })
+         console.log('Created brand customer!')
+      },
+      onError: error => {
+         console.log(error)
+         console.error('Could not create brand customer!')
+      },
+   })
+
    // Query Customer and Data from platform
    const { error, loading: fetchingCustomer } = useQuery(CUSTOMER, {
       variables: {
@@ -268,11 +289,30 @@ export default function OnboardingStack(props) {
          if (data.customer) {
             setCustomer(data.customer)
             setCustomerDetails(data.customer.platform_customer)
+
+            // check if customer exists on brand
+            const brandCustomerRecord = data.customer.brandCustomers.find(
+               record => record.brandId === brandId
+            )
+            console.log('brandCustomerRecord', brandCustomerRecord)
+            if (!brandCustomerRecord) {
+               createBrandCustomer({
+                  variables: {
+                     object: {
+                        brandId,
+                        keycloakId: data.customer.keycloakId,
+                     },
+                  },
+               })
+            }
+
+            // check if any exisiting carts
             if (data.customer.orderCarts.length) {
                console.log('Found cart with customer...')
                setCart(data.customer.orderCarts[0])
             }
-            // Update any pending cart
+
+            // update any pending cart (w/o signup)
             if (cartId) {
                updateCart({
                   variables: {
@@ -473,6 +513,7 @@ export default function OnboardingStack(props) {
          brandId,
          fetchingCustomer,
          creatingCustomer,
+         creatingBrandCustomer,
          fetchingCart,
          isInitialized,
          user: Object.keys(user).length,
@@ -487,6 +528,7 @@ export default function OnboardingStack(props) {
                Boolean(brandId), // 1
                !fetchingCustomer, // true
                !creatingCustomer, // true
+               !creatingBrandCustomer, // true
                !fetchingCart, // true
                Object.keys(user).length, // > 0
                !subscribingCart, // true
@@ -510,6 +552,7 @@ export default function OnboardingStack(props) {
       brandId,
       fetchingCustomer,
       creatingCustomer,
+      creatingBrandCustomer,
       fetchingCart,
       isInitialized,
       user,

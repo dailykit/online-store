@@ -69,6 +69,11 @@ export const CUSTOMER = gql`
          email
          keycloakId
          isTest
+         brandCustomers {
+            id
+            brandId
+            keycloakId
+         }
          customerReferralDetails {
             id
             signupStatus

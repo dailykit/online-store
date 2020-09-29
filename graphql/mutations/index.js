@@ -6,6 +6,11 @@ export const CREATE_CUSTOMER = gql`
          id
          email
          keycloakId
+         brandCustomers {
+            id
+            brandId
+            keycloakId
+         }
          platform_customer {
             email
             firstName
@@ -52,6 +57,16 @@ export const CREATE_CUSTOMER = gql`
                brand
             }
          }
+      }
+   }
+`
+
+export const CREATE_BRAND_CUSTOMER = gql`
+   mutation CreateBrandCustomer($object: crm_brandCustomer_insert_input!) {
+      createBrandCustomer(object: $object) {
+         id
+         brandId
+         keycloakId
       }
    }
 `
