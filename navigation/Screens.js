@@ -308,6 +308,12 @@ export default function OnboardingStack(props) {
                      email: user.email,
                      source: 'online store',
                      clientId: CLIENTID,
+                     sourceBrandId: brandId,
+                     brandCustomers: {
+                        data: {
+                           brandId,
+                        },
+                     },
                   },
                },
             })
