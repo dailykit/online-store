@@ -63,7 +63,7 @@ export const SIMPLE_RECIPE = gql`
 `
 
 export const CUSTOMER = gql`
-   query Customer($keycloakId: String!) {
+   query Customer($keycloakId: String!, $brandId: Int!) {
       customer(keycloakId: $keycloakId) {
          id
          email
@@ -129,6 +129,7 @@ export const CUSTOMER = gql`
             where: {
                status: { _eq: "PENDING" }
                cartSource: { _eq: "a-la-carte" }
+               brandId: { _eq: $brandId }
             }
             order_by: { created_at: desc }
          ) {

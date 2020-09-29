@@ -139,9 +139,9 @@ export const ONDEMAND_DELIVERY = gql`
 `
 
 export const ORDERS = gql`
-   subscription Orders($keycloakId: String!) {
+   subscription Orders($keycloakId: String!, $brandId: Int!) {
       orders(
-         where: { keycloakId: { _eq: $keycloakId } }
+         where: { keycloakId: { _eq: $keycloakId }, brandId: { _eq: $brandId } }
          order_by: { created_at: desc }
       ) {
          id
@@ -175,12 +175,13 @@ export const STORE_SETTINGS = gql`
 `
 
 export const CART = gql`
-   subscription Carts($customerId: Int!) {
+   subscription Carts($customerId: Int!, $brandId: Int!) {
       cart(
          where: {
             status: { _eq: "PENDING" }
             customerId: { _eq: $customerId }
             cartSource: { _eq: "a-la-carte" }
+            brandId: { _eq: $brandId }
          }
          order_by: { created_at: desc }
       ) {

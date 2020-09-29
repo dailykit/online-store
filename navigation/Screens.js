@@ -202,8 +202,9 @@ export default function OnboardingStack(props) {
    const { loading: subscribingCart } = useSubscription(CART, {
       variables: {
          customerId: customer?.id,
+         brandId,
       },
-      // skip: !Boolean(customer?.id),
+      skip: !Boolean(customer?.id && brandId),
       onSubscriptionData: data => {
          if (data.subscriptionData.data.cart.length > 1) {
             const [mergedCart, mergedCartIds] = mergeCarts(
@@ -283,6 +284,7 @@ export default function OnboardingStack(props) {
    const { error, loading: fetchingCustomer } = useQuery(CUSTOMER, {
       variables: {
          keycloakId: user.sub || user.userid,
+         brandId,
       },
       onCompleted: data => {
          console.log('Customer:', data)

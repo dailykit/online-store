@@ -30,7 +30,7 @@ const Cart = ({
    isDisabled,
 }) => {
    const { cart, customerDetails, customer, setCart } = useCartContext()
-   const { visual } = useAppContext()
+   const { brandId, visual } = useAppContext()
    const { open } = useDrawerContext()
    const { isAuthenticated, login, user } = useAuth()
 
@@ -221,6 +221,7 @@ const Cart = ({
                         tip: 0,
                         customerKeycloakId: user.sub || user.id || null,
                         cartSource: 'a-la-carte',
+                        brandId: brandId,
                      },
                   },
                })
