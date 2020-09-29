@@ -53,6 +53,7 @@ const PaymentProcessing = ({ navigation }) => {
                      status: 'TEST_PROCESS',
                      paymentStatus: 'SUCCEEDED',
                      amount: cart.totalPrice,
+                     couponDiscount: cart.discount,
                      isTest: true,
                      transactionId: 'pi_1HHW5aGKMRh0bTai1N_TEST',
                      transactionRemark: {
@@ -71,6 +72,7 @@ const PaymentProcessing = ({ navigation }) => {
                   set: {
                      status: 'PROCESS',
                      amount: cart.totalPrice,
+                     couponDiscount: cart.discount,
                   },
                },
             })
