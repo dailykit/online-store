@@ -282,8 +282,10 @@ export const ORDER_CART_REWARDS = gql`
 `
 
 export const LOYALTY_POINTS = gql`
-   subscription LoyaltyPoints($keycloakId: String!) {
-      loyaltyPoints(where: { keycloakId: { _eq: $keycloakId } }) {
+   subscription LoyaltyPoints($keycloakId: String!, $brandId: Int!) {
+      loyaltyPoints(
+         where: { keycloakId: { _eq: $keycloakId }, brandId: { _eq: $brandId } }
+      ) {
          id
          points
       }
@@ -291,8 +293,10 @@ export const LOYALTY_POINTS = gql`
 `
 
 export const WALLETS = gql`
-   subscription Wallets($keycloakId: String!) {
-      wallets(where: { keycloakId: { _eq: $keycloakId } }) {
+   subscription Wallets($keycloakId: String!, $brandId: Int!) {
+      wallets(
+         where: { keycloakId: { _eq: $keycloakId }, brandId: { _eq: $brandId } }
+      ) {
          id
          amount
       }
@@ -300,8 +304,10 @@ export const WALLETS = gql`
 `
 
 export const CUSTOMER_REFERRAL = gql`
-   subscription CustomerReferral($keycloakId: String!) {
-      customerReferrals(where: { keycloakId: { _eq: $keycloakId } }) {
+   subscription CustomerReferral($keycloakId: String!, $brandId: Int!) {
+      customerReferrals(
+         where: { keycloakId: { _eq: $keycloakId }, brandId: { _eq: $brandId } }
+      ) {
          id
          signupStatus
          referralStatus

@@ -369,6 +369,7 @@ export default function OnboardingStack(props) {
    useSubscription(CUSTOMER_REFERRAL, {
       variables: {
          keycloakId: user.sub || user.id,
+         brandId,
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.customerReferrals.length) {
@@ -384,6 +385,7 @@ export default function OnboardingStack(props) {
    useSubscription(WALLETS, {
       variables: {
          keycloakId: user.sub || user.id,
+         brandId,
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.wallets.length) {
@@ -395,6 +397,7 @@ export default function OnboardingStack(props) {
    useSubscription(LOYALTY_POINTS, {
       variables: {
          keycloakId: user.sub || user.id,
+         brandId,
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.loyaltyPoints.length) {
