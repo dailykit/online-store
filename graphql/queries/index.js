@@ -151,13 +151,10 @@ export const CUSTOMER = gql`
 `
 
 export const GET_MENU = gql`
-   query GetMenu($year: Int!, $month: Int!, $day: Int!) {
-      getMenu(year: $year, month: $month, day: $day) {
-         name
-         comboProducts
-         customizableProducts
-         inventoryProducts
-         simpleRecipeProducts
+   query GetMenu($params: jsonb!) {
+      onlineStore_getMenu(args: { params: $params }) {
+         id
+         data
       }
    }
 `
@@ -1308,6 +1305,20 @@ export const STRIPE_PK = gql`
    query StripePublishableKey {
       organizations {
          stripePublishableKey
+      }
+   }
+`
+
+export const SHOPS = gql`
+   query Shops($domain: String!) {
+      shops(
+         where: {
+            _or: [{ domain: { _eq: $domain } }, { isDefault: { _eq: true } }]
+         }
+      ) {
+         id
+         isDefault
+         domain
       }
    }
 `

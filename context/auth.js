@@ -93,6 +93,7 @@ export const AuthProvider = ({ children }) => {
             isAuthenticated,
             loginUrl,
             registerUrl,
+            keycloak,
          }}
       >
          {children}
