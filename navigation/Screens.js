@@ -23,7 +23,7 @@ import {
    WALLETS,
    LOYALTY_POINTS,
    CUSTOMER_REFERRAL,
-   SHOPS,
+   BRANDS,
    GET_MENU,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
@@ -69,8 +69,8 @@ export default function OnboardingStack(props) {
       setCustomerReferral,
    } = useCartContext()
    const {
-      shopId,
-      setShopId,
+      brandId,
+      setBrandId,
       setBrand,
       setVisual,
       availability,
@@ -83,20 +83,20 @@ export default function OnboardingStack(props) {
 
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
 
-   // Query for Shop ID
-   useQuery(SHOPS, {
+   // Query for Brand ID
+   useQuery(BRANDS, {
       variables: {
          domain: window.location.hostname,
       },
       onCompleted: data => {
-         if (data.shops.length) {
+         if (data.brands.length) {
             const domain = window.location.hostname
-            const shop =
-               data.shops.find(shop => shop.domain === domain) ||
-               data.shops.find(shop => shop.isDefault)
-            setShopId(shop.id)
+            const brand =
+               data.brands.find(brand => brand.domain === domain) ||
+               data.brands.find(brand => brand.isDefault)
+            setBrandId(brand.id)
          } else {
-            console.log('COULD NOT RESOLVE SHOP')
+            console.log('COULD NOT RESOLVE BRAND')
          }
       },
       onError: error => {
@@ -108,7 +108,7 @@ export default function OnboardingStack(props) {
    const { loading: settingsLoading, error: settingsError } = useSubscription(
       STORE_SETTINGS,
       {
-         skip: Boolean(!shopId),
+         skip: Boolean(!brandId),
          onSubscriptionData: data => {
             const brandSettings = data.subscriptionData.data.storeSettings.filter(
                setting => setting.type === 'brand'
@@ -414,9 +414,9 @@ export default function OnboardingStack(props) {
 
    const [fetchMenu, { loading: queryMenuLoading }] = useLazyQuery(GET_MENU, {
       onCompleted: data => {
-         console.log('MENU:', data.onlineStore_getMenu[0].data.menu)
-         if (data.onlineStore_getMenu[0].data.menu.length) {
-            setMenuData([...data.onlineStore_getMenu[0].data.menu])
+         console.log('MENU:', data.onDemand_getMenu[0].data.menu)
+         if (data.onDemand_getMenu[0].data.menu.length) {
+            setMenuData([...data.onDemand_getMenu[0].data.menu])
          }
       },
       onError: error => {
@@ -449,22 +449,22 @@ export default function OnboardingStack(props) {
    }, [queryMenuLoading])
 
    React.useEffect(() => {
-      if (availability && isStoreOpen() && shopId) {
+      if (availability && isStoreOpen() && brandId) {
          const date = new Date(Date.now()).toISOString()
          fetchMenu({
             variables: {
                params: {
                   date,
-                  shopId,
+                  brandId,
                },
             },
          })
       }
-   }, [availability, shopId])
+   }, [availability, brandId])
 
    React.useEffect(() => {
       console.table({
-         shopId,
+         brandId,
          fetchingCustomer,
          creatingCustomer,
          fetchingCart,
@@ -478,7 +478,7 @@ export default function OnboardingStack(props) {
       } else {
          if (isAuthenticated) {
             const status = [
-               Boolean(shopId), // 1
+               Boolean(brandId), // 1
                !fetchingCustomer, // true
                !creatingCustomer, // true
                !fetchingCart, // true
@@ -491,7 +491,7 @@ export default function OnboardingStack(props) {
             }
          } else {
             const status = [
-               Boolean(shopId), // 1
+               Boolean(brandId), // 1
                settingsMapped, // true
                !fetchingCart, // true
             ].every(notLoading => notLoading)
@@ -501,7 +501,7 @@ export default function OnboardingStack(props) {
          }
       }
    }, [
-      shopId,
+      brandId,
       fetchingCustomer,
       creatingCustomer,
       fetchingCart,

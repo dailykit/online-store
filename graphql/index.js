@@ -12,7 +12,7 @@ import {
    FETCH_CART,
    STRIPE_PK,
    CUSTOMER,
-   SHOPS,
+   BRANDS,
 } from './queries'
 
 import {
@@ -85,5 +85,5 @@ export {
    LOYALTY_POINTS,
    UPDATE_CUSTOMER_REFERRAL,
    CUSTOMER_REFERRAL,
-   SHOPS,
+   BRANDS,
 }

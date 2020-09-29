@@ -152,7 +152,7 @@ export const CUSTOMER = gql`
 
 export const GET_MENU = gql`
    query GetMenu($params: jsonb!) {
-      onlineStore_getMenu(args: { params: $params }) {
+      onDemand_getMenu(args: { params: $params }) {
          id
          data
       }
@@ -1309,9 +1309,9 @@ export const STRIPE_PK = gql`
    }
 `
 
-export const SHOPS = gql`
-   query Shops($domain: String!) {
-      shops(
+export const BRANDS = gql`
+   query BRANDS($domain: String!) {
+      brands(
          where: {
             _or: [{ domain: { _eq: $domain } }, { isDefault: { _eq: true } }]
          }
