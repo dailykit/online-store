@@ -14,12 +14,13 @@ import { styles } from './styles'
 
 export default ({ navigation }) => {
    const { customer, customerDetails } = useCartContext()
-   const { masterLoading } = useAppContext()
+   const { masterLoading, brandId } = useAppContext()
 
    // Query
    const { data, loading, error } = useSubscription(ORDERS, {
       variables: {
          keycloakId: customer?.keycloakId,
+         brandId,
       },
    })
 
