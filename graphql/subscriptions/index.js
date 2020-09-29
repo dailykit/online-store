@@ -240,8 +240,13 @@ export const CART_BY_PK = gql`
 `
 
 export const COUPONS = gql`
-   subscription Coupons($params: jsonb) {
-      coupons(where: { isActive: { _eq: true } }) {
+   subscription Coupons($params: jsonb, $brandId: Int!) {
+      coupons(
+         where: {
+            isActive: { _eq: true }
+            brands: { brandId: { _eq: $brandId }, isActive: { _eq: true } }
+         }
+      ) {
          id
          code
          isRewardMulti

@@ -11,6 +11,7 @@ import { useStoreToast } from '../../../utils'
 
 const CouponList = () => {
    const { cart, customer } = useCartContext()
+   const { brandId } = useAppContext()
    const { setIsDrawerOpen } = useDrawerContext()
    const { toastr } = useStoreToast()
 
@@ -23,6 +24,7 @@ const CouponList = () => {
             cartId: cart.id,
             keycloakId: customer.keycloakId,
          },
+         brandId,
       },
    })
 
