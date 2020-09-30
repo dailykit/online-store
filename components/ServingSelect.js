@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
       position: 'relative',
    },
    servingSelectContainer_one: {
-      flex: 7,
+      flex: 5,
       justifyContent: 'flex-start',
       alignItems: 'center',
       flexDirection: 'row',
