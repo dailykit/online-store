@@ -41,6 +41,8 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       return <AppSkeleton />
    }
 
+   console.log(cart)
+
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
@@ -542,10 +544,9 @@ const Cart = ({ cart }) => {
                         {Boolean(product.discount) && (
                            <CartItemDiscount>
                               ${' '}
-                              {(
-                                 product.discount * product.quantity +
-                                 product.totalPrice
-                              ).toFixed(2)}
+                              {(product.discount + product.totalPrice).toFixed(
+                                 2
+                              )}
                            </CartItemDiscount>
                         )}
                         <CartItemPrice>
