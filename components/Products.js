@@ -17,7 +17,7 @@ const Products = ({ category, navigation, horizontal }) => {
    React.useEffect(() => {
       // empty products on route change
       setProducts([])
-      fetchInventoryProduts()
+      fetchInventoryProducts()
       fetchSimpleRecipeProducts()
       fetchCustomizableProducts()
       fetchComboProducts()
@@ -25,7 +25,7 @@ const Products = ({ category, navigation, horizontal }) => {
 
    // Subscriptions
    const [
-      fetchInventoryProduts,
+      fetchInventoryProducts,
       { loading: inventoryProductsLoading },
    ] = useLazyQuery(INVENTORY_PRODUCTS, {
       variables: {

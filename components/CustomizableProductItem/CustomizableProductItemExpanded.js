@@ -29,92 +29,80 @@ const Item = ({
    const { visual } = useAppContext()
 
    const [typeSelected, setTypeSelected] = useState('mealKit')
-   const [servingIndex, setServingIndex] = useState(0)
+   const [servingIndex, setServingIndex] = useState(undefined)
    const [selectedOption, setSelectedOption] = useState(undefined)
    const [isSelected, setisSelected] = useState(undefined)
 
    React.useEffect(() => {
-      const component = data.customizableProductOptions[isSelected]
-      if (component?.simpleRecipeProduct) {
-         setTypeSelected(
-            component.simpleRecipeProduct.defaultSimpleRecipeProductOption.type
-         )
-         const index = component.simpleRecipeProduct.simpleRecipeProductOptions
-            .filter(
-               option =>
-                  option.type ===
-                  component.simpleRecipeProduct.defaultSimpleRecipeProductOption
-                     .type
+      if (isSelected !== undefined) {
+         const component = data.customizableProductOptions[isSelected]
+         if (component.simpleRecipeProduct) {
+            const option =
+               component.simpleRecipeProduct.defaultSimpleRecipeProductOption ||
+               component.simpleRecipeProduct.simpleRecipeProductOptions[0]
+            setTypeSelected(option.type)
+            const index = component.simpleRecipeProduct.simpleRecipeProductOptions
+               .filter(op => op.type === option.type)
+               .findIndex(op => op.id === option.id)
+            setServingIndex(index)
+         } else {
+            const option =
+               component.inventoryProduct.defaultInventoryProductOption ||
+               component.inventoryProduct.inventoryProductOptions[0]
+            const index = component.inventoryProduct.inventoryProductOptions.findIndex(
+               op => op.id === option.id
             )
-            .findIndex(
-               option =>
-                  option.id ===
-                  component.simpleRecipeProduct.defaultSimpleRecipeProductOption
-                     .id
-            )
-         setServingIndex(index)
+            setServingIndex(index)
+         }
       }
    }, [isSelected])
 
    React.useEffect(() => {
-      const customizableOption = data.customizableProductOptions[isSelected]
-      let option
-      if (customizableOption) {
-         if (customizableOption.simpleRecipeProduct) {
-            option = data.customizableProductOptions[
-               isSelected
-            ].simpleRecipeProduct.simpleRecipeProductOptions.filter(
-               option => option.type === typeSelected
-            )[servingIndex]
-            if (option && tunnelItem) {
-               setProductOption(
-                  option,
-                  customizableOption.simpleRecipeProduct,
-                  'simpleRecipeProduct',
-                  customizableOption.id
-               )
+      if (servingIndex !== undefined) {
+         const customizableOption = data.customizableProductOptions[isSelected]
+         if (customizableOption) {
+            let option
+            if (customizableOption.simpleRecipeProduct) {
+               option = data.customizableProductOptions[
+                  isSelected
+               ].simpleRecipeProduct.simpleRecipeProductOptions.filter(
+                  option => option.type === typeSelected
+               )[servingIndex]
+               if (!option) {
+                  setServingIndex(0)
+               }
+               if (option && tunnelItem) {
+                  setProductOption(
+                     option,
+                     customizableOption.simpleRecipeProduct,
+                     'simpleRecipeProduct',
+                     customizableOption.id
+                  )
+               }
+            } else {
+               option =
+                  customizableOption.inventoryProduct.inventoryProductOptions[
+                     servingIndex
+                  ]
+               if (option && tunnelItem) {
+                  setProductOption(
+                     option,
+                     customizableOption.inventoryProduct,
+                     'inventoryProduct',
+                     customizableOption.id
+                  )
+               }
             }
-         } else {
-            option =
-               customizableOption.inventoryProduct.inventoryProductOptions[
-                  servingIndex
-               ]
-            if (option && tunnelItem) {
-               setProductOption(
-                  option,
-                  customizableOption.inventoryProduct,
-                  'inventoryProduct',
-                  customizableOption.id
-               )
+            if (!option?.modifier && onValidityChange) {
+               onValidityChange(true)
             }
+            setSelectedOption(option)
          }
-         if (!option?.modifier && onValidityChange) {
-            onValidityChange(true)
-         }
-         setSelectedOption(option)
       }
    }, [typeSelected, servingIndex])
 
    return (
       <View key={_id} style={styles.container}>
-         {/* <View style={styles.item_three_upper}>
-            <TouchableOpacity
-               onPress={() => {
-                  if (!tunnelItem) {
-                     if (!independantItem) {
-                        setExpanded(false)
-                     } else {
-                        setExpanded(false)
-                     }
-                  }
-               }}
-            >
-               <Text style={styles.options_text}>
-                  {numberOfOptions} options <Ionicons name="ios-arrow-up" />
-               </Text>
-            </TouchableOpacity>
-         </View> */}
-
          {data.customizableProductOptions.map((item, _key) => {
             let simpleRecipeProduct = item?.simpleRecipeProduct
             if (simpleRecipeProduct !== null) {

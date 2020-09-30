@@ -40,6 +40,7 @@ const Recipe = ({ route, navigation }) => {
                setOption(data.simpleRecipe.simpleRecipeYields[0])
             }
          },
+         fetchPolicy: 'cache-and-network',
       }
    )
 

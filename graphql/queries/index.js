@@ -21,6 +21,7 @@ export const FETCH_CART = gql`
          status
          paymentStatus
          orderId
+         discount
       }
    }
 `
@@ -41,7 +42,7 @@ export const SIMPLE_RECIPE = gql`
          description
          utensils
          procedures
-         simpleRecipeYields {
+         simpleRecipeYields(order_by: { yield: asc }) {
             id
             yield
             ingredientSachets(where: { isVisible: { _eq: true } }) {
@@ -62,12 +63,22 @@ export const SIMPLE_RECIPE = gql`
 `
 
 export const CUSTOMER = gql`
-   query Customer($keycloakId: String!) {
+   query Customer($keycloakId: String!, $brandId: Int!) {
       customer(keycloakId: $keycloakId) {
          id
          email
          keycloakId
          isTest
+         brandCustomers {
+            id
+            brandId
+            keycloakId
+         }
+         customerReferralDetails {
+            id
+            signupStatus
+            referralStatus
+         }
          platform_customer {
             email
             firstName
@@ -118,6 +129,7 @@ export const CUSTOMER = gql`
             where: {
                status: { _eq: "PENDING" }
                cartSource: { _eq: "a-la-carte" }
+               brandId: { _eq: $brandId }
             }
             order_by: { created_at: desc }
          ) {
@@ -145,13 +157,10 @@ export const CUSTOMER = gql`
 `
 
 export const GET_MENU = gql`
-   query GetMenu($year: Int!, $month: Int!, $day: Int!) {
-      getMenu(year: $year, month: $month, day: $day) {
-         name
-         comboProducts
-         customizableProducts
-         inventoryProducts
-         simpleRecipeProducts
+   query GetMenu($params: jsonb!) {
+      onDemand_getMenu(args: { params: $params }) {
+         id
+         data
       }
    }
 `
@@ -1302,6 +1311,20 @@ export const STRIPE_PK = gql`
    query StripePublishableKey {
       organizations {
          stripePublishableKey
+      }
+   }
+`
+
+export const BRANDS = gql`
+   query BRANDS($domain: String!) {
+      brands(
+         where: {
+            _or: [{ domain: { _eq: $domain } }, { isDefault: { _eq: true } }]
+         }
+      ) {
+         id
+         isDefault
+         domain
       }
    }
 `

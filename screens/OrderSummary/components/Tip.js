@@ -1,11 +1,11 @@
 import React from 'react'
 import { useMutation } from '@apollo/react-hooks'
 import styled from 'styled-components/native'
-import { useAppContext } from '../context/app'
-import { UPDATE_CART } from '../graphql'
+import { useAppContext } from '../../../context/app'
+import { UPDATE_CART } from '../../../graphql'
 import { Feather } from '@expo/vector-icons'
-import { useAuth } from '../context/auth'
-import { useCartContext } from '../context/cart'
+import { useAuth } from '../../../context/auth'
+import { useCartContext } from '../../../context/cart'
 
 const Tip = ({ cart }) => {
    const { visual } = useAppContext()
