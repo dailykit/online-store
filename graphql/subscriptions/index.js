@@ -165,11 +165,15 @@ export const ORDERS = gql`
 `
 
 export const STORE_SETTINGS = gql`
-   subscription {
+   subscription StoreSettings($brandId: Int!) {
       storeSettings {
+         id
          type
          value
          identifier
+         brandSettings(where: { brandId: { _eq: $brandId } }) {
+            value
+         }
       }
    }
 `
