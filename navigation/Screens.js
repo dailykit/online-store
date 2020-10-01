@@ -109,6 +109,9 @@ export default function OnboardingStack(props) {
    const { loading: settingsLoading, error: settingsError } = useSubscription(
       STORE_SETTINGS,
       {
+         variables: {
+            brandId,
+         },
          skip: Boolean(!brandId),
          onSubscriptionData: data => {
             const brandSettings = data.subscriptionData.data.storeSettings.filter(
@@ -122,14 +125,15 @@ export default function OnboardingStack(props) {
             )
 
             let brandState = {}
-            brandSettings.forEach(({ identifier, value }) => {
+            brandSettings.forEach(({ identifier, value, brandSettings }) => {
                switch (identifier) {
                   case 'Brand Logo': {
-                     brandState.logo = value.url
+                     brandState.logo = brandSettings[0]?.value.url || value.url
                      return
                   }
                   case 'Brand Name': {
-                     brandState.name = value.name
+                     brandState.name =
+                        brandSettings[0]?.value.name || value.name
                      return
                   }
                   default: {
@@ -140,14 +144,15 @@ export default function OnboardingStack(props) {
             setBrand({ ...brandState })
 
             let visualState = {}
-            visualSettings.forEach(({ identifier, value }) => {
+            visualSettings.forEach(({ identifier, value, brandSettings }) => {
                switch (identifier) {
                   case 'Primary Color': {
-                     visualState.color = value.color
+                     visualState.color =
+                        brandSettings[0]?.value.color || value.color
                      return
                   }
                   case 'Slides': {
-                     visualState.slides = value
+                     visualState.slides = brandSettings[0]?.value || value
                      return
                   }
                   default: {
@@ -158,35 +163,44 @@ export default function OnboardingStack(props) {
             setVisual({ ...visualState })
 
             let availabilityState = {}
-            availabilitySettings.forEach(({ identifier, value }) => {
-               switch (identifier) {
-                  case 'Store Availability': {
-                     availabilityState.store = value
-                     return
-                  }
-                  case 'Pickup Availability': {
-                     availabilityState.pickup = value
-                     return
-                  }
-                  case 'Delivery Availability': {
-                     availabilityState.delivery = value
-                     return
-                  }
-                  case 'Location': {
-                     availabilityState.location = value.address
-                     return
-                  }
-                  case 'Store Live': {
-                     availabilityState.isStoreLive = value.isStoreLive
-                     availabilityState.isStripeConfigured =
-                        value.isStripeConfigured
-                     return
-                  }
-                  default: {
-                     return
+            availabilitySettings.forEach(
+               ({ identifier, value, brandSettings }) => {
+                  switch (identifier) {
+                     case 'Store Availability': {
+                        availabilityState.store =
+                           brandSettings[0]?.value || value
+                        return
+                     }
+                     case 'Pickup Availability': {
+                        availabilityState.pickup =
+                           brandSettings[0]?.value || value
+                        return
+                     }
+                     case 'Delivery Availability': {
+                        availabilityState.delivery =
+                           brandSettings[0]?.value || value
+                        return
+                     }
+                     case 'Location': {
+                        availabilityState.location =
+                           brandSettings[0]?.value.address || value.address
+                        return
+                     }
+                     case 'Store Live': {
+                        availabilityState.isStoreLive =
+                           brandSettings[0]?.value.isStoreLive ||
+                           value.isStoreLive
+                        availabilityState.isStripeConfigured =
+                           brandSettings[0]?.value.isStripeConfigured ||
+                           value.isStripeConfigured
+                        return
+                     }
+                     default: {
+                        return
+                     }
                   }
                }
-            })
+            )
             setAvailability({ ...availabilityState })
             setSettingsMapped(true)
          },
