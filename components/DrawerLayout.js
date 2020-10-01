@@ -18,6 +18,7 @@ import { height, width } from '../utils/Scalaing'
 import Fulfillment from './Fulfillment'
 import CouponList from '../screens/OrderSummary/components/CouponList'
 import ReferralCode from './ReferralCode'
+import { useAppContext } from '../context/app'
 
 const DrawerLayout = () => {
    const {
@@ -28,12 +29,14 @@ const DrawerLayout = () => {
       params,
    } = useDrawerContext()
    const { setCustomerDetails } = useCartContext()
+   const { brandId } = useAppContext()
    const { user } = useAuth()
 
    // Query
    const [fetchDetails] = useLazyQuery(CUSTOMER, {
       variables: {
          keycloakId: user.sub || user.userid,
+         brandId,
       },
       onCompleted: data => {
          console.log('platform -> data', data)
