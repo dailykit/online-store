@@ -514,8 +514,12 @@ const Card = () => {
          }
          console.log('Name: ', name)
          console.log('Intent: ', intent)
-         if (!name || !intent) {
+         if (!name) {
             setError('All fields are required!')
+            return
+         }
+         if (!intent) {
+            setError('Stripe Error: could not form intent!')
             return
          }
          const result = await stripe.confirmCardSetup(intent.client_secret, {
@@ -528,9 +532,10 @@ const Card = () => {
          })
 
          if (result.error) {
-            console.log('Result = error')
+            console.log('Error')
+            console.log(result.error)
 
-            throw Error(result.error)
+            setError(result.error.message)
          } else {
             console.log('Result: ', result)
 
