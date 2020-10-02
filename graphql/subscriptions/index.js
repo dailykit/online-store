@@ -139,9 +139,9 @@ export const ONDEMAND_DELIVERY = gql`
 `
 
 export const ORDERS = gql`
-   subscription Orders($keycloakId: String!) {
+   subscription Orders($keycloakId: String!, $brandId: Int!) {
       orders(
-         where: { keycloakId: { _eq: $keycloakId } }
+         where: { keycloakId: { _eq: $keycloakId }, brandId: { _eq: $brandId } }
          order_by: { created_at: desc }
       ) {
          id
@@ -165,22 +165,27 @@ export const ORDERS = gql`
 `
 
 export const STORE_SETTINGS = gql`
-   subscription {
+   subscription StoreSettings($brandId: Int!) {
       storeSettings {
+         id
          type
          value
          identifier
+         brandSettings(where: { brandId: { _eq: $brandId } }) {
+            value
+         }
       }
    }
 `
 
 export const CART = gql`
-   subscription Carts($customerId: Int!) {
+   subscription Carts($customerId: Int!, $brandId: Int!) {
       cart(
          where: {
             status: { _eq: "PENDING" }
             customerId: { _eq: $customerId }
             cartSource: { _eq: "a-la-carte" }
+            brandId: { _eq: $brandId }
          }
          order_by: { created_at: desc }
       ) {
@@ -202,6 +207,7 @@ export const CART = gql`
          status
          paymentStatus
          orderId
+         discount
       }
    }
 `
@@ -233,6 +239,84 @@ export const CART_BY_PK = gql`
          status
          id
          orderId
+      }
+   }
+`
+
+export const COUPONS = gql`
+   subscription Coupons($params: jsonb, $brandId: Int!) {
+      coupons(
+         where: {
+            isActive: { _eq: true }
+            brands: { brandId: { _eq: $brandId }, isActive: { _eq: true } }
+         }
+      ) {
+         id
+         code
+         isRewardMulti
+         rewards(order_by: { priority: desc }) {
+            id
+            condition {
+               isValid(args: { params: $params })
+            }
+         }
+         metaDetails
+         visibilityCondition {
+            isValid(args: { params: $params })
+         }
+      }
+   }
+`
+
+export const ORDER_CART_REWARDS = gql`
+   subscription OrderCartRewards($cartId: Int!, $params: jsonb) {
+      orderCartRewards(where: { orderCartId: { _eq: $cartId } }) {
+         reward {
+            id
+            coupon {
+               id
+               code
+            }
+            condition {
+               isValid(args: { params: $params })
+            }
+         }
+      }
+   }
+`
+
+export const LOYALTY_POINTS = gql`
+   subscription LoyaltyPoints($keycloakId: String!, $brandId: Int!) {
+      loyaltyPoints(
+         where: { keycloakId: { _eq: $keycloakId }, brandId: { _eq: $brandId } }
+      ) {
+         id
+         points
+      }
+   }
+`
+
+export const WALLETS = gql`
+   subscription Wallets($keycloakId: String!, $brandId: Int!) {
+      wallets(
+         where: { keycloakId: { _eq: $keycloakId }, brandId: { _eq: $brandId } }
+      ) {
+         id
+         amount
+      }
+   }
+`
+
+export const CUSTOMER_REFERRAL = gql`
+   subscription CustomerReferral($keycloakId: String!, $brandId: Int!) {
+      customerReferrals(
+         where: { keycloakId: { _eq: $keycloakId }, brandId: { _eq: $brandId } }
+      ) {
+         id
+         signupStatus
+         referralStatus
+         referralCode
+         referredByCode
       }
    }
 `

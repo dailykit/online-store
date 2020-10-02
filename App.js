@@ -6,6 +6,7 @@ import { ApplicationProvider } from '@ui-kitten/components'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
 import { split } from 'apollo-link'
+import { setContext } from 'apollo-link-context'
 import { HttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
@@ -17,8 +18,11 @@ import Constants from 'expo-constants'
 import * as Font from 'expo-font'
 import React, { useEffect, useRef, useState, Suspense } from 'react'
 import { Image, Platform, SafeAreaView, StatusBar, View } from 'react-native'
-// set up apollo client
-import { HASURA_URL, HASURA_WS } from 'react-native-dotenv' //1
+import {
+   HASURA_URL,
+   HASURA_WS,
+   HASURA_GRAPHQL_ADMIN_SECRET,
+} from 'react-native-dotenv'
 // setup rem
 import EStyleSheet from 'react-native-extended-stylesheet'
 import 'react-native-get-random-values'
@@ -43,6 +47,15 @@ import { ToastProvider } from 'react-native-styled-toast'
 import DrawerLayout from './components/DrawerLayout'
 import AppSkeleton from './components/skeletons/app'
 
+const authLink = setContext((_, { headers }) => {
+   return {
+      headers: {
+         ...headers,
+         'x-hasura-admin-secret': `${HASURA_GRAPHQL_ADMIN_SECRET}`,
+      },
+   }
+})
+
 const httpLink = new HttpLink({
    uri: HASURA_URL,
 })
@@ -51,6 +64,11 @@ const wsLink = new WebSocketLink({
    uri: HASURA_WS,
    options: {
       reconnect: true,
+      connectionParams: {
+         headers: {
+            'x-hasura-admin-secret': `${HASURA_GRAPHQL_ADMIN_SECRET}`,
+         },
+      },
    },
 })
 
@@ -63,7 +81,7 @@ const link = split(
       )
    },
    wsLink,
-   httpLink
+   authLink.concat(httpLink)
 )
 
 const client = new ApolloClient({

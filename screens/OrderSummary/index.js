@@ -24,7 +24,10 @@ import { useDrawerContext } from '../../context/drawer'
 import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
 import { useStoreToast } from '../../utils'
 import { width } from '../../utils/Scalaing'
-import Tip from '../../components/Tip'
+import Coupon from './components/Coupon'
+import Tip from './components/Tip'
+import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
+import PayWithWallet from './components/PayWithWallet'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
@@ -37,6 +40,8 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    if (masterLoading) {
       return <AppSkeleton />
    }
+
+   console.log(cart)
 
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -539,10 +544,9 @@ const Cart = ({ cart }) => {
                         {Boolean(product.discount) && (
                            <CartItemDiscount>
                               ${' '}
-                              {(
-                                 product.discount * product.quantity +
-                                 product.totalPrice
-                              ).toFixed(2)}
+                              {(product.discount + product.totalPrice).toFixed(
+                                 2
+                              )}
                            </CartItemDiscount>
                         )}
                         <CartItemPrice>
@@ -554,6 +558,13 @@ const Cart = ({ cart }) => {
             ))}
          </CartItems>
          <CartBilling>
+            {isAuthenticated ? (
+               <Coupon cart={cart} />
+            ) : (
+               <HelpText>
+                  Discount coupons are only available when logged in!
+               </HelpText>
+            )}
             <CartBillingHeading>Bill Details</CartBillingHeading>
             <CartBillingDetail>
                <CartBillingDetailText>Item Total</CartBillingDetailText>
@@ -567,6 +578,15 @@ const Cart = ({ cart }) => {
                   $ {cart.deliveryPrice}
                </CartBillingDetailText>
             </CartBillingDetail>
+            {Boolean(cart.discount) && (
+               <CartBillingDetail>
+                  <CartBillingDetailText>Discount</CartBillingDetailText>
+                  <CartBillingDetailText>
+                     - $ {cart.discount}
+                  </CartBillingDetailText>
+               </CartBillingDetail>
+            )}
+            {Boolean(isAuthenticated) && <PayWithLoyaltyPoints />}
             <Divider margin="8px" />
             <CartBillingDetail>
                <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
@@ -582,11 +602,19 @@ const Cart = ({ cart }) => {
                <CartDiscountText>YOU SAVED</CartDiscountText>
                <CartDiscountText>
                   ${' '}
-                  {cart.cartInfo.products
-                     .reduce((acc, item) => acc + item.discount, 0)
-                     .toFixed(2)}
+                  {(
+                     cart.cartInfo.products.reduce(
+                        (acc, item) => acc + item.discount,
+                        0
+                     ) + cart.discount
+                  ).toFixed(2)}
                </CartDiscountText>
             </CartFooter>
+         )}
+         {Boolean(isAuthenticated) && (
+            <WalletWrapper>
+               <PayWithWallet />
+            </WalletWrapper>
          )}
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
@@ -908,6 +936,11 @@ const Divider = styled.View`
    margin-bottom: ${props => props.margin || '0px'};
 `
 
+const WalletWrapper = styled.View`
+   padding: ${width > 768 ? '0px 30px' : '0px 10px'};
+   background: #fff;
+`
+
 const CartFooter = styled.View`
    flex-direction: row;
    padding: ${width > 768 ? '0px 30px' : '0px 10px'};
@@ -924,4 +957,9 @@ const CartFooterText = styled.Text`
 
 const CartDiscountText = styled(CartFooterText)`
    color: #60b246;
+`
+
+const HelpText = styled(CartBillingDetailText)`
+   margin-bottom: 0.5rem;
+   font-style: italic;
 `

@@ -28,7 +28,7 @@ const InventoryProductCollapsed = ({
 }) => {
    const { visual } = useAppContext()
 
-   const [servingIndex, setServingIndex] = useState(0)
+   const [servingIndex, setServingIndex] = useState(undefined)
    const [selectedOption, setSelectedOption] = useState(undefined)
    if (!inventoryProduct) {
       return <Text>Bad Data</Text>
@@ -38,27 +38,26 @@ const InventoryProductCollapsed = ({
       const option =
          inventoryProduct.defaultInventoryProductOption ||
          inventoryProduct.inventoryProductOptions.sort(priceSort)[0]
-      setSelectedOption(option)
       const index = inventoryProduct.inventoryProductOptions.findIndex(
          op => op.id === option.id
       )
-      if (index !== -1) {
-         setServingIndex(index)
-      } else {
-         setServingIndex(0)
-      }
+      setServingIndex(index)
    }, [])
 
    React.useEffect(() => {
-      const option = inventoryProduct.inventoryProductOptions[servingIndex]
-      if (!option?.modifier && onValidityChange) {
-         onValidityChange(true)
-      }
-      setSelectedOption(option)
-      if (tunnelItem) {
-         setProductOption(option)
+      if (servingIndex !== undefined) {
+         const option = inventoryProduct.inventoryProductOptions[servingIndex]
+         if (!option?.modifier && onValidityChange) {
+            onValidityChange(true)
+         }
+         setSelectedOption(option)
+         if (tunnelItem) {
+            setProductOption(option)
+         }
       }
    }, [servingIndex])
+
+   if (servingIndex === undefined) return null
 
    return (
       <>
@@ -195,7 +194,7 @@ const InventoryProductCollapsed = ({
                      )
                   }
                )}
-               {selectedOption?.modifier && (
+               {Boolean(selectedOption?.modifier) && (
                   <Modifiers
                      data={selectedOption.modifier.data}
                      onModifiersSelected={onModifiersSelected}

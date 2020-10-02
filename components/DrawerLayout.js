@@ -16,6 +16,9 @@ import SafetyScreen from '../screens/SafetyScreen'
 import SelectPaymentMethod from '../screens/SelectPaymentMethod'
 import { height, width } from '../utils/Scalaing'
 import Fulfillment from './Fulfillment'
+import CouponList from '../screens/OrderSummary/components/CouponList'
+import ReferralCode from './ReferralCode'
+import { useAppContext } from '../context/app'
 
 const DrawerLayout = () => {
    const {
@@ -26,12 +29,14 @@ const DrawerLayout = () => {
       params,
    } = useDrawerContext()
    const { setCustomerDetails } = useCartContext()
+   const { brandId } = useAppContext()
    const { user } = useAuth()
 
    // Query
    const [fetchDetails] = useLazyQuery(CUSTOMER, {
       variables: {
          keycloakId: user.sub || user.userid,
+         brandId,
       },
       onCompleted: data => {
          console.log('platform -> data', data)
@@ -60,7 +65,9 @@ const DrawerLayout = () => {
    React.useEffect(() => {
       if (
          !isDrawerOpen &&
-         ['AddDetails', 'Login', 'Register', 'Payment'].includes(drawerView)
+         ['AddDetails', 'Login', 'Register', 'Payment', 'CouponList'].includes(
+            drawerView
+         )
       ) {
          setDrawerView(undefined)
       }
@@ -87,6 +94,10 @@ const DrawerLayout = () => {
             return <Keycloak type="register" />
          case 'Payment':
             return <PaymentProcessing {...params} />
+         case 'CouponList':
+            return <CouponList />
+         case 'ReferralCode':
+            return <ReferralCode />
          default:
             return <Text>Oops! No such component.</Text>
       }

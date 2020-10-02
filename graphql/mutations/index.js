@@ -6,6 +6,11 @@ export const CREATE_CUSTOMER = gql`
          id
          email
          keycloakId
+         brandCustomers {
+            id
+            brandId
+            keycloakId
+         }
          platform_customer {
             email
             firstName
@@ -56,6 +61,16 @@ export const CREATE_CUSTOMER = gql`
    }
 `
 
+export const CREATE_BRAND_CUSTOMER = gql`
+   mutation CreateBrandCustomer($object: crm_brandCustomer_insert_input!) {
+      createBrandCustomer(object: $object) {
+         id
+         brandId
+         keycloakId
+      }
+   }
+`
+
 export const CREATE_CART = gql`
    mutation($object: crm_orderCart_insert_input!) {
       createCart(object: $object) {
@@ -77,6 +92,7 @@ export const CREATE_CART = gql`
          status
          paymentStatus
          orderId
+         discount
       }
    }
 `
@@ -103,6 +119,7 @@ export const UPDATE_CART = gql`
             status
             paymentStatus
             orderId
+            discount
          }
       }
    }
@@ -161,6 +178,37 @@ export const DELETE_CARTS = gql`
          returning {
             id
          }
+      }
+   }
+`
+
+export const CREATE_ORDER_CART_REWARDS = gql`
+   mutation OrderCartRewards($objects: [crm_orderCart_rewards_insert_input!]!) {
+      createOrderCartRewards(objects: $objects) {
+         returning {
+            id
+         }
+      }
+   }
+`
+
+export const DELETE_ORDER_CART_REWARDS = gql`
+   mutation DeleteOrderCartRewards($cartId: Int!) {
+      deleteOrderCartRewards(where: { orderCartId: { _eq: $cartId } }) {
+         returning {
+            id
+         }
+      }
+   }
+`
+
+export const UPDATE_CUSTOMER_REFERRAL = gql`
+   mutation UpdateCustomerReferral(
+      $id: Int!
+      $set: crm_customerReferral_set_input
+   ) {
+      updateCustomerReferral(pk_columns: { id: $id }, _set: $set) {
+         id
       }
    }
 `

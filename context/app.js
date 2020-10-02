@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 const AppContext = React.createContext()
 
 export const AppContextProvider = ({ children }) => {
+   const [brandId, setBrandId] = useState(undefined)
    const [visual, setVisual] = useState({
       color: '#3fa4ff',
       slides: [],
@@ -21,9 +22,15 @@ export const AppContextProvider = ({ children }) => {
    const [masterLoading, setMasterLoading] = React.useState(true)
    const [menuLoading, setMenuLoading] = React.useState(false)
 
+   React.useEffect(() => {
+      console.log('Master loading:', masterLoading)
+   }, [masterLoading])
+
    return (
       <AppContext.Provider
          value={{
+            brandId,
+            setBrandId,
             setVisual,
             visual,
             setBrand,

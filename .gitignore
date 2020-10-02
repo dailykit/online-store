@@ -8,6 +8,7 @@ package-lock.json
 *.mobileprovision
 .env
 web-build
+*.log
 
 # Local Netlify folder
 .netlify

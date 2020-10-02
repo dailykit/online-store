@@ -24,7 +24,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [cardItem, setcardItem] = useState(null) // obj to push to jaguar
    const [cardData, setcardData] = useState(null) // obj to pass to add to cart modal
    const [isModalVisible, setIsModalVisible] = useState(false)
-   const { visual } = useAppContext()
+   const { visual, brandId } = useAppContext()
    const { cart, customerDetails, customer, setCart } = useCartContext()
    const { isAuthenticated, login, user } = useAuth()
    const { open } = useDrawerContext()
@@ -138,6 +138,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         tip: 0,
                         customerKeycloakId: user.sub || user.id || null,
                         cartSource: 'a-la-carte',
+                        brandId: brandId,
                      },
                   },
                })

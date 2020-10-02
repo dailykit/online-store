@@ -26,6 +26,7 @@
       "@stripe/stripe-js": "^1.8.0",
       "@ui-kitten/components": "^5.0.0-alpha.1",
       "apollo-boost": "^0.4.9",
+      "apollo-link-context": "^1.0.20",
       "apollo-link-ws": "^1.0.20",
       "axios": "^0.19.2",
       "base-64": "^0.1.0",
