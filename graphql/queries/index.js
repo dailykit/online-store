@@ -45,6 +45,7 @@ export const SIMPLE_RECIPE = gql`
          simpleRecipeYields(order_by: { yield: asc }) {
             id
             yield
+            nutritionalInfo
             ingredientSachets(where: { isVisible: { _eq: true } }) {
                ingredientSachetId
                slipName

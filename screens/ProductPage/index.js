@@ -209,7 +209,7 @@ const ProductPage = ({ navigation, route }) => {
                       </Text>
                     </View>
                   ))} */}
-                     <Nutrition />
+                     {/* <Nutrition /> */}
                      <AddToCart
                         showInfo={false}
                         setIsModalVisible={true}

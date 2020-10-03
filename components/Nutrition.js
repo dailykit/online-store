@@ -1,11 +1,30 @@
 import React from 'react'
 import styled, { css } from 'styled-components/native'
 
-const Nutrition = () => {
+const Nutrition = ({ values }) => {
+   const getDailyValue = (type, value) => {
+      switch (type) {
+         case 'Total Fat':
+            return Math.round((parseInt(value, 10) / 78) * 100) + '%'
+         case 'Saturated Fat':
+            return Math.round((parseInt(value, 10) / 20) * 100) + '%'
+         case 'Cholesterol':
+            return Math.round((parseInt(value, 10) / 300) * 100) + '%'
+         case 'Sodium':
+            return Math.round((parseInt(value, 10) / 2300) * 100) + '%'
+         case 'Total Carbs':
+            return Math.round((parseInt(value, 10) / 275) * 100) + '%'
+         case 'Dietary Fibre':
+            return Math.round((parseInt(value, 10) / 28) * 100) + '%'
+         default:
+            return 'NA'
+      }
+   }
+
    return (
       <Wrapper>
          <Heading>Nutrition</Heading>
-         <Calories>Calories 330</Calories>
+         <Calories>Calories {values.calories}</Calories>
          <Table>
             <TableHead>
                <TableHeadText>Amount/Serving</TableHeadText>
@@ -14,63 +33,81 @@ const Nutrition = () => {
             <TableBody>
                <TableRow>
                   <TableRowText>
-                     Total Fat <NutritionValue>60g</NutritionValue>
+                     Total Fat{' '}
+                     <NutritionValue>{values.totalFat} g</NutritionValue>
                   </TableRowText>
-                  <TableRowText>60%</TableRowText>
-               </TableRow>
-               <TableRow>
-                  <TableRowText inset>
-                     Saturated Fat <NutritionValue>40g</NutritionValue>
-                  </TableRowText>
-                  <TableRowText>20%</TableRowText>
-               </TableRow>
-               <TableRow>
-                  <TableRowText inset>
-                     Trans Fat <NutritionValue>20g</NutritionValue>
-                  </TableRowText>
-                  <TableRowText></TableRowText>
-               </TableRow>
-               <TableRow>
                   <TableRowText>
-                     Cholesterol <NutritionValue>2 mg</NutritionValue>
+                     {getDailyValue('Total Fat', values.totalFat)}
                   </TableRowText>
-                  <TableRowText>1%</TableRowText>
-               </TableRow>
-               <TableRow>
-                  <TableRowText>
-                     Sodium <NutritionValue>1 mg</NutritionValue>
-                  </TableRowText>
-                  <TableRowText>0%</TableRowText>
-               </TableRow>
-               <TableRow>
-                  <TableRowText>
-                     Total Carbs <NutritionValue>40g</NutritionValue>
-                  </TableRowText>
-                  <TableRowText>5%</TableRowText>
                </TableRow>
                <TableRow>
                   <TableRowText inset>
-                     Dietary Fibre <NutritionValue>20g</NutritionValue>
+                     Saturated Fat{' '}
+                     <NutritionValue>{values.saturatedFat} g</NutritionValue>
                   </TableRowText>
-                  <TableRowText>71%</TableRowText>
+                  <TableRowText>
+                     {getDailyValue('Saturated Fat', values.saturatedFat)}
+                  </TableRowText>
                </TableRow>
                <TableRow>
                   <TableRowText inset>
-                     Sugars <NutritionValue>20g</NutritionValue>
+                     Trans Fat{' '}
+                     <NutritionValue>{values.transFat} g</NutritionValue>
                   </TableRowText>
                </TableRow>
                <TableRow>
                   <TableRowText>
-                     Protein <NutritionValue>30g</NutritionValue>
+                     Cholesterol{' '}
+                     <NutritionValue>{values.cholesterol} mg</NutritionValue>
                   </TableRowText>
-                  <TableRowText>71%</TableRowText>
+                  <TableRowText>
+                     {getDailyValue('Cholesterol', values.cholesterol)}
+                  </TableRowText>
+               </TableRow>
+               <TableRow>
+                  <TableRowText>
+                     Sodium <NutritionValue>{values.sodium} mg</NutritionValue>
+                  </TableRowText>
+                  <TableRowText>
+                     {getDailyValue('Sodium', values.sodium)}
+                  </TableRowText>
+               </TableRow>
+               <TableRow>
+                  <TableRowText>
+                     Total Carbs{' '}
+                     <NutritionValue>
+                        {values.totalCarbohydrates} g
+                     </NutritionValue>
+                  </TableRowText>
+                  <TableRowText>
+                     {getDailyValue('Total Carbs', values.totalCarbohydrates)}
+                  </TableRowText>
+               </TableRow>
+               <TableRow>
+                  <TableRowText inset>
+                     Dietary Fibre{' '}
+                     <NutritionValue>{values.dietaryFibre} g</NutritionValue>
+                  </TableRowText>
+                  <TableRowText>
+                     {getDailyValue('Dietary Fibre', values.dietaryFibre)}
+                  </TableRowText>
+               </TableRow>
+               <TableRow>
+                  <TableRowText inset>
+                     Sugars <NutritionValue>{values.sugars} g</NutritionValue>
+                  </TableRowText>
+               </TableRow>
+               <TableRow>
+                  <TableRowText>
+                     Protein <NutritionValue>{values.protein} g</NutritionValue>
+                  </TableRowText>
                </TableRow>
             </TableBody>
             <TableFooter>
-               <TableFooterText>Vitamin A 2%</TableFooterText>
-               <TableFooterText>Vitamin C 3%</TableFooterText>
-               <TableFooterText>Calcium 3%</TableFooterText>
-               <TableFooterText>Iron 4%</TableFooterText>
+               <TableFooterText>Vitamin A {values.vitaminA}%</TableFooterText>
+               <TableFooterText>Vitamin C {values.vitaminC}%</TableFooterText>
+               <TableFooterText>Calcium {values.calcium}%</TableFooterText>
+               <TableFooterText>Iron {values.iron}%</TableFooterText>
             </TableFooter>
          </Table>
       </Wrapper>
@@ -80,9 +117,7 @@ const Nutrition = () => {
 export default Nutrition
 
 const Wrapper = styled.View`
-   padding: 0.5rem;
    max-width: 450px;
-   min-width: 350px;
 `
 
 const Heading = styled.Text`
@@ -141,7 +176,7 @@ const TableFooter = styled.View`
    flex-direction: row;
    align-items: center;
    justify-content: space-between;
-   height: 1.5rem;
+   min-height: 1.5rem;
 `
 
 const TableFooterText = styled.Text`
