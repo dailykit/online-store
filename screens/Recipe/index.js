@@ -252,6 +252,16 @@ const Recipe = ({ route, navigation }) => {
                            </View>
                         </View>
                      )}
+                     {Boolean(option?.allergens?.length) && (
+                        <View style={styles.section}>
+                           <Text style={styles.sectionTitle}>Allergens</Text>
+                           <Text style={styles.text}>
+                              {option.allergens
+                                 .map(allergen => allergen.title)
+                                 .join(', ')}
+                           </Text>
+                        </View>
+                     )}
                   </View>
                   {Boolean(option?.nutritionalInfo) && (
                      <View

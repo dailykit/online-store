@@ -47,6 +47,7 @@ export const SIMPLE_RECIPE = gql`
             id
             yield
             nutritionalInfo
+            allergens
             ingredientSachets(where: { isVisible: { _eq: true } }) {
                ingredientSachetId
                slipName
@@ -455,16 +456,8 @@ export const INVENTORY_PRODUCT = gql`
          default
          isPopupAllowed
          defaultCartItem
-         sachetItem {
-            bulkItem {
-               nutritionInfo
-            }
-         }
-         supplierItem {
-            bulkItemAsShipped {
-               nutritionInfo
-            }
-         }
+         allergens
+         nutritionalInfo
          defaultInventoryProductOption {
             id
             price

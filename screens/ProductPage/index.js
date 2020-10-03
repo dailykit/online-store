@@ -136,6 +136,16 @@ const ProductPage = ({ navigation, route }) => {
                            </Text>
                         </>
                      )}
+                     {product?.allergens && (
+                        <>
+                           <Text style={styles.sectionTitle}>Allergens</Text>
+                           <Text style={styles.text}>
+                              {product.allergens
+                                 .map(allergen => allergen.title)
+                                 .join(', ')}
+                           </Text>
+                        </>
+                     )}
                      {product?.__typename?.includes('simpleRecipeProduct') && (
                         <View style={{ marginBottom: 10 }}>
                            <View style={{ flexDirection: 'row', width: 250 }}>
@@ -210,18 +220,8 @@ const ProductPage = ({ navigation, route }) => {
                       </Text>
                     </View>
                   ))} */}
-                     {Boolean(
-                        product?.sachetItem?.bulkItem?.nutritionInfo ||
-                           product?.supplierItem?.bulkItemAsShipped
-                              ?.nutritionInfo
-                     ) && (
-                        <Nutrition
-                           values={
-                              product?.sachetItem?.bulkItem?.nutritionInfo ||
-                              product?.supplierItem?.bulkItemAsShipped
-                                 ?.nutritionInfo
-                           }
-                        />
+                     {Boolean(product?.nutritionalInfo) && (
+                        <Nutrition values={product?.nutritionalInfo} />
                      )}
                      <AddToCart
                         showInfo={false}
