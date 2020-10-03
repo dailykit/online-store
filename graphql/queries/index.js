@@ -455,6 +455,16 @@ export const INVENTORY_PRODUCT = gql`
          default
          isPopupAllowed
          defaultCartItem
+         sachetItem {
+            bulkItem {
+               nutritionInfo
+            }
+         }
+         supplierItem {
+            bulkItemAsShipped {
+               nutritionInfo
+            }
+         }
          defaultInventoryProductOption {
             id
             price

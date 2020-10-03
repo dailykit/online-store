@@ -210,7 +210,19 @@ const ProductPage = ({ navigation, route }) => {
                       </Text>
                     </View>
                   ))} */}
-                     {/* <Nutrition /> */}
+                     {Boolean(
+                        product?.sachetItem?.bulkItem?.nutritionInfo ||
+                           product?.supplierItem?.bulkItemAsShipped
+                              ?.nutritionInfo
+                     ) && (
+                        <Nutrition
+                           values={
+                              product?.sachetItem?.bulkItem?.nutritionInfo ||
+                              product?.supplierItem?.bulkItemAsShipped
+                                 ?.nutritionInfo
+                           }
+                        />
+                     )}
                      <AddToCart
                         showInfo={false}
                         setIsModalVisible={true}
