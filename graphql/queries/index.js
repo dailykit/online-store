@@ -31,6 +31,7 @@ export const SIMPLE_RECIPE = gql`
       simpleRecipe(id: $id) {
          simpleRecipeProducts {
             id
+            accompaniments
          }
          id
          name
@@ -450,6 +451,7 @@ export const INVENTORY_PRODUCT = gql`
          description
          tags
          assets
+         accompaniments
          default
          isPopupAllowed
          defaultCartItem

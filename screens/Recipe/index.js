@@ -8,6 +8,7 @@ import CheckoutBar from '../../components/CheckoutBar'
 import { Drawer } from '../../components/Drawer'
 import Header from '../../components/Header'
 import Nutrition from '../../components/Nutrition'
+import Recommendations from '../../components/Recommendations'
 import AppSkeleton from '../../components/skeletons/app'
 import { useAppContext } from '../../context/app'
 import {
@@ -229,7 +230,7 @@ const Recipe = ({ route, navigation }) => {
                                        styles.tag,
                                        {
                                           backgroundColor:
-                                             item.id === option.id
+                                             item.id === option?.id
                                                 ? visual.color
                                                 : '#e3e3e3',
                                        },
@@ -239,7 +240,7 @@ const Recipe = ({ route, navigation }) => {
                                     <Text
                                        style={{
                                           color:
-                                             item.id === option.id
+                                             item.id === option?.id
                                                 ? '#fff'
                                                 : '#111',
                                        }}
@@ -252,7 +253,7 @@ const Recipe = ({ route, navigation }) => {
                         </View>
                      )}
                   </View>
-                  {Boolean(option.nutritionalInfo) && (
+                  {Boolean(option?.nutritionalInfo) && (
                      <View
                         style={{
                            marginLeft: width > 768 ? 60 : 0,
@@ -374,6 +375,20 @@ const Recipe = ({ route, navigation }) => {
                         </View>
                      ))}
                   </View>
+               )}
+               {Boolean(
+                  simpleRecipe?.simpleRecipeProducts.find(
+                     product => product.id === refId
+                  )?.accompaniments
+               ) && (
+                  <Recommendations
+                     navigation={navigation}
+                     recommendations={
+                        simpleRecipe?.simpleRecipeProducts.find(
+                           product => product.id === refId
+                        )?.accompaniments
+                     }
+                  />
                )}
             </View>
          </ScrollView>

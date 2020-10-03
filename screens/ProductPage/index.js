@@ -16,6 +16,7 @@ import CheckoutBar from '../../components/CheckoutBar'
 import { Drawer } from '../../components/Drawer'
 import HeaderBack from '../../components/HeaderBack'
 import Nutrition from '../../components/Nutrition'
+import Recommendations from '../../components/Recommendations'
 import AppSkeleton from '../../components/skeletons/app'
 import { useAppContext } from '../../context/app'
 import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../../graphql'
@@ -103,7 +104,7 @@ const ProductPage = ({ navigation, route }) => {
             ) : (
                <HeaderBack title="Go Back" navigation={navigation} />
             )}
-            <ScrollView>
+            <ScrollView style={{ paddingHorizontal: '1rem' }}>
                <View style={styles.container}>
                   <View
                      style={{
@@ -229,6 +230,12 @@ const ProductPage = ({ navigation, route }) => {
               </TouchableOpacity> */}
                   </View>
                </View>
+               {Boolean(product.accompaniments) && (
+                  <Recommendations
+                     navigation={navigation}
+                     recommendations={product.accompaniments}
+                  />
+               )}
             </ScrollView>
             {width < 768 && <CheckoutBar navigation={navigation} />}
          </SafeAreaView>
@@ -250,6 +257,7 @@ const styles = StyleSheet.create({
       width: '100%',
       marginHorizontal: 'auto',
       flexDirection: width > 768 ? 'row' : 'column',
+      marginBottom: '32px',
    },
    image: {
       width: width > 768 ? 400 : width * 0.6,
