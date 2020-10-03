@@ -15,6 +15,7 @@ import { Header } from '../../components'
 import CheckoutBar from '../../components/CheckoutBar'
 import { Drawer } from '../../components/Drawer'
 import HeaderBack from '../../components/HeaderBack'
+import Nutrition from '../../components/Nutrition'
 import AppSkeleton from '../../components/skeletons/app'
 import { useAppContext } from '../../context/app'
 import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../../graphql'
@@ -208,7 +209,7 @@ const ProductPage = ({ navigation, route }) => {
                       </Text>
                     </View>
                   ))} */}
-
+                     <Nutrition />
                      <AddToCart
                         showInfo={false}
                         setIsModalVisible={true}
