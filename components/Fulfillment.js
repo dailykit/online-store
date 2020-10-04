@@ -10,6 +10,7 @@ import {
    TouchableOpacity,
    View,
 } from 'react-native'
+import FulfillmentSkeleton from './skeletons/fulfillment'
 import { useAppContext } from '../context/app'
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
@@ -322,13 +323,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
    }
 
    if ([PPLoading, OPLoading, PDLoading, ODLoading].some(loading => loading)) {
-      return (
-         <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-         >
-            <Spinner />
-         </View>
-      )
+      return <FulfillmentSkeleton />
    }
 
    return (
