@@ -32,7 +32,7 @@ import {
 import { DefaultAddressFloater } from './DefaultFloater'
 
 const Fulfillment = ({ navigation, setEditing }) => {
-   const { visual, availability } = useAppContext()
+   const { visual, availability, brandId } = useAppContext()
    const { cart } = useCartContext()
    const [distance, setDistance] = React.useState(0)
    const [type, setType] = React.useState('')
@@ -56,12 +56,20 @@ const Fulfillment = ({ navigation, setEditing }) => {
    const {
       data: { preOrderPickup = [] } = {},
       loading: PPLoading,
-   } = useSubscription(PREORDER_PICKUP)
+   } = useSubscription(PREORDER_PICKUP, {
+      variables: {
+         brandId,
+      },
+   })
 
    const {
       data: { onDemandPickup = [] } = {},
       loading: OPLoading,
-   } = useSubscription(ONDEMAND_PICKUP)
+   } = useSubscription(ONDEMAND_PICKUP, {
+      variables: {
+         brandId,
+      },
+   })
 
    const {
       data: { preOrderDelivery = [] } = {},
@@ -69,6 +77,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
    } = useSubscription(PREORDER_DELIVERY, {
       variables: {
          distance,
+         brandId,
       },
    })
 
@@ -78,6 +87,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
    } = useSubscription(ONDEMAND_DELIVERY, {
       variables: {
          distance,
+         brandId,
       },
    })
 

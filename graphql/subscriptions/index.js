@@ -23,11 +23,18 @@ export const ORDER = gql`
 `
 
 export const PREORDER_PICKUP = gql`
-   subscription PreOrderPickup {
+   subscription PreOrderPickup($brandId: Int!) {
       preOrderPickup: fulfillmentTypes(
          where: { isActive: { _eq: true }, value: { _eq: "PREORDER_PICKUP" } }
       ) {
-         recurrences(where: { isActive: { _eq: true } }) {
+         recurrences(
+            where: {
+               isActive: { _eq: true }
+               brands: {
+                  _and: { brandId: { _eq: $brandId }, isActive: { _eq: true } }
+               }
+            }
+         ) {
             id
             type
             rrule
@@ -43,11 +50,18 @@ export const PREORDER_PICKUP = gql`
 `
 
 export const ONDEMAND_PICKUP = gql`
-   subscription OndemandPickup {
+   subscription OndemandPickup($brandId: Int!) {
       onDemandPickup: fulfillmentTypes(
          where: { isActive: { _eq: true }, value: { _eq: "ONDEMAND_PICKUP" } }
       ) {
-         recurrences(where: { isActive: { _eq: true } }) {
+         recurrences(
+            where: {
+               isActive: { _eq: true }
+               brands: {
+                  _and: { brandId: { _eq: $brandId }, isActive: { _eq: true } }
+               }
+            }
+         ) {
             id
             type
             rrule
@@ -63,11 +77,18 @@ export const ONDEMAND_PICKUP = gql`
 `
 
 export const PREORDER_DELIVERY = gql`
-   subscription PreOrderDelivery($distance: numeric!) {
+   subscription PreOrderDelivery($distance: numeric!, $brandId: Int!) {
       preOrderDelivery: fulfillmentTypes(
          where: { isActive: { _eq: true }, value: { _eq: "PREORDER_DELIVERY" } }
       ) {
-         recurrences(where: { isActive: { _eq: true } }) {
+         recurrences(
+            where: {
+               isActive: { _eq: true }
+               brands: {
+                  _and: { brandId: { _eq: $brandId }, isActive: { _eq: true } }
+               }
+            }
+         ) {
             id
             type
             rrule
@@ -101,11 +122,18 @@ export const PREORDER_DELIVERY = gql`
 `
 
 export const ONDEMAND_DELIVERY = gql`
-   subscription OnDemandDelivery($distance: numeric!) {
+   subscription OnDemandDelivery($distance: numeric!, $brandId: Int!) {
       onDemandDelivery: fulfillmentTypes(
          where: { isActive: { _eq: true }, value: { _eq: "ONDEMAND_DELIVERY" } }
       ) {
-         recurrences(where: { isActive: { _eq: true } }) {
+         recurrences(
+            where: {
+               isActive: { _eq: true }
+               brands: {
+                  _and: { brandId: { _eq: $brandId }, isActive: { _eq: true } }
+               }
+            }
+         ) {
             id
             type
             rrule
