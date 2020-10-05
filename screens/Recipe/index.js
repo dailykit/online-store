@@ -3,9 +3,12 @@ import { Spinner } from 'native-base'
 import React from 'react'
 import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
+import styled from 'styled-components'
 import CheckoutBar from '../../components/CheckoutBar'
 import { Drawer } from '../../components/Drawer'
 import Header from '../../components/Header'
+import Nutrition from '../../components/Nutrition'
+import Recommendations from '../../components/Recommendations'
 import AppSkeleton from '../../components/skeletons/app'
 import { useAppContext } from '../../context/app'
 import {
@@ -158,84 +161,121 @@ const Recipe = ({ route, navigation }) => {
                <View
                   style={[
                      styles.section,
-                     {
-                        flexDirection: 'row',
-                        flexWrap: 'wrap',
-                        marginBottom: 0,
-                     },
+                     { flexDirection: width > 768 ? 'row' : 'column' },
                   ]}
                >
-                  <View style={styles.tile}>
-                     <Text style={styles.sectionTitle}>Type</Text>
-                     <Text
+                  <View>
+                     <View
                         style={[
-                           styles.text,
+                           styles.section,
                            {
-                              color:
-                                 simpleRecipe?.type === 'Non-vegetarian'
-                                    ? '#FF545A'
-                                    : '#FF545A',
+                              flexDirection: 'row',
+                              flexWrap: 'wrap',
+                              marginBottom: 0,
                            },
                         ]}
                      >
-                        {simpleRecipe?.type}
-                     </Text>
-                  </View>
-                  <View style={styles.tile}>
-                     <Text style={styles.sectionTitle}>Cuisine</Text>
-                     <Text style={styles.text}>{simpleRecipe?.cuisine}</Text>
-                  </View>
-                  <View style={styles.tile}>
-                     <Text style={styles.sectionTitle}>Author</Text>
-                     <Text style={styles.text}>{simpleRecipe?.author}</Text>
-                  </View>
-                  <View style={styles.tile}>
-                     <Text style={styles.sectionTitle}>Cooking Time</Text>
-                     <Text style={styles.text}>
-                        {simpleRecipe?.cookingTime} mins.
-                     </Text>
-                  </View>
-               </View>
-               {Boolean(simpleRecipe?.utensils?.length) && (
-                  <View style={styles.section}>
-                     <Text style={styles.sectionTitle}>Utensils Required</Text>
-                     <Text style={styles.text}>
-                        {simpleRecipe.utensils.join(', ')}
-                     </Text>
-                  </View>
-               )}
-               {Boolean(option) && (
-                  <>
-                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Servings</Text>
-                        <View style={{ flexDirection: 'row' }}>
-                           {simpleRecipe.simpleRecipeYields.map(item => (
-                              <TouchableOpacity
-                                 style={[
-                                    styles.tag,
-                                    {
-                                       backgroundColor:
-                                          item.id === option.id
-                                             ? visual.color
-                                             : '#e3e3e3',
-                                    },
-                                 ]}
-                                 onPress={() => setOption(item)}
-                              >
-                                 <Text
-                                    style={{
-                                       color:
-                                          item.id === option.id
-                                             ? '#fff'
-                                             : '#111',
-                                    }}
-                                 >
-                                    {item.yield.serving}
-                                 </Text>
-                              </TouchableOpacity>
-                           ))}
+                        <View style={styles.tile}>
+                           <Text style={styles.sectionTitle}>Type</Text>
+                           <Text
+                              style={[
+                                 styles.text,
+                                 {
+                                    color:
+                                       simpleRecipe?.type === 'Non-vegetarian'
+                                          ? '#FF545A'
+                                          : '#FF545A',
+                                 },
+                              ]}
+                           >
+                              {simpleRecipe?.type}
+                           </Text>
+                        </View>
+                        <View style={styles.tile}>
+                           <Text style={styles.sectionTitle}>Cuisine</Text>
+                           <Text style={styles.text}>
+                              {simpleRecipe?.cuisine}
+                           </Text>
+                        </View>
+                        <View style={styles.tile}>
+                           <Text style={styles.sectionTitle}>Author</Text>
+                           <Text style={styles.text}>
+                              {simpleRecipe?.author}
+                           </Text>
+                        </View>
+                        <View style={styles.tile}>
+                           <Text style={styles.sectionTitle}>Cooking Time</Text>
+                           <Text style={styles.text}>
+                              {simpleRecipe?.cookingTime} mins.
+                           </Text>
                         </View>
                      </View>
+                     {Boolean(simpleRecipe?.utensils?.length) && (
+                        <View style={styles.section}>
+                           <Text style={styles.sectionTitle}>
+                              Utensils Required
+                           </Text>
+                           <Text style={styles.text}>
+                              {simpleRecipe.utensils.join(', ')}
+                           </Text>
+                        </View>
+                     )}
+                     {Boolean(option) && (
+                        <View style={styles.section}>
+                           <Text style={styles.sectionTitle}>Servings</Text>
+                           <View style={{ flexDirection: 'row' }}>
+                              {simpleRecipe.simpleRecipeYields.map(item => (
+                                 <TouchableOpacity
+                                    style={[
+                                       styles.tag,
+                                       {
+                                          backgroundColor:
+                                             item.id === option?.id
+                                                ? visual.color
+                                                : '#e3e3e3',
+                                       },
+                                    ]}
+                                    onPress={() => setOption(item)}
+                                 >
+                                    <Text
+                                       style={{
+                                          color:
+                                             item.id === option?.id
+                                                ? '#fff'
+                                                : '#111',
+                                       }}
+                                    >
+                                       {item.yield.serving}
+                                    </Text>
+                                 </TouchableOpacity>
+                              ))}
+                           </View>
+                        </View>
+                     )}
+                     {Boolean(option?.allergens?.length) && (
+                        <View style={styles.section}>
+                           <Text style={styles.sectionTitle}>Allergens</Text>
+                           <Text style={styles.text}>
+                              {option.allergens
+                                 .map(allergen => allergen.title)
+                                 .join(', ')}
+                           </Text>
+                        </View>
+                     )}
+                  </View>
+                  {Boolean(option?.nutritionalInfo) && (
+                     <View
+                        style={{
+                           marginLeft: width > 768 ? 60 : 0,
+                           width: '100%',
+                        }}
+                     >
+                        <Nutrition values={option.nutritionalInfo} />
+                     </View>
+                  )}
+               </View>
+               {Boolean(option) && (
+                  <>
                      <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Ingredients</Text>
                         <ScrollView horizontal>
@@ -345,6 +385,20 @@ const Recipe = ({ route, navigation }) => {
                         </View>
                      ))}
                   </View>
+               )}
+               {Boolean(
+                  simpleRecipe?.simpleRecipeProducts.find(
+                     product => product.id === refId
+                  )?.accompaniments
+               ) && (
+                  <Recommendations
+                     navigation={navigation}
+                     recommendations={
+                        simpleRecipe?.simpleRecipeProducts.find(
+                           product => product.id === refId
+                        )?.accompaniments
+                     }
+                  />
                )}
             </View>
          </ScrollView>

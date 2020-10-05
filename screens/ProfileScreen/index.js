@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import React from 'react'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, Clipboard } from 'react-native'
 import styled from 'styled-components/native'
 import { Header } from '../../components'
 import Auth from '../../components/error/Auth'
@@ -9,6 +9,7 @@ import { useAppContext } from '../../context/app'
 import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { width } from '../../utils/Scalaing'
+// import Clipboard from '@react-native-community/clipboard'
 
 const ProfileScreen = ({ navigation }) => {
    const { visual, masterLoading } = useAppContext()
@@ -34,6 +35,7 @@ const ProfileScreen = ({ navigation }) => {
                   }`}</BannerName>
                )}
             </Banner>
+            <ReferralCode />
             <PersonalDetails />
             <Addresses />
             <Cards />
@@ -43,6 +45,43 @@ const ProfileScreen = ({ navigation }) => {
 }
 
 export default ProfileScreen
+
+const ReferralCode = () => {
+   const { customerReferral } = useCartContext()
+   const { open } = useDrawerContext()
+   const { visual } = useAppContext()
+
+   return (
+      <Section>
+         <SectionTileLabel>Your Referral Code</SectionTileLabel>
+         <ReferralCodeContainer>
+            <Code>{customerReferral?.referralCode}</Code>
+            <CopyBtn
+               onPress={() =>
+                  Clipboard.setString(customerReferral?.referralCode)
+               }
+            >
+               <Feather name="copy" color="#666" size={20} />
+            </CopyBtn>
+         </ReferralCodeContainer>
+         {customerReferral.referredByCode ? (
+            <>
+               <SectionTileLabel>Referred By</SectionTileLabel>
+               <ReferralCodeContainer>
+                  <Code>{customerReferral?.referralCode}</Code>
+               </ReferralCodeContainer>
+            </>
+         ) : (
+            <ReferrerText
+               color={visual.color}
+               onPress={() => open('ReferralCode')}
+            >
+               Someone referred you?
+            </ReferrerText>
+         )}
+      </Section>
+   )
+}
 
 const PersonalDetails = () => {
    const { visual } = useAppContext()
@@ -263,4 +302,18 @@ const ButtonTile = styled.TouchableOpacity`
 
 const ButtonTileText = styled.Text`
    font-color: #333;
+`
+
+const ReferralCodeContainer = styled.View`
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
+`
+
+const Code = styled.Text``
+
+const CopyBtn = styled.TouchableOpacity``
+
+const ReferrerText = styled.Text`
+   color: ${props => props.color};
 `

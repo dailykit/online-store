@@ -31,6 +31,7 @@ export const SIMPLE_RECIPE = gql`
       simpleRecipe(id: $id) {
          simpleRecipeProducts {
             id
+            accompaniments
          }
          id
          name
@@ -45,6 +46,8 @@ export const SIMPLE_RECIPE = gql`
          simpleRecipeYields(order_by: { yield: asc }) {
             id
             yield
+            nutritionalInfo
+            allergens
             ingredientSachets(where: { isVisible: { _eq: true } }) {
                ingredientSachetId
                slipName
@@ -449,9 +452,12 @@ export const INVENTORY_PRODUCT = gql`
          description
          tags
          assets
+         accompaniments
          default
          isPopupAllowed
          defaultCartItem
+         allergens
+         nutritionalInfo
          defaultInventoryProductOption {
             id
             price

@@ -22,7 +22,7 @@ import { useDrawerContext } from './drawer'
 const CartContext = React.createContext()
 
 export const CartContextProvider = ({ children }) => {
-   const { availability } = useAppContext()
+   const { availability, brandId } = useAppContext()
 
    const { saved } = useDrawerContext()
 
@@ -82,11 +82,21 @@ export const CartContextProvider = ({ children }) => {
 
    // Subscriptions
    const { data: { preOrderPickup = [] } = {} } = useSubscription(
-      PREORDER_PICKUP
+      PREORDER_PICKUP,
+      {
+         variables: {
+            brandId,
+         },
+      }
    )
 
    const { data: { onDemandPickup = [] } = {} } = useSubscription(
-      ONDEMAND_PICKUP
+      ONDEMAND_PICKUP,
+      {
+         variables: {
+            brandId,
+         },
+      }
    )
 
    const { data: { preOrderDelivery = [] } = {} } = useSubscription(
@@ -94,6 +104,7 @@ export const CartContextProvider = ({ children }) => {
       {
          variables: {
             distance,
+            brandId,
          },
       }
    )
@@ -103,6 +114,7 @@ export const CartContextProvider = ({ children }) => {
       {
          variables: {
             distance,
+            brandId,
          },
       }
    )
