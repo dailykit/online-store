@@ -164,28 +164,26 @@ export default function OnboardingStack(props) {
                      }
                      case 'Store Live': {
                         availabilityState.isStoreLive =
-                           brandSettings[0]?.value.isStoreLive ||
-                           value.isStoreLive
+                           brandSettings[0]?.value || value
                         availabilityState.isStripeConfigured =
-                           brandSettings[0]?.value.isStripeConfigured ||
-                           value.isStripeConfigured
+                           brandSettings[0]?.value || value
                         return
                      }
                      case 'Loyalty Points Availability': {
                         rewardsState.isLoyaltyPointsAvailable =
-                           brandSettings[0]?.value.isAvailable ||
+                           brandSettings[0]?.value.isAvailable ??
                            value.isAvailable
                         return
                      }
                      case 'Wallet Availability': {
                         rewardsState.isWalletAvailable =
-                           brandSettings[0]?.value.isAvailable ||
+                           brandSettings[0]?.value.isAvailable ??
                            value.isAvailable
                         return
                      }
                      case 'Coupons Availability': {
                         rewardsState.isCouponsAvailable =
-                           brandSettings[0]?.value.isAvailable ||
+                           brandSettings[0]?.value.isAvailable ??
                            value.isAvailable
                         return
                      }

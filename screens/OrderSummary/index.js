@@ -256,7 +256,7 @@ const Checkout = ({ cart, navigation }) => {
 }
 
 const Cart = ({ cart }) => {
-   const { visual } = useAppContext()
+   const { visual, rewardsSettings } = useAppContext()
    const { setCart } = useCartContext()
    const { isAuthenticated } = useAuth()
 
@@ -558,12 +558,16 @@ const Cart = ({ cart }) => {
             ))}
          </CartItems>
          <CartBilling>
-            {isAuthenticated ? (
-               <Coupon cart={cart} />
-            ) : (
-               <HelpText>
-                  Discount coupons are only available when logged in!
-               </HelpText>
+            {Boolean(rewardsSettings.isCouponsAvailable) && (
+               <>
+                  {isAuthenticated ? (
+                     <Coupon cart={cart} />
+                  ) : (
+                     <HelpText>
+                        Discount coupons are only available when logged in!
+                     </HelpText>
+                  )}
+               </>
             )}
             <CartBillingHeading>Bill Details</CartBillingHeading>
             <CartBillingDetail>
@@ -586,7 +590,9 @@ const Cart = ({ cart }) => {
                   </CartBillingDetailText>
                </CartBillingDetail>
             )}
-            {Boolean(isAuthenticated) && <PayWithLoyaltyPoints />}
+            {Boolean(
+               isAuthenticated && rewardsSettings.isLoyaltyPointsAvailable
+            ) && <PayWithLoyaltyPoints />}
             <Divider margin="8px" />
             <CartBillingDetail>
                <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
@@ -611,7 +617,7 @@ const Cart = ({ cart }) => {
                </CartDiscountText>
             </CartFooter>
          )}
-         {Boolean(isAuthenticated) && (
+         {Boolean(isAuthenticated && rewardsSettings.isWalletAvailable) && (
             <WalletWrapper>
                <PayWithWallet />
             </WalletWrapper>
