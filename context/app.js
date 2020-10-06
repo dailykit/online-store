@@ -17,6 +17,7 @@ export const AppContextProvider = ({ children }) => {
          'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80',
    })
    const [availability, setAvailability] = useState(undefined)
+   const [rewardsSettings, setRewardsSettings] = useState(undefined)
 
    const [menuData, setMenuData] = React.useState([])
    const [masterLoading, setMasterLoading] = React.useState(true)
@@ -37,6 +38,8 @@ export const AppContextProvider = ({ children }) => {
             brand,
             setAvailability,
             availability,
+            rewardsSettings,
+            setRewardsSettings,
             menuData,
             setMenuData,
             masterLoading,
