@@ -31,7 +31,7 @@ export default PayWithWallet
 const Wrapper = styled.View`
    border: 1px solid #e9e9eb;
    padding: 8px;
-   margin-bottom: 8px;
+   margin: 8px 0;
    flex-direction: row;
    align-items: center;
    justify-content: space-between;
