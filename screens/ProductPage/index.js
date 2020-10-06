@@ -242,10 +242,10 @@ const ProductPage = ({ navigation, route }) => {
               </TouchableOpacity> */}
                   </View>
                </View>
-               {Boolean(product.accompaniments) && (
+               {Boolean(product.recommendations) && (
                   <Recommendations
                      navigation={navigation}
-                     recommendations={product.accompaniments}
+                     recommendations={product.recommendations}
                   />
                )}
             </ScrollView>

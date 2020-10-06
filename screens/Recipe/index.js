@@ -389,14 +389,14 @@ const Recipe = ({ route, navigation }) => {
                {Boolean(
                   simpleRecipe?.simpleRecipeProducts.find(
                      product => product.id === refId
-                  )?.accompaniments
+                  )?.recommendations
                ) && (
                   <Recommendations
                      navigation={navigation}
                      recommendations={
                         simpleRecipe?.simpleRecipeProducts.find(
                            product => product.id === refId
-                        )?.accompaniments
+                        )?.recommendations
                      }
                   />
                )}
