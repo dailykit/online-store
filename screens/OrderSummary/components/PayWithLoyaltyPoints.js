@@ -2,25 +2,110 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { useCartContext } from '../../../context/cart'
 import { useAppContext } from '../../../context/app'
+import { useMutation } from '@apollo/react-hooks'
+import { UPDATE_CART } from '../../../graphql'
+import { Feather } from '@expo/vector-icons'
 
 const PayWithLoyaltyPoints = () => {
-   const { loyaltyPoints } = useCartContext()
+   const { loyaltyPoints, cart } = useCartContext()
    const { visual } = useAppContext()
+   const [value, setValue] = React.useState(cart.loyaltyPointsUsable)
+   const [isInputing, setIsInputing] = React.useState(false)
+
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: () => {
+         console.log('Loyalty points added!')
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   const save = () => {
+      try {
+         if (Number.isInteger(value) && value > 0) {
+            if (value <= cart.loyaltyPointsUsable) {
+               if (value <= loyaltyPoints.points) {
+                  updateCart({
+                     variables: {
+                        id: cart.id,
+                        set: {
+                           loyaltyPointsUsed: value,
+                        },
+                     },
+                  })
+               } else {
+                  throw Error('Not enough points!')
+               }
+            } else {
+               throw Error('Max value exceeded!')
+            }
+         } else {
+            throw Error('Invalid input!')
+         }
+      } catch (err) {
+         console.log(err)
+      }
+   }
 
    return (
       <>
          {Boolean(loyaltyPoints?.points) && (
-            <Wrapper>
-               <Content>
-                  <Header>Use Loyalty Points</Header>
-                  <AvailableText>
-                     Available: <Points>{loyaltyPoints.points}</Points>
-                  </AvailableText>
-               </Content>
-               <CTA color={visual.color}>
-                  <CTAText color={visual.color}>Use</CTAText>
-               </CTA>
-            </Wrapper>
+            <>
+               {cart.loyaltyPointsUsed ? (
+                  <Field>
+                     <FieldText>Loyalty Points Used:</FieldText>
+                     <PointsContainer>
+                        <Remove
+                           onPress={() =>
+                              updateCart({
+                                 variables: {
+                                    id: cart.id,
+                                    set: {
+                                       loyaltyPointsUsed: 0,
+                                    },
+                                 },
+                              })
+                           }
+                        >
+                           <Feather color="#FF5A52" name="x" size={16} />
+                        </Remove>
+                        <FieldText>{cart.loyaltyPointsUsed}</FieldText>
+                     </PointsContainer>
+                  </Field>
+               ) : (
+                  <Wrapper>
+                     {isInputing ? (
+                        <>
+                           <Input
+                              value={value}
+                              onChangeText={val => setValue(+val)}
+                           />
+                           <PointsText>
+                              Max: <Points>{cart.loyaltyPointsUsable}</Points>
+                           </PointsText>
+                        </>
+                     ) : (
+                        <Content>
+                           <Header>Use Loyalty Points?</Header>
+                           <PointsText>
+                              Available: <Points>{loyaltyPoints.points}</Points>
+                           </PointsText>
+                        </Content>
+                     )}
+                     <CTA
+                        color={visual.color}
+                        onPress={() =>
+                           isInputing ? save() : setIsInputing(true)
+                        }
+                     >
+                        <CTAText color={visual.color}>
+                           {isInputing ? 'Use' : 'Yes'}
+                        </CTAText>
+                     </CTA>
+                  </Wrapper>
+               )}
+            </>
          )}
       </>
    )
@@ -31,7 +116,7 @@ export default PayWithLoyaltyPoints
 const Wrapper = styled.View`
    border: 1px solid #e9e9eb;
    padding: 8px;
-   margin-bottom: 8px;
+   margin-top: 8px;
    flex-direction: row;
    align-items: center;
    justify-content: space-between;
@@ -55,7 +140,7 @@ const Header = styled.Text`
    margin-bottom: 0.5rem;
 `
 
-const AvailableText = styled.Text`
+const PointsText = styled.Text`
    font-size: 12px;
    color: #686b78;
 `
@@ -64,4 +149,31 @@ const Points = styled.Text`
    font-size: 12px;
    color: #686b78;
    font-weight: bold;
+`
+
+const Input = styled.TextInput`
+   border-bottom-width: 1px;
+   border-bottom-color: #686b78;
+   color: #686b78;
+`
+
+const Field = styled.View`
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
+   margin-top: 8px;
+`
+
+const FieldText = styled.Text`
+   font-size: 13px;
+   color: #686b78;
+`
+
+const PointsContainer = styled.View`
+   flex-direction: row;
+   align-items: center;
+`
+
+const Remove = styled.TouchableOpacity`
+   margin-right: 0.5rem;
 `
