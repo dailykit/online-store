@@ -590,9 +590,6 @@ const Cart = ({ cart }) => {
                   </CartBillingDetailText>
                </CartBillingDetail>
             )}
-            {Boolean(
-               isAuthenticated && rewardsSettings.isLoyaltyPointsAvailable
-            ) && <PayWithLoyaltyPoints />}
             <Divider margin="8px" />
             <CartBillingDetail>
                <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
@@ -617,10 +614,17 @@ const Cart = ({ cart }) => {
                </CartDiscountText>
             </CartFooter>
          )}
+         {Boolean(
+            isAuthenticated && rewardsSettings.isLoyaltyPointsAvailable
+         ) && (
+            <FooterContentWrapper>
+               <PayWithLoyaltyPoints />
+            </FooterContentWrapper>
+         )}
          {Boolean(isAuthenticated && rewardsSettings.isWalletAvailable) && (
-            <WalletWrapper>
+            <FooterContentWrapper>
                <PayWithWallet />
-            </WalletWrapper>
+            </FooterContentWrapper>
          )}
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
@@ -942,7 +946,7 @@ const Divider = styled.View`
    margin-bottom: ${props => props.margin || '0px'};
 `
 
-const WalletWrapper = styled.View`
+const FooterContentWrapper = styled.View`
    padding: ${width > 768 ? '0px 30px' : '0px 10px'};
    background: #fff;
 `

@@ -236,6 +236,8 @@ export const CART = gql`
          paymentStatus
          orderId
          discount
+         loyaltyPointsUsable
+         loyaltyPointsUsed
       }
    }
 `
