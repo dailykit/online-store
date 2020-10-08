@@ -10,6 +10,7 @@ const PayWithLoyaltyPoints = () => {
    const { loyaltyPoints, cart } = useCartContext()
    const { visual } = useAppContext()
    const [value, setValue] = React.useState(cart.loyaltyPointsUsable)
+   const [error, setError] = React.useState('')
    const [isInputing, setIsInputing] = React.useState(false)
 
    const [updateCart] = useMutation(UPDATE_CART, {
@@ -23,14 +24,16 @@ const PayWithLoyaltyPoints = () => {
 
    const save = () => {
       try {
-         if (Number.isInteger(value) && value > 0) {
-            if (value <= cart.loyaltyPointsUsable) {
-               if (value <= loyaltyPoints.points) {
+         setError('')
+         const val = +value
+         if (!Number.isNaN(val) && Number.isInteger(val) && val > 0) {
+            if (val <= cart.loyaltyPointsUsable) {
+               if (val <= loyaltyPoints.points) {
                   updateCart({
                      variables: {
                         id: cart.id,
                         set: {
-                           loyaltyPointsUsed: value,
+                           loyaltyPointsUsed: val,
                         },
                      },
                   })
@@ -44,7 +47,7 @@ const PayWithLoyaltyPoints = () => {
             throw Error('Invalid input!')
          }
       } catch (err) {
-         console.log(err)
+         setError(err.message)
       }
    }
 
@@ -77,10 +80,13 @@ const PayWithLoyaltyPoints = () => {
                   <Wrapper>
                      {isInputing ? (
                         <>
-                           <Input
-                              value={value}
-                              onChangeText={val => setValue(+val)}
-                           />
+                           <InputGroup>
+                              {Boolean(error) && <ErrorText>{error}</ErrorText>}
+                              <Input
+                                 value={value}
+                                 onChangeText={val => setValue(val)}
+                              />
+                           </InputGroup>
                            <PointsText>
                               Max: <Points>{cart.loyaltyPointsUsable}</Points>
                            </PointsText>
@@ -149,6 +155,12 @@ const Points = styled.Text`
    font-size: 12px;
    color: #686b78;
    font-weight: bold;
+`
+
+const InputGroup = styled.View``
+
+const ErrorText = styled.Text`
+   color: #ff5a52;
 `
 
 const Input = styled.TextInput`

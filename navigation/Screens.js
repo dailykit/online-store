@@ -164,9 +164,11 @@ export default function OnboardingStack(props) {
                      }
                      case 'Store Live': {
                         availabilityState.isStoreLive =
-                           brandSettings[0]?.value || value
+                           brandSettings[0]?.value?.isStoreLive ??
+                           value.isStoreLive
                         availabilityState.isStripeConfigured =
-                           brandSettings[0]?.value || value
+                           brandSettings[0]?.value?.isStripeConfigured ??
+                           value.isStripeConfigured
                         return
                      }
                      case 'Loyalty Points Availability': {

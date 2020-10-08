@@ -41,9 +41,11 @@ const PaymentProcessing = ({ navigation }) => {
             isStripeConfigured: availability.isStripeConfigured,
          })
          if (
-            customer.isTest ||
-            !availability.isStoreLive ||
-            !availability.isStripeConfigured
+            [
+               customer.isTest,
+               !availability.isStoreLive,
+               !availability.isStripeConfigured,
+            ].some(val => val)
          ) {
             console.log('Test user: Bypassing payments...')
             updateCart({
