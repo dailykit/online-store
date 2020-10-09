@@ -49,6 +49,10 @@ const PayWithWallet = () => {
       }
    }
 
+   if (cart.walletAmountUsable === 0) {
+      return null
+   }
+
    return (
       <>
          {Boolean(wallet?.amount) && (

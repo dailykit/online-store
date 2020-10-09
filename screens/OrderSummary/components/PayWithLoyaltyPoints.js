@@ -47,6 +47,10 @@ const PayWithLoyaltyPoints = () => {
       }
    }
 
+   if (cart.loyaltyPointsUsable === 0) {
+      return null
+   }
+
    return (
       <>
          {Boolean(loyaltyPoints?.points) && (
