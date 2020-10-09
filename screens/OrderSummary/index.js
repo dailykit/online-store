@@ -241,7 +241,11 @@ const Checkout = ({ cart, navigation }) => {
                         cart.isValid.status && open('Payment', { navigation })
                      }
                   >
-                     <CTAText>PAY ${cart.totalPrice.toFixed(2)}</CTAText>
+                     <CTAText>
+                        {cart.totalPrice
+                           ? `PAY $${cart.totalPrice}`
+                           : 'PLACE ORDER'}
+                     </CTAText>
                   </CTA>
                   {!cart.isValid.status && (
                      <Error>

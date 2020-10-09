@@ -35,50 +35,16 @@ const PaymentProcessing = ({ navigation }) => {
    //Effects
    React.useEffect(() => {
       if (cart?.id) {
-         console.log({
-            isTest: customer.isTest,
-            isStoreLive: availability.isStoreLive,
-            isStripeConfigured: availability.isStripeConfigured,
+         updateCart({
+            variables: {
+               id: cart.id,
+               set: {
+                  status: 'PROCESS',
+                  amount: cart.totalPrice,
+                  couponDiscount: cart.discount,
+               },
+            },
          })
-         if (
-            [
-               customer.isTest,
-               !availability.isStoreLive,
-               !availability.isStripeConfigured,
-            ].some(val => val)
-         ) {
-            console.log('Test user: Bypassing payments...')
-            updateCart({
-               variables: {
-                  id: cart.id,
-                  set: {
-                     status: 'TEST_PROCESS',
-                     paymentStatus: 'SUCCEEDED',
-                     amount: cart.totalPrice,
-                     couponDiscount: cart.discount,
-                     isTest: true,
-                     transactionId: 'pi_1HHW5aGKMRh0bTai1N_TEST',
-                     transactionRemark: {
-                        id: 'pi_1HHW5aGKMRh0bTai1N_TEST',
-                        amount: cart.totalPrice * 100,
-                        object: 'payment_intent',
-                     },
-                  },
-               },
-            })
-         } else {
-            console.log('Charging through live mode...')
-            updateCart({
-               variables: {
-                  id: cart.id,
-                  set: {
-                     status: 'PROCESS',
-                     amount: cart.totalPrice,
-                     couponDiscount: cart.discount,
-                  },
-               },
-            })
-         }
          setCartId(cart.id)
       } else {
          navigation.navigate('Home')
