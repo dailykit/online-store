@@ -11,7 +11,7 @@ const PayWithWallet = () => {
    const { visual } = useAppContext()
 
    const [isInputing, setIsInputing] = React.useState(false)
-   const [value, setValue] = React.useState('')
+   const [value, setValue] = React.useState(cart.walletAmountUsable)
    const [error, setError] = React.useState('')
 
    const [updateCart] = useMutation(UPDATE_CART, {
@@ -28,19 +28,15 @@ const PayWithWallet = () => {
          setError('')
          const val = +value
          if (!Number.isNaN(val) && val > 0) {
-            if (val <= Math.min(wallet.amount, cart.totalPrice)) {
-               if (val <= wallet.amount) {
-                  updateCart({
-                     variables: {
-                        id: cart.id,
-                        set: {
-                           walletAmount: val,
-                        },
+            if (val <= cart.walletAmountUsable) {
+               updateCart({
+                  variables: {
+                     id: cart.id,
+                     set: {
+                        walletAmountUsed: val,
                      },
-                  })
-               } else {
-                  throw Error('Not enough funds!')
-               }
+                  },
+               })
             } else {
                throw Error('Max limit exceeded!')
             }
@@ -57,7 +53,7 @@ const PayWithWallet = () => {
       <>
          {Boolean(wallet?.amount) && (
             <>
-               {cart.walletAmount ? (
+               {cart.walletAmountUsed ? (
                   <Field>
                      <FieldText>Wallet Amount Used:</FieldText>
                      <AmountContainer>
@@ -67,7 +63,7 @@ const PayWithWallet = () => {
                                  variables: {
                                     id: cart.id,
                                     set: {
-                                       walletAmount: 0,
+                                       walletAmountUsed: 0,
                                     },
                                  },
                               })
@@ -75,7 +71,9 @@ const PayWithWallet = () => {
                         >
                            <Feather color="#FF5A52" name="x" size={16} />
                         </Remove>
-                        <FieldText>{cart.walletAmount}</FieldText>
+                        <FieldText>
+                           {cart.walletAmountUsed.toFixed(2)}
+                        </FieldText>
                      </AmountContainer>
                   </Field>
                ) : (
@@ -92,11 +90,7 @@ const PayWithWallet = () => {
                            <AmountText>
                               Max:{' '}
                               <Amount>
-                                 ${' '}
-                                 {Math.min(
-                                    wallet.amount,
-                                    cart.totalPrice
-                                 ).toFixed(2)}
+                                 $ {cart.walletAmountUsable.toFixed(2)}
                               </Amount>
                            </AmountText>
                         </>
