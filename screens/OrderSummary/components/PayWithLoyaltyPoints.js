@@ -161,6 +161,7 @@ const InputGroup = styled.View``
 
 const ErrorText = styled.Text`
    color: #ff5a52;
+   font-size: 12px;
 `
 
 const Input = styled.TextInput`

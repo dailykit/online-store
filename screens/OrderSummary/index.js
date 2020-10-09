@@ -241,7 +241,7 @@ const Checkout = ({ cart, navigation }) => {
                         cart.isValid.status && open('Payment', { navigation })
                      }
                   >
-                     <CTAText>PAY ${cart.totalPrice}</CTAText>
+                     <CTAText>PAY ${cart.totalPrice.toFixed(2)}</CTAText>
                   </CTA>
                   {!cart.isValid.status && (
                      <Error>
