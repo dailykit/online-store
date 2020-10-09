@@ -238,6 +238,8 @@ export const CART = gql`
          discount
          loyaltyPointsUsable
          loyaltyPointsUsed
+         walletAmountUsable
+         walletAmountUsed
       }
    }
 `

@@ -28,18 +28,14 @@ const PayWithLoyaltyPoints = () => {
          const val = +value
          if (!Number.isNaN(val) && Number.isInteger(val) && val > 0) {
             if (val <= cart.loyaltyPointsUsable) {
-               if (val <= loyaltyPoints.points) {
-                  updateCart({
-                     variables: {
-                        id: cart.id,
-                        set: {
-                           loyaltyPointsUsed: val,
-                        },
+               updateCart({
+                  variables: {
+                     id: cart.id,
+                     set: {
+                        loyaltyPointsUsed: val,
                      },
-                  })
-               } else {
-                  throw Error('Not enough points!')
-               }
+                  },
+               })
             } else {
                throw Error('Max value exceeded!')
             }
@@ -49,6 +45,10 @@ const PayWithLoyaltyPoints = () => {
       } catch (err) {
          setError(err.message)
       }
+   }
+
+   if (cart.loyaltyPointsUsable === 0) {
+      return null
    }
 
    return (
@@ -161,6 +161,7 @@ const InputGroup = styled.View``
 
 const ErrorText = styled.Text`
    color: #ff5a52;
+   font-size: 12px;
 `
 
 const Input = styled.TextInput`
