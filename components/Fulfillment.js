@@ -10,6 +10,7 @@ import {
    TouchableOpacity,
    View,
 } from 'react-native'
+import FulfillmentSkeleton from './skeletons/fulfillment'
 import { useAppContext } from '../context/app'
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
@@ -32,7 +33,7 @@ import {
 import { DefaultAddressFloater } from './DefaultFloater'
 
 const Fulfillment = ({ navigation, setEditing }) => {
-   const { visual, availability } = useAppContext()
+   const { visual, availability, brandId } = useAppContext()
    const { cart } = useCartContext()
    const [distance, setDistance] = React.useState(0)
    const [type, setType] = React.useState('')
@@ -56,12 +57,20 @@ const Fulfillment = ({ navigation, setEditing }) => {
    const {
       data: { preOrderPickup = [] } = {},
       loading: PPLoading,
-   } = useSubscription(PREORDER_PICKUP)
+   } = useSubscription(PREORDER_PICKUP, {
+      variables: {
+         brandId,
+      },
+   })
 
    const {
       data: { onDemandPickup = [] } = {},
       loading: OPLoading,
-   } = useSubscription(ONDEMAND_PICKUP)
+   } = useSubscription(ONDEMAND_PICKUP, {
+      variables: {
+         brandId,
+      },
+   })
 
    const {
       data: { preOrderDelivery = [] } = {},
@@ -69,6 +78,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
    } = useSubscription(PREORDER_DELIVERY, {
       variables: {
          distance,
+         brandId,
       },
    })
 
@@ -78,6 +88,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
    } = useSubscription(ONDEMAND_DELIVERY, {
       variables: {
          distance,
+         brandId,
       },
    })
 
@@ -312,13 +323,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
    }
 
    if ([PPLoading, OPLoading, PDLoading, ODLoading].some(loading => loading)) {
-      return (
-         <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-         >
-            <Spinner />
-         </View>
-      )
+      return <FulfillmentSkeleton />
    }
 
    return (
@@ -326,7 +331,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
          <View style={styles.headingContainer}>
             <Text style={styles.heading}>Help us know your preference</Text>
             <TouchableOpacity onPress={() => setEditing(false)}>
-               <Feather name="x-circle" size={18} color="#333" />
+               <Feather name="x" size={25} color="#93959F" />
             </TouchableOpacity>
          </View>
          {!!oops && (
@@ -486,14 +491,13 @@ const Fulfillment = ({ navigation, setEditing }) => {
                justifyContent: 'center',
                alignItems: 'center',
                backgroundColor: visual.color,
-               borderRadius: 4,
-               width: 200,
                marginHorizontal: 'auto',
                opacity: type && time ? 1 : 0.5,
+               width: '100%',
             }}
             onPress={confirm}
          >
-            <Text style={{ color: '#fff', fontWeight: 'bold' }}>Confirm</Text>
+            <Text style={{ color: '#fff' }}>CONFIRM</Text>
          </TouchableOpacity>
       </View>
    )
@@ -505,14 +509,6 @@ const styles = StyleSheet.create({
    container: {
       position: 'relative',
       padding: 10,
-      shadowColor: '#000',
-      shadowOffset: {
-         width: 0,
-         height: 1,
-      },
-      shadowOpacity: 0.22,
-      shadowRadius: 2.22,
-      elevation: 3,
    },
    headingContainer: {
       flexDirection: 'row',
@@ -520,7 +516,7 @@ const styles = StyleSheet.create({
       justifyContent: 'space-between',
       marginBottom: 20,
    },
-   heading: { lineHeight: 24, fontSize: 16, fontWeight: 'bold' },
+   heading: { lineHeight: 24, fontSize: 16, color: '#282c3f' },
    text: {
       fontSize: 16,
       marginBottom: 10,

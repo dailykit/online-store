@@ -76,6 +76,7 @@ export default function OnboardingStack(props) {
       setVisual,
       availability,
       setAvailability,
+      setRewardsSettings,
       setMenuData,
       setMasterLoading,
       setMenuLoading,
@@ -114,58 +115,33 @@ export default function OnboardingStack(props) {
          },
          skip: Boolean(!brandId),
          onSubscriptionData: data => {
-            const brandSettings = data.subscriptionData.data.storeSettings.filter(
-               setting => setting.type === 'brand'
-            )
-            const visualSettings = data.subscriptionData.data.storeSettings.filter(
-               setting => setting.type === 'visual'
-            )
-            const availabilitySettings = data.subscriptionData.data.storeSettings.filter(
-               setting => setting.type === 'availability'
-            )
-
             let brandState = {}
-            brandSettings.forEach(({ identifier, value, brandSettings }) => {
-               switch (identifier) {
-                  case 'Brand Logo': {
-                     brandState.logo = brandSettings[0]?.value.url || value.url
-                     return
-                  }
-                  case 'Brand Name': {
-                     brandState.name =
-                        brandSettings[0]?.value.name || value.name
-                     return
-                  }
-                  default: {
-                     return
-                  }
-               }
-            })
-            setBrand({ ...brandState })
-
             let visualState = {}
-            visualSettings.forEach(({ identifier, value, brandSettings }) => {
-               switch (identifier) {
-                  case 'Primary Color': {
-                     visualState.color =
-                        brandSettings[0]?.value.color || value.color
-                     return
-                  }
-                  case 'Slides': {
-                     visualState.slides = brandSettings[0]?.value || value
-                     return
-                  }
-                  default: {
-                     return
-                  }
-               }
-            })
-            setVisual({ ...visualState })
-
             let availabilityState = {}
-            availabilitySettings.forEach(
+            let rewardsState = {}
+
+            data.subscriptionData.data.storeSettings.forEach(
                ({ identifier, value, brandSettings }) => {
                   switch (identifier) {
+                     case 'Brand Logo': {
+                        brandState.logo =
+                           brandSettings[0]?.value.url || value.url
+                        return
+                     }
+                     case 'Brand Name': {
+                        brandState.name =
+                           brandSettings[0]?.value.name || value.name
+                        return
+                     }
+                     case 'Primary Color': {
+                        visualState.color =
+                           brandSettings[0]?.value.color || value.color
+                        return
+                     }
+                     case 'Slides': {
+                        visualState.slides = brandSettings[0]?.value || value
+                        return
+                     }
                      case 'Store Availability': {
                         availabilityState.store =
                            brandSettings[0]?.value || value
@@ -186,13 +162,27 @@ export default function OnboardingStack(props) {
                            brandSettings[0]?.value.address || value.address
                         return
                      }
-                     case 'Store Live': {
-                        availabilityState.isStoreLive =
-                           brandSettings[0]?.value.isStoreLive ||
-                           value.isStoreLive
-                        availabilityState.isStripeConfigured =
-                           brandSettings[0]?.value.isStripeConfigured ||
-                           value.isStripeConfigured
+                     case 'Loyalty Points Availability': {
+                        rewardsState.isLoyaltyPointsAvailable =
+                           brandSettings[0]?.value.isAvailable ??
+                           value.isAvailable
+                        return
+                     }
+                     case 'Wallet Availability': {
+                        rewardsState.isWalletAvailable =
+                           brandSettings[0]?.value.isAvailable ??
+                           value.isAvailable
+                        return
+                     }
+                     case 'Coupons Availability': {
+                        rewardsState.isCouponsAvailable =
+                           brandSettings[0]?.value.isAvailable ??
+                           value.isAvailable
+                        return
+                     }
+                     case 'Loyalty Points Usage': {
+                        rewardsState.loyaltyPointsUsage =
+                           brandSettings[0]?.value || value
                         return
                      }
                      default: {
@@ -201,7 +191,11 @@ export default function OnboardingStack(props) {
                   }
                }
             )
+            setBrand({ ...brandState })
+            setVisual({ ...visualState })
             setAvailability({ ...availabilityState })
+            setRewardsSettings({ ...rewardsState })
+
             setSettingsMapped(true)
          },
       }
