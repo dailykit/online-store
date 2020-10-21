@@ -9,7 +9,8 @@
       "android": "expo start --android",
       "ios": "expo start --ios",
       "web": "expo start --web",
-      "eject": "expo eject"
+      "eject": "expo eject",
+      "lint:graphql": "eslint graphql/**/*.js"
    },
    "dependencies": {
       "@apollo/react-hooks": "^3.1.5",
@@ -29,8 +30,11 @@
       "apollo-link-context": "^1.0.20",
       "apollo-link-ws": "^1.0.20",
       "axios": "^0.19.2",
+      "babel-eslint": "^10.1.0",
       "base-64": "^0.1.0",
       "buffer": "^5.6.0",
+      "eslint": "^7.11.0",
+      "eslint-plugin-graphql": "^4.0.0",
       "expo": "^37.0.6",
       "expo-asset": "~8.1.4",
       "expo-constants": "^9.0.0",
