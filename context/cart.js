@@ -77,9 +77,6 @@ export const CartContextProvider = ({ children }) => {
    const [loyaltyPoints, setLoyaltyPoints] = useState(undefined)
    const [customerReferral, setCustomerReferral] = useState(undefined)
 
-   // Payments
-   const [paymentRequestId, setPaymentRequestId] = React.useState(null)
-
    // local
    const [distance, setDistance] = useState(0)
 
@@ -304,8 +301,6 @@ export const CartContextProvider = ({ children }) => {
             setLoyaltyPoints,
             customerReferral,
             setCustomerReferral,
-            paymentRequestId,
-            setPaymentRequestId,
          }}
       >
          {children}

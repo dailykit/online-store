@@ -8,6 +8,7 @@ export const DrawerContextProvider = ({ children }) => {
    const [isDrawerOpen, setIsDrawerOpen] = React.useState(false)
    const [drawerView, setDrawerView] = React.useState(undefined)
    const [params, setParams] = React.useState(undefined)
+   const [navigation, setNavigation] = React.useState(undefined)
 
    const [saved, setSaved] = React.useState(undefined)
 
@@ -29,6 +30,8 @@ export const DrawerContextProvider = ({ children }) => {
             saved,
             setSaved,
             setDrawerView,
+            navigation,
+            setNavigation,
          }}
       >
          {children}

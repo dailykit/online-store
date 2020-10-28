@@ -2,6 +2,7 @@ import React from 'react'
 import { AsyncStorage } from 'react-native'
 import { CLIENTID, MAPS_API_KEY } from 'react-native-dotenv'
 import { createDrawerNavigator } from '@react-navigation/drawer'
+import { useNavigation } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import {
    useLazyQuery,
@@ -69,7 +70,6 @@ export default function OnboardingStack(props) {
       setLoyaltyPoints,
       customerReferral,
       setCustomerReferral,
-      setPaymentRequestId,
    } = useCartContext()
    const {
       brandId,
@@ -208,29 +208,10 @@ export default function OnboardingStack(props) {
       console.log(error)
    }
 
-   const [
-      fetchPayment,
-      { data: { cart: cartForPayment = {} } = {} },
-   ] = useLazyQuery(CART_PAYMENT)
-
    React.useEffect(() => {
-      console.log(cartForPayment)
-      if (Object.keys(cartForPayment).length) {
-         const length = cartForPayment?.payment?.length
-         if (length === 0) return
-         console.log('cart.payment', cartForPayment?.payment)
-         const id = cartForPayment?.payment[length - 1]?.paymentRequestId
-         if (id) {
-            console.log('Setting ID:', id)
-            setPaymentRequestId(id)
-         }
-      }
-   }, [cartForPayment])
-
-   React.useEffect(() => {
+      console.log('Screens -> cart.paymentStatus ', cart?.paymentStatus)
       if (cart?.paymentStatus === 'SUCCEEDED') {
          open('Payment', { cartId: cart.id })
-         setPaymentRequestId(null)
       }
    }, [cart?.paymentStatus])
 
@@ -260,30 +241,9 @@ export default function OnboardingStack(props) {
                   ids: mergedCartIds,
                },
             })
-            // fetching payment request id
-            if (mergedCart?.paymentId) {
-               fetchPayment({ variables: { id: mergedCart.id } })
-            } else {
-               setPaymentRequestId(null)
-            }
          } else {
             const cart = data.subscriptionData.data.cart[0]
             setCart(cart)
-            console.log(cart)
-            if (!cart?.paymentId) {
-               setPaymentRequestId(null)
-            }
-            if (
-               cart &&
-               cart?.paymentId &&
-               cart?.paymentStatus !== 'SUCCEEDED'
-            ) {
-               console.log('Requesting requestId')
-               fetchPayment({
-                  variables: { id: cart.id },
-               })
-               return
-            }
          }
       },
    })
@@ -625,15 +585,22 @@ export default function OnboardingStack(props) {
    ])
 
    return (
-      <>
-         <Stack.Navigator mode="card" headerMode="none">
-            <Stack.Screen name="App" component={AppStack} />
-         </Stack.Navigator>
-      </>
+      <Stack.Navigator mode="card" headerMode="none">
+         <Stack.Screen name="App" component={AppStack} />
+      </Stack.Navigator>
    )
 }
 
 function AppStack(props) {
+   const { setNavigation } = useDrawerContext()
+
+   React.useEffect(() => {
+      if (props.navigation) {
+         console.log('Setting up navigation...')
+         setNavigation(props.navigation)
+      }
+   }, [])
+
    return (
       <Drawer.Navigator
          style={{ flex: 1 }}

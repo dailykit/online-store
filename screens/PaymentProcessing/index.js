@@ -8,18 +8,18 @@ import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 
-const PaymentProcessing = () => {
+const PaymentProcessing = ({ cartId }) => {
    const { visual } = useAppContext()
-   const { setIsDrawerOpen, params } = useDrawerContext()
-   const navigation = useNavigation()
+   const { setIsDrawerOpen, navigation } = useDrawerContext()
+   // const navigation = useNavigation()
 
    const [progress, setProgress] = React.useState('Sending your order...')
 
    // Subscription
    const { data, loading, error } = useSubscription(CART_BY_PK, {
-      skip: Boolean(!params?.cartId),
+      skip: Boolean(!cartId),
       variables: {
-         id: params?.cartId,
+         id: cartId,
       },
    })
 
@@ -36,10 +36,14 @@ const PaymentProcessing = () => {
                   break
                } else {
                   setTimeout(() => {
-                     navigation.navigate('Order', {
-                        orderId: data.cartByPK.orderId,
-                     })
-                     setIsDrawerOpen(false)
+                     if (navigation) {
+                        navigation.navigate('Order', {
+                           orderId: data.cartByPK.orderId,
+                        })
+                        setIsDrawerOpen(false)
+                     } else {
+                        console.log('Navigation failed!')
+                     }
                   }, 2000)
                   break
                }

@@ -61,7 +61,7 @@ const payments = {
 }
 
 const OrderSummary = ({ navigation, ...restProps }) => {
-   const { cart, paymentRequestId } = useCartContext()
+   const { cart } = useCartContext()
    const { visual, masterLoading } = useAppContext()
 
    // const [paymentScriptLoaded, paymentScriptError] = useScript(
@@ -87,12 +87,11 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    }, [cart])
 
    React.useEffect(() => {
-      if (cart?.paymentStatus === 'PENDING' && paymentRequestId) {
+      if (cart?.paymentStatus === 'PENDING') {
          payments.razorpay.checkout({
             partnershipId: 1,
             datahub_url: HASURA_URL,
             admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
-            requestId: paymentRequestId,
             paymentId: cart?.paymentId,
             amount: cart?.totalPrice,
             currency: CURRENCY,
@@ -101,7 +100,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             contact: cart.customerInfo.customerPhone,
          })
       }
-   }, [paymentRequestId, cart])
+   }, [cart])
 
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
