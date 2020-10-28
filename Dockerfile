@@ -7,6 +7,7 @@ ARG DAILYOS_SERVER_URL
 ARG DAILYKEY_URL
 ARG MAPS_API_KEY
 ARG PAYMENTS_API_URL
+ARG CURRENCY
 WORKDIR /usr/src/app
 COPY package.json ./
 RUN npm install
@@ -19,6 +20,7 @@ RUN echo "DAILYOS_SERVER_URL=${DAILYOS_SERVER_URL}" >> .env
 RUN echo "DAILYKEY_URL=${DAILYKEY_URL}" >> .env
 RUN echo "MAPS_API_KEY=${MAPS_API_KEY}" >> .env
 RUN echo "PAYMENTS_API_URL=${PAYMENTS_API_URL}" >> .env
+RUN echo "CURRENCY=${CURRENCY}" >> .env
 
 ENV PATH /app/node_modules/.bin:$PATH
 
