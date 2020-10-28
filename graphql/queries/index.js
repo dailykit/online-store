@@ -1,5 +1,20 @@
 import gql from 'graphql-tag'
 
+export const CART_PAYMENT = gql`
+   query cart($id: Int!) {
+      cart: cartByPK(id: $id) {
+         id
+         paymentStatus
+         payment {
+            id
+            paymentStatus
+            paymentRequestId
+            paymentTransactionId
+         }
+      }
+   }
+`
+
 export const FETCH_CART = gql`
    query FetchCart($id: Int!) {
       cartByPK(id: $id) {

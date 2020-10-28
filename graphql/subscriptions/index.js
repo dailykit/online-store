@@ -240,6 +240,9 @@ export const CART = gql`
          loyaltyPointsUsed
          walletAmountUsable
          walletAmountUsed
+         paymentId
+         paymentUpdatedAt
+         customerKeycloakId
       }
    }
 `

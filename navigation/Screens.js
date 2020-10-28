@@ -26,6 +26,7 @@ import {
    BRANDS,
    GET_MENU,
    CREATE_BRAND_CUSTOMER,
+   CART_PAYMENT,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -68,6 +69,7 @@ export default function OnboardingStack(props) {
       setLoyaltyPoints,
       customerReferral,
       setCustomerReferral,
+      setPaymentRequestId,
    } = useCartContext()
    const {
       brandId,
@@ -206,6 +208,32 @@ export default function OnboardingStack(props) {
       console.log(error)
    }
 
+   const [
+      fetchPayment,
+      { data: { cart: cartForPayment = {} } = {} },
+   ] = useLazyQuery(CART_PAYMENT)
+
+   React.useEffect(() => {
+      console.log(cartForPayment)
+      if (Object.keys(cartForPayment).length) {
+         const length = cartForPayment?.payment?.length
+         if (length === 0) return
+         console.log('cart.payment', cartForPayment?.payment)
+         const id = cartForPayment?.payment[length - 1]?.paymentRequestId
+         if (id) {
+            console.log('Setting ID:', id)
+            setPaymentRequestId(id)
+         }
+      }
+   }, [cartForPayment])
+
+   React.useEffect(() => {
+      if (cart?.paymentStatus === 'SUCCEEDED') {
+         open('Payment', { cartId: cart.id })
+         setPaymentRequestId(null)
+      }
+   }, [cart?.paymentStatus])
+
    // Subscription for Cart when logged in
    const { loading: subscribingCart } = useSubscription(CART, {
       variables: {
@@ -232,8 +260,30 @@ export default function OnboardingStack(props) {
                   ids: mergedCartIds,
                },
             })
+            // fetching payment request id
+            if (mergedCart?.paymentId) {
+               fetchPayment({ variables: { id: mergedCart.id } })
+            } else {
+               setPaymentRequestId(null)
+            }
          } else {
-            setCart(data.subscriptionData.data.cart[0])
+            const cart = data.subscriptionData.data.cart[0]
+            setCart(cart)
+            console.log(cart)
+            if (!cart?.paymentId) {
+               setPaymentRequestId(null)
+            }
+            if (
+               cart &&
+               cart?.paymentId &&
+               cart?.paymentStatus !== 'SUCCEEDED'
+            ) {
+               console.log('Requesting requestId')
+               fetchPayment({
+                  variables: { id: cart.id },
+               })
+               return
+            }
          }
       },
    })

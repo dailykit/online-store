@@ -13,6 +13,7 @@ import {
    STRIPE_PK,
    CUSTOMER,
    BRANDS,
+   CART_PAYMENT,
 } from './queries'
 
 import {
@@ -88,4 +89,5 @@ export {
    UPDATE_CUSTOMER_REFERRAL,
    CUSTOMER_REFERRAL,
    BRANDS,
+   CART_PAYMENT,
 }

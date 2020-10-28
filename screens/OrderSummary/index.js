@@ -28,10 +28,45 @@ import Coupon from './components/Coupon'
 import Tip from './components/Tip'
 import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
 import PayWithWallet from './components/PayWithWallet'
+import {
+   HASURA_GRAPHQL_ADMIN_SECRET,
+   HASURA_URL,
+   CURRENCY,
+} from 'react-native-dotenv'
+
+const payments = {
+   razorpay: {
+      ui: async ({ cart }) => {
+         await window.payments.provider({
+            disabled: cart?.paymentStatus === 'SUCCEEDED',
+            amount: new Intl.NumberFormat('en-US', {
+               style: 'currency',
+               currency: CURRENCY,
+            }).format(cart.totalPrice),
+            partnershipId: 1,
+            admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
+            datahub_url: HASURA_URL,
+            request_variables: {
+               amount: cart.totalPrice,
+               cartId: cart.id,
+               partnershipId: 1,
+               keycloakId: cart.customerKeycloakId,
+            },
+         })
+      },
+      checkout: async args => {
+         await window.payments.checkout(args)
+      },
+   },
+}
 
 const OrderSummary = ({ navigation, ...restProps }) => {
-   const { cart } = useCartContext()
+   const { cart, paymentRequestId } = useCartContext()
    const { visual, masterLoading } = useAppContext()
+
+   // const [paymentScriptLoaded, paymentScriptError] = useScript(
+   //    `https://s3.us-east-2.amazonaws.com/dailykit.org/payments.js`
+   // )
 
    String.prototype.SRPType = function () {
       return this === 'readyToEat' ? 'Ready to Eat' : 'Meal Kit'
@@ -42,6 +77,31 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    }
 
    console.log(cart)
+
+   React.useEffect(() => {
+      if (cart) {
+         payments.razorpay.ui({
+            cart,
+         })
+      }
+   }, [cart])
+
+   React.useEffect(() => {
+      if (cart?.paymentStatus === 'PENDING' && paymentRequestId) {
+         payments.razorpay.checkout({
+            partnershipId: 1,
+            datahub_url: HASURA_URL,
+            admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
+            requestId: paymentRequestId,
+            paymentId: cart?.paymentId,
+            amount: cart?.totalPrice,
+            currency: CURRENCY,
+            name: `${cart.customerInfo.customerFirstName} ${cart.customerInfo.customerLastName}`,
+            email: cart.customerInfo.customerEmail,
+            contact: cart.customerInfo.customerPhone,
+         })
+      }
+   }, [paymentRequestId, cart])
 
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -233,20 +293,7 @@ const Checkout = ({ cart, navigation }) => {
             </CheckoutSectionHeading>
             {isAuthenticated && cart?.fulfillmentInfo && (
                <CheckoutSectionContent>
-                  <DefaultPaymentFloater navigation={navigation} />
-                  <CTA
-                     disabled={!cart.isValid.status}
-                     color={visual.color}
-                     onPress={() =>
-                        cart.isValid.status && open('Payment', { navigation })
-                     }
-                  >
-                     <CTAText>
-                        {cart.totalPrice
-                           ? `PAY $${cart.totalPrice}`
-                           : 'PLACE ORDER'}
-                     </CTAText>
-                  </CTA>
+                  <GenericPayment nativeID="payment"></GenericPayment>
                   {!cart.isValid.status && (
                      <Error>
                         <ErrorText>{cart.isValid.error}</ErrorText>
@@ -977,3 +1024,5 @@ const HelpText = styled(CartBillingDetailText)`
    margin-bottom: 0.5rem;
    font-style: italic;
 `
+
+const GenericPayment = styled.View``

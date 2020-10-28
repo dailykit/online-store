@@ -1,5 +1,6 @@
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 import { Spinner, Text, View } from 'native-base'
 import React from 'react'
 import { useAppContext } from '../../context/app'
@@ -7,49 +8,20 @@ import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 
-const PaymentProcessing = ({ navigation }) => {
-   const { cart, customer } = useCartContext()
-   const { visual, availability } = useAppContext()
-   const { setIsDrawerOpen } = useDrawerContext()
+const PaymentProcessing = () => {
+   const { visual } = useAppContext()
+   const { setIsDrawerOpen, params } = useDrawerContext()
+   const navigation = useNavigation()
 
-   const [cartId, setCartId] = React.useState(undefined)
    const [progress, setProgress] = React.useState('Sending your order...')
 
    // Subscription
    const { data, loading, error } = useSubscription(CART_BY_PK, {
+      skip: Boolean(!params?.cartId),
       variables: {
-         id: cartId,
+         id: params?.cartId,
       },
    })
-
-   // Mutation
-   const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
-         console.log('Cart confirmed!')
-      },
-      onError: error => {
-         console.log(error)
-      },
-   })
-
-   //Effects
-   React.useEffect(() => {
-      if (cart?.id) {
-         updateCart({
-            variables: {
-               id: cart.id,
-               set: {
-                  status: 'PROCESS',
-                  amount: cart.totalPrice,
-                  couponDiscount: cart.discount,
-               },
-            },
-         })
-         setCartId(cart.id)
-      } else {
-         navigation.navigate('Home')
-      }
-   }, [])
 
    React.useEffect(() => {
       if (data) {
