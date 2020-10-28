@@ -3,6 +3,7 @@ import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppContext } from '../context/app'
 import { discountedPrice } from '../utils'
+import { CURRENCY } from 'react-native-dotenv'
 
 const ServingSelect = ({
    index,
@@ -62,14 +63,27 @@ const ServingSelect = ({
                         { textDecorationLine: 'line-through' },
                      ]}
                   >
-                     $ {price.toFixed(2)}
+                     {new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: CURRENCY,
+                     }).format(price.toFixed(2))}
                   </Text>
                   <Text style={[styles.price_text, { marginLeft: 16 }]}>
-                     $ {discountedPrice({ value: price, discount }).toFixed(2)}
+                     {new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: CURRENCY,
+                     }).format(
+                        discountedPrice({ value: price, discount }).toFixed(2)
+                     )}
                   </Text>
                </>
             ) : (
-               <Text style={styles.price_text}>$ {price.toFixed(2)}</Text>
+               <Text style={styles.price_text}>
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(price.toFixed(2))}
+               </Text>
             )}
          </View>
          <View style={styles.servingSelectContainer_three}>
@@ -130,6 +144,7 @@ const styles = StyleSheet.create({
    discountBannerText: {
       color: '#fff',
       fontSize: '0.7rem',
+      fontStyle: 'italic',
    },
 })
 

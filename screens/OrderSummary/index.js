@@ -307,7 +307,10 @@ const Checkout = ({ cart, navigation }) => {
                         >
                            <CTAText>
                               {cart.totalPrice
-                                 ? `PAY $${cart.totalPrice}`
+                                 ? `PAY ${new Intl.NumberFormat('en-US', {
+                                      style: 'currency',
+                                      currency: CURRENCY,
+                                   }).format(cart.totalPrice)}`
                                  : 'PLACE ORDER'}
                            </CTAText>
                         </CTA>
@@ -613,14 +616,21 @@ const Cart = ({ cart }) => {
                      <CartItemPriceContainer>
                         {Boolean(product.discount) && (
                            <CartItemDiscount>
-                              ${' '}
-                              {(product.discount + product.totalPrice).toFixed(
-                                 2
+                              {new Intl.NumberFormat('en-US', {
+                                 style: 'currency',
+                                 currency: CURRENCY,
+                              }).format(
+                                 (
+                                    product.discount + product.totalPrice
+                                 ).toFixed(2)
                               )}
                            </CartItemDiscount>
                         )}
                         <CartItemPrice>
-                           $ {product.totalPrice.toFixed(2)}
+                           {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: CURRENCY,
+                           }).format(product.totalPrice.toFixed(2))}
                         </CartItemPrice>
                      </CartItemPriceContainer>
                   </CartItemRight>
@@ -643,27 +653,42 @@ const Cart = ({ cart }) => {
             <CartBillingDetail>
                <CartBillingDetailText>Item Total</CartBillingDetailText>
                <CartBillingDetailText>
-                  $ {cart.itemTotal.toFixed(2)}
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(cart.itemTotal.toFixed(2))}
                </CartBillingDetailText>
             </CartBillingDetail>
             <CartBillingDetail>
                <CartBillingDetailText>Delivery Fee</CartBillingDetailText>
                <CartBillingDetailText>
-                  $ {cart.deliveryPrice}
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(cart.deliveryPrice)}
                </CartBillingDetailText>
             </CartBillingDetail>
             {Boolean(cart.discount) && (
                <CartBillingDetail>
                   <CartBillingDetailText>Discount</CartBillingDetailText>
                   <CartBillingDetailText>
-                     - $ {cart.discount}
+                     -{' '}
+                     {new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: CURRENCY,
+                     }).format(cart.discount)}
                   </CartBillingDetailText>
                </CartBillingDetail>
             )}
             <Divider margin="8px" />
             <CartBillingDetail>
                <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
-               <CartBillingDetailText>$ {cart.tax}</CartBillingDetailText>
+               <CartBillingDetailText>
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(cart.tax)}
+               </CartBillingDetailText>
             </CartBillingDetail>
             <Tip cart={cart} />
          </CartBilling>
@@ -674,13 +699,17 @@ const Cart = ({ cart }) => {
             <CartFooter>
                <CartDiscountText>YOU SAVED</CartDiscountText>
                <CartDiscountText>
-                  ${' '}
-                  {(
-                     cart.cartInfo.products.reduce(
-                        (acc, item) => acc + item.discount,
-                        0
-                     ) + cart.discount
-                  ).toFixed(2)}
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(
+                     (
+                        cart.cartInfo.products.reduce(
+                           (acc, item) => acc + item.discount,
+                           0
+                        ) + cart.discount
+                     ).toFixed(2)
+                  )}
                </CartDiscountText>
             </CartFooter>
          )}
@@ -698,7 +727,12 @@ const Cart = ({ cart }) => {
          )}
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
-            <CartFooterText>$ {cart.totalPrice.toFixed(2)}</CartFooterText>
+            <CartFooterText>
+               {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: CURRENCY,
+               }).format(cart.totalPrice.toFixed(2))}
+            </CartFooterText>
          </CartFooter>
       </StyledCart>
    )

@@ -3,6 +3,7 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { useCartContext } from '../context/cart'
+import { CURRENCY } from 'react-native-dotenv'
 
 const CheckoutBar = ({ navigation }) => {
    const { visual } = useAppContext()
@@ -22,7 +23,10 @@ const CheckoutBar = ({ navigation }) => {
                      }`}</StatsCount>
                      <StatsPrice>
                         <StatsPriceExact>
-                           $ {cart.cartInfo.total?.toFixed(2)}
+                           {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: CURRENCY,
+                           }).format(cart.cartInfo.total?.toFixed(2))}
                         </StatsPriceExact>
                         <StatsPriceTrail>plus taxes</StatsPriceTrail>
                      </StatsPrice>

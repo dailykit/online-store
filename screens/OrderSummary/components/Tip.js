@@ -6,6 +6,7 @@ import { UPDATE_CART } from '../../../graphql'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '../../../context/auth'
 import { useCartContext } from '../../../context/cart'
+import { CURRENCY } from 'react-native-dotenv'
 
 const Tip = ({ cart }) => {
    const { visual } = useAppContext()
@@ -55,7 +56,12 @@ const Tip = ({ cart }) => {
                   <TipCTA onPress={() => addTip(0)}>
                      <Feather color="#FF5A52" name="x" size={16} />
                   </TipCTA>
-                  <TipAmount>${cart.tip.toFixed(2)}</TipAmount>
+                  <TipAmount>
+                     {new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: CURRENCY,
+                     }).format(cart.tip.toFixed(2))}
+                  </TipAmount>
                </TipAmountContainer>
             </TipWrapper>
          ) : (
@@ -63,7 +69,7 @@ const Tip = ({ cart }) => {
                <Header>Add a Tip</Header>
                {isCustom ? (
                   <CustomWrapper>
-                     <Dollar>$</Dollar>
+                     <Dollar></Dollar>
                      <CustomInput
                         onChangeText={value => setTip(value)}
                         value={tip}
@@ -89,9 +95,14 @@ const Tip = ({ cart }) => {
                         >
                            <OptionHeader>{percent}%</OptionHeader>
                            <OptionText>
-                              $
-                              {(cart.cartInfo.total * (percent / 100)).toFixed(
-                                 2
+                              {new Intl.NumberFormat('en-US', {
+                                 style: 'currency',
+                                 currency: CURRENCY,
+                              }).format(
+                                 (
+                                    cart.cartInfo.total *
+                                    (percent / 100)
+                                 ).toFixed(2)
                               )}
                            </OptionText>
                         </Option>
