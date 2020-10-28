@@ -1,6 +1,5 @@
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
-import { useNavigation } from '@react-navigation/native'
 import { Spinner, Text, View } from 'native-base'
 import React from 'react'
 import { useAppContext } from '../../context/app'
@@ -9,19 +8,53 @@ import { useDrawerContext } from '../../context/drawer'
 import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 
 const PaymentProcessing = ({ cartId }) => {
+   const { cart, customer } = useCartContext()
    const { visual } = useAppContext()
    const { setIsDrawerOpen, navigation } = useDrawerContext()
-   // const navigation = useNavigation()
 
+   const [_cartId, set_CartId] = React.useState(undefined)
    const [progress, setProgress] = React.useState('Sending your order...')
 
    // Subscription
    const { data, loading, error } = useSubscription(CART_BY_PK, {
-      skip: Boolean(!cartId),
+      skip: Boolean(!cartId && !_cartId),
       variables: {
-         id: cartId,
+         id: cartId || _cartId,
       },
    })
+
+   // Mutation
+   const [updateCart] = useMutation(UPDATE_CART, {
+      onCompleted: () => {
+         console.log('Cart confirmed!')
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   //Effects
+   React.useEffect(() => {
+      // !cartId = payment made without razorpay
+      if (!cartId) {
+         if (cart?.id) {
+            console.log('Paying through stripe...')
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     status: 'PROCESS',
+                     amount: cart.totalPrice,
+                     couponDiscount: cart.discount,
+                  },
+               },
+            })
+            set_CartId(cart.id)
+         } else {
+            navigation.navigate('Home')
+         }
+      }
+   }, [])
 
    React.useEffect(() => {
       if (data) {
