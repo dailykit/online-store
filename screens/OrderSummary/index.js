@@ -292,7 +292,27 @@ const Checkout = ({ cart, navigation }) => {
             </CheckoutSectionHeading>
             {isAuthenticated && cart?.fulfillmentInfo && (
                <CheckoutSectionContent>
-                  <GenericPayment nativeID="payment"></GenericPayment>
+                  {CURRENCY === 'INR' ? (
+                     <GenericPayment nativeID="payment" />
+                  ) : (
+                     <>
+                        <DefaultPaymentFloater navigation={navigation} />
+                        <CTA
+                           disabled={!cart.isValid.status}
+                           color={visual.color}
+                           onPress={() =>
+                              cart.isValid.status &&
+                              open('Payment', { navigation })
+                           }
+                        >
+                           <CTAText>
+                              {cart.totalPrice
+                                 ? `PAY $${cart.totalPrice}`
+                                 : 'PLACE ORDER'}
+                           </CTAText>
+                        </CTA>
+                     </>
+                  )}
                   {!cart.isValid.status && (
                      <Error>
                         <ErrorText>{cart.isValid.error}</ErrorText>

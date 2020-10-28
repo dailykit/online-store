@@ -9,7 +9,7 @@ import { useAppContext } from '../../context/app'
 import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { width } from '../../utils/Scalaing'
-// import Clipboard from '@react-native-community/clipboard'
+import { CURRENCY } from 'react-native-dotenv'
 
 const ProfileScreen = ({ navigation }) => {
    const { visual, masterLoading } = useAppContext()
@@ -38,7 +38,7 @@ const ProfileScreen = ({ navigation }) => {
             <ReferralCode />
             <PersonalDetails />
             <Addresses />
-            <Cards />
+            {Boolean(CURRENCY !== 'INR') && <Cards />}
          </Wrapper>
       </Container>
    )
@@ -68,7 +68,7 @@ const ReferralCode = () => {
             <>
                <SectionTileLabel>Referred By</SectionTileLabel>
                <ReferralCodeContainer>
-                  <Code>{customerReferral?.referralCode}</Code>
+                  <Code>{customerReferral?.referredByCode}</Code>
                </ReferralCodeContainer>
             </>
          ) : (

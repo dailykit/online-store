@@ -1,6 +1,6 @@
 import React from 'react'
 import { AsyncStorage } from 'react-native'
-import { CLIENTID, MAPS_API_KEY } from 'react-native-dotenv'
+import { CLIENTID, MAPS_API_KEY, CURRENCY } from 'react-native-dotenv'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { useNavigation } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -209,8 +209,8 @@ export default function OnboardingStack(props) {
    }
 
    React.useEffect(() => {
-      console.log('Screens -> cart.paymentStatus ', cart?.paymentStatus)
-      if (cart?.paymentStatus === 'SUCCEEDED') {
+      if (cart?.paymentStatus === 'SUCCEEDED' && CURRENCY === 'INR') {
+         console.log('Screens -> cart.paymentStatus ', cart?.paymentStatus)
          open('Payment', { cartId: cart.id })
       }
    }, [cart?.paymentStatus])
