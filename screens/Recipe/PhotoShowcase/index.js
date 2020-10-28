@@ -1,5 +1,4 @@
 import React from 'react'
-import { Image } from 'react-native'
 import styled from 'styled-components/native'
 
 const PhotoShowcase = ({ images }) => {
@@ -13,7 +12,6 @@ const PhotoShowcase = ({ images }) => {
 export default PhotoShowcase
 
 const Wrapper = styled.View`
-   background: #111;
    margin: 0 auto;
 `
 
