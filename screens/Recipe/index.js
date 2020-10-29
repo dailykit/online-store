@@ -196,10 +196,8 @@ const Recipe = ({ route, navigation }) => {
                   <Tab
                      color={visual.color}
                      onPress={() => {
-                        console.log(cookingStepsRef)
-                        cookingStepsRef.current.scrollIntoView(
-                           scrollIntoView({ behavior: 'smooth' })
-                        )
+                        // scrollTo(0, 500)
+                        cookingStepsRef.current?.scrollTo(0, 500)
                      }}
                   >
                      <TabText color={visual.color}>Cooking Steps</TabText>
@@ -242,7 +240,7 @@ const Recipe = ({ route, navigation }) => {
                      <Spacer size="28px" />
                   </>
                )}
-               <SectionHeader ref={cookingStepsRef}>
+               <SectionHeader nativeID="cookingSteps" ref={cookingStepsRef}>
                   Cooking Steps
                </SectionHeader>
                <Spacer size="20px" />
