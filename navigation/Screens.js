@@ -27,7 +27,7 @@ import {
    BRANDS,
    GET_MENU,
    CREATE_BRAND_CUSTOMER,
-   CART_PAYMENT,
+   PAYMENT_PARTNERSHIP,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -82,6 +82,7 @@ export default function OnboardingStack(props) {
       setMenuData,
       setMasterLoading,
       setMenuLoading,
+      setPaymentPartnershipIds,
    } = useAppContext()
    const { open } = useDrawerContext()
 
@@ -207,6 +208,33 @@ export default function OnboardingStack(props) {
       setSettingsMapped(true)
       console.log(error)
    }
+
+   // Payment Partnership
+   const [fetchPaymentPartnerships] = useLazyQuery(PAYMENT_PARTNERSHIP, {
+      onCompleted: data => {
+         if (data.brands_brand_paymentPartnership.length) {
+            console.log(
+               'Fetched payment partnerships: ',
+               data.brands_brand_paymentPartnership
+            )
+            setPaymentPartnershipIds(data.brands_brand_paymentPartnership)
+         }
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   React.useEffect(() => {
+      if (brandId) {
+         console.log('Fetching payment partnership...')
+         fetchPaymentPartnerships({
+            variables: {
+               brandId,
+            },
+         })
+      }
+   }, [brandId])
 
    React.useEffect(() => {
       if (cart?.paymentStatus === 'SUCCEEDED' && CURRENCY === 'INR') {

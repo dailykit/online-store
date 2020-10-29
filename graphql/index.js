@@ -14,6 +14,7 @@ import {
    CUSTOMER,
    BRANDS,
    CART_PAYMENT,
+   PAYMENT_PARTNERSHIP,
 } from './queries'
 
 import {
@@ -90,4 +91,5 @@ export {
    CUSTOMER_REFERRAL,
    BRANDS,
    CART_PAYMENT,
+   PAYMENT_PARTNERSHIP,
 }

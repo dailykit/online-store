@@ -1,5 +1,18 @@
 import gql from 'graphql-tag'
 
+export const PAYMENT_PARTNERSHIP = gql`
+   query PaymentPartnership($brandId: Int!) {
+      brands_brand_paymentPartnership(
+         where: {
+            _and: [{ brandId: { _eq: $brandId } }, { isActive: { _eq: true } }]
+         }
+      ) {
+         brandId
+         paymentPartnershipId
+      }
+   }
+`
+
 export const CART_PAYMENT = gql`
    query cart($id: Int!) {
       cart: cartByPK(id: $id) {

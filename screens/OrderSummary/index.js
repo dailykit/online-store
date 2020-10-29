@@ -34,62 +34,40 @@ import {
    CURRENCY,
 } from 'react-native-dotenv'
 
-const payments = {
-   razorpay: {
-      ui: async ({ cart }) => {
-         await window.payments.provider({
-            disabled: cart?.paymentStatus === 'SUCCEEDED',
-            amount: new Intl.NumberFormat('en-US', {
-               style: 'currency',
-               currency: CURRENCY,
-            }).format(cart.totalPrice),
-            partnershipId: 1,
-            admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
-            datahub_url: HASURA_URL,
-            request_variables: {
-               amount: cart.totalPrice,
-               cartId: cart.id,
-               partnershipId: 1,
-               keycloakId: cart.customerKeycloakId,
-            },
-         })
-      },
-      checkout: async args => {
-         await window.payments.checkout(args)
-      },
-   },
-}
-
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { cart } = useCartContext()
-   const { visual, masterLoading } = useAppContext()
-
-   // const [paymentScriptLoaded, paymentScriptError] = useScript(
-   //    `https://s3.us-east-2.amazonaws.com/dailykit.org/payments.js`
-   // )
+   const { visual, masterLoading, paymentPartnerShipIds } = useAppContext()
 
    String.prototype.SRPType = function () {
       return this === 'readyToEat' ? 'Ready to Eat' : 'Meal Kit'
    }
 
-   if (masterLoading) {
-      return <AppSkeleton />
-   }
-
-   console.log(cart)
-
    React.useEffect(() => {
-      if (cart) {
-         payments.razorpay.ui({
-            cart,
-         })
-      }
-   }, [cart])
+      ;(async () => {
+         if (cart && paymentPartnerShipIds?.length) {
+            await window.payments.provider({
+               disabled: cart?.paymentStatus === 'SUCCEEDED',
+               amount: new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: CURRENCY,
+               }).format(cart.totalPrice),
+               partnershipIds: paymentPartnerShipIds,
+               admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
+               datahub_url: HASURA_URL,
+               request_variables: {
+                  amount: cart.totalPrice,
+                  cartId: cart.id,
+                  partnershipIds: paymentPartnerShipIds,
+                  keycloakId: cart.customerKeycloakId,
+               },
+            })
+         }
+      })()
+   }, [cart, paymentPartnerShipIds])
 
    React.useEffect(() => {
       if (cart?.paymentStatus === 'PENDING') {
-         payments.razorpay.checkout({
-            partnershipId: 1,
+         window.payments.checkout({
             datahub_url: HASURA_URL,
             admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
             paymentId: cart?.paymentId,
@@ -101,6 +79,12 @@ const OrderSummary = ({ navigation, ...restProps }) => {
          })
       }
    }, [cart])
+
+   console.log(cart)
+
+   if (masterLoading) {
+      return <AppSkeleton />
+   }
 
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
