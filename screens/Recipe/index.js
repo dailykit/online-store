@@ -28,9 +28,10 @@ const Recipe = ({ route, navigation }) => {
 
    const { visual, masterLoading } = useAppContext()
 
-   const [option, setOption] = React.useState(undefined)
    const [fetching, setFetching] = React.useState(false)
-   const [selected, setSelected] = React.useState(new Map())
+   const ingredientsRef = React.useRef()
+   const nutritionRef = React.useRef()
+   const cookingStepsRef = React.useRef()
 
    // For Drawer
    const [isModalVisible, setIsModalVisible] = React.useState(false)
@@ -41,11 +42,6 @@ const Recipe = ({ route, navigation }) => {
       {
          variables: {
             id: recipeId,
-         },
-         onCompleted: data => {
-            if (data.simpleRecipe.simpleRecipeYields[0]) {
-               setOption(data.simpleRecipe.simpleRecipeYields[0])
-            }
          },
          fetchPolicy: 'cache-and-network',
       }
@@ -66,7 +62,6 @@ const Recipe = ({ route, navigation }) => {
    const [fetchCustomizableProduct] = useLazyQuery(CUSTOMIZABLE_PRODUCT, {
       onCompleted: data => {
          setRefProduct(data.customizableProduct)
-         setIsModalVisible(true)
          setFetching(false)
       },
       onError: error => {
@@ -79,7 +74,6 @@ const Recipe = ({ route, navigation }) => {
    const [fetchComboProduct] = useLazyQuery(COMBO_PRODUCT, {
       onCompleted: data => {
          setRefProduct(data.comboProduct)
-         setIsModalVisible(true)
          setFetching(false)
       },
       onError: error => {
@@ -88,6 +82,12 @@ const Recipe = ({ route, navigation }) => {
       },
       fetchPolicy: 'cache-and-network',
    })
+
+   const buy = () => {
+      if (Object.keys(refProduct).length) {
+         setIsModalVisible(true)
+      }
+   }
 
    const renderPricing = () => {
       switch (refType) {
@@ -102,10 +102,18 @@ const Recipe = ({ route, navigation }) => {
                   data={refProduct}
                />
             )
-         // case 'customizableProduct':
-         //    return fetchCustomizableProduct({ variables: { id: refId } })
-         // case 'comboProduct':
-         //    return fetchComboProduct({ variables: { id: refId } })
+         case 'customizableProduct':
+            return (
+               <BuyBtn color={visual.color} onPress={buy}>
+                  <BuyBtnText>Buy Now</BuyBtnText>
+               </BuyBtn>
+            )
+         case 'comboProduct':
+            return (
+               <BuyBtn color={visual.color} onPress={buy}>
+                  <BuyBtnText>Buy Now</BuyBtnText>
+               </BuyBtn>
+            )
          default:
             return <ContentText>No matching product found!</ContentText>
       }
@@ -122,7 +130,7 @@ const Recipe = ({ route, navigation }) => {
          default:
             return console.log('No type matched for fetching!')
       }
-   }, [])
+   }, [refType, refId])
 
    if (masterLoading) {
       return <AppSkeleton />
@@ -160,20 +168,43 @@ const Recipe = ({ route, navigation }) => {
                <ContentText>{simpleRecipe.description}</ContentText>
                <Spacer size="40px" />
                <Tabs horizontal showsHorizontalScrollIndicator={false}>
-                  <Tab active color={visual.color}>
+                  <Tab
+                     active
+                     color={visual.color}
+                     onPress={() =>
+                        ingredientsRef.current.scrollIntoView({
+                           behavior: 'smooth',
+                        })
+                     }
+                  >
                      <TabText active color={visual.color}>
                         Ingredients
                      </TabText>
                   </Tab>
-                  <Tab color={visual.color}>
+                  <Tab
+                     color={visual.color}
+                     onPress={() =>
+                        nutritionRef.current.scrollIntoView({
+                           behavior: 'smooth',
+                        })
+                     }
+                  >
                      <TabText color={visual.color}>Nutritional Values</TabText>
                   </Tab>
-                  <Tab color={visual.color}>
+                  <Tab
+                     color={visual.color}
+                     onPress={() => {
+                        console.log(cookingStepsRef)
+                        cookingStepsRef.current.scrollIntoView(
+                           scrollIntoView({ behavior: 'smooth' })
+                        )
+                     }}
+                  >
                      <TabText color={visual.color}>Cooking Steps</TabText>
                   </Tab>
                </Tabs>
                <Spacer size="28px" />
-               <SectionHeader>
+               <SectionHeader ref={ingredientsRef}>
                   {
                      simpleRecipe.simpleRecipeYields[0].ingredientSachets.filter(
                         ing => ing.isVisible
@@ -197,7 +228,9 @@ const Recipe = ({ route, navigation }) => {
                <Spacer size="28px" />
                {Boolean(simpleRecipe.simpleRecipeYields[0].nutritionalInfo) && (
                   <>
-                     <SectionHeader>Nutritional Values</SectionHeader>
+                     <SectionHeader ref={nutritionRef}>
+                        Nutritional Values
+                     </SectionHeader>
                      <Spacer size="20px" />
                      <Nutrition
                         values={
@@ -207,7 +240,9 @@ const Recipe = ({ route, navigation }) => {
                      <Spacer size="28px" />
                   </>
                )}
-               <SectionHeader>Cooking Steps</SectionHeader>
+               <SectionHeader ref={cookingStepsRef}>
+                  Cooking Steps
+               </SectionHeader>
                <Spacer size="20px" />
                {simpleRecipe.procedures.map((procedure, k) => (
                   <>
@@ -387,4 +422,15 @@ const Type = styled.Text`
 const Info = styled.View`
    flex-direction: row;
    align-items: center;
+`
+
+const BuyBtn = styled.TouchableOpacity`
+   margin-top: 32px;
+   background: ${props => props.color || '#888d98'};
+   text-align: center;
+   padding: 16px;
+`
+
+const BuyBtnText = styled.Text`
+   color: #fff;
 `
