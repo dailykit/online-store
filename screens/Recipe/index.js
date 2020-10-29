@@ -22,6 +22,7 @@ import styled from 'styled-components/native'
 import PhotoShowcase from './PhotoShowcase'
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import AddToCart from '../AddToCart'
+import RecipeSkeleton from '../../components/skeletons/recipe'
 
 const Recipe = ({ route, navigation }) => {
    let { recipeId, refId, refType } = route.params
@@ -138,9 +139,10 @@ const Recipe = ({ route, navigation }) => {
 
    if (loading) {
       return (
-         <View>
-            <Spinner size="large" />
-         </View>
+         <>
+            <Header title="Home" navigation={navigation} />
+            <RecipeSkeleton />
+         </>
       )
    }
 
@@ -313,10 +315,10 @@ const Recipe = ({ route, navigation }) => {
                   </Info>
                </Flex>
                <Spacer size="16px" />
-               {Object.keys(refProduct).length ? (
-                  renderPricing()
-               ) : (
+               {fetching ? (
                   <ContentText>Loading...</ContentText>
+               ) : (
+                  renderPricing()
                )}
             </PricingContainer>
          </Wrapper>
