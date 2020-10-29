@@ -18,6 +18,7 @@ import HeaderBack from '../../components/HeaderBack'
 import Nutrition from '../../components/Nutrition'
 import Recommendations from '../../components/Recommendations'
 import AppSkeleton from '../../components/skeletons/app'
+import RecipeSkeleton from '../../components/skeletons/recipe'
 import { useAppContext } from '../../context/app'
 import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../../graphql'
 import { width } from '../../utils/Scalaing'
@@ -79,11 +80,10 @@ const ProductPage = ({ navigation, route }) => {
 
    if (IPLoading || SRPLoading)
       return (
-         <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-         >
-            <Spinner size="large" />
-         </View>
+         <>
+            <Header title="Home" navigation={navigation} />
+            <RecipeSkeleton />
+         </>
       )
 
    return (
