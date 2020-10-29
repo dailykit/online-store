@@ -6,6 +6,7 @@ import { UPDATE_CART } from '../../../graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
 import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const PayWithWallet = () => {
    const { wallet, cart } = useCartContext()

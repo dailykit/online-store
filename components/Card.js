@@ -17,6 +17,7 @@ import { Drawer } from './Drawer'
 import InventoryProductItem from './InventoryProductItem'
 import SimpleProductItem from './SimpleProductItem'
 import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [busy, setBusy] = useState(false)

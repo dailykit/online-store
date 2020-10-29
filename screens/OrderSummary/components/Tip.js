@@ -7,6 +7,7 @@ import { Feather } from '@expo/vector-icons'
 import { useAuth } from '../../../context/auth'
 import { useCartContext } from '../../../context/cart'
 import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const Tip = ({ cart }) => {
    const { visual } = useAppContext()

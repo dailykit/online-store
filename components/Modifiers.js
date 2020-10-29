@@ -4,6 +4,7 @@ import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { discountedPrice } from '../utils'
 import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
    const { visual } = useAppContext()

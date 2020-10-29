@@ -1779,10 +1779,6 @@
     wcwidth "^1.0.1"
     ws "^1.1.0"
 
-"@react-native-community/clipboard@react-native-community/clipboard":
-  version "1.4.0"
-  resolved "https://codeload.github.com/react-native-community/clipboard/tar.gz/d4b8447e3be53877a7b88a718f7fc94332f082c8"
-
 "@react-native-community/masked-view@0.1.6":
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.6.tgz#c7f2ac187c1f25aa8c30d11baa8f4398eca3bb84"
@@ -1810,10 +1806,10 @@
     react-is "^16.13.0"
     use-subscription "^1.4.0"
 
-"@react-navigation/drawer@5.4.1":
-  version "5.4.1"
-  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-5.4.1.tgz#381bed18422b75f5e2c69455a85390564e6d3584"
-  integrity sha512-5w8wjg+Cp1HcNHSwpYtOJMDHHODKGLjpiSrDvWlCXs4OX2ifPeBPiR4AaEXHkyNDhsikHMe6E5WW6Dn7GPzU9w==
+"@react-navigation/drawer@5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@react-navigation/drawer/-/drawer-5.3.0.tgz#55654ac4b4cbdbd257d6d3071ab6cb3675e74cdb"
+  integrity sha512-7pPQWKl86EITpskHHnY73HUljvZsp67r0kmpp5uDhz9I0D/QHvl6KtuS4ACOUS8kHP5e/aQkYPBvboZl55xvBQ==
   dependencies:
     color "^3.1.2"
     react-native-iphone-x-helper "^1.2.1"

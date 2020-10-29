@@ -10,6 +10,7 @@ import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { width } from '../../utils/Scalaing'
 import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const ProfileScreen = ({ navigation }) => {
    const { visual, masterLoading } = useAppContext()

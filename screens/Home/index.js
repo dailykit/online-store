@@ -40,7 +40,7 @@ const Home = props => {
       console.log('window.parent.location', window.parent.location)
       if (
          isAuthenticated &&
-         window.location.pathname.includes('login-success')
+         window.location.pathname.includes('LoginSuccess')
       ) {
          console.log('Logged in and not on success page...')
          if (window.location !== window.parent.location) {

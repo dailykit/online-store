@@ -1,6 +1,7 @@
 import React from 'react'
 import { AsyncStorage } from 'react-native'
 import { CLIENTID, MAPS_API_KEY, CURRENCY } from 'react-native-dotenv'
+// 12
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { useNavigation } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -70,6 +71,7 @@ export default function OnboardingStack(props) {
       setLoyaltyPoints,
       customerReferral,
       setCustomerReferral,
+      setSettingCart,
    } = useCartContext()
    const {
       brandId,
@@ -251,6 +253,7 @@ export default function OnboardingStack(props) {
       },
       skip: !Boolean(customer?.id && brandId),
       onSubscriptionData: data => {
+         console.log('Found carts:', data.subscriptionData.data.cart)
          if (data.subscriptionData.data.cart.length > 1) {
             const [mergedCart, mergedCartIds] = mergeCarts(
                data.subscriptionData.data.cart
@@ -273,6 +276,7 @@ export default function OnboardingStack(props) {
             const cart = data.subscriptionData.data.cart[0]
             setCart(cart)
          }
+         setSettingCart(false)
       },
    })
 
@@ -327,87 +331,98 @@ export default function OnboardingStack(props) {
    })
 
    // Query Customer and Data from platform
-   const { error, loading: fetchingCustomer } = useQuery(CUSTOMER, {
-      variables: {
-         keycloakId: user.sub || user.userid,
-         brandId,
-      },
-      onCompleted: data => {
-         console.log('Customer:', data)
-         if (data.customer) {
-            setCustomer(data.customer)
-            setCustomerDetails(data.customer.platform_customer)
+   const [fetchCustomer, { error, loading: fetchingCustomer }] = useLazyQuery(
+      CUSTOMER,
+      {
+         onCompleted: data => {
+            console.log('Customer:', data)
 
-            // check if customer exists on brand
-            const brandCustomerRecord = data.customer.brandCustomers.find(
-               record => record.brandId === brandId
-            )
-            console.log('brandCustomerRecord', brandCustomerRecord)
-            if (!brandCustomerRecord) {
-               createBrandCustomer({
+            if (data.customer) {
+               setCustomer(data.customer)
+               setCustomerDetails(data.customer.platform_customer)
+
+               // check if customer exists on brand
+               const brandCustomerRecord = data.customer.brandCustomers.find(
+                  record => record.brandId === brandId
+               )
+               console.log('brandCustomerRecord', brandCustomerRecord)
+               if (!brandCustomerRecord) {
+                  createBrandCustomer({
+                     variables: {
+                        object: {
+                           brandId,
+                           keycloakId: data.customer.keycloakId,
+                        },
+                     },
+                  })
+               }
+
+               // check if any exisiting carts
+               if (data.customer.orderCarts.length) {
+                  console.log('Found cart with customer...')
+                  setCart(data.customer.orderCarts[0])
+               }
+
+               // update any pending cart (w/o signup)
+               if (cartId) {
+                  updateCart({
+                     variables: {
+                        id: cartId,
+                        set: {
+                           customerId: data.customer.id,
+                           customerKeycloakId: data.customer.keycloakId,
+                           stripeCustomerId:
+                              data.customer.platform_customer
+                                 ?.stripeCustomerId || null,
+                           paymentMethodId:
+                              data.customer.platform_customer
+                                 ?.defaultPaymentMethodId || null,
+                           customerInfo: {
+                              customerFirstName:
+                                 data.customer.platform_customer?.firstName,
+                              customerLastName:
+                                 data.customer.platform_customer?.lastName,
+                              customerPhone:
+                                 data.customer.platform_customer?.phoneNumber,
+                              customerEmail:
+                                 data.customer.platform_customer?.email,
+                           },
+                        },
+                     },
+                  })
+               }
+            } else {
+               createCustomer({
                   variables: {
                      object: {
-                        brandId,
-                        keycloakId: data.customer.keycloakId,
-                     },
-                  },
-               })
-            }
-
-            // check if any exisiting carts
-            if (data.customer.orderCarts.length) {
-               console.log('Found cart with customer...')
-               setCart(data.customer.orderCarts[0])
-            }
-
-            // update any pending cart (w/o signup)
-            if (cartId) {
-               updateCart({
-                  variables: {
-                     id: cartId,
-                     set: {
-                        customerId: data.customer.id,
-                        customerKeycloakId: data.customer.keycloakId,
-                        stripeCustomerId:
-                           data.customer.platform_customer?.stripeCustomerId ||
-                           null,
-                        paymentMethodId:
-                           data.customer.platform_customer
-                              ?.defaultPaymentMethodId || null,
-                        customerInfo: {
-                           customerFirstName:
-                              data.customer.platform_customer?.firstName,
-                           customerLastName:
-                              data.customer.platform_customer?.lastName,
-                           customerPhone:
-                              data.customer.platform_customer?.phoneNumber,
-                           customerEmail:
-                              data.customer.platform_customer?.email,
+                        keycloakId: user.sub || user.userid,
+                        email: user.email,
+                        source: 'online store',
+                        clientId: CLIENTID,
+                        sourceBrandId: brandId,
+                        brandCustomers: {
+                           data: {
+                              brandId,
+                           },
                         },
                      },
                   },
                })
             }
-         } else {
-            createCustomer({
-               variables: {
-                  object: {
-                     keycloakId: user.sub || user.userid,
-                     email: user.email,
-                     source: 'online store',
-                     clientId: CLIENTID,
-                     sourceBrandId: brandId,
-                     brandCustomers: {
-                        data: {
-                           brandId,
-                        },
-                     },
-                  },
-               },
-            })
-         }
-      },
-   })
+         },
+      }
+   )
+
+   React.useEffect(() => {
+      if (brandId && (user.sub || user.id)) {
+         fetchCustomer({
+            variables: {
+               keycloakId: user.sub || user.userid,
+               brandId,
+            },
+         })
+      }
+   }, [brandId, user])
 
    // if (error) console.log('Customer fetch error: ', error)
 
@@ -423,6 +438,7 @@ export default function OnboardingStack(props) {
                'Customer Referral: ',
                data.subscriptionData.data.customerReferrals[0]
             )
+
             setCustomerReferral(data.subscriptionData.data.customerReferrals[0])
          }
       },
@@ -436,6 +452,7 @@ export default function OnboardingStack(props) {
       onSubscriptionData: data => {
          if (data.subscriptionData.data.wallets.length) {
             console.log('Wallet: ', data.subscriptionData.data.wallets[0])
+
             setWallet(data.subscriptionData.data.wallets[0])
          }
       },
@@ -451,6 +468,7 @@ export default function OnboardingStack(props) {
                'Loyalty Points: ',
                data.subscriptionData.data.loyaltyPoints[0]
             )
+
             setLoyaltyPoints(data.subscriptionData.data.loyaltyPoints[0])
          }
       },
@@ -628,6 +646,8 @@ function AppStack(props) {
          console.log('Setting up navigation...')
          setNavigation(props.navigation)
       }
+      console.log(initRender, width)
+      console.log('Setting initRender...')
       setInitRender(false)
    }, [])
 
@@ -635,10 +655,14 @@ function AppStack(props) {
       <Drawer.Navigator
          style={{ flex: 1 }}
          drawerContent={props => <CustomDrawerContent {...props} />}
-         drawerStyle={{
-            backgroundColor: 'white',
-            width: initRender ? null : width * 0.8,
-         }}
+         drawerStyle={
+            initRender
+               ? { backgroundColor: 'black' }
+               : {
+                    backgroundColor: 'white',
+                    width: width * 0.8,
+                 }
+         }
          gestureHandlerProps={{ enabled: false }}
          drawerContentOptions={{
             activeTintcolor: 'white',
@@ -672,7 +696,7 @@ function AppStack(props) {
             }}
          />
          <Stack.Screen
-            name="login-success"
+            name="LoginSuccess"
             component={LoginSuccess}
             options={{
                headerShown: false,

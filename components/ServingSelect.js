@@ -4,6 +4,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useAppContext } from '../context/app'
 import { discountedPrice } from '../utils'
 import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const ServingSelect = ({
    index,

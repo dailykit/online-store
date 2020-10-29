@@ -18,6 +18,7 @@ import { CREATE_CART, UPDATE_CART } from '../graphql/mutations'
 import { discountedPrice, useStoreToast, uuid } from '../utils'
 import { width } from '../utils/Scalaing'
 import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const Cart = ({
    navigation,

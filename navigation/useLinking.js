@@ -11,6 +11,9 @@ export default function (containerRef) {
                Home: {
                   path: '/',
                },
+               LoginSuccess: {
+                  path: 'LoginSuccess',
+               },
                ProfileScreen: {
                   path: 'ProfileScreen',
                },

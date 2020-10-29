@@ -33,9 +33,10 @@ import {
    HASURA_URL,
    CURRENCY,
 } from 'react-native-dotenv'
+// 12
 
 const OrderSummary = ({ navigation, ...restProps }) => {
-   const { cart } = useCartContext()
+   const { cart, settingCart } = useCartContext()
    const { visual, masterLoading, paymentPartnerShipIds } = useAppContext()
 
    String.prototype.SRPType = function () {
@@ -45,6 +46,17 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    React.useEffect(() => {
       ;(async () => {
          if (cart && paymentPartnerShipIds?.length) {
+            console.log('OrderSummary -> cart.totalPrice', cart.totalPrice)
+            console.log('OrderSummary -> cart.id', cart.id)
+            console.log(
+               'OrderSummary -> paymentPartnerShipIds',
+               paymentPartnerShipIds
+            )
+            console.log(
+               'OrderSummary -> cart.customerKeycloakId',
+               cart.customerKeycloakId
+            )
+
             await window.payments.provider({
                disabled: cart?.paymentStatus === 'SUCCEEDED',
                amount: new Intl.NumberFormat('en-US', {
@@ -79,7 +91,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    console.log(cart)
 
-   if (masterLoading) {
+   if (masterLoading || settingCart) {
       return <AppSkeleton />
    }
 
