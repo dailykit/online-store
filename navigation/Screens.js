@@ -621,12 +621,14 @@ export default function OnboardingStack(props) {
 
 function AppStack(props) {
    const { setNavigation } = useDrawerContext()
+   const [initRender, setInitRender] = React.useState(true)
 
    React.useEffect(() => {
       if (props.navigation) {
          console.log('Setting up navigation...')
          setNavigation(props.navigation)
       }
+      setInitRender(false)
    }, [])
 
    return (
@@ -635,7 +637,7 @@ function AppStack(props) {
          drawerContent={props => <CustomDrawerContent {...props} />}
          drawerStyle={{
             backgroundColor: 'white',
-            width: width * 0.8,
+            width: initRender ? null : width * 0.8,
          }}
          gestureHandlerProps={{ enabled: false }}
          drawerContentOptions={{

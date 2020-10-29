@@ -73,9 +73,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             paymentId: cart?.paymentId,
             amount: cart?.totalPrice,
             currency: CURRENCY,
-            name: `${cart.customerInfo?.customerFirstName} ${cart.customerInfo?.customerLastName}`,
-            email: cart.customerInfo?.customerEmail,
-            contact: cart.customerInfo?.customerPhone,
          })
       }
    }, [cart])
