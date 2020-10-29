@@ -28,6 +28,7 @@ export const CartContextProvider = ({ children }) => {
 
    React.useEffect(() => {
       if (saved && cart) {
+         console.log('Saved:', saved)
          if (saved.type.includes('card')) {
             updateCart({
                variables: {
