@@ -33,6 +33,7 @@ import {
    HASURA_URL,
    CURRENCY,
 } from 'react-native-dotenv'
+import CartSkeleton from '../../components/skeletons/cart'
 // 12
 
 const OrderSummary = ({ navigation, ...restProps }) => {
@@ -91,8 +92,17 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    console.log(cart)
 
-   if (masterLoading || settingCart) {
+   if (masterLoading) {
       return <AppSkeleton />
+   }
+
+   if (settingCart) {
+      return (
+         <>
+            <Header title="Home" navigation={navigation} />
+            <CartSkeleton />
+         </>
+      )
    }
 
    return (

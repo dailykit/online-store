@@ -488,6 +488,7 @@ export default function OnboardingStack(props) {
       onCompleted: data => {
          if (data?.cartByPK?.id) {
             setCart(data.cartByPK)
+            setSettingCart(false)
          }
       },
       onError: error => {
@@ -515,6 +516,8 @@ export default function OnboardingStack(props) {
                   id: cartId,
                },
             })
+         } else {
+            setSettingCart(false)
          }
       })()
    }, [user])
