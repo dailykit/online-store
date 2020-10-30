@@ -23,7 +23,7 @@ const Nutrition = ({ values }) => {
 
    return (
       <Wrapper>
-         <Heading>Nutrition</Heading>
+         {/* <Heading>Nutrition</Heading> */}
          <Calories>Calories {values.calories}</Calories>
          <Table>
             <TableHead>
@@ -121,14 +121,14 @@ const Wrapper = styled.View`
 `
 
 const Heading = styled.Text`
-   color: #666;
+   color: #555b6e;
    font-size: 14px;
    margin-bottom: 0.5rem;
 `
 
 const Calories = styled.Text`
-   font-weight: bold;
-   color: #666;
+   font-weight: 600;
+   color: #555b6e;
    margin-bottom: 0.25rem;
 `
 
@@ -138,12 +138,12 @@ const TableHead = styled.View`
    flex-direction: row;
    align-items: center;
    justify-content: space-between;
-   border-bottom: 2px solid #666;
+   border-bottom: 2px solid #555b6e;
 `
 
 const TableHeadText = styled.Text`
    font-size: 14px;
-   color: #666;
+   color: #555b6e;
 `
 
 const TableBody = styled.View``
@@ -153,13 +153,11 @@ const TableRow = styled.View`
    align-items: center;
    justify-content: space-between;
    height: 1.5rem;
-   border-bottom-width: 1px;
-   border-bottom-color: #aaa;
 `
 
 const TableRowText = styled.Text`
-   font-weight: bold;
-   color: #666;
+   font-weight: 600;
+   color: #555b6e;
    ${props =>
       props.inset &&
       css`
@@ -180,6 +178,6 @@ const TableFooter = styled.View`
 `
 
 const TableFooterText = styled.Text`
-   color: #666;
-   font-weight: bold;
+   color: #555b6e;
+   font-weight: 600;
 `
