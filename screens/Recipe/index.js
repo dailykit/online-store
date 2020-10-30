@@ -24,9 +24,10 @@ import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import AddToCart from '../AddToCart'
 import RecipeSkeleton from '../../components/skeletons/recipe'
 
-// import CookingTime from '../../assets/svgs/cooking-time.svg'
-// import Cuisine from '../../assets/svgs/cuisine.svg'
-import Chef from '../../assets/svgs/chef'
+import CookingTime from '../../assets/svgs/CookingTime'
+import Cuisine from '../../assets/svgs/Cuisine'
+import Chef from '../../assets/svgs/Chef'
+import Utensils from '../../assets/svgs/Utensils'
 
 const Recipe = ({ route, navigation }) => {
    let { recipeId, refId, refType } = route.params
@@ -167,74 +168,87 @@ const Recipe = ({ route, navigation }) => {
          <Wrapper>
             <DetailsContainer
                showsVerticalScrollIndicator={false}
-               stickyHeaderIndices={[6]}
+               stickyHeaderIndices={[0]}
             >
-               <PhotoShowcase images={[simpleRecipe.image] || []} />
-               <Spacer size="32px" />
-               <TypeWrapper type={simpleRecipe.type}>
-                  <TypeText type={simpleRecipe.type}>
-                     {simpleRecipe.type}
-                  </TypeText>
-               </TypeWrapper>
-               <Spacer size="20px" />
-               <ContentText>{simpleRecipe.description}</ContentText>
-               <Spacer size="24px" />
-               <Flex>
-                  <Info>
-                     <Chef />
-                     <InfoText>{simpleRecipe.cuisine}</InfoText>
-                  </Info>
-                  <Info>
-                     <Chef />
-                     <InfoText>{simpleRecipe.cookingTime} mins.</InfoText>
-                  </Info>
-                  <Info>
-                     <Chef />
-                     <InfoText>{simpleRecipe.author}</InfoText>
-                  </Info>
-               </Flex>
-               <Spacer size="20px" />
-               {Boolean(simpleRecipe.utensils.length) && (
-                  <ContentText>
-                     Utensils required: {simpleRecipe.utensils.join(', ')}
-                  </ContentText>
-               )}
-               <Spacer size="32px" />
-               <Tabs horizontal showsHorizontalScrollIndicator={false}>
+               <Tabs
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ marginHorizontal: 'auto' }}
+               >
                   <Tab
                      active
                      color={visual.color}
-                     onPress={() =>
-                        ingredientsRef.current.scrollIntoView({
-                           behavior: 'smooth',
-                        })
-                     }
+                     // onPress={() =>
+                     //    ingredientsRef.current.scrollIntoView({
+                     //       behavior: 'smooth',
+                     //    })
+                     // }
                   >
                      <TabText active color={visual.color}>
-                        Ingredients
+                        Description
                      </TabText>
                   </Tab>
                   <Tab
                      color={visual.color}
-                     onPress={() =>
-                        nutritionRef.current.scrollIntoView({
-                           behavior: 'smooth',
-                        })
-                     }
+                     // onPress={() =>
+                     //    ingredientsRef.current.scrollIntoView({
+                     //       behavior: 'smooth',
+                     //    })
+                     // }
                   >
-                     <TabText color={visual.color}>Nutritional Values</TabText>
+                     <TabText color={visual.color}>Ingredients</TabText>
                   </Tab>
                   <Tab
                      color={visual.color}
-                     onPress={() => {
-                        // scrollTo(0, 500)
-                        cookingStepsRef.current?.scrollTo(0, 500)
-                     }}
+                     // onPress={() => {
+                     //    cookingStepsRef.current?.scrollTo(0, 500)
+                     // }}
                   >
                      <TabText color={visual.color}>Cooking Steps</TabText>
                   </Tab>
+                  <Tab
+                     color={visual.color}
+                     // onPress={() =>
+                     //    nutritionRef.current.scrollIntoView({
+                     //       behavior: 'smooth',
+                     //    })
+                     // }
+                  >
+                     <TabText color={visual.color}>Nutritional Values</TabText>
+                  </Tab>
                </Tabs>
                <Spacer size="28px" />
+               <PhotoShowcase images={[simpleRecipe.image] || []} />
+               <Spacer size="32px" />
+               {/* <TypeWrapper type={simpleRecipe.type}>
+                  <TypeText type={simpleRecipe.type}>
+                     {simpleRecipe.type}
+                  </TypeText>
+               </TypeWrapper> */}
+               <Spacer size="24px" />
+               <Flex>
+                  <Info>
+                     <Cuisine color={visual.color} />
+                     <InfoText>{simpleRecipe.cuisine}</InfoText>
+                  </Info>
+                  <Info>
+                     <CookingTime color={visual.color} />
+                     <InfoText>{simpleRecipe.cookingTime} mins.</InfoText>
+                  </Info>
+                  <Info>
+                     <Chef color={visual.color} />
+                     <InfoText>{simpleRecipe.author}</InfoText>
+                  </Info>
+                  <Info>
+                     <Utensils color={visual.color} />
+                     <InfoText>{simpleRecipe.utensils.join(', ')}</InfoText>
+                  </Info>
+               </Flex>
+               <Spacer size="24px" />
+               <ContentText style={{ textAlign: 'center' }}>
+                  {simpleRecipe.description}
+               </ContentText>
+               <Spacer size="68px" />
                <SectionHeader color={visual.color} ref={ingredientsRef}>
                   {
                      simpleRecipe.simpleRecipeYields[0].ingredientSachets.filter(
@@ -263,20 +277,6 @@ const Recipe = ({ route, navigation }) => {
                      ))}
                </Ingredients>
                <Spacer size="68px" />
-               {Boolean(simpleRecipe.simpleRecipeYields[0].nutritionalInfo) && (
-                  <>
-                     <SectionHeader color={visual.color} ref={nutritionRef}>
-                        Nutritional Values
-                     </SectionHeader>
-                     <Spacer size="20px" />
-                     <Nutrition
-                        values={
-                           simpleRecipe.simpleRecipeYields[0].nutritionalInfo
-                        }
-                     />
-                     <Spacer size="68px" />
-                  </>
-               )}
                <SectionHeader
                   color={visual.color}
                   nativeID="cookingSteps"
@@ -321,6 +321,20 @@ const Recipe = ({ route, navigation }) => {
                      <Spacer size="40px" />
                   </>
                ))}
+               <Spacer size="68px" />
+               {Boolean(simpleRecipe.simpleRecipeYields[0].nutritionalInfo) && (
+                  <>
+                     <SectionHeader color={visual.color} ref={nutritionRef}>
+                        Nutritional Values
+                     </SectionHeader>
+                     <Spacer size="20px" />
+                     <Nutrition
+                        values={
+                           simpleRecipe.simpleRecipeYields[0].nutritionalInfo
+                        }
+                     />
+                  </>
+               )}
             </DetailsContainer>
             <PricingContainer>
                {fetching ? (
@@ -345,13 +359,13 @@ const Wrapper = styled.View`
    flex: 1;
    flex-direction: row;
    padding: 16px 48px;
-   background: rgb(233, 236, 238);
+   background: #fefdfc;
 `
 
 const Flex = styled.View`
    flex-direction: row;
-   align-items: center;
-   justify-content: center;
+   align-items: start;
+   justify-content: space-evenly;
    flex-wrap: wrap;
 `
 
@@ -362,7 +376,6 @@ const Spacer = styled.View`
 const DetailsContainer = styled.ScrollView`
    margin-right: 24px;
    padding: 0 20px;
-   background: #fff;
 `
 
 const Tabs = styled.ScrollView`
@@ -389,6 +402,7 @@ const SectionHeader = styled.Text`
    color: ${props => props.color || '#888d9d'};
    font-size: 28px;
    font-weight: 600;
+   text-align: center;
 `
 
 const ContentText = styled.Text`
@@ -450,6 +464,11 @@ const PricingContainer = styled.View`
    background: #fff;
    min-width: 31vw;
    padding: 20px;
+   shadow-opacity: 1;
+   shadow-radius: 2px;
+   shadow-color: #f8f8f7;
+   shadow-offset: -5px -5px;
+   border-radius: 4px;
 `
 
 const Title = styled(ContentText)`
@@ -476,12 +495,12 @@ const TypeText = styled.Text`
 
 const Info = styled.View`
    align-items: center;
-   margin: 0 50px;
 `
 
 const InfoText = styled(ContentText)`
    font-size: 20px;
    color: #000;
+   max-width: 200px;
 `
 
 const BuyBtn = styled.TouchableOpacity`
@@ -518,4 +537,5 @@ const IngredientImage = styled.Image`
 const Ingredients = styled.View`
    flex-direction: row;
    flex-wrap: wrap;
+   justify-content: center;
 `

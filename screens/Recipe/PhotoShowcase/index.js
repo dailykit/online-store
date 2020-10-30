@@ -1,10 +1,11 @@
 import React from 'react'
 import styled from 'styled-components/native'
+import { height, width } from '../../../utils/Scalaing'
 
 const PhotoShowcase = ({ images }) => {
    return (
       <Wrapper>
-         <Display source={{ uri: images[0] }} />
+         <Display style={{ resizeMode: 'cover' }} source={{ uri: images[0] }} />
       </Wrapper>
    )
 }
@@ -16,6 +17,7 @@ const Wrapper = styled.View`
 `
 
 const Display = styled.Image`
-   height: 400px;
-   width: 500px;
+   height: 500px;
+   width: ${width - 48 * 2 - 24 - 0.4 * width}px;
+   border-radius: 4px;
 `
