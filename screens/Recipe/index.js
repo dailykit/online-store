@@ -24,6 +24,10 @@ import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
 import AddToCart from '../AddToCart'
 import RecipeSkeleton from '../../components/skeletons/recipe'
 
+// import CookingTime from '../../assets/svgs/cooking-time.svg'
+// import Cuisine from '../../assets/svgs/cuisine.svg'
+import Chef from '../../assets/svgs/chef'
+
 const Recipe = ({ route, navigation }) => {
    let { recipeId, refId, refType } = route.params
 
@@ -167,39 +171,28 @@ const Recipe = ({ route, navigation }) => {
             >
                <PhotoShowcase images={[simpleRecipe.image] || []} />
                <Spacer size="32px" />
-               <Type type={simpleRecipe.type}>{simpleRecipe.type}</Type>
-               <Spacer size="16px" />
-               <Flex>
-                  <Info>
-                     <MaterialCommunityIcons
-                        name="food"
-                        color="#888d9d"
-                        style={{ marginRight: 8 }}
-                        size={16}
-                     />
-                     <ContentText>{simpleRecipe.cuisine}</ContentText>
-                  </Info>
-                  <Info>
-                     <MaterialCommunityIcons
-                        name="timelapse"
-                        color="#888d9d"
-                        style={{ marginRight: 8 }}
-                        size={16}
-                     />
-                     <ContentText>{simpleRecipe.cookingTime} mins.</ContentText>
-                  </Info>
-                  <Info>
-                     <MaterialCommunityIcons
-                        name="chef-hat"
-                        color="#888d9d"
-                        style={{ marginRight: 8 }}
-                        size={16}
-                     />
-                     <ContentText>{simpleRecipe.author}</ContentText>
-                  </Info>
-               </Flex>
+               <TypeWrapper type={simpleRecipe.type}>
+                  <TypeText type={simpleRecipe.type}>
+                     {simpleRecipe.type}
+                  </TypeText>
+               </TypeWrapper>
                <Spacer size="20px" />
                <ContentText>{simpleRecipe.description}</ContentText>
+               <Spacer size="24px" />
+               <Flex>
+                  <Info>
+                     <Chef />
+                     <InfoText>{simpleRecipe.cuisine}</InfoText>
+                  </Info>
+                  <Info>
+                     <Chef />
+                     <InfoText>{simpleRecipe.cookingTime} mins.</InfoText>
+                  </Info>
+                  <Info>
+                     <Chef />
+                     <InfoText>{simpleRecipe.author}</InfoText>
+                  </Info>
+               </Flex>
                <Spacer size="20px" />
                {Boolean(simpleRecipe.utensils.length) && (
                   <ContentText>
@@ -251,18 +244,24 @@ const Recipe = ({ route, navigation }) => {
                   Ingredients
                </SectionHeader>
                <Spacer size="20px" />
-               {simpleRecipe.simpleRecipeYields[0].ingredientSachets
-                  .filter(ing => ing.isVisible)
-                  .map((ing, i) => (
-                     <>
-                        <ContentText key={ing.id}>{`${i + 1}. ${
-                           ing.ingredientSachet.quantity
-                        } ${ing.ingredientSachet.unit} ${
-                           ing.slipName
-                        }`}</ContentText>
-                        <Spacer size="20px" />
-                     </>
-                  ))}
+               <Ingredients>
+                  {simpleRecipe.simpleRecipeYields[0].ingredientSachets
+                     .filter(ing => ing.isVisible)
+                     .map((ing, i) => (
+                        <IngredientWrapper>
+                           <ContentText
+                              key={ing.id}
+                           >{`${ing.ingredientSachet.quantity} ${ing.ingredientSachet.unit} ${ing.slipName}`}</ContentText>
+                           {Boolean(ing.ingredientSachet.ingredient.image) && (
+                              <IngredientImage
+                                 source={{
+                                    uri: ing.ingredientSachet.ingredient.image,
+                                 }}
+                              />
+                           )}
+                        </IngredientWrapper>
+                     ))}
+               </Ingredients>
                <Spacer size="68px" />
                {Boolean(simpleRecipe.simpleRecipeYields[0].nutritionalInfo) && (
                   <>
@@ -352,6 +351,7 @@ const Wrapper = styled.View`
 const Flex = styled.View`
    flex-direction: row;
    align-items: center;
+   justify-content: center;
    flex-wrap: wrap;
 `
 
@@ -458,32 +458,30 @@ const Title = styled(ContentText)`
    font-weight: bold;
 `
 
-const getColorForType = type => {
-   switch (type) {
-      case 'Vegetarian':
-         return '#4FECAA'
-      case 'Vegan':
-         return '#4FECD0'
-      case 'Non-Vegetarian':
-         return ''
-      default:
-         return '#FF5A52'
-   }
-}
-
-const Type = styled.Text`
-   background: ${props => getColorForType(props.type)}
-   padding: 4px 8px;
-   color: #fff;
-   font-size: 16px;
+const TypeWrapper = styled.Text`
+   border: 2px solid
+      ${props => (props.type === 'Non-vegetarian' ? '#FF5A52' : '#53C22B')};
+   border-radius: 32px;
+   align-items: center;
+   justify-content: center;
+   padding: 4px 12px;
    width: fit-content;
-   border-radius: 2px;
+`
+
+const TypeText = styled.Text`
+   color: ${props => (props.type === 'Non-vegetarian' ? '#FF5A52' : '#53C22B')};
+   font-weight: bold;
+   text-transform: uppercase;
 `
 
 const Info = styled.View`
-   flex-direction: row;
    align-items: center;
-   margin-right: 32px;
+   margin: 0 50px;
+`
+
+const InfoText = styled(ContentText)`
+   font-size: 20px;
+   color: #000;
 `
 
 const BuyBtn = styled.TouchableOpacity`
@@ -495,4 +493,29 @@ const BuyBtn = styled.TouchableOpacity`
 
 const BuyBtnText = styled.Text`
    color: #fff;
+`
+
+const IngredientWrapper = styled.View`
+   background: #fff;
+   border-radius: 7px;
+   padding: 16px;
+   border: 1px solid #eae8e8;
+   flex-direction: row;
+   align-items: center;
+   width: 295px;
+   justify-content: space-between;
+   margin-right: 20px;
+   margin-bottom: 20px;
+`
+
+const IngredientImage = styled.Image`
+   width: 56px;
+   height: 56px;
+   border-radius: 28px;
+   margin-left: 16px;
+`
+
+const Ingredients = styled.View`
+   flex-direction: row;
+   flex-wrap: wrap;
 `
