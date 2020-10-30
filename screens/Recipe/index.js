@@ -163,12 +163,50 @@ const Recipe = ({ route, navigation }) => {
          <Wrapper>
             <DetailsContainer
                showsVerticalScrollIndicator={false}
-               stickyHeaderIndices={[4]}
+               stickyHeaderIndices={[6]}
             >
                <PhotoShowcase images={[simpleRecipe.image] || []} />
                <Spacer size="32px" />
+               <Type type={simpleRecipe.type}>{simpleRecipe.type}</Type>
+               <Spacer size="16px" />
+               <Flex>
+                  <Info>
+                     <MaterialCommunityIcons
+                        name="food"
+                        color="#888d9d"
+                        style={{ marginRight: 8 }}
+                        size={16}
+                     />
+                     <ContentText>{simpleRecipe.cuisine}</ContentText>
+                  </Info>
+                  <Info>
+                     <MaterialCommunityIcons
+                        name="timelapse"
+                        color="#888d9d"
+                        style={{ marginRight: 8 }}
+                        size={16}
+                     />
+                     <ContentText>{simpleRecipe.cookingTime} mins.</ContentText>
+                  </Info>
+                  <Info>
+                     <MaterialCommunityIcons
+                        name="chef-hat"
+                        color="#888d9d"
+                        style={{ marginRight: 8 }}
+                        size={16}
+                     />
+                     <ContentText>{simpleRecipe.author}</ContentText>
+                  </Info>
+               </Flex>
+               <Spacer size="20px" />
                <ContentText>{simpleRecipe.description}</ContentText>
-               <Spacer size="40px" />
+               <Spacer size="20px" />
+               {Boolean(simpleRecipe.utensils.length) && (
+                  <ContentText>
+                     Utensils required: {simpleRecipe.utensils.join(', ')}
+                  </ContentText>
+               )}
+               <Spacer size="32px" />
                <Tabs horizontal showsHorizontalScrollIndicator={false}>
                   <Tab
                      active
@@ -204,7 +242,7 @@ const Recipe = ({ route, navigation }) => {
                   </Tab>
                </Tabs>
                <Spacer size="28px" />
-               <SectionHeader ref={ingredientsRef}>
+               <SectionHeader color={visual.color} ref={ingredientsRef}>
                   {
                      simpleRecipe.simpleRecipeYields[0].ingredientSachets.filter(
                         ing => ing.isVisible
@@ -225,10 +263,10 @@ const Recipe = ({ route, navigation }) => {
                         <Spacer size="20px" />
                      </>
                   ))}
-               <Spacer size="28px" />
+               <Spacer size="68px" />
                {Boolean(simpleRecipe.simpleRecipeYields[0].nutritionalInfo) && (
                   <>
-                     <SectionHeader ref={nutritionRef}>
+                     <SectionHeader color={visual.color} ref={nutritionRef}>
                         Nutritional Values
                      </SectionHeader>
                      <Spacer size="20px" />
@@ -237,86 +275,63 @@ const Recipe = ({ route, navigation }) => {
                            simpleRecipe.simpleRecipeYields[0].nutritionalInfo
                         }
                      />
-                     <Spacer size="28px" />
+                     <Spacer size="68px" />
                   </>
                )}
-               <SectionHeader nativeID="cookingSteps" ref={cookingStepsRef}>
+               <SectionHeader
+                  color={visual.color}
+                  nativeID="cookingSteps"
+                  ref={cookingStepsRef}
+               >
                   Cooking Steps
                </SectionHeader>
-               <Spacer size="20px" />
+               <Spacer size="40px" />
                {simpleRecipe.procedures.map((procedure, k) => (
                   <>
-                     <ProcedureText>
-                        {k + 1}. {procedure.title}
-                     </ProcedureText>
-                     <Spacer size="16px" />
+                     <ProcedureText>{procedure.title}</ProcedureText>
+                     <Spacer size="28px" />
                      {procedure.steps
                         .filter(step => step.isVisible)
                         .map((step, i) => (
                            <>
-                              <ProcedureContent>
-                                 <StepText>
-                                    {k + 1}.{i + 1} {step.title}
-                                 </StepText>
-                                 <Spacer size="8px" />
-                                 {Boolean(step.assets?.images?.length) && (
-                                    <>
+                              <DescriptionWrapper>
+                                 <StepIndicator>
+                                    <StepIndicatorText>
+                                       {i + 1}
+                                    </StepIndicatorText>
+                                 </StepIndicator>
+                                 <StepDescText>
+                                    <StepText>
+                                       {step.title ? step.title + ': ' : ''}
+                                    </StepText>
+                                    {step.description}
+                                 </StepDescText>
+                                 <StepImageWrapper>
+                                    {Boolean(step.assets?.images?.length) && (
                                        <StepImage
                                           source={{
                                              uri: step.assets.images[0].url,
                                           }}
-                                          width="300px"
                                        />
-                                       <Spacer size="8px" />
-                                    </>
-                                 )}
-                                 <ContentText>{step.description}</ContentText>
-                              </ProcedureContent>
-                              <Spacer size="16px" />
+                                    )}
+                                 </StepImageWrapper>
+                              </DescriptionWrapper>
+                              <Spacer size="20px" />
                            </>
                         ))}
-                     <Spacer size="28px" />
+                     <Spacer size="40px" />
                   </>
                ))}
             </DetailsContainer>
             <PricingContainer>
-               <Title>{simpleRecipe.name}</Title>
-               <Type type={simpleRecipe.type}>{simpleRecipe.type}</Type>
-               <Spacer size="16px" />
-               <Flex>
-                  <Info>
-                     <MaterialCommunityIcons
-                        name="food"
-                        color="#888d9d"
-                        style={{ marginRight: 8 }}
-                        size={16}
-                     />
-                     <ContentText>{simpleRecipe.cuisine}</ContentText>
-                  </Info>
-                  <Info>
-                     <MaterialCommunityIcons
-                        name="timelapse"
-                        color="#888d9d"
-                        style={{ marginRight: 8 }}
-                        size={16}
-                     />
-                     <ContentText>{simpleRecipe.cookingTime} mins.</ContentText>
-                  </Info>
-                  <Info>
-                     <MaterialCommunityIcons
-                        name="chef-hat"
-                        color="#888d9d"
-                        style={{ marginRight: 8 }}
-                        size={16}
-                     />
-                     <ContentText>{simpleRecipe.author}</ContentText>
-                  </Info>
-               </Flex>
-               <Spacer size="16px" />
                {fetching ? (
                   <ContentText>Loading...</ContentText>
                ) : (
-                  renderPricing()
+                  <>
+                     <Title>{refProduct.name}</Title>
+                     <Spacer size="16px" />
+                     {renderPricing()}
+                  </>
                )}
             </PricingContainer>
          </Wrapper>
@@ -330,14 +345,13 @@ export default Recipe
 const Wrapper = styled.View`
    flex: 1;
    flex-direction: row;
-   padding: 16px 32px;
-   background: #fff;
+   padding: 16px 48px;
+   background: rgb(233, 236, 238);
 `
 
 const Flex = styled.View`
    flex-direction: row;
    align-items: center;
-   justify-content: space-between;
    flex-wrap: wrap;
 `
 
@@ -347,6 +361,8 @@ const Spacer = styled.View`
 
 const DetailsContainer = styled.ScrollView`
    margin-right: 24px;
+   padding: 0 20px;
+   background: #fff;
 `
 
 const Tabs = styled.ScrollView`
@@ -370,38 +386,70 @@ const TabText = styled.Text`
 `
 
 const SectionHeader = styled.Text`
-   color: #888d9d;
-   font-size: 24px;
+   color: ${props => props.color || '#888d9d'};
+   font-size: 28px;
    font-weight: 600;
 `
 
 const ContentText = styled.Text`
-   line-height: 20px;
-   font-size: 16px;
-   color: #555b6e;
+   line-height: 23px;
+   font-size: 18px;
+   color: #636363;
 `
 
 const ProcedureText = styled(ContentText)`
    font-size: 20px;
    font-weight: 600;
+   color: #000;
+   text-transform: uppercase;
 `
 
-const ProcedureContent = styled.View`
-   padding-left: 16px;
+const StepIndicator = styled.View`
+   width: 40px;
+   height: 40px;
+   border-radius: 20px;
+   align-items: center;
+   justify-content: center;
+   background: #eae8e8;
+`
+
+const StepIndicatorText = styled.Text`
+   color: #636363;
+   font-size: 18px;
+   font-weight: bold;
 `
 
 const StepText = styled(ContentText)`
-   font-weight: 600;
+   font-weight: bold;
+   font-size: 18px;
+   color: #000;
+`
+
+const StepDescText = styled(ContentText)`
+   font-size: 18px;
+   margin-left: 16px;
+   line-height: 23px;
+`
+
+const DescriptionWrapper = styled.View`
+   flex-direction: row;
+`
+
+const StepImageWrapper = styled.View`
+   margin-left: 16px;
+   width: 400px;
 `
 
 const StepImage = styled.Image`
-   width: 300px;
+   width: 350px;
    height: 200px;
+   border-radius: 4px;
 `
 
 const PricingContainer = styled.View`
-   min-width: 400px;
-   padding: 0 16px;
+   background: #fff;
+   min-width: 31vw;
+   padding: 20px;
 `
 
 const Title = styled(ContentText)`
@@ -410,18 +458,32 @@ const Title = styled(ContentText)`
    font-weight: bold;
 `
 
+const getColorForType = type => {
+   switch (type) {
+      case 'Vegetarian':
+         return '#4FECAA'
+      case 'Vegan':
+         return '#4FECD0'
+      case 'Non-Vegetarian':
+         return ''
+      default:
+         return '#FF5A52'
+   }
+}
+
 const Type = styled.Text`
-   background: ${props =>
-      props.type === 'Non-vegetarian' ? '#FF5A52' : '#53C22B'}
-   padding: 2px;
+   background: ${props => getColorForType(props.type)}
+   padding: 4px 8px;
    color: #fff;
-   font-size: 14px;
+   font-size: 16px;
    width: fit-content;
+   border-radius: 2px;
 `
 
 const Info = styled.View`
    flex-direction: row;
    align-items: center;
+   margin-right: 32px;
 `
 
 const BuyBtn = styled.TouchableOpacity`
