@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import { height, width } from '../../../utils/Scalaing'
 
 const PhotoShowcase = ({ images }) => {
@@ -20,4 +20,9 @@ const Display = styled.Image`
    height: 500px;
    width: ${width - 48 * 2 - 24 - 0.4 * width}px;
    border-radius: 4px;
+   ${width <= 768 &&
+   css`
+      width: ${width - 24}px;
+      height: 300px;
+   `}
 `

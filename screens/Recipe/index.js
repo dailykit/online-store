@@ -17,7 +17,7 @@ import {
    SIMPLE_RECIPE,
 } from '../../graphql'
 import { height, width } from '../../utils/Scalaing'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 
 import PhotoShowcase from './PhotoShowcase'
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -145,7 +145,7 @@ const Recipe = ({ route, navigation }) => {
             {simpleRecipe.procedures.map((procedure, k) => (
                <>
                   <ProcedureText>{procedure.title}</ProcedureText>
-                  <Spacer size="28px" />
+                  <Spacer size={width <= 768 ? '16px' : '20px'} />
                   <StepsWrapper>
                      {procedure.steps
                         .filter(step => step.isVisible)
@@ -154,12 +154,12 @@ const Recipe = ({ route, navigation }) => {
                               <StepIndicator>
                                  <StepIndicatorText>{i + 1}</StepIndicatorText>
                               </StepIndicator>
-                              <StepDescText>
+                              <ContentText>
                                  <StepText>
                                     {step.title ? step.title + ': ' : ''}
                                  </StepText>
                                  {step.description}
-                              </StepDescText>
+                              </ContentText>
                               {Boolean(step.assets.images.length) && (
                                  <StepImage
                                     source={{ uri: step.assets.images[0].url }}
@@ -266,30 +266,46 @@ const Recipe = ({ route, navigation }) => {
                      </Tab>
                   )}
                </Tabs>
-               <Spacer size="28px" />
+               <Spacer size="20px" />
+               {Boolean(width <= 768) && (
+                  <>
+                     <Title>{refProduct?.name}</Title>
+                     <Spacer size="8px" />
+                     <TypeWrapper type={simpleRecipe.type}>
+                        <TypeText type={simpleRecipe.type}>
+                           {simpleRecipe.type}
+                        </TypeText>
+                     </TypeWrapper>
+                     <Spacer size="16px" />
+                  </>
+               )}
                <PhotoShowcase images={[simpleRecipe.image] || []} />
                <Spacer size="32px" />
-               {/* <TypeWrapper type={simpleRecipe.type}>
-                  <TypeText type={simpleRecipe.type}>
-                     {simpleRecipe.type}
-                  </TypeText>
-               </TypeWrapper> */}
                <Spacer size="24px" />
                <Flex>
                   <Info>
-                     <Cuisine color={visual.color} />
+                     <Cuisine
+                        size={width <= 768 ? 24 : 40}
+                        color={visual.color}
+                     />
                      <InfoText>{simpleRecipe.cuisine}</InfoText>
                   </Info>
                   <Info>
-                     <CookingTime color={visual.color} />
+                     <CookingTime
+                        size={width <= 768 ? 24 : 40}
+                        color={visual.color}
+                     />
                      <InfoText>{simpleRecipe.cookingTime} mins.</InfoText>
                   </Info>
                   <Info>
-                     <Chef color={visual.color} />
+                     <Chef size={width <= 768 ? 24 : 40} color={visual.color} />
                      <InfoText>{simpleRecipe.author}</InfoText>
                   </Info>
                   <Info>
-                     <Utensils color={visual.color} />
+                     <Utensils
+                        size={width <= 768 ? 24 : 40}
+                        color={visual.color}
+                     />
                      <InfoText>{simpleRecipe.utensils.join(', ')}</InfoText>
                   </Info>
                </Flex>
@@ -345,7 +361,7 @@ const Recipe = ({ route, navigation }) => {
                      </SectionHeader>
                      <Spacer size="40px" />
                      {renderCookingSteps()}
-                     <Spacer size="68px" />
+                     <Spacer size="28px" />
                   </>
                )}
                {Boolean(simpleRecipe.simpleRecipeYields[0].nutritionalInfo) && (
@@ -360,27 +376,42 @@ const Recipe = ({ route, navigation }) => {
                         Nutritional Values
                      </SectionHeader>
                      <Spacer size="20px" />
-                     <Nutrition
-                        values={
-                           simpleRecipe.simpleRecipeYields[0].nutritionalInfo
-                        }
-                     />
+                     <NutritionWrapper>
+                        <Nutrition
+                           values={
+                              simpleRecipe.simpleRecipeYields[0].nutritionalInfo
+                           }
+                        />
+                     </NutritionWrapper>
+                     <Spacer size="40px" />
                   </>
                )}
             </DetailsContainer>
-            <PricingContainer>
-               {fetching ? (
-                  <ContentText>Loading...</ContentText>
-               ) : (
-                  <>
-                     <Title>{refProduct.name}</Title>
-                     <Spacer size="16px" />
-                     {renderPricing()}
-                  </>
-               )}
-            </PricingContainer>
+            {Boolean(width > 768) && (
+               <PricingContainer>
+                  {fetching ? (
+                     <ContentText>Loading...</ContentText>
+                  ) : (
+                     <>
+                        <Title>{refProduct.name}</Title>
+                        <Spacer size="8px" />
+                        <TypeWrapper type={simpleRecipe.type}>
+                           <TypeText type={simpleRecipe.type}>
+                              {simpleRecipe.type}
+                           </TypeText>
+                        </TypeWrapper>
+                        <Spacer size="16px" />
+                        {renderPricing()}
+                     </>
+                  )}
+               </PricingContainer>
+            )}
          </Wrapper>
-         {width < 768 && <CheckoutBar navigation={navigation} />}
+         {Boolean(width <= 768) && (
+            <BuyBtn color={visual.color} onPress={buy}>
+               <BuyBtnText>Buy Now</BuyBtnText>
+            </BuyBtn>
+         )}
       </>
    )
 }
@@ -397,6 +428,10 @@ const Wrapper = styled.View`
    flex-direction: row;
    padding: 16px 48px;
    background: #fefdfc;
+   ${width <= 768 &&
+   css`
+      padding: 8px 12px;
+   `}
 `
 
 const Flex = styled.View`
@@ -413,6 +448,11 @@ const Spacer = styled.View`
 const DetailsContainer = styled.ScrollView`
    margin-right: 24px;
    padding: 0 20px;
+   ${width <= 768 &&
+   css`
+      margin-right: 0;
+      padding: 0;
+   `}
 `
 
 const Tabs = styled.ScrollView`
@@ -446,6 +486,11 @@ const ContentText = styled.Text`
    line-height: 23px;
    font-size: 18px;
    color: #636363;
+   ${width <= 768 &&
+   css`
+      line-height: 21px;
+      font-size: 16px;
+   `}
 `
 
 const ProcedureText = styled(ContentText)`
@@ -470,6 +515,11 @@ const StepCard = styled.View`
    margin: 20px 10px;
    background: #fff;
    position: relative;
+   ${width <= 768 &&
+   css`
+      width: ${width - 24}px;
+      margin: 20px 0px;
+   `}
 `
 
 const StepIndicator = styled.View`
@@ -478,10 +528,16 @@ const StepIndicator = styled.View`
    border-radius: 20px;
    align-items: center;
    justify-content: center;
-   background: #eae8e8;
+   border: 1px solid #eae8e8;
+   background: #fff;
    position: absolute;
    top: -20px;
    left: -10px;
+   ${width <= 768 &&
+   css`
+      left: 0;
+      top: -24px;
+   `}
 `
 
 const StepIndicatorText = styled.Text`
@@ -492,13 +548,7 @@ const StepIndicatorText = styled.Text`
 
 const StepText = styled(ContentText)`
    font-weight: bold;
-   font-size: 18px;
    color: #000;
-`
-
-const StepDescText = styled(ContentText)`
-   font-size: 18px;
-   line-height: 23px;
 `
 
 const StepImage = styled.Image`
@@ -506,6 +556,10 @@ const StepImage = styled.Image`
    height: 200px;
    border-radius: 4px;
    margin-top: 16px;
+   ${width <= 768 &&
+   css`
+      width: ${width - 24 - 32}px;
+   `}
 `
 
 const PricingContainer = styled.View`
@@ -549,6 +603,12 @@ const InfoText = styled(ContentText)`
    font-size: 20px;
    color: #000;
    max-width: 200px;
+   margin-top: 8px;
+   ${width <= 768 &&
+   css`
+      font-size: 18px;
+      margin-bottom: 8px;
+   `}
 `
 
 const BuyBtn = styled.TouchableOpacity`
@@ -556,6 +616,10 @@ const BuyBtn = styled.TouchableOpacity`
    background: ${props => props.color || '#888d98'};
    text-align: center;
    padding: 16px;
+   ${width <= 768 &&
+   css`
+      margin-top: 0px;
+   `}
 `
 
 const BuyBtnText = styled.Text`
@@ -585,5 +649,10 @@ const IngredientImage = styled.Image`
 const Ingredients = styled.View`
    flex-direction: row;
    flex-wrap: wrap;
+   justify-content: center;
+`
+
+const NutritionWrapper = styled.View`
+   flex-direction: row;
    justify-content: center;
 `
