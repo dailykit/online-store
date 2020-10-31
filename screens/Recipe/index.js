@@ -138,6 +138,42 @@ const Recipe = ({ route, navigation }) => {
       }
    }, [refType, refId])
 
+   const renderCookingSteps = () => {
+      return (
+         <>
+            {simpleRecipe.procedures.map((procedure, k) => (
+               <>
+                  <ProcedureText>{procedure.title}</ProcedureText>
+                  <Spacer size="28px" />
+                  <StepsWrapper>
+                     {procedure.steps
+                        .filter(step => step.isVisible)
+                        .map((step, i) => (
+                           <StepCard key={i}>
+                              <StepIndicator>
+                                 <StepIndicatorText>{i + 1}</StepIndicatorText>
+                              </StepIndicator>
+                              <StepDescText>
+                                 <StepText>
+                                    {step.title ? step.title + ': ' : ''}
+                                 </StepText>
+                                 {step.description}
+                              </StepDescText>
+                              {Boolean(step.assets.images.length) && (
+                                 <StepImage
+                                    source={{ uri: step.assets.images[0].url }}
+                                 />
+                              )}
+                           </StepCard>
+                        ))}
+                  </StepsWrapper>
+                  <Spacer size="40px" />
+               </>
+            ))}
+         </>
+      )
+   }
+
    if (masterLoading) {
       return <AppSkeleton />
    }
@@ -285,42 +321,7 @@ const Recipe = ({ route, navigation }) => {
                   Cooking Steps
                </SectionHeader>
                <Spacer size="40px" />
-               {simpleRecipe.procedures.map((procedure, k) => (
-                  <>
-                     <ProcedureText>{procedure.title}</ProcedureText>
-                     <Spacer size="28px" />
-                     {procedure.steps
-                        .filter(step => step.isVisible)
-                        .map((step, i) => (
-                           <>
-                              <DescriptionWrapper>
-                                 <StepIndicator>
-                                    <StepIndicatorText>
-                                       {i + 1}
-                                    </StepIndicatorText>
-                                 </StepIndicator>
-                                 <StepDescText>
-                                    <StepText>
-                                       {step.title ? step.title + ': ' : ''}
-                                    </StepText>
-                                    {step.description}
-                                 </StepDescText>
-                                 <StepImageWrapper>
-                                    {Boolean(step.assets?.images?.length) && (
-                                       <StepImage
-                                          source={{
-                                             uri: step.assets.images[0].url,
-                                          }}
-                                       />
-                                    )}
-                                 </StepImageWrapper>
-                              </DescriptionWrapper>
-                              <Spacer size="20px" />
-                           </>
-                        ))}
-                     <Spacer size="40px" />
-                  </>
-               ))}
+               {renderCookingSteps()}
                <Spacer size="68px" />
                {Boolean(simpleRecipe.simpleRecipeYields[0].nutritionalInfo) && (
                   <>
@@ -416,6 +417,23 @@ const ProcedureText = styled(ContentText)`
    font-weight: 600;
    color: #000;
    text-transform: uppercase;
+   text-align: center;
+`
+
+const StepsWrapper = styled.View`
+   flex-direction: row;
+   flex-wrap: wrap;
+   margin: 0 auto;
+`
+
+const StepCard = styled.View`
+   border: 1px solid #eae8e8;
+   border-radius: 4px;
+   padding: 16px;
+   width: 400px;
+   margin: 20px 10px;
+   background: #fff;
+   position: relative;
 `
 
 const StepIndicator = styled.View`
@@ -425,6 +443,9 @@ const StepIndicator = styled.View`
    align-items: center;
    justify-content: center;
    background: #eae8e8;
+   position: absolute;
+   top: -20px;
+   left: -10px;
 `
 
 const StepIndicatorText = styled.Text`
@@ -441,23 +462,14 @@ const StepText = styled(ContentText)`
 
 const StepDescText = styled(ContentText)`
    font-size: 18px;
-   margin-left: 16px;
    line-height: 23px;
 `
 
-const DescriptionWrapper = styled.View`
-   flex-direction: row;
-`
-
-const StepImageWrapper = styled.View`
-   margin-left: 16px;
-   width: 400px;
-`
-
 const StepImage = styled.Image`
-   width: 350px;
+   width: 368px;
    height: 200px;
    border-radius: 4px;
+   margin-top: 16px;
 `
 
 const PricingContainer = styled.View`
