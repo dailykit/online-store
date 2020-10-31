@@ -117,7 +117,7 @@ const Nutrition = ({ values }) => {
 export default Nutrition
 
 const Wrapper = styled.View`
-   max-width: 450px;
+   min-width: 300px;
 `
 
 const Heading = styled.Text`
@@ -175,9 +175,11 @@ const TableFooter = styled.View`
    align-items: center;
    justify-content: space-between;
    min-height: 1.5rem;
+   flex-wrap: wrap;
 `
 
 const TableFooterText = styled.Text`
    color: #555b6e;
    font-weight: 600;
+   margin-right: 8px;
 `

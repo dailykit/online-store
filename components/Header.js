@@ -11,7 +11,7 @@ import { useDrawerContext } from '../context/drawer'
 import { width } from '../utils/Scalaing'
 import Icon from './Icon'
 
-const BasketButton = ({ isWhite }) => {
+const BasketButton = ({ isWhite, size = 24 }) => {
    const { cart } = useCartContext()
    const { visual } = useAppContext()
    let numberOfProducts = cart?.cartInfo?.products?.length || 0
@@ -20,26 +20,41 @@ const BasketButton = ({ isWhite }) => {
       <View style={{ position: 'relative' }}>
          {Boolean(numberOfProducts) && (
             <Text
-               style={{
-                  position: 'absolute',
-                  top: '-50%',
-                  right: '-50%',
-                  backgroundColor: visual.color,
-                  color: '#fff',
-                  borderRadius: 20,
-                  height: 25,
-                  width: 25,
-                  padding: 2,
-                  fontSize: 16,
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-               }}
+               style={
+                  width <= 768
+                     ? {
+                          position: 'absolute',
+                          backgroundColor: visual.color,
+                          color: '#fff',
+                          top: '-10px',
+                          right: '-8px',
+                          height: 16,
+                          width: 16,
+                          borderRadius: 8,
+                          fontSize: 10,
+                          textAlign: 'center',
+                       }
+                     : {
+                          position: 'absolute',
+                          top: '-50%',
+                          right: '-50%',
+                          backgroundColor: visual.color,
+                          color: '#fff',
+                          borderRadius: 20,
+                          height: 25,
+                          width: 25,
+                          padding: 2,
+                          fontSize: 16,
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                       }
+               }
             >
                {numberOfProducts}
             </Text>
          )}
          <Icon
-            size={24}
+            size={size}
             name="shopping-cart"
             color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
          />
@@ -146,6 +161,9 @@ const MobileNav = ({ navigation }) => {
          <NavRight>
             <NavLink onPress={() => navigation.navigate('Search')}>
                <Feather name="search" size={16} />
+            </NavLink>
+            <NavLink onPress={() => navigation.navigate('OrderSummary')}>
+               <BasketButton size={16} />
             </NavLink>
          </NavRight>
       </>

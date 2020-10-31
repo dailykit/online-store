@@ -17,7 +17,7 @@ import {
    SIMPLE_RECIPE,
 } from '../../graphql'
 import { height, width } from '../../utils/Scalaing'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 
 import PhotoShowcase from './PhotoShowcase'
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
@@ -35,9 +35,10 @@ const Recipe = ({ route, navigation }) => {
    const { visual, masterLoading } = useAppContext()
 
    const [fetching, setFetching] = React.useState(false)
-   const ingredientsRef = React.useRef()
-   const nutritionRef = React.useRef()
-   const cookingStepsRef = React.useRef()
+   const nutritionPosition = React.useRef(0)
+   const ingredientsPosition = React.useRef(0)
+   const cookingStepsPosition = React.useRef(0)
+   const containerRef = React.useRef()
 
    // For Drawer
    const [isModalVisible, setIsModalVisible] = React.useState(false)
@@ -138,6 +139,42 @@ const Recipe = ({ route, navigation }) => {
       }
    }, [refType, refId])
 
+   const renderCookingSteps = () => {
+      return (
+         <>
+            {simpleRecipe.procedures.map((procedure, k) => (
+               <>
+                  <ProcedureText>{procedure.title}</ProcedureText>
+                  <Spacer size={width <= 768 ? '16px' : '20px'} />
+                  <StepsWrapper>
+                     {procedure.steps
+                        .filter(step => step.isVisible)
+                        .map((step, i) => (
+                           <StepCard key={i}>
+                              <StepIndicator>
+                                 <StepIndicatorText>{i + 1}</StepIndicatorText>
+                              </StepIndicator>
+                              <ContentText>
+                                 <StepText>
+                                    {step.title ? step.title + ': ' : ''}
+                                 </StepText>
+                                 {step.description}
+                              </ContentText>
+                              {Boolean(step.assets.images.length) && (
+                                 <StepImage
+                                    source={{ uri: step.assets.images[0].url }}
+                                 />
+                              )}
+                           </StepCard>
+                        ))}
+                  </StepsWrapper>
+                  <Spacer size="40px" />
+               </>
+            ))}
+         </>
+      )
+   }
+
    if (masterLoading) {
       return <AppSkeleton />
    }
@@ -165,10 +202,12 @@ const Recipe = ({ route, navigation }) => {
             showInfo={true}
          />
          <Header title="Home" navigation={navigation} />
+         {/* <Banner source={{ uri: simpleRecipe.image }}></Banner> */}
          <Wrapper>
             <DetailsContainer
                showsVerticalScrollIndicator={false}
                stickyHeaderIndices={[0]}
+               ref={containerRef}
             >
                <Tabs
                   horizontal
@@ -178,11 +217,11 @@ const Recipe = ({ route, navigation }) => {
                   <Tab
                      active
                      color={visual.color}
-                     // onPress={() =>
-                     //    ingredientsRef.current.scrollIntoView({
-                     //       behavior: 'smooth',
-                     //    })
-                     // }
+                     onPress={() =>
+                        containerRef.current.scrollTo({
+                           y: 0,
+                        })
+                     }
                   >
                      <TabText active color={visual.color}>
                         Description
@@ -190,57 +229,83 @@ const Recipe = ({ route, navigation }) => {
                   </Tab>
                   <Tab
                      color={visual.color}
-                     // onPress={() =>
-                     //    ingredientsRef.current.scrollIntoView({
-                     //       behavior: 'smooth',
-                     //    })
-                     // }
+                     onPress={() =>
+                        containerRef.current.scrollTo({
+                           y: ingredientsPosition.current,
+                        })
+                     }
                   >
                      <TabText color={visual.color}>Ingredients</TabText>
                   </Tab>
-                  <Tab
-                     color={visual.color}
-                     // onPress={() => {
-                     //    cookingStepsRef.current?.scrollTo(0, 500)
-                     // }}
-                  >
-                     <TabText color={visual.color}>Cooking Steps</TabText>
-                  </Tab>
-                  <Tab
-                     color={visual.color}
-                     // onPress={() =>
-                     //    nutritionRef.current.scrollIntoView({
-                     //       behavior: 'smooth',
-                     //    })
-                     // }
-                  >
-                     <TabText color={visual.color}>Nutritional Values</TabText>
-                  </Tab>
+                  {Boolean(simpleRecipe.procedures.length) && (
+                     <Tab
+                        color={visual.color}
+                        onPress={() =>
+                           containerRef.current.scrollTo({
+                              y: cookingStepsPosition.current,
+                           })
+                        }
+                     >
+                        <TabText color={visual.color}>Cooking Steps</TabText>
+                     </Tab>
+                  )}
+                  {Boolean(
+                     simpleRecipe.simpleRecipeYields[0].nutritionalInfo
+                  ) && (
+                     <Tab
+                        color={visual.color}
+                        onPress={() =>
+                           containerRef.current.scrollTo({
+                              y: nutritionPosition.current,
+                           })
+                        }
+                     >
+                        <TabText color={visual.color}>
+                           Nutritional Values
+                        </TabText>
+                     </Tab>
+                  )}
                </Tabs>
-               <Spacer size="28px" />
+               <Spacer size="20px" />
+               {Boolean(width <= 768) && (
+                  <>
+                     <Title>{refProduct?.name}</Title>
+                     <Spacer size="8px" />
+                     <TypeWrapper type={simpleRecipe.type}>
+                        <TypeText type={simpleRecipe.type}>
+                           {simpleRecipe.type}
+                        </TypeText>
+                     </TypeWrapper>
+                     <Spacer size="16px" />
+                  </>
+               )}
                <PhotoShowcase images={[simpleRecipe.image] || []} />
                <Spacer size="32px" />
-               {/* <TypeWrapper type={simpleRecipe.type}>
-                  <TypeText type={simpleRecipe.type}>
-                     {simpleRecipe.type}
-                  </TypeText>
-               </TypeWrapper> */}
                <Spacer size="24px" />
                <Flex>
                   <Info>
-                     <Cuisine color={visual.color} />
+                     <Cuisine
+                        size={width <= 768 ? 24 : 40}
+                        color={visual.color}
+                     />
                      <InfoText>{simpleRecipe.cuisine}</InfoText>
                   </Info>
                   <Info>
-                     <CookingTime color={visual.color} />
+                     <CookingTime
+                        size={width <= 768 ? 24 : 40}
+                        color={visual.color}
+                     />
                      <InfoText>{simpleRecipe.cookingTime} mins.</InfoText>
                   </Info>
                   <Info>
-                     <Chef color={visual.color} />
+                     <Chef size={width <= 768 ? 24 : 40} color={visual.color} />
                      <InfoText>{simpleRecipe.author}</InfoText>
                   </Info>
                   <Info>
-                     <Utensils color={visual.color} />
+                     <Utensils
+                        size={width <= 768 ? 24 : 40}
+                        color={visual.color}
+                     />
                      <InfoText>{simpleRecipe.utensils.join(', ')}</InfoText>
                   </Info>
                </Flex>
@@ -249,7 +314,12 @@ const Recipe = ({ route, navigation }) => {
                   {simpleRecipe.description}
                </ContentText>
                <Spacer size="68px" />
-               <SectionHeader color={visual.color} ref={ingredientsRef}>
+               <SectionHeader
+                  color={visual.color}
+                  onLayout={e => {
+                     ingredientsPosition.current = e.nativeEvent.layout.y - 60
+                  }}
+               >
                   {
                      simpleRecipe.simpleRecipeYields[0].ingredientSachets.filter(
                         ing => ing.isVisible
@@ -277,89 +347,91 @@ const Recipe = ({ route, navigation }) => {
                      ))}
                </Ingredients>
                <Spacer size="68px" />
-               <SectionHeader
-                  color={visual.color}
-                  nativeID="cookingSteps"
-                  ref={cookingStepsRef}
-               >
-                  Cooking Steps
-               </SectionHeader>
-               <Spacer size="40px" />
-               {simpleRecipe.procedures.map((procedure, k) => (
+               {Boolean(simpleRecipe.procedures.length) && (
                   <>
-                     <ProcedureText>{procedure.title}</ProcedureText>
-                     <Spacer size="28px" />
-                     {procedure.steps
-                        .filter(step => step.isVisible)
-                        .map((step, i) => (
-                           <>
-                              <DescriptionWrapper>
-                                 <StepIndicator>
-                                    <StepIndicatorText>
-                                       {i + 1}
-                                    </StepIndicatorText>
-                                 </StepIndicator>
-                                 <StepDescText>
-                                    <StepText>
-                                       {step.title ? step.title + ': ' : ''}
-                                    </StepText>
-                                    {step.description}
-                                 </StepDescText>
-                                 <StepImageWrapper>
-                                    {Boolean(step.assets?.images?.length) && (
-                                       <StepImage
-                                          source={{
-                                             uri: step.assets.images[0].url,
-                                          }}
-                                       />
-                                    )}
-                                 </StepImageWrapper>
-                              </DescriptionWrapper>
-                              <Spacer size="20px" />
-                           </>
-                        ))}
+                     <SectionHeader
+                        color={visual.color}
+                        nativeID="cookingSteps"
+                        onLayout={e => {
+                           cookingStepsPosition.current =
+                              e.nativeEvent.layout.y - 60
+                        }}
+                     >
+                        Cooking Steps
+                     </SectionHeader>
                      <Spacer size="40px" />
+                     {renderCookingSteps()}
+                     <Spacer size="28px" />
                   </>
-               ))}
-               <Spacer size="68px" />
+               )}
                {Boolean(simpleRecipe.simpleRecipeYields[0].nutritionalInfo) && (
                   <>
-                     <SectionHeader color={visual.color} ref={nutritionRef}>
+                     <SectionHeader
+                        color={visual.color}
+                        onLayout={e => {
+                           nutritionPosition.current =
+                              e.nativeEvent.layout.y - 60
+                        }}
+                     >
                         Nutritional Values
                      </SectionHeader>
                      <Spacer size="20px" />
-                     <Nutrition
-                        values={
-                           simpleRecipe.simpleRecipeYields[0].nutritionalInfo
-                        }
-                     />
+                     <NutritionWrapper>
+                        <Nutrition
+                           values={
+                              simpleRecipe.simpleRecipeYields[0].nutritionalInfo
+                           }
+                        />
+                     </NutritionWrapper>
+                     <Spacer size="40px" />
                   </>
                )}
             </DetailsContainer>
-            <PricingContainer>
-               {fetching ? (
-                  <ContentText>Loading...</ContentText>
-               ) : (
-                  <>
-                     <Title>{refProduct.name}</Title>
-                     <Spacer size="16px" />
-                     {renderPricing()}
-                  </>
-               )}
-            </PricingContainer>
+            {Boolean(width > 768) && (
+               <PricingContainer>
+                  {fetching ? (
+                     <ContentText>Loading...</ContentText>
+                  ) : (
+                     <>
+                        <Title>{refProduct.name}</Title>
+                        <Spacer size="8px" />
+                        <TypeWrapper type={simpleRecipe.type}>
+                           <TypeText type={simpleRecipe.type}>
+                              {simpleRecipe.type}
+                           </TypeText>
+                        </TypeWrapper>
+                        <Spacer size="16px" />
+                        {renderPricing()}
+                     </>
+                  )}
+               </PricingContainer>
+            )}
          </Wrapper>
-         {width < 768 && <CheckoutBar navigation={navigation} />}
+         {Boolean(width <= 768) && (
+            <BuyBtn color={visual.color} onPress={buy}>
+               <BuyBtnText>Buy Now</BuyBtnText>
+            </BuyBtn>
+         )}
       </>
    )
 }
 
 export default Recipe
 
+const Banner = styled.ImageBackground`
+   width: ${width}px;
+   height: 250px;
+`
+
 const Wrapper = styled.View`
    flex: 1;
    flex-direction: row;
    padding: 16px 48px;
    background: #fefdfc;
+   ${width <= 768 &&
+   css`
+      padding: 8px 12px;
+   `}
 `
 
 const Flex = styled.View`
@@ -376,6 +448,11 @@ const Spacer = styled.View`
 const DetailsContainer = styled.ScrollView`
    margin-right: 24px;
    padding: 0 20px;
+   ${width <= 768 &&
+   css`
+      margin-right: 0;
+      padding: 0;
+   `}
 `
 
 const Tabs = styled.ScrollView`
@@ -409,6 +486,11 @@ const ContentText = styled.Text`
    line-height: 23px;
    font-size: 18px;
    color: #636363;
+   ${width <= 768 &&
+   css`
+      line-height: 21px;
+      font-size: 16px;
+   `}
 `
 
 const ProcedureText = styled(ContentText)`
@@ -416,6 +498,28 @@ const ProcedureText = styled(ContentText)`
    font-weight: 600;
    color: #000;
    text-transform: uppercase;
+   text-align: center;
+`
+
+const StepsWrapper = styled.View`
+   flex-direction: row;
+   flex-wrap: wrap;
+   margin: 0 auto;
+`
+
+const StepCard = styled.View`
+   border: 1px solid #eae8e8;
+   border-radius: 4px;
+   padding: 16px;
+   width: 400px;
+   margin: 20px 10px;
+   background: #fff;
+   position: relative;
+   ${width <= 768 &&
+   css`
+      width: ${width - 24}px;
+      margin: 20px 0px;
+   `}
 `
 
 const StepIndicator = styled.View`
@@ -424,7 +528,16 @@ const StepIndicator = styled.View`
    border-radius: 20px;
    align-items: center;
    justify-content: center;
-   background: #eae8e8;
+   border: 1px solid #eae8e8;
+   background: #fff;
+   position: absolute;
+   top: -20px;
+   left: -10px;
+   ${width <= 768 &&
+   css`
+      left: 0;
+      top: -24px;
+   `}
 `
 
 const StepIndicatorText = styled.Text`
@@ -435,29 +548,18 @@ const StepIndicatorText = styled.Text`
 
 const StepText = styled(ContentText)`
    font-weight: bold;
-   font-size: 18px;
    color: #000;
 `
 
-const StepDescText = styled(ContentText)`
-   font-size: 18px;
-   margin-left: 16px;
-   line-height: 23px;
-`
-
-const DescriptionWrapper = styled.View`
-   flex-direction: row;
-`
-
-const StepImageWrapper = styled.View`
-   margin-left: 16px;
-   width: 400px;
-`
-
 const StepImage = styled.Image`
-   width: 350px;
+   width: 368px;
    height: 200px;
    border-radius: 4px;
+   margin-top: 16px;
+   ${width <= 768 &&
+   css`
+      width: ${width - 24 - 32}px;
+   `}
 `
 
 const PricingContainer = styled.View`
@@ -501,6 +603,12 @@ const InfoText = styled(ContentText)`
    font-size: 20px;
    color: #000;
    max-width: 200px;
+   margin-top: 8px;
+   ${width <= 768 &&
+   css`
+      font-size: 18px;
+      margin-bottom: 8px;
+   `}
 `
 
 const BuyBtn = styled.TouchableOpacity`
@@ -508,6 +616,10 @@ const BuyBtn = styled.TouchableOpacity`
    background: ${props => props.color || '#888d98'};
    text-align: center;
    padding: 16px;
+   ${width <= 768 &&
+   css`
+      margin-top: 0px;
+   `}
 `
 
 const BuyBtnText = styled.Text`
@@ -537,5 +649,10 @@ const IngredientImage = styled.Image`
 const Ingredients = styled.View`
    flex-direction: row;
    flex-wrap: wrap;
+   justify-content: center;
+`
+
+const NutritionWrapper = styled.View`
+   flex-direction: row;
    justify-content: center;
 `
