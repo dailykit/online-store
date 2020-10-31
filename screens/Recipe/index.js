@@ -35,9 +35,10 @@ const Recipe = ({ route, navigation }) => {
    const { visual, masterLoading } = useAppContext()
 
    const [fetching, setFetching] = React.useState(false)
-   const ingredientsRef = React.useRef()
-   const nutritionRef = React.useRef()
-   const cookingStepsRef = React.useRef()
+   const nutritionPosition = React.useRef(0)
+   const ingredientsPosition = React.useRef(0)
+   const cookingStepsPosition = React.useRef(0)
+   const containerRef = React.useRef()
 
    // For Drawer
    const [isModalVisible, setIsModalVisible] = React.useState(false)
@@ -201,10 +202,12 @@ const Recipe = ({ route, navigation }) => {
             showInfo={true}
          />
          <Header title="Home" navigation={navigation} />
+         {/* <Banner source={{ uri: simpleRecipe.image }}></Banner> */}
          <Wrapper>
             <DetailsContainer
                showsVerticalScrollIndicator={false}
                stickyHeaderIndices={[0]}
+               ref={containerRef}
             >
                <Tabs
                   horizontal
@@ -214,11 +217,11 @@ const Recipe = ({ route, navigation }) => {
                   <Tab
                      active
                      color={visual.color}
-                     // onPress={() =>
-                     //    ingredientsRef.current.scrollIntoView({
-                     //       behavior: 'smooth',
-                     //    })
-                     // }
+                     onPress={() =>
+                        containerRef.current.scrollTo({
+                           y: 0,
+                        })
+                     }
                   >
                      <TabText active color={visual.color}>
                         Description
@@ -226,32 +229,42 @@ const Recipe = ({ route, navigation }) => {
                   </Tab>
                   <Tab
                      color={visual.color}
-                     // onPress={() =>
-                     //    ingredientsRef.current.scrollIntoView({
-                     //       behavior: 'smooth',
-                     //    })
-                     // }
+                     onPress={() =>
+                        containerRef.current.scrollTo({
+                           y: ingredientsPosition.current,
+                        })
+                     }
                   >
                      <TabText color={visual.color}>Ingredients</TabText>
                   </Tab>
-                  <Tab
-                     color={visual.color}
-                     // onPress={() => {
-                     //    cookingStepsRef.current?.scrollTo(0, 500)
-                     // }}
-                  >
-                     <TabText color={visual.color}>Cooking Steps</TabText>
-                  </Tab>
-                  <Tab
-                     color={visual.color}
-                     // onPress={() =>
-                     //    nutritionRef.current.scrollIntoView({
-                     //       behavior: 'smooth',
-                     //    })
-                     // }
-                  >
-                     <TabText color={visual.color}>Nutritional Values</TabText>
-                  </Tab>
+                  {Boolean(simpleRecipe.procedures.length) && (
+                     <Tab
+                        color={visual.color}
+                        onPress={() =>
+                           containerRef.current.scrollTo({
+                              y: cookingStepsPosition.current,
+                           })
+                        }
+                     >
+                        <TabText color={visual.color}>Cooking Steps</TabText>
+                     </Tab>
+                  )}
+                  {Boolean(
+                     simpleRecipe.simpleRecipeYields[0].nutritionalInfo
+                  ) && (
+                     <Tab
+                        color={visual.color}
+                        onPress={() =>
+                           containerRef.current.scrollTo({
+                              y: nutritionPosition.current,
+                           })
+                        }
+                     >
+                        <TabText color={visual.color}>
+                           Nutritional Values
+                        </TabText>
+                     </Tab>
+                  )}
                </Tabs>
                <Spacer size="28px" />
                <PhotoShowcase images={[simpleRecipe.image] || []} />
@@ -285,7 +298,12 @@ const Recipe = ({ route, navigation }) => {
                   {simpleRecipe.description}
                </ContentText>
                <Spacer size="68px" />
-               <SectionHeader color={visual.color} ref={ingredientsRef}>
+               <SectionHeader
+                  color={visual.color}
+                  onLayout={e => {
+                     ingredientsPosition.current = e.nativeEvent.layout.y - 60
+                  }}
+               >
                   {
                      simpleRecipe.simpleRecipeYields[0].ingredientSachets.filter(
                         ing => ing.isVisible
@@ -313,19 +331,32 @@ const Recipe = ({ route, navigation }) => {
                      ))}
                </Ingredients>
                <Spacer size="68px" />
-               <SectionHeader
-                  color={visual.color}
-                  nativeID="cookingSteps"
-                  ref={cookingStepsRef}
-               >
-                  Cooking Steps
-               </SectionHeader>
-               <Spacer size="40px" />
-               {renderCookingSteps()}
-               <Spacer size="68px" />
+               {Boolean(simpleRecipe.procedures.length) && (
+                  <>
+                     <SectionHeader
+                        color={visual.color}
+                        nativeID="cookingSteps"
+                        onLayout={e => {
+                           cookingStepsPosition.current =
+                              e.nativeEvent.layout.y - 60
+                        }}
+                     >
+                        Cooking Steps
+                     </SectionHeader>
+                     <Spacer size="40px" />
+                     {renderCookingSteps()}
+                     <Spacer size="68px" />
+                  </>
+               )}
                {Boolean(simpleRecipe.simpleRecipeYields[0].nutritionalInfo) && (
                   <>
-                     <SectionHeader color={visual.color} ref={nutritionRef}>
+                     <SectionHeader
+                        color={visual.color}
+                        onLayout={e => {
+                           nutritionPosition.current =
+                              e.nativeEvent.layout.y - 60
+                        }}
+                     >
                         Nutritional Values
                      </SectionHeader>
                      <Spacer size="20px" />
@@ -355,6 +386,11 @@ const Recipe = ({ route, navigation }) => {
 }
 
 export default Recipe
+
+const Banner = styled.ImageBackground`
+   width: ${width}px;
+   height: 250px;
+`
 
 const Wrapper = styled.View`
    flex: 1;
