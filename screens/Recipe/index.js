@@ -30,7 +30,7 @@ import Chef from '../../assets/svgs/Chef'
 import Utensils from '../../assets/svgs/Utensils'
 
 const Recipe = ({ route, navigation }) => {
-   const { recipeId, refId, refType } = route.params
+   let { recipeId, refId, refType } = route.params
 
    const { visual, masterLoading } = useAppContext()
 
@@ -90,6 +90,7 @@ const Recipe = ({ route, navigation }) => {
                id: recipeId,
             },
          })
+         setSimpleRecipe(undefined)
       }
    }, [recipeId])
 
