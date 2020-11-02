@@ -76,6 +76,7 @@ const Recipe = ({ route, navigation }) => {
 
    const [fetchRecipe, { loading, error }] = useLazyQuery(SIMPLE_RECIPE, {
       onCompleted: data => {
+         console.log(data)
          setSimpleRecipe(data.simpleRecipe)
       },
       fetchPolicy: 'network-only',
@@ -236,8 +237,6 @@ const Recipe = ({ route, navigation }) => {
          </>
       )
    }
-
-   console.log(simpleRecipe)
 
    return (
       <>
