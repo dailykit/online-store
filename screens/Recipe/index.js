@@ -30,11 +30,12 @@ import Chef from '../../assets/svgs/Chef'
 import Utensils from '../../assets/svgs/Utensils'
 
 const Recipe = ({ route, navigation }) => {
-   let { recipeId, refId, refType } = route.params
+   const { recipeId, refId, refType } = route.params
 
    const { visual, masterLoading } = useAppContext()
 
    const [fetching, setFetching] = React.useState(false)
+   const [simpleRecipe, setSimpleRecipe] = React.useState(undefined)
    const nutritionPosition = React.useRef(0)
    const ingredientsPosition = React.useRef(0)
    const cookingStepsPosition = React.useRef(0)
@@ -44,15 +45,22 @@ const Recipe = ({ route, navigation }) => {
    const [isModalVisible, setIsModalVisible] = React.useState(false)
    const [refProduct, setRefProduct] = React.useState({})
 
-   const { data: { simpleRecipe = {} } = {}, loading, error } = useQuery(
-      SIMPLE_RECIPE,
-      {
-         variables: {
-            id: recipeId,
-         },
-         fetchPolicy: 'cache-and-network',
+   const [fetchRecipe, { loading, error }] = useLazyQuery(SIMPLE_RECIPE, {
+      onCompleted: data => {
+         setSimpleRecipe(data.simpleRecipe)
+      },
+      fetchPolicy: 'cache-and-network',
+   })
+
+   React.useEffect(() => {
+      if (recipeId) {
+         fetchRecipe({
+            variables: {
+               id: recipeId,
+            },
+         })
       }
-   )
+   }, [recipeId])
 
    const [fetchSimpleRecipeProduct] = useLazyQuery(SIMPLE_PRODUCT, {
       onCompleted: data => {
@@ -179,11 +187,22 @@ const Recipe = ({ route, navigation }) => {
       return <AppSkeleton />
    }
 
-   if (loading) {
+   if (loading && !simpleRecipe) {
       return (
          <>
             <Header title="Home" navigation={navigation} />
             <RecipeSkeleton />
+         </>
+      )
+   }
+
+   if (!loading && (!simpleRecipe || error)) {
+      return (
+         <>
+            <Header title="Home" navigation={navigation} />
+            <ErrorScreen>
+               <ContentText>Failed to fetch Recipe!</ContentText>
+            </ErrorScreen>
          </>
       )
    }
@@ -421,6 +440,12 @@ export default Recipe
 const Banner = styled.ImageBackground`
    width: ${width}px;
    height: 250px;
+`
+
+const ErrorScreen = styled.View`
+   flex: 1;
+   align-items: center;
+   justify-content: center;
 `
 
 const Wrapper = styled.View`
