@@ -35,7 +35,6 @@ const Recipe = ({ route, navigation }) => {
    const { visual, masterLoading } = useAppContext()
 
    const [fetching, setFetching] = React.useState(false)
-   const [simpleRecipe, setSimpleRecipe] = React.useState(undefined)
    const [scrollHeight, setScrollHeight] = React.useState(0)
    const [activeTab, setActiveTab] = React.useState('description')
    const nutritionPosition = React.useRef(undefined)
@@ -74,25 +73,15 @@ const Recipe = ({ route, navigation }) => {
    const [isModalVisible, setIsModalVisible] = React.useState(false)
    const [refProduct, setRefProduct] = React.useState({})
 
-   const [fetchRecipe, { loading, error }] = useLazyQuery(SIMPLE_RECIPE, {
-      onCompleted: data => {
-         console.log(data)
-         setSimpleRecipe(data.simpleRecipe)
-      },
-      fetchPolicy: 'network-only',
-   })
-
-   React.useEffect(() => {
-      console.log('Recipe ID changed: ', recipeId)
-      if (recipeId) {
-         fetchRecipe({
-            variables: {
-               id: recipeId,
-            },
-         })
-         setSimpleRecipe(undefined)
+   const { data: { simpleRecipe = {} } = {}, loading, error } = useQuery(
+      SIMPLE_RECIPE,
+      {
+         variables: {
+            id: recipeId,
+         },
+         fetchPolicy: 'cache-and-network',
       }
-   }, [recipeId])
+   )
 
    const [fetchSimpleRecipeProduct] = useLazyQuery(SIMPLE_PRODUCT, {
       onCompleted: data => {
@@ -219,7 +208,7 @@ const Recipe = ({ route, navigation }) => {
       return <AppSkeleton />
    }
 
-   if (loading && !simpleRecipe) {
+   if (loading && !Object.keys(simpleRecipe).length) {
       return (
          <>
             <Header title="Home" navigation={navigation} />
@@ -228,7 +217,7 @@ const Recipe = ({ route, navigation }) => {
       )
    }
 
-   if (!loading && (!simpleRecipe || error)) {
+   if (!loading && (!Object.keys(simpleRecipe).length || error)) {
       return (
          <>
             <Header title="Home" navigation={navigation} />

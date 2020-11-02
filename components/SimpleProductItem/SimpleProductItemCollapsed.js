@@ -268,6 +268,7 @@ const Type = styled.TouchableOpacity`
    align-items: center;
    border: 1px solid #eae8e8;
    justify-content: center;
+   padding: 0 12px;
 `
 
 const TypeText = styled.Text`
