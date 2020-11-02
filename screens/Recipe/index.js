@@ -302,31 +302,42 @@ const Recipe = ({ route, navigation }) => {
                <Spacer size="32px" />
                <Spacer size="24px" />
                <Flex>
-                  <Info>
-                     <Cuisine
-                        size={width <= 768 ? 24 : 40}
-                        color={visual.color}
-                     />
-                     <InfoText>{simpleRecipe.cuisine}</InfoText>
-                  </Info>
-                  <Info>
-                     <CookingTime
-                        size={width <= 768 ? 24 : 40}
-                        color={visual.color}
-                     />
-                     <InfoText>{simpleRecipe.cookingTime} mins.</InfoText>
-                  </Info>
-                  <Info>
-                     <Chef size={width <= 768 ? 24 : 40} color={visual.color} />
-                     <InfoText>{simpleRecipe.author}</InfoText>
-                  </Info>
-                  <Info>
-                     <Utensils
-                        size={width <= 768 ? 24 : 40}
-                        color={visual.color}
-                     />
-                     <InfoText>{simpleRecipe.utensils.join(', ')}</InfoText>
-                  </Info>
+                  {Boolean(simpleRecipe.cuisine) && (
+                     <Info>
+                        <Cuisine
+                           size={width <= 768 ? 24 : 40}
+                           color={visual.color}
+                        />
+                        <InfoText>{simpleRecipe.cuisine}</InfoText>
+                     </Info>
+                  )}
+                  {Boolean(simpleRecipe.cookingTime) && (
+                     <Info>
+                        <CookingTime
+                           size={width <= 768 ? 24 : 40}
+                           color={visual.color}
+                        />
+                        <InfoText>{simpleRecipe.cookingTime} mins.</InfoText>
+                     </Info>
+                  )}
+                  {Boolean(simpleRecipe.author) && (
+                     <Info>
+                        <Chef
+                           size={width <= 768 ? 24 : 40}
+                           color={visual.color}
+                        />
+                        <InfoText>{simpleRecipe.author}</InfoText>
+                     </Info>
+                  )}
+                  {Boolean(simpleRecipe.utensils?.length) && (
+                     <Info>
+                        <Utensils
+                           size={width <= 768 ? 24 : 40}
+                           color={visual.color}
+                        />
+                        <InfoText>{simpleRecipe.utensils.join(', ')}</InfoText>
+                     </Info>
+                  )}
                </Flex>
                <Spacer size="24px" />
                <ContentText style={{ textAlign: 'center' }}>
@@ -629,6 +640,7 @@ const InfoText = styled(ContentText)`
    color: #000;
    max-width: 200px;
    margin-top: 8px;
+   text-align: center;
    ${width <= 768 &&
    css`
       font-size: 18px;
