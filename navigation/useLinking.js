@@ -33,8 +33,8 @@ export default function (containerRef) {
                Search: {
                   path: 'Search',
                },
-               Recipe: {
-                  path: 'Recipe',
+               recipe: {
+                  path: 'recipe',
                   parse: {
                      recipeId: Number,
                      refId: Number,

@@ -189,7 +189,7 @@ const Item = ({
                                  >{`${simpleRecipeProduct.name} `}</Text>
                                  <TouchableOpacity
                                     onPress={() => {
-                                       navigation.navigate('Recipe', {
+                                       navigation.navigate('recipe', {
                                           recipeId:
                                              simpleRecipeProduct.simpleRecipe
                                                 .id,

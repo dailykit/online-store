@@ -720,7 +720,7 @@ function AppStack(props) {
             }}
          />
          <Stack.Screen
-            name="Recipe"
+            name="recipe"
             component={Recipe}
             options={{
                headerShown: true,
