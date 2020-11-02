@@ -1,14 +1,15 @@
-import { useLazyQuery, useQuery } from '@apollo/react-hooks'
-import { Spinner } from 'native-base'
 import React from 'react'
-import { Image, Text, View } from 'react-native'
-import EStyleSheet from 'react-native-extended-stylesheet'
-import CheckoutBar from '../../components/CheckoutBar'
+import { useLazyQuery } from '@apollo/react-hooks'
+import styled, { css } from 'styled-components/native'
+import Chef from '../../assets/svgs/Chef'
+import CookingTime from '../../assets/svgs/CookingTime'
+import Cuisine from '../../assets/svgs/Cuisine'
+import Utensils from '../../assets/svgs/Utensils'
 import { Drawer } from '../../components/Drawer'
 import Header from '../../components/Header'
 import Nutrition from '../../components/Nutrition'
-import Recommendations from '../../components/Recommendations'
 import AppSkeleton from '../../components/skeletons/app'
+import RecipeSkeleton from '../../components/skeletons/recipe'
 import { useAppContext } from '../../context/app'
 import {
    COMBO_PRODUCT,
@@ -16,25 +17,17 @@ import {
    SIMPLE_PRODUCT,
    SIMPLE_RECIPE,
 } from '../../graphql'
-import { height, width } from '../../utils/Scalaing'
-import styled, { css } from 'styled-components/native'
-
-import PhotoShowcase from './PhotoShowcase'
-import { Feather, MaterialCommunityIcons } from '@expo/vector-icons'
+import { width } from '../../utils/Scalaing'
 import AddToCart from '../AddToCart'
-import RecipeSkeleton from '../../components/skeletons/recipe'
+import PhotoShowcase from './PhotoShowcase'
 
-import CookingTime from '../../assets/svgs/CookingTime'
-import Cuisine from '../../assets/svgs/Cuisine'
-import Chef from '../../assets/svgs/Chef'
-import Utensils from '../../assets/svgs/Utensils'
-
-const Recipe = ({ route, navigation }) => {
-   let { recipeId, refId, refType } = route.params
+const Recipe = ({ navigation, route }) => {
+   const { recipeId, refId, refType } = route.params
 
    const { visual, masterLoading } = useAppContext()
 
    const [fetching, setFetching] = React.useState(false)
+   const [simpleRecipe, setSimpleRecipe] = React.useState(undefined)
    const [scrollHeight, setScrollHeight] = React.useState(0)
    const [activeTab, setActiveTab] = React.useState('description')
    const nutritionPosition = React.useRef(undefined)
@@ -73,15 +66,24 @@ const Recipe = ({ route, navigation }) => {
    const [isModalVisible, setIsModalVisible] = React.useState(false)
    const [refProduct, setRefProduct] = React.useState({})
 
-   const { data: { simpleRecipe = {} } = {}, loading, error } = useQuery(
-      SIMPLE_RECIPE,
-      {
-         variables: {
-            id: recipeId,
-         },
-         fetchPolicy: 'cache-and-network',
+   const [fetchRecipe, { loading, error }] = useLazyQuery(SIMPLE_RECIPE, {
+      onCompleted: data => {
+         if (data.simpleRecipe) {
+            setSimpleRecipe(data.simpleRecipe)
+         }
+      },
+      fetchPolicy: 'cache-and-network',
+   })
+
+   React.useEffect(() => {
+      if (recipeId) {
+         fetchRecipe({
+            variables: {
+               id: recipeId,
+            },
+         })
       }
-   )
+   }, [recipeId])
 
    const [fetchSimpleRecipeProduct] = useLazyQuery(SIMPLE_PRODUCT, {
       onCompleted: data => {
@@ -208,7 +210,7 @@ const Recipe = ({ route, navigation }) => {
       return <AppSkeleton />
    }
 
-   if (loading && !Object.keys(simpleRecipe).length) {
+   if (loading && !simpleRecipe) {
       return (
          <>
             <Header title="Home" navigation={navigation} />
@@ -217,7 +219,7 @@ const Recipe = ({ route, navigation }) => {
       )
    }
 
-   if (!loading && (!Object.keys(simpleRecipe).length || error)) {
+   if (!loading && (!simpleRecipe || error)) {
       return (
          <>
             <Header title="Home" navigation={navigation} />
