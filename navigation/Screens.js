@@ -239,8 +239,8 @@ export default function OnboardingStack(props) {
    }, [brandId])
 
    React.useEffect(() => {
+      console.log('Screens -> cart.paymentStatus ', cart?.paymentStatus)
       if (cart?.paymentStatus === 'SUCCEEDED' && CURRENCY === 'INR') {
-         console.log('Screens -> cart.paymentStatus ', cart?.paymentStatus)
          open('Payment', { cartId: cart.id })
       }
    }, [cart?.paymentStatus])

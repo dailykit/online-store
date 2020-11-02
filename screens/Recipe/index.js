@@ -78,10 +78,11 @@ const Recipe = ({ route, navigation }) => {
       onCompleted: data => {
          setSimpleRecipe(data.simpleRecipe)
       },
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'network-only',
    })
 
    React.useEffect(() => {
+      console.log('Recipe ID changed: ', recipeId)
       if (recipeId) {
          fetchRecipe({
             variables: {

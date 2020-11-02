@@ -47,47 +47,24 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    React.useEffect(() => {
       ;(async () => {
          if (cart && paymentPartnerShipIds?.length) {
-            console.log('OrderSummary -> cart.totalPrice', cart.totalPrice)
-            console.log('OrderSummary -> cart.id', cart.id)
-            console.log(
-               'OrderSummary -> paymentPartnerShipIds',
-               paymentPartnerShipIds
-            )
-            console.log(
-               'OrderSummary -> cart.customerKeycloakId',
-               cart.customerKeycloakId
-            )
-
             await window.payments.provider({
-               disabled: cart?.paymentStatus === 'SUCCEEDED',
-               amount: new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: CURRENCY,
-               }).format(cart.totalPrice),
+               cart,
+               currency: CURRENCY,
                partnershipIds: paymentPartnerShipIds,
                admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
                datahub_url: HASURA_URL,
-               request_variables: {
-                  amount: cart.totalPrice,
-                  cartId: cart.id,
-                  partnershipIds: paymentPartnerShipIds,
-                  keycloakId: cart.customerKeycloakId,
-               },
             })
          }
       })()
    }, [cart, paymentPartnerShipIds])
 
    React.useEffect(() => {
-      if (cart?.paymentStatus === 'PENDING') {
-         window.payments.checkout({
-            datahub_url: HASURA_URL,
-            admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
-            paymentId: cart?.paymentId,
-            amount: cart?.totalPrice,
-            currency: CURRENCY,
-         })
-      }
+      window.payments.checkout({
+         cart,
+         datahub_url: HASURA_URL,
+         admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
+         currency: CURRENCY,
+      })
    }, [cart])
 
    console.log(cart)
