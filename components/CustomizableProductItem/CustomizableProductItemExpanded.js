@@ -451,7 +451,7 @@ const Item = ({
                            <Text
                               style={[styles.options_text, { marginTop: 16 }]}
                            >
-                              Avaliable Options:
+                              Available Options:
                            </Text>
                            {inventoryProduct?.inventoryProductOptions.map(
                               (item_data, key) => {

@@ -23,7 +23,7 @@ import {
    HASURA_WS,
    HASURA_GRAPHQL_ADMIN_SECRET,
 } from 'react-native-dotenv'
-// setup rem 12
+// setup rem
 import EStyleSheet from 'react-native-extended-stylesheet'
 import 'react-native-get-random-values'
 // Before rendering any navigation stack

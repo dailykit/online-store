@@ -17,7 +17,7 @@ const ServingTypes = ({ types, selected, onSelect }) => {
                   <Feather
                      name="check-circle"
                      style={{ marginLeft: 8 }}
-                     size={18}
+                     size={16}
                      color={visual.color}
                   />
                )}

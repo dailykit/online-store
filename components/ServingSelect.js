@@ -1,9 +1,9 @@
-import { Feather, MaterialIcons } from '@expo/vector-icons'
+import { Feather } from '@expo/vector-icons'
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { CURRENCY } from 'react-native-dotenv'
+import styled, { css } from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { discountedPrice } from '../utils'
-import { CURRENCY } from 'react-native-dotenv'
 // 12
 
 const ServingSelect = ({
@@ -19,134 +19,96 @@ const ServingSelect = ({
    const { visual } = useAppContext()
 
    return (
-      <TouchableOpacity
+      <Wrapper
          onPress={() => {
             setServingIndex(index - 1)
             setSelectedOption()
             setProductOption()
          }}
-         style={[
-            styles.servingSelectContainer,
-            {
-               borderColor: isSelected
-                  ? visual.color
-                     ? visual.color
-                     : '#3fa4ff'
-                  : '#ececec',
-               backgroundColor: '#fff',
-               display: 'flex',
-            },
-         ]}
+         active={isSelected}
+         color={visual.color}
       >
-         {Boolean(discount) && (
-            <View
-               style={[
-                  styles.discountBanner,
-                  { backgroundColor: visual.color },
-               ]}
-            >
-               <Text style={styles.discountBannerText}>{discount}% off</Text>
-            </View>
-         )}
-         <View style={styles.servingSelectContainer_one}>
+         <Container>
             <Feather size={14} name="user" />
-            <Text style={{ fontWeight: 'bold' }}>
-               {'    '}
-               {size}
-            </Text>
-         </View>
-         <View style={styles.servingSelectContainer_two}>
-            {discount ? (
+            <ContentText serving>{size}</ContentText>
+         </Container>
+         <Container>
+            {Boolean(discount) ? (
                <>
-                  <Text
-                     style={[
-                        styles.price_text,
-                        { textDecorationLine: 'line-through' },
-                     ]}
-                  >
+                  <ContentText discount color={visual.color}>
+                     {discount}% off
+                  </ContentText>
+                  <ContentText strike>
                      {new Intl.NumberFormat('en-US', {
                         style: 'currency',
                         currency: CURRENCY,
                      }).format(price.toFixed(2))}
-                  </Text>
-                  <Text style={[styles.price_text, { marginLeft: 16 }]}>
+                  </ContentText>
+                  <ContentText>
                      {new Intl.NumberFormat('en-US', {
                         style: 'currency',
                         currency: CURRENCY,
                      }).format(
                         discountedPrice({ value: price, discount }).toFixed(2)
                      )}
-                  </Text>
+                  </ContentText>
                </>
             ) : (
-               <Text style={styles.price_text}>
+               <ContentText>
                   {new Intl.NumberFormat('en-US', {
                      style: 'currency',
                      currency: CURRENCY,
                   }).format(price.toFixed(2))}
-               </Text>
+               </ContentText>
             )}
-         </View>
-         <View style={styles.servingSelectContainer_three}>
-            {isSelected && (
-               <View
-                  style={[
-                     styles.done_container,
-                     { backgroundColor: visual.color || '#3fa4ff' },
-                  ]}
-               >
-                  <MaterialIcons name="done" size={16} color="#fff" />
-               </View>
-            )}
-         </View>
-      </TouchableOpacity>
+            <Feather
+               name="check-circle"
+               size={16}
+               style={{ marginLeft: 20 }}
+               color={isSelected ? visual.color : 'transparent'}
+            />
+         </Container>
+      </Wrapper>
    )
 }
 
-const styles = StyleSheet.create({
-   done_container: {
-      backgroundColor: '#3fa4ff',
-      borderRadius: 50,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginLeft: 5,
-   },
-
-   servingSelectContainer: {
-      height: 50,
-      flexDirection: 'row',
-      borderWidth: 1,
-      marginBottom: 5,
-      borderColor: '#fff',
-      position: 'relative',
-   },
-   servingSelectContainer_one: {
-      flex: 5,
-      justifyContent: 'flex-start',
-      alignItems: 'center',
-      flexDirection: 'row',
-      paddingLeft: 20,
-   },
-   servingSelectContainer_two: {
-      flex: 2,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-   servingSelectContainer_three: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-   },
-   discountBanner: {
-      position: 'absolute',
-      paddding: 2,
-   },
-   discountBannerText: {
-      color: '#fff',
-      fontSize: '0.7rem',
-      fontStyle: 'italic',
-   },
-})
-
 export default ServingSelect
+
+const Wrapper = styled.TouchableOpacity`
+   height: 48px;
+   border: 1px solid ${props => (props.active ? props.color : '#eae8e8')};
+   padding: 0 12px;
+   align-items: center;
+   justify-content: space-between;
+   flex-direction: row;
+   margin-bottom: 12px;
+`
+
+const Container = styled.View`
+   height: inherit;
+   align-items: center;
+   flex-direction: row;
+`
+
+const ContentText = styled.Text`
+   margin-left: 16px;
+   ${props =>
+      props.serving &&
+      css`
+         font-weight: bold;
+      `}
+   ${props =>
+      props.discount &&
+      css`
+         padding: 2px;
+         font-size: 12px;
+         font-style: italic;
+         color: #fff;
+         background: ${props.color};
+      `}
+   ${props =>
+      props.strike &&
+      css`
+         text-decoration: line-through;
+      `}
+`
