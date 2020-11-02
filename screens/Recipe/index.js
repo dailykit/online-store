@@ -36,10 +36,39 @@ const Recipe = ({ route, navigation }) => {
 
    const [fetching, setFetching] = React.useState(false)
    const [simpleRecipe, setSimpleRecipe] = React.useState(undefined)
-   const nutritionPosition = React.useRef(0)
-   const ingredientsPosition = React.useRef(0)
-   const cookingStepsPosition = React.useRef(0)
+   const [scrollHeight, setScrollHeight] = React.useState(0)
+   const [activeTab, setActiveTab] = React.useState('description')
+   const nutritionPosition = React.useRef(undefined)
+   const ingredientsPosition = React.useRef(undefined)
+   const cookingStepsPosition = React.useRef(undefined)
    const containerRef = React.useRef()
+
+   React.useEffect(() => {
+      if (
+         scrollHeight < ingredientsPosition.current ||
+         ingredientsPosition.current === undefined
+      ) {
+         return setActiveTab('description')
+      }
+      if (
+         scrollHeight >= ingredientsPosition.current &&
+         (scrollHeight < cookingStepsPosition.current ||
+            cookingStepsPosition.current === undefined)
+      ) {
+         return setActiveTab('ingredients')
+      }
+      if (
+         scrollHeight >= cookingStepsPosition.current &&
+         (nutritionPosition.current === undefined ||
+            scrollHeight < nutritionPosition.current)
+      ) {
+         return setActiveTab('cookingSteps')
+      }
+      if (scrollHeight >= nutritionPosition.current) {
+         return setActiveTab('nutrition')
+      }
+      return setActiveTab('description')
+   }, [scrollHeight])
 
    // For Drawer
    const [isModalVisible, setIsModalVisible] = React.useState(false)
@@ -227,6 +256,7 @@ const Recipe = ({ route, navigation }) => {
                showsVerticalScrollIndicator={false}
                stickyHeaderIndices={[0]}
                ref={containerRef}
+               onScroll={e => setScrollHeight(e.nativeEvent.contentOffset.y)}
             >
                <Tabs
                   horizontal
@@ -234,7 +264,7 @@ const Recipe = ({ route, navigation }) => {
                   contentContainerStyle={{ marginHorizontal: 'auto' }}
                >
                   <Tab
-                     active
+                     active={activeTab === 'description'}
                      color={visual.color}
                      onPress={() =>
                         containerRef.current.scrollTo({
@@ -242,11 +272,15 @@ const Recipe = ({ route, navigation }) => {
                         })
                      }
                   >
-                     <TabText active color={visual.color}>
+                     <TabText
+                        active={activeTab === 'description'}
+                        color={visual.color}
+                     >
                         Description
                      </TabText>
                   </Tab>
                   <Tab
+                     active={activeTab === 'ingredients'}
                      color={visual.color}
                      onPress={() =>
                         containerRef.current.scrollTo({
@@ -254,10 +288,16 @@ const Recipe = ({ route, navigation }) => {
                         })
                      }
                   >
-                     <TabText color={visual.color}>Ingredients</TabText>
+                     <TabText
+                        active={activeTab === 'ingredients'}
+                        color={visual.color}
+                     >
+                        Ingredients
+                     </TabText>
                   </Tab>
                   {Boolean(simpleRecipe.procedures.length) && (
                      <Tab
+                        active={activeTab === 'cookingSteps'}
                         color={visual.color}
                         onPress={() =>
                            containerRef.current.scrollTo({
@@ -265,13 +305,19 @@ const Recipe = ({ route, navigation }) => {
                            })
                         }
                      >
-                        <TabText color={visual.color}>Cooking Steps</TabText>
+                        <TabText
+                           active={activeTab === 'cookingSteps'}
+                           color={visual.color}
+                        >
+                           Cooking Steps
+                        </TabText>
                      </Tab>
                   )}
                   {Boolean(
                      simpleRecipe.simpleRecipeYields[0].nutritionalInfo
                   ) && (
                      <Tab
+                        active={activeTab === 'nutrition'}
                         color={visual.color}
                         onPress={() =>
                            containerRef.current.scrollTo({
@@ -279,7 +325,10 @@ const Recipe = ({ route, navigation }) => {
                            })
                         }
                      >
-                        <TabText color={visual.color}>
+                        <TabText
+                           active={activeTab === 'nutrition'}
+                           color={visual.color}
+                        >
                            Nutritional Values
                         </TabText>
                      </Tab>
