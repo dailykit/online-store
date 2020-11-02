@@ -1,4 +1,3 @@
-import { Feather, MaterialIcons } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import {
    Image,
@@ -14,7 +13,7 @@ import { width } from '../../utils/Scalaing'
 import Modifiers from '../Modifiers'
 import ServingSelect from '../ServingSelect'
 import { styles } from './styles'
-import styled from 'styled-components/native'
+import ServingTypes from '../ServingTypes'
 
 const SimpleProductItemCollapsed = ({
    navigation,
@@ -34,16 +33,13 @@ const SimpleProductItemCollapsed = ({
    const [selectedOption, setSelectedOption] = useState(undefined)
    const [servingIndex, setServingIndex] = useState(undefined)
 
-   const generateTypes = () => {
-      const _types = new Set(
-         simpleRecipeProduct.simpleRecipeProductOptions.map(op => op.type)
-      )
-      console.log('generateTypes -> _types', _types)
+   const generateTypes = srp => {
+      const _types = new Set(srp.simpleRecipeProductOptions.map(op => op.type))
       setTypes([..._types])
    }
 
    React.useEffect(() => {
-      generateTypes()
+      generateTypes(simpleRecipeProduct)
       const op =
          simpleRecipeProduct.defaultSimpleRecipeProductOption ||
          simpleRecipeProduct.simpleRecipeProductOptions.sort(priceSort)[0]
@@ -191,26 +187,11 @@ const SimpleProductItemCollapsed = ({
          )}
          {tunnelItem && isSelected && (
             <View style={{ paddingHorizontal: 20 }}>
-               <TypeWrapper>
-                  {types.map(type => (
-                     <Type
-                        active={typeSelected === type}
-                        onPress={() => setTypeSelected(type)}
-                     >
-                        <TypeText>
-                           {type === 'mealKit' ? 'Meal Kit' : 'Ready to Eat'}
-                        </TypeText>
-                        {Boolean(typeSelected === type) && (
-                           <Feather
-                              name="check-circle"
-                              style={{ marginLeft: 8 }}
-                              size={18}
-                              color={visual.color}
-                           />
-                        )}
-                     </Type>
-                  ))}
-               </TypeWrapper>
+               <ServingTypes
+                  types={types}
+                  selected={typeSelected}
+                  onSelect={setTypeSelected}
+               />
                <Text style={styles.options_text}>Available Servings:</Text>
                {simpleRecipeProduct.simpleRecipeProductOptions
                   .filter(serving => serving.type === typeSelected)
@@ -253,24 +234,3 @@ const SimpleProductItemCollapsed = ({
 }
 
 export default SimpleProductItemCollapsed
-
-const TypeWrapper = styled.View`
-   flex-direction: row;
-   height: 48px;
-   margin-bottom: 16px;
-`
-
-const Type = styled.TouchableOpacity`
-   height: inherit;
-   min-width: 96px;
-   background: ${props => (props.active ? '#fff' : '#eae8e8')};
-   flex-direction: row;
-   align-items: center;
-   border: 1px solid #eae8e8;
-   justify-content: center;
-   padding: 0 12px;
-`
-
-const TypeText = styled.Text`
-   color: #000;
-`

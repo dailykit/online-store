@@ -13,6 +13,7 @@ import { priceSort } from '../../utils'
 import { width } from '../../utils/Scalaing'
 import Modifiers from '../Modifiers'
 import ServingSelect from '../ServingSelect'
+import ServingTypes from '../ServingTypes'
 import { stylesExpanded as styles } from './styles'
 
 const Item = ({
@@ -28,15 +29,22 @@ const Item = ({
 }) => {
    const { visual } = useAppContext()
 
+   const [types, setTypes] = useState([])
    const [typeSelected, setTypeSelected] = useState('mealKit')
    const [servingIndex, setServingIndex] = useState(undefined)
    const [selectedOption, setSelectedOption] = useState(undefined)
    const [isSelected, setisSelected] = useState(undefined)
 
+   const generateTypes = srp => {
+      const _types = new Set(srp.simpleRecipeProductOptions.map(op => op.type))
+      setTypes([..._types])
+   }
+
    React.useEffect(() => {
       if (isSelected !== undefined) {
          const component = data.customizableProductOptions[isSelected]
          if (component.simpleRecipeProduct) {
+            generateTypes(component.simpleRecipeProduct)
             const option =
                component.simpleRecipeProduct.defaultSimpleRecipeProductOption ||
                component.simpleRecipeProduct.simpleRecipeProductOptions[0]
@@ -242,68 +250,13 @@ const Item = ({
                      </TouchableOpacity>
                      {isSelected === _key && tunnelItem && (
                         <View style={{ paddingHorizontal: 20 }}>
-                           <View style={styles.type_container}>
-                              <View style={styles.type_container_right}>
-                                 <TouchableOpacity
-                                    style={[
-                                       styles.type_button,
-                                       typeSelected === 'mealKit'
-                                          ? styles.selected_type_conatiner
-                                          : {},
-                                    ]}
-                                    onPress={() => setTypeSelected('mealKit')}
-                                 >
-                                    <Text style={styles.type_text}>
-                                       Meal Kit
-                                    </Text>
-                                    {typeSelected === 'mealKit' && (
-                                       <View
-                                          style={[
-                                             styles.done_container,
-                                             { backgroundColor: visual.color },
-                                          ]}
-                                       >
-                                          <MaterialIcons
-                                             name="done"
-                                             size={16}
-                                             color="#fff"
-                                          />
-                                       </View>
-                                    )}
-                                 </TouchableOpacity>
-                                 <TouchableOpacity
-                                    onPress={() =>
-                                       setTypeSelected('readyToEat')
-                                    }
-                                    style={[
-                                       styles.type_button,
-                                       typeSelected === 'readyToEat'
-                                          ? styles.selected_type_conatiner
-                                          : {},
-                                    ]}
-                                 >
-                                    <Text style={styles.type_text}>
-                                       Ready To Eat
-                                    </Text>
-                                    {typeSelected === 'readyToEat' && (
-                                       <View
-                                          style={[
-                                             styles.done_container,
-                                             { backgroundColor: visual.color },
-                                          ]}
-                                       >
-                                          <MaterialIcons
-                                             name="done"
-                                             size={16}
-                                             color="#fff"
-                                          />
-                                       </View>
-                                    )}
-                                 </TouchableOpacity>
-                              </View>
-                           </View>
+                           <ServingTypes
+                              types={types}
+                              selected={typeSelected}
+                              onSelect={setTypeSelected}
+                           />
                            <Text style={styles.options_text}>
-                              Avaliable Servings:
+                              Available Servings:
                            </Text>
                            {simpleRecipeProduct?.simpleRecipeProductOptions
                               ?.filter(serving => serving.type === typeSelected)
