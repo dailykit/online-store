@@ -82,6 +82,7 @@ const Recipe = ({ navigation, route }) => {
                id: recipeId,
             },
          })
+         setSimpleRecipe(undefined)
       }
    }, [recipeId])
 
