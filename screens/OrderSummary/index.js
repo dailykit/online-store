@@ -37,8 +37,14 @@ import CartSkeleton from '../../components/skeletons/cart'
 // 12
 
 const OrderSummary = ({ navigation, ...restProps }) => {
+   const { isAuthenticated } = useAuth()
    const { cart, settingCart } = useCartContext()
-   const { visual, masterLoading, paymentPartnerShipIds } = useAppContext()
+   const {
+      visual,
+      brand,
+      masterLoading,
+      paymentPartnerShipIds,
+   } = useAppContext()
 
    String.prototype.SRPType = function () {
       return this === 'readyToEat' ? 'Ready to Eat' : 'Meal Kit'
@@ -46,7 +52,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    React.useEffect(() => {
       ;(async () => {
-         if (cart && paymentPartnerShipIds?.length) {
+         if (cart && paymentPartnerShipIds?.length && isAuthenticated) {
             await window.payments.provider({
                cart,
                currency: CURRENCY,
@@ -56,16 +62,23 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             })
          }
       })()
-   }, [cart, paymentPartnerShipIds])
+   }, [cart, paymentPartnerShipIds, isAuthenticated])
 
    React.useEffect(() => {
-      window.payments.checkout({
-         cart,
-         datahub_url: HASURA_URL,
-         admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
-         currency: CURRENCY,
-      })
-   }, [cart])
+      if (isAuthenticated) {
+         const brandObject = {
+            name: brand.name,
+            logo: brand.logo,
+            description: '',
+         }
+         window.payments.checkout({
+            cart: { ...cart, brand: brandObject },
+            datahub_url: HASURA_URL,
+            admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
+            currency: CURRENCY,
+         })
+      }
+   }, [cart, isAuthenticated, brand])
 
    console.log(cart)
 
