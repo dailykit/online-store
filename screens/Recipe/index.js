@@ -20,6 +20,7 @@ import {
 import { width } from '../../utils/Scalaing'
 import AddToCart from '../AddToCart'
 import PhotoShowcase from './PhotoShowcase'
+import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 
 const Recipe = ({ navigation, route }) => {
    const { recipeId, refId, refType } = route.params
@@ -337,13 +338,15 @@ const Recipe = ({ navigation, route }) => {
                            {simpleRecipe.type}
                         </TypeText>
                      </TypeWrapper>
+                     <Spacer size="8px" />
+                     <SocialMediaShareButtons />
                      <Spacer size="16px" />
                   </>
                )}
                <PhotoShowcase images={[simpleRecipe.image] || []} />
                <Spacer size="32px" />
                <Spacer size="24px" />
-               <Flex>
+               <InfoContainer>
                   {Boolean(simpleRecipe.cuisine) && (
                      <Info>
                         <Cuisine
@@ -380,7 +383,7 @@ const Recipe = ({ navigation, route }) => {
                         <InfoText>{simpleRecipe.utensils.join(', ')}</InfoText>
                      </Info>
                   )}
-               </Flex>
+               </InfoContainer>
                <Spacer size="24px" />
                <ContentText style={{ textAlign: 'center' }}>
                   {simpleRecipe.description}
@@ -467,11 +470,14 @@ const Recipe = ({ navigation, route }) => {
                      <>
                         <Title>{refProduct.name}</Title>
                         <Spacer size="8px" />
-                        <TypeWrapper type={simpleRecipe.type}>
-                           <TypeText type={simpleRecipe.type}>
-                              {simpleRecipe.type}
-                           </TypeText>
-                        </TypeWrapper>
+                        <SubSectionWrapper>
+                           <TypeWrapper type={simpleRecipe.type}>
+                              <TypeText type={simpleRecipe.type}>
+                                 {simpleRecipe.type}
+                              </TypeText>
+                           </TypeWrapper>
+                           <SocialMediaShareButtons />
+                        </SubSectionWrapper>
                         <Spacer size="16px" />
                         {renderPricing()}
                      </>
@@ -512,7 +518,7 @@ const Wrapper = styled.View`
    `}
 `
 
-const Flex = styled.View`
+const InfoContainer = styled.View`
    flex-direction: row;
    align-items: start;
    justify-content: space-evenly;
@@ -734,4 +740,11 @@ const Ingredients = styled.View`
 const NutritionWrapper = styled.View`
    flex-direction: row;
    justify-content: center;
+`
+
+const SubSectionWrapper = styled.View`
+   flex-direction: row;
+   flex-wrap: wrap;
+   align-items: center;
+   justify-content: space-between;
 `
