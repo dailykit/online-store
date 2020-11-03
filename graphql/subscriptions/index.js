@@ -243,6 +243,8 @@ export const CART = gql`
          paymentId
          paymentUpdatedAt
          customerKeycloakId
+         cartSource
+         brandId
       }
    }
 `
