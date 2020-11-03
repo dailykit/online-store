@@ -595,7 +595,7 @@ const StepCard = styled.View`
    border: 1px solid #eae8e8;
    border-radius: 4px;
    padding: 16px;
-   width: 400px;
+   width: 360px;
    margin: 20px 10px;
    background: #fff;
    position: relative;
@@ -636,7 +636,7 @@ const StepText = styled(ContentText)`
 `
 
 const StepImage = styled.Image`
-   width: 368px;
+   width: 328px;
    height: 200px;
    border-radius: 4px;
    margin-top: 16px;
