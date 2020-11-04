@@ -480,6 +480,7 @@ const styles = EStyleSheet.create({
       justifyContent: 'flex-end',
       alignItems: 'center',
       flexDirection: 'row',
+      alignSelf: 'flex-end',
    },
    button: {
       backgroundColor: '#3fa4ff',
