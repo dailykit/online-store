@@ -2,7 +2,7 @@ import { Feather } from '@expo/vector-icons'
 import { useIsDrawerOpen } from '@react-navigation/drawer'
 import React from 'react'
 import { Text, View } from 'react-native'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import argonTheme from '../constants/Theme'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
@@ -128,10 +128,13 @@ const WebNav = ({ navigation }) => {
                      <NavLinkText white>Login</NavLinkText>
                   </NavButton>
                   <NavButton
+                     outline
                      color={visual.color}
                      onPress={() => open('Register')}
                   >
-                     <NavLinkText white>Sign Up</NavLinkText>
+                     <NavLinkText outline color={visual.color}>
+                        Sign Up
+                     </NavLinkText>
                   </NavButton>
                </>
             )}
@@ -201,6 +204,11 @@ const NavLink = styled.TouchableOpacity`
 const NavLinkText = styled.Text`
    font-size: 1.1rem;
    color: ${props => (props.white ? '#fff' : '#111')};
+   ${props =>
+      props.outline &&
+      css`
+         color: ${props.color};
+      `}
 `
 
 const SearchContainer = styled.TouchableOpacity`
@@ -222,6 +230,13 @@ const NavRight = styled.View`
 
 const NavButton = styled(NavLink)`
    padding: 10px;
-   background-color: ${props => (props.blend ? '#ccc' : props.color || '#666')};
+   background-color: ${props => (props.outline ? '#fff' : props.color)};
+   border: 1px solid ${props => props.color};
    border-radius: 2px;
+   ${props =>
+      props.fade &&
+      css`
+         background: #ccc;
+         border: 1px solid #ccc;
+      `}
 `
