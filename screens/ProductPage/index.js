@@ -53,7 +53,7 @@ const ProductPage = ({ navigation, route }) => {
       return setActiveTab('description')
    }, [scrollHeight])
 
-   const [fetchInventoryProduct, { loading: IPLoading }] = useLazyQuery(
+   const [fetchInventoryProduct, { loading }] = useLazyQuery(
       INVENTORY_PRODUCT,
       {
          onCompleted: data => {
@@ -63,27 +63,10 @@ const ProductPage = ({ navigation, route }) => {
       }
    )
 
-   const [fetchSimpleRecipeProduct, { loading: SRPLoading }] = useLazyQuery(
-      SIMPLE_PRODUCT,
-      {
-         onCompleted: data => {
-            setProduct(data.simpleRecipeProduct)
-         },
-         fetchPolicy: 'cache-and-network',
-      }
-   )
-
    React.useEffect(() => {
       switch (type) {
          case 'inventoryProduct': {
             return fetchInventoryProduct({
-               variables: {
-                  id,
-               },
-            })
-         }
-         case 'simpleRecipeProduct': {
-            return fetchSimpleRecipeProduct({
                variables: {
                   id,
                },
@@ -99,7 +82,7 @@ const ProductPage = ({ navigation, route }) => {
       return <AppSkeleton />
    }
 
-   if (IPLoading || SRPLoading)
+   if (loading)
       return (
          <>
             <Header title="Home" navigation={navigation} />
