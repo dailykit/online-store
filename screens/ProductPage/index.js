@@ -24,7 +24,7 @@ import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../../graphql'
 import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
-import ProductPhotos from './ProductPhotos'
+import PhotoShowcase from '../../components/PhotoShowcase'
 
 import styled, { css } from 'styled-components/native'
 
@@ -117,7 +117,7 @@ const ProductPage = ({ navigation, route }) => {
                   </>
                )}
                <Spacer size="20px" />
-               <ProductPhotos images={product.assets?.images} />
+               <PhotoShowcase images={product.assets?.images} />
                <Spacer size="40px" />
                <ContentText style={{ textAlign: 'center' }}>
                   {product.description}

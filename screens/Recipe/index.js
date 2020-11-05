@@ -19,7 +19,7 @@ import {
 } from '../../graphql'
 import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
-import PhotoShowcase from './PhotoShowcase'
+import PhotoShowcase from '../../components/PhotoShowcase'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 
 const Recipe = ({ navigation, route }) => {
@@ -344,7 +344,10 @@ const Recipe = ({ navigation, route }) => {
                      <Spacer size="16px" />
                   </>
                )}
-               <PhotoShowcase images={[simpleRecipe.image] || []} />
+               <PhotoShowcase
+                  images={[simpleRecipe.image] || []}
+                  fullWidth={true}
+               />
                <Spacer size="40px" />
                <InfoContainer>
                   {Boolean(simpleRecipe.cuisine) && (
