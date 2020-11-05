@@ -323,7 +323,7 @@ const Recipe = ({ navigation, route }) => {
                            active={activeTab === 'nutrition'}
                            color={visual.color}
                         >
-                           Nutritional Values
+                           Nutrition and Allergens
                         </TabText>
                      </Tab>
                   )}
@@ -344,8 +344,7 @@ const Recipe = ({ navigation, route }) => {
                   </>
                )}
                <PhotoShowcase images={[simpleRecipe.image] || []} />
-               <Spacer size="32px" />
-               <Spacer size="24px" />
+               <Spacer size="40px" />
                <InfoContainer>
                   {Boolean(simpleRecipe.cuisine) && (
                      <Info>
@@ -448,7 +447,7 @@ const Recipe = ({ navigation, route }) => {
                               e.nativeEvent.layout.y - 60
                         }}
                      >
-                        Nutritional Values
+                        Nutrition and Allergens
                      </SectionHeader>
                      <Spacer size="20px" />
                      <NutritionWrapper>

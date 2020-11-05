@@ -1,5 +1,5 @@
 import { useLazyQuery } from '@apollo/react-hooks'
-import { Spinner } from 'native-base'
+import { Content, Spinner } from 'native-base'
 import React from 'react'
 import {
    Image,
@@ -23,6 +23,9 @@ import { useAppContext } from '../../context/app'
 import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../../graphql'
 import { width } from '../../utils/Scalaing'
 import AddToCart from '../AddToCart'
+import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
+
+import styled from 'styled-components/native'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
@@ -96,215 +99,130 @@ const ProductPage = ({ navigation, route }) => {
             id={product?.id}
             setIsModalVisible={setIsModalVisible}
          />
-         <SafeAreaView
-            style={[styles.safeArea, { paddingBottom: width < 768 ? 70 : 0 }]}
-         >
-            {width > 768 ? (
-               <Header title="Home" navigation={navigation} />
-            ) : (
-               <HeaderBack title="Go Back" navigation={navigation} />
-            )}
-            <ScrollView style={{ paddingHorizontal: '1rem' }}>
-               <View style={styles.container}>
-                  <View
-                     style={{
-                        alignItems: 'center',
-                        flex: 1,
-                        marginBottom: width > 768 ? 5 : 20,
-                     }}
-                  >
-                     <Image
-                        source={{
-                           uri:
-                              product?.assets?.images[0] || defaultProductImage,
-                        }}
-                        style={styles.image}
-                     />
-                  </View>
-                  <View style={{ flex: 1 }}>
-                     <Text style={styles.productName}>{product?.name}</Text>
-                     <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                        {product?.tags?.map(tag => (
-                           <Text style={styles.tag}>{tag.toUpperCase()}</Text>
-                        ))}
-                     </View>
-                     {product?.description && (
-                        <>
-                           <Text style={styles.sectionTitle}>Description</Text>
-                           <Text style={styles.text}>
-                              {product?.description}
-                           </Text>
-                        </>
-                     )}
-                     {product?.allergens && (
-                        <>
-                           <Text style={styles.sectionTitle}>Allergens</Text>
-                           <Text style={styles.text}>
-                              {product.allergens
-                                 .map(allergen => allergen.title)
-                                 .join(', ')}
-                           </Text>
-                        </>
-                     )}
-                     {product?.__typename?.includes('simpleRecipeProduct') && (
-                        <View style={{ marginBottom: 10 }}>
-                           <View style={{ flexDirection: 'row', width: 250 }}>
-                              <Text style={[styles.sectionTitle, { flex: 1 }]}>
-                                 Author
-                              </Text>
-                              <Text style={[styles.text, { flex: 1 }]}>
-                                 {product?.simpleRecipe?.author}
-                              </Text>
-                           </View>
-                           <View style={{ flexDirection: 'row', width: 250 }}>
-                              <Text style={[styles.sectionTitle, { flex: 1 }]}>
-                                 Cuisine
-                              </Text>
-                              <Text style={[styles.text, { flex: 1 }]}>
-                                 {product?.simpleRecipe?.cuisine}
-                              </Text>
-                           </View>
-                           <View style={{ flexDirection: 'row', width: 250 }}>
-                              <Text style={[styles.sectionTitle, { flex: 1 }]}>
-                                 Type
-                              </Text>
-                              <Text style={[styles.text, { flex: 1 }]}>
-                                 {product?.simpleRecipe?.type}
-                              </Text>
-                           </View>
-                           <TouchableOpacity
-                              onPress={() =>
-                                 navigation.navigate('Recipe', {
-                                    recipeId: product?.simpleRecipe?.id,
-                                 })
-                              }
-                           >
-                              <Text
-                                 style={[
-                                    styles.text,
-                                    {
-                                       color: visual.color,
-                                       textDecorationLine: 'underline',
-                                    },
-                                 ]}
-                              >
-                                 See Recipe for this product
-                              </Text>
-                           </TouchableOpacity>
-                        </View>
-                     )}
-                     {/* {product?.__typename?.includes('inventoryProduct')
-                ? product.inventoryProductOptions?.map((option) => (
-                    <View style={styles.option}>
-                      <Text style={styles.text}>{option.label}</Text>
-                      <Text style={[styles.text, { fontWeight: 'bold' }]}>
-                        $ {option.price[0].value}
-                      </Text>
-                    </View>
-                  ))
-                : product.simpleRecipeProductOptions?.map((option) => (
-                    <View style={styles.option}>
-                      <Text style={{ width: 120 }}>
-                        {option.type === 'mealKit'
-                          ? 'Meal Kit'
-                          : 'Ready to Eat'}
-                      </Text>
-                      <Text style={styles.text}>
-                        <Feather size={18} name='user' />{' '}
-                        {option.simpleRecipeYield.yield.serving}
-                      </Text>
-                      <Text
-                        style={[styles.text, { fontWeight: 'bold', width: 50 }]}
-                      >
-                        $ {option.price[0].value}
-                      </Text>
-                    </View>
-                  ))} */}
-                     {Boolean(product?.nutritionalInfo) && (
-                        <Nutrition values={product?.nutritionalInfo} />
-                     )}
-                     <AddToCart
-                        showInfo={false}
-                        setIsModalVisible={true}
-                        navigation={navigation}
-                        id={id}
-                        type={product?.__typename?.split('_')[1]}
-                        data={product}
-                     />
-
-                     {/* <TouchableOpacity
-                style={[styles.button, { backgroundColor: visual.color }]}
-                onPress={() => setIsModalVisible(true)}
-              >
-                <Text style={{ color: '#fff' }}>
-                  ADD TO CART <Feather size={14} name='plus' />
-                </Text>
-              </TouchableOpacity> */}
-                  </View>
-               </View>
-               {Boolean(product.recommendations) && (
-                  <Recommendations
-                     navigation={navigation}
-                     recommendations={product.recommendations}
-                  />
-               )}
-            </ScrollView>
-            {width < 768 && <CheckoutBar navigation={navigation} />}
-         </SafeAreaView>
+         <Header title="Home" navigation={navigation} />
+         <Wrapper>
+            <DetailsContainer>
+               <Title>{product.name}</Title>
+               <Spacer size="16px" />
+               <Flex>
+                  <TagsContainer>
+                     {product?.tags?.map((tag, i) => (
+                        <Tag key={i}>{tag}</Tag>
+                     ))}
+                  </TagsContainer>
+                  <SocialMediaShareButtons />
+               </Flex>
+               <Spacer size="40px" />
+               <ContentText style={{ textAlign: 'center' }}>
+                  {product.description}
+               </ContentText>
+               <Spacer size="68px" />
+               <SectionHeader color={visual.color}>
+                  Nutrition and Allergens
+               </SectionHeader>
+               <Spacer size="20px" />
+               <NutritionWrapper>
+                  <Nutrition values={product.nutritionalInfo} />
+               </NutritionWrapper>
+               <Spacer size="40px" />
+            </DetailsContainer>
+            <PricingContainer>
+               <AddToCart
+                  showInfo={false}
+                  setIsModalVisible={true}
+                  navigation={navigation}
+                  id={product.id}
+                  type={product?.__typename?.split('_')[1]}
+                  data={product}
+               />
+            </PricingContainer>
+         </Wrapper>
       </>
    )
 }
 
 export default ProductPage
 
-const styles = StyleSheet.create({
-   safeArea: {
-      flex: 1,
-      backgroundColor: '#fff',
-   },
-   container: {
-      paddingVertical: width > 768 ? 40 : 10,
-      paddingHorizontal: 10,
-      maxWidth: 1280,
-      width: '100%',
-      marginHorizontal: 'auto',
-      flexDirection: width > 768 ? 'row' : 'column',
-      marginBottom: '32px',
-   },
-   image: {
-      width: width > 768 ? 400 : width * 0.6,
-      height: width > 768 ? 400 : width * 0.6,
-      resizeMode: 'contain',
-   },
-   productName: {
-      fontSize: '2.125rem',
-      fontWeight: 'bold',
-      lineHeight: '2.5rem',
-      marginBottom: '1rem',
-      letterSpacing: 0.85,
-   },
-   sectionTitle: { fontSize: '100%', color: '#666', marginBottom: 5 },
-   tag: {
-      padding: 5,
-      backgroundColor: '#e3e3e3',
-      marginRight: 5,
-   },
-   text: {
-      fontSize: '1.1rem',
-      marginBottom: '1rem',
-   },
-   option: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      maxWidth: 400,
-   },
-   button: {
-      textAlign: 'center',
-      borderRadius: 4,
-      maxWidth: 200,
-      height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginVertical: 20,
-   },
-})
+const Wrapper = styled.View`
+   flex: 1;
+   flex-direction: row;
+   padding: 16px 48px;
+   background: #fefdfc;
+   ${width <= 768 &&
+   css`
+      padding: 8px 12px;
+   `}
+`
+
+const Spacer = styled.View`
+   height: ${props => props.size || '16px'};
+`
+
+const DetailsContainer = styled.ScrollView`
+   margin-right: 24px;
+   padding: 0 20px;
+   ${width <= 768 &&
+   css`
+      margin-right: 0;
+      padding: 0;
+   `}
+`
+
+const PricingContainer = styled.View`
+   background: #fff;
+   min-width: 31vw;
+   padding: 20px;
+   shadow-opacity: 1;
+   shadow-radius: 2px;
+   shadow-color: #f8f8f7;
+   shadow-offset: -5px -5px;
+   border-radius: 4px;
+`
+
+const ContentText = styled.Text`
+   line-height: 23px;
+   font-size: 18px;
+   color: #636363;
+   ${width <= 768 &&
+   css`
+      line-height: 21px;
+      font-size: 16px;
+   `}
+`
+
+const Title = styled(ContentText)`
+   font-size: 28px;
+   line-height: 40px;
+   font-weight: bold;
+`
+
+const SectionHeader = styled.Text`
+   color: ${props => props.color || '#888d9d'};
+   font-size: 28px;
+   font-weight: 600;
+   text-align: center;
+`
+
+const Flex = styled.View`
+   flex-direction: row;
+   align-items: center;
+   justify-content: space-between;
+`
+
+const TagsContainer = styled.View`
+      flex-direction: row;
+      align-items center;
+`
+
+const Tag = styled(ContentText)`
+   font-size: 14px;
+   padding: 4px 8px;
+   border-radius: 4px;
+   background: #eae8e8;
+   margin-right: 8px;
+`
+
+const NutritionWrapper = styled.View`
+   flex-direction: row;
+   justify-content: center;
+`
