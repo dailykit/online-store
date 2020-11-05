@@ -62,7 +62,7 @@ export const CREATE_CUSTOMER = gql`
 `
 
 export const CREATE_BRAND_CUSTOMER = gql`
-   mutation CreateBrandCustomer($object: crm_brandCustomer_insert_input!) {
+   mutation CreateBrandCustomer($object: crm_brand_customer_insert_input!) {
       createBrandCustomer(object: $object) {
          id
          brandId
