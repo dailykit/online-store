@@ -34,7 +34,24 @@ const ProductPage = ({ navigation, route }) => {
    const { visual, masterLoading } = useAppContext()
 
    const [product, setProduct] = React.useState({})
+   const [scrollHeight, setScrollHeight] = React.useState(0)
+   const [activeTab, setActiveTab] = React.useState('description')
+   const nutritionPosition = React.useRef(undefined)
+   const containerRef = React.useRef()
    const [isModalVisible, setIsModalVisible] = React.useState(false)
+
+   React.useEffect(() => {
+      if (
+         scrollHeight < nutritionPosition.current ||
+         nutritionPosition.current === undefined
+      ) {
+         return setActiveTab('description')
+      }
+      if (scrollHeight >= nutritionPosition.current) {
+         return setActiveTab('nutrition')
+      }
+      return setActiveTab('description')
+   }, [scrollHeight])
 
    const [fetchInventoryProduct, { loading: IPLoading }] = useLazyQuery(
       INVENTORY_PRODUCT,
@@ -103,7 +120,12 @@ const ProductPage = ({ navigation, route }) => {
          />
          <Header title="Home" navigation={navigation} />
          <Wrapper>
-            <DetailsContainer showsVerticalScrollIndicator={false}>
+            <DetailsContainer
+               showsVerticalScrollIndicator={false}
+               stickyHeaderIndices={[4]}
+               ref={containerRef}
+               onScroll={e => setScrollHeight(e.nativeEvent.contentOffset.y)}
+            >
                {Boolean(width <= 768) && (
                   <>
                      <Title>{product.name}</Title>
@@ -119,6 +141,49 @@ const ProductPage = ({ navigation, route }) => {
                <Spacer size="20px" />
                <PhotoShowcase images={product.assets?.images} />
                <Spacer size="40px" />
+               <Tabs
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ marginHorizontal: 'auto' }}
+               >
+                  <Tab
+                     active={activeTab === 'description'}
+                     color={visual.color}
+                     onPress={() =>
+                        containerRef.current.scrollTo({
+                           y: 0,
+                        })
+                     }
+                  >
+                     <TabText
+                        active={activeTab === 'description'}
+                        color={visual.color}
+                     >
+                        Description
+                     </TabText>
+                  </Tab>
+                  {Boolean(
+                     product.nutritionalInfo || product.allergens?.length
+                  ) && (
+                     <Tab
+                        active={activeTab === 'nutrition'}
+                        color={visual.color}
+                        onPress={() =>
+                           containerRef.current.scrollTo({
+                              y: nutritionPosition.current,
+                           })
+                        }
+                     >
+                        <TabText
+                           active={activeTab === 'nutrition'}
+                           color={visual.color}
+                        >
+                           Nutrition and Allergens
+                        </TabText>
+                     </Tab>
+                  )}
+               </Tabs>
+               <Spacer size="28px" />
                <ContentText style={{ textAlign: 'center' }}>
                   {product.description}
                </ContentText>
@@ -127,7 +192,13 @@ const ProductPage = ({ navigation, route }) => {
                   product.allergens?.length || product.nutritionalInfo
                ) && (
                   <>
-                     <SectionHeader color={visual.color}>
+                     <SectionHeader
+                        color={visual.color}
+                        onLayout={e => {
+                           nutritionPosition.current =
+                              e.nativeEvent.layout.y - 60
+                        }}
+                     >
                         Nutrition and Allergens
                      </SectionHeader>
                      {Boolean(product.nutritionalInfo) && (
@@ -286,5 +357,25 @@ const BuyBtnText = styled.Text`
 
 const AllergensText = styled(ContentText)`
    font-size: 20px;
+   font-weight: 600;
+`
+
+const Tabs = styled.ScrollView`
+   background: #fff;
+   border-bottom-width: 1px;
+   border-bottom-color: #cecece;
+`
+
+const Tab = styled.TouchableOpacity`
+   margin-right: 48px;
+   padding: 16px 0;
+   border-bottom-width: 3px;
+   border-bottom-color: ${props => (props.active ? props.color : '#fff')};
+`
+
+const TabText = styled.Text`
+   line-height: 24px;
+   font-size: 16px;
+   color: ${props => (props.active ? props.color : '#888D9D')};
    font-weight: 600;
 `
