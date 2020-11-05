@@ -481,7 +481,7 @@ const Recipe = ({ navigation, route }) => {
                            </NutritionWrapper>
                         </>
                      )}
-                     <Spacer size="40px" />
+                     <Spacer size="100px" />
                   </>
                )}
             </DetailsContainer>
