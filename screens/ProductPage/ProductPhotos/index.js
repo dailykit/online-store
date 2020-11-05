@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import { width } from '../../../utils/Scaling'
 
 const ProductPhotos = ({ images }) => {

@@ -26,7 +26,7 @@ import AddToCart from '../AddToCart'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 import ProductPhotos from './ProductPhotos'
 
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
@@ -99,6 +99,7 @@ const ProductPage = ({ navigation, route }) => {
             type={product?.__typename?.split('_')[1]}
             id={product?.id}
             setIsModalVisible={setIsModalVisible}
+            showInfo={true}
          />
          <Header title="Home" navigation={navigation} />
          <Wrapper>
@@ -150,17 +151,27 @@ const ProductPage = ({ navigation, route }) => {
                   </>
                )}
             </DetailsContainer>
-            <PricingContainer>
-               <AddToCart
-                  showInfo={false}
-                  setIsModalVisible={true}
-                  navigation={navigation}
-                  id={product.id}
-                  type={product?.__typename?.split('_')[1]}
-                  data={product}
-               />
-            </PricingContainer>
+            {Boolean(width > 768) && (
+               <PricingContainer>
+                  <AddToCart
+                     showInfo={false}
+                     setIsModalVisible={true}
+                     navigation={navigation}
+                     id={product.id}
+                     type={product?.__typename?.split('_')[1]}
+                     data={product}
+                  />
+               </PricingContainer>
+            )}
          </Wrapper>
+         {Boolean(width <= 768) && (
+            <BuyBtn
+               color={visual.color}
+               onPress={() => setIsModalVisible(true)}
+            >
+               <BuyBtnText>Buy Now</BuyBtnText>
+            </BuyBtn>
+         )}
       </>
    )
 }
@@ -231,11 +242,22 @@ const Flex = styled.View`
    flex-direction: row;
    align-items: center;
    justify-content: space-between;
+   ${width <= 768 &&
+   css`
+      align-items: flex-start;
+      flex-direction: column;
+   `}
 `
 
 const TagsContainer = styled.View`
       flex-direction: row;
       align-items center;
+      ${
+         width <= 768 &&
+         css`
+            margin-bottom: 16px;
+         `
+      }
 `
 
 const Tag = styled(ContentText)`
@@ -249,4 +271,19 @@ const Tag = styled(ContentText)`
 const NutritionWrapper = styled.View`
    flex-direction: row;
    justify-content: center;
+`
+
+const BuyBtn = styled.TouchableOpacity`
+   margin-top: 32px;
+   background: ${props => props.color || '#888d98'};
+   text-align: center;
+   padding: 16px;
+   ${width <= 768 &&
+   css`
+      margin-top: 0px;
+   `}
+`
+
+const BuyBtnText = styled.Text`
+   color: #fff;
 `
