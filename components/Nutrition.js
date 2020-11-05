@@ -127,7 +127,7 @@ const Heading = styled.Text`
 `
 
 const Text = styled.Text`
-   color: #555b6e;
+   color: #000;
    font-size: 14px;
    font-weight: normal;
 `
@@ -137,7 +137,7 @@ const Calories = styled.View`
    align-items: center;
    justify-content: space-between;
    padding: 8px 0px;
-   border-color: #555b6e;
+   border-color: #000;
    border-bottom-width: 1px;
 `
 
@@ -188,6 +188,9 @@ const TableRowText = styled(Text)`
 const TableFooter = styled.View`
    display: grid;
    grid-template-columns: 1fr 1fr;
+   border-color: #000;
+   border-top-width: 1px;
+   border-bottom-width: 1px;
 `
 
 const TableFooterText = styled(Text)`

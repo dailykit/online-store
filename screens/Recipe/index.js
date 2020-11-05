@@ -457,19 +457,6 @@ const Recipe = ({ navigation, route }) => {
                         Nutrition and Allergens
                      </SectionHeader>
                      {Boolean(
-                        simpleRecipe.simpleRecipeYields[0].allergens?.length
-                     ) && (
-                        <>
-                           <Spacer size="20px" />
-                           <ContentText style={{ textAlign: 'center' }}>
-                              Allergens:{' '}
-                              {simpleRecipe.simpleRecipeYields[0].allergens
-                                 .map(allergen => allergen.title)
-                                 .join(', ')}
-                           </ContentText>
-                        </>
-                     )}
-                     {Boolean(
                         simpleRecipe.simpleRecipeYields[0].nutritionalInfo
                      ) && (
                         <>
@@ -482,6 +469,20 @@ const Recipe = ({ navigation, route }) => {
                                  }
                               />
                            </NutritionWrapper>
+                           <Spacer size="20px" />
+                        </>
+                     )}
+                     {Boolean(
+                        simpleRecipe.simpleRecipeYields[0].allergens?.length
+                     ) && (
+                        <>
+                           <Spacer size="20px" />
+                           <AllergensText style={{ textAlign: 'center' }}>
+                              Allergens:{' '}
+                              {simpleRecipe.simpleRecipeYields[0].allergens
+                                 .map(allergen => allergen.title)
+                                 .join(', ')}
+                           </AllergensText>
                         </>
                      )}
                      <Spacer size="100px" />
@@ -595,7 +596,7 @@ const SectionHeader = styled.Text`
 const ContentText = styled.Text`
    line-height: 23px;
    font-size: 18px;
-   color: #636363;
+   color: #000;
    ${width <= 768 &&
    css`
       line-height: 21px;
@@ -773,4 +774,9 @@ const SubSectionWrapper = styled.View`
    flex-wrap: wrap;
    align-items: center;
    justify-content: space-between;
+`
+
+const AllergensText = styled(ContentText)`
+   font-size: 20px;
+   font-weight: 600;
 `

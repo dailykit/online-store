@@ -130,23 +130,24 @@ const ProductPage = ({ navigation, route }) => {
                      <SectionHeader color={visual.color}>
                         Nutrition and Allergens
                      </SectionHeader>
-                     {Boolean(product.allergens?.length) && (
-                        <>
-                           <Spacer size="20px" />
-                           <ContentText style={{ textAlign: 'center' }}>
-                              Allergens:{' '}
-                              {product.allergens
-                                 .map(allergen => allergen.title)
-                                 .join(', ')}
-                           </ContentText>
-                        </>
-                     )}
                      {Boolean(product.nutritionalInfo) && (
                         <>
                            <Spacer size="20px" />
                            <NutritionWrapper>
                               <Nutrition values={product.nutritionalInfo} />
                            </NutritionWrapper>
+                           <Spacer size="20px" />
+                        </>
+                     )}
+                     {Boolean(product.allergens?.length) && (
+                        <>
+                           <Spacer size="20px" />
+                           <AllergensText style={{ textAlign: 'center' }}>
+                              Allergens:{' '}
+                              {product.allergens
+                                 .map(allergen => allergen.title)
+                                 .join(', ')}
+                           </AllergensText>
                         </>
                      )}
                      <Spacer size="100px" />
@@ -227,7 +228,7 @@ const PricingContainer = styled.View`
 const ContentText = styled.Text`
    line-height: 23px;
    font-size: 18px;
-   color: #636363;
+   color: #000;
    ${width <= 768 &&
    css`
       line-height: 21px;
@@ -281,4 +282,9 @@ const BuyBtn = styled.TouchableOpacity`
 
 const BuyBtnText = styled.Text`
    color: #fff;
+`
+
+const AllergensText = styled(ContentText)`
+   font-size: 20px;
+   font-weight: 600;
 `
