@@ -15,8 +15,11 @@ const ServingSelect = ({
    discount,
    setProductOption,
    setSelectedOption,
+   type,
 }) => {
    const { visual } = useAppContext()
+
+   console.log({ type })
 
    return (
       <Wrapper
@@ -29,7 +32,9 @@ const ServingSelect = ({
          color={visual.color}
       >
          <Container>
-            <Feather size={14} name="user" />
+            {Boolean(type === 'simpleRecipeProduct') && (
+               <Feather size={14} name="user" />
+            )}
             <ContentText serving>{size}</ContentText>
          </Container>
          <Container>

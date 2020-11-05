@@ -205,18 +205,11 @@ const SimpleProductItemCollapsed = ({
                            size={item_data.simpleRecipeYield.yield.serving}
                            price={parseFloat(item_data.price[0].value)}
                            discount={parseFloat(item_data.price[0].discount)}
-                           display={
-                              typeSelected === 'mealKit'
-                                 ? 'Meal Kit'
-                                 : 'Ready To Eat'
-                           }
-                           type={item_data.type}
-                           typeSelected={typeSelected}
                            setProductOption={() => setProductOption(item_data)}
-                           id={item_data.id}
                            setSelectedOption={() =>
                               setSelectedOption(item_data)
                            }
+                           type="simpleRecipeProduct"
                         />
                      )
                   })}

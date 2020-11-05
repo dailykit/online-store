@@ -1,32 +1,17 @@
-import { useLazyQuery } from '@apollo/react-hooks'
-import { Content, Spinner } from 'native-base'
 import React from 'react'
-import {
-   Image,
-   SafeAreaView,
-   StyleSheet,
-   Text,
-   TouchableOpacity,
-   View,
-} from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
-import defaultProductImage from '../../assets/imgs/default-product-image.png'
+import { useLazyQuery } from '@apollo/react-hooks'
+import styled, { css } from 'styled-components/native'
 import { Header } from '../../components'
-import CheckoutBar from '../../components/CheckoutBar'
 import { Drawer } from '../../components/Drawer'
-import HeaderBack from '../../components/HeaderBack'
 import Nutrition from '../../components/Nutrition'
-import Recommendations from '../../components/Recommendations'
+import PhotoShowcase from '../../components/PhotoShowcase'
 import AppSkeleton from '../../components/skeletons/app'
 import RecipeSkeleton from '../../components/skeletons/recipe'
+import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 import { useAppContext } from '../../context/app'
-import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../../graphql'
+import { INVENTORY_PRODUCT } from '../../graphql'
 import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
-import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
-import PhotoShowcase from '../../components/PhotoShowcase'
-
-import styled, { css } from 'styled-components/native'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params

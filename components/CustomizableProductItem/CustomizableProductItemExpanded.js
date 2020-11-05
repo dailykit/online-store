@@ -281,18 +281,6 @@ const Item = ({
                                        discount={parseFloat(
                                           item_data.price[0].discount
                                        )}
-                                       display={
-                                          typeSelected === 'mealKit'
-                                             ? 'Meal Kit'
-                                             : 'Ready To Eat'
-                                       }
-                                       typeSelected={typeSelected}
-                                       type={item_data?.type}
-                                       customizableProduct
-                                       name={simpleRecipeProduct?.name}
-                                       simpleRecipeProductId={
-                                          simpleRecipeProduct?.id
-                                       }
                                        setSelectedOption={() =>
                                           setSelectedOption(item_data)
                                        }
@@ -304,7 +292,7 @@ const Item = ({
                                              item.id
                                           )
                                        }
-                                       id={item_data?.id}
+                                       type="simpleRecipeProduct"
                                     />
                                  )
                               })}
@@ -483,7 +471,7 @@ const Item = ({
                                              item.id
                                           )
                                        }
-                                       id={item_data.id}
+                                       type="inventoryProduct"
                                     />
                                  )
                               }

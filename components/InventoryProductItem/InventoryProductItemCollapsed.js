@@ -186,10 +186,10 @@ const InventoryProductCollapsed = ({
                            price={parseFloat(item_data.price[0].value)}
                            discount={parseFloat(item_data.price[0].discount)}
                            setProductOption={() => setProductOption(item_data)}
-                           id={item_data.id}
                            setSelectedOption={() =>
                               setSelectedOption(item_data)
                            }
+                           type="inventoryProduct"
                         />
                      )
                   }
