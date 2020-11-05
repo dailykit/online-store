@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components/native'
-import { height, width } from '../../../utils/Scalaing'
+import { height, width } from '../../../utils/Scaling'
 
 const PhotoShowcase = ({ images }) => {
    return (

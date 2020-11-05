@@ -3,7 +3,7 @@ import { View } from 'react-native'
 import styled from 'styled-components/native'
 import { useAppContext } from '../../context/app'
 import { useDrawerContext } from '../../context/drawer'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 import Header from '../Header'
 
 const Auth = ({ navigation }) => {

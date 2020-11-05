@@ -15,7 +15,7 @@ import { SafetyBanner } from '../../components/SafetyBanner'
 import AppSkeleton from '../../components/skeletons/app'
 import MenuSkeleton from '../../components/skeletons/menu'
 import { useAppContext } from '../../context/app'
-import { height, width } from '../../utils/Scalaing'
+import { height, width } from '../../utils/Scaling'
 import { styles } from './styles'
 import { useAuth } from '../../context/auth'
 

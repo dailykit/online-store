@@ -17,7 +17,7 @@ import {
    SIMPLE_PRODUCT,
    SIMPLE_RECIPE,
 } from '../../graphql'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
 import PhotoShowcase from './PhotoShowcase'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
@@ -449,14 +449,21 @@ const Recipe = ({ navigation, route }) => {
                      >
                         Nutrition and Allergens
                      </SectionHeader>
-                     <Spacer size="20px" />
-                     <NutritionWrapper>
-                        <Nutrition
-                           values={
-                              simpleRecipe.simpleRecipeYields[0].nutritionalInfo
-                           }
-                        />
-                     </NutritionWrapper>
+                     {Boolean(
+                        simpleRecipe.simpleRecipeYields[0].nutritionalInfo
+                     ) && (
+                        <>
+                           <Spacer size="20px" />
+                           <NutritionWrapper>
+                              <Nutrition
+                                 values={
+                                    simpleRecipe.simpleRecipeYields[0]
+                                       .nutritionalInfo
+                                 }
+                              />
+                           </NutritionWrapper>
+                        </>
+                     )}
                      <Spacer size="40px" />
                   </>
                )}

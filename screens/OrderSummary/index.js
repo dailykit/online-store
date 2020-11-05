@@ -23,7 +23,7 @@ import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
 import { useStoreToast } from '../../utils'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 import Coupon from './components/Coupon'
 import Tip from './components/Tip'
 import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
@@ -34,7 +34,6 @@ import {
    CURRENCY,
 } from 'react-native-dotenv'
 import CartSkeleton from '../../components/skeletons/cart'
-// 12
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { isAuthenticated } = useAuth()

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 import { useAppContext } from '../context/app'
-import { width } from '../utils/Scalaing'
+import { width } from '../utils/Scaling'
 
 const Footer = () => {
    const { visual, brand } = useAppContext()

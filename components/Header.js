@@ -8,7 +8,7 @@ import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
-import { width } from '../utils/Scalaing'
+import { width } from '../utils/Scaling'
 import Icon from './Icon'
 
 const BasketButton = ({ isWhite, size = 24 }) => {

@@ -10,7 +10,7 @@ import AppSkeleton from '../../components/skeletons/app'
 import CardSkeleton from '../../components/skeletons/card'
 import { useAppContext } from '../../context/app'
 import { SEARCH_PRODUCTS } from '../../graphql/queries'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 
 const Search = ({ navigation }) => {
    const { menuData, masterLoading } = useAppContext()

@@ -2,7 +2,7 @@ import React from 'react'
 import { Animated } from 'react-native'
 import styled from 'styled-components/native'
 import { useAppContext } from '../../context/app'
-import { height, width } from '../../utils/Scalaing'
+import { height, width } from '../../utils/Scaling'
 
 const RecipeSkeleton = () => {
    const { visual } = useAppContext()

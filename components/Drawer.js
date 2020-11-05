@@ -3,7 +3,7 @@ import Modal from 'modal-enhanced-react-native-web'
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import AddToCart from '../screens/AddToCart'
-import { height, width } from '../utils/Scalaing'
+import { height, width } from '../utils/Scaling'
 
 export const Drawer = ({
    navigation,

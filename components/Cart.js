@@ -16,7 +16,7 @@ import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
 import { CREATE_CART, UPDATE_CART } from '../graphql/mutations'
 import { discountedPrice, useStoreToast, uuid } from '../utils'
-import { width } from '../utils/Scalaing'
+import { width } from '../utils/Scaling'
 import { CURRENCY } from 'react-native-dotenv'
 // 12
 

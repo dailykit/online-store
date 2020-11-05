@@ -42,7 +42,7 @@ import ProfileScreen from '../screens/ProfileScreen'
 import Recipe from '../screens/Recipe'
 import Search from '../screens/Search'
 import { mergeCarts } from '../utils'
-import { width } from '../utils/Scalaing'
+import { width } from '../utils/Scaling'
 import { useScript } from '../utils/useScript'
 // drawer
 import CustomDrawerContent from './Menu'

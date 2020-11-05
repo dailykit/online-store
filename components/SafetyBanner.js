@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import { Badge } from '../assets/imgs/Badge'
 import { useDrawerContext } from '../context/drawer'
-import { height, width } from '../utils/Scalaing'
+import { height, width } from '../utils/Scaling'
 
 export const SafetyBanner = ({ navigation }) => {
    const { open } = useDrawerContext()

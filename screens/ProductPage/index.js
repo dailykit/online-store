@@ -21,9 +21,10 @@ import AppSkeleton from '../../components/skeletons/app'
 import RecipeSkeleton from '../../components/skeletons/recipe'
 import { useAppContext } from '../../context/app'
 import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../../graphql'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
+import ProductPhotos from './ProductPhotos'
 
 import styled from 'styled-components/native'
 
@@ -101,7 +102,7 @@ const ProductPage = ({ navigation, route }) => {
          />
          <Header title="Home" navigation={navigation} />
          <Wrapper>
-            <DetailsContainer>
+            <DetailsContainer showsVerticalScrollIndicator={false}>
                <Title>{product.name}</Title>
                <Spacer size="16px" />
                <Flex>
@@ -112,6 +113,8 @@ const ProductPage = ({ navigation, route }) => {
                   </TagsContainer>
                   <SocialMediaShareButtons />
                </Flex>
+               <Spacer size="20px" />
+               <ProductPhotos images={product.assets?.images} />
                <Spacer size="40px" />
                <ContentText style={{ textAlign: 'center' }}>
                   {product.description}
@@ -120,10 +123,14 @@ const ProductPage = ({ navigation, route }) => {
                <SectionHeader color={visual.color}>
                   Nutrition and Allergens
                </SectionHeader>
-               <Spacer size="20px" />
-               <NutritionWrapper>
-                  <Nutrition values={product.nutritionalInfo} />
-               </NutritionWrapper>
+               {Boolean(product.nutritionalInfo) && (
+                  <>
+                     <Spacer size="20px" />
+                     <NutritionWrapper>
+                        <Nutrition values={product.nutritionalInfo} />
+                     </NutritionWrapper>
+                  </>
+               )}
                <Spacer size="40px" />
             </DetailsContainer>
             <PricingContainer>

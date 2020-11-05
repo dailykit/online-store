@@ -3,7 +3,7 @@ import { Image, Text, View } from 'react-native'
 import Carousel from 'react-native-banner-carousel'
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 
 const CustomizableProductItemCollapsed = ({ product }) => {
    const { visual } = useAppContext()

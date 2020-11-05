@@ -2,7 +2,7 @@ import React from 'react'
 import { Animated } from 'react-native'
 import styled from 'styled-components/native'
 import { useAppContext } from '../../context/app'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 
 const MenuSkeleton = () => {
    const fadeAnim = React.useRef(new Animated.Value(0)).current
