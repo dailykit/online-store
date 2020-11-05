@@ -55,6 +55,7 @@ export const getDistance = (lat1, lon1, lat2, lon2) => {
 
 export const generateMiniSlots = (data, size) => {
    let newData = []
+   console.log('generateMiniSlots -> data', data)
    data.forEach(el => {
       el.slots.forEach(slot => {
          const startMinutes = getMinutes(slot.start)
@@ -236,17 +237,35 @@ export const isDeliveryAvailable = recurrences => {
                         mileRangeId: timeslot.mileRanges[0].id,
                      }
                   } else {
-                     return { status: false }
+                     console.log('isDeliveryAvailable -> time failure')
+                     return {
+                        status: false,
+                        message:
+                           'Sorry, We do not offer Delivery at this time.',
+                     }
                   }
                } else {
-                  return { status: false }
+                  console.log('isDeliveryAvailable -> mile range failure')
+                  return {
+                     status: false,
+                     message:
+                        'Sorry, you seem to be placed far out of our delivery range.',
+                  }
                }
             }
          } else {
-            return { status: false }
+            console.log('isDeliveryAvailable -> time slots failure')
+            return {
+               status: false,
+               message: 'Sorry, We do not offer Delivery at this time.',
+            }
          }
       } else {
-         return { status: false }
+         console.log('isDeliveryAvailable -> dates failure')
+         return {
+            status: false,
+            message: 'Sorry, We do not offer Delivery on this day.',
+         }
       }
    }
 }
@@ -331,11 +350,15 @@ export const generateDeliverySlots = recurrences => {
                      }
                   }
                } else {
-                  return { status: false }
+                  return {
+                     status: false,
+                     message:
+                        'Sorry, you seem to be placed far out of our delivery range.',
+                  }
                }
             })
          } else {
-            return { status: false }
+            return { status: false, message: 'Sorry! No time slots available.' }
          }
       })
    })
