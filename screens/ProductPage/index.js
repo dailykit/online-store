@@ -104,16 +104,18 @@ const ProductPage = ({ navigation, route }) => {
          <Header title="Home" navigation={navigation} />
          <Wrapper>
             <DetailsContainer showsVerticalScrollIndicator={false}>
-               <Title>{product.name}</Title>
-               <Spacer size="16px" />
-               <Flex>
-                  <TagsContainer>
-                     {product?.tags?.map((tag, i) => (
-                        <Tag key={i}>{tag}</Tag>
-                     ))}
-                  </TagsContainer>
-                  <SocialMediaShareButtons />
-               </Flex>
+               {Boolean(width <= 768) && (
+                  <>
+                     <Title>{product.name}</Title>
+                     <Spacer size="16px" />
+                     <TagsContainer>
+                        {product?.tags?.map((tag, i) => (
+                           <Tag key={i}>{tag}</Tag>
+                        ))}
+                     </TagsContainer>
+                     <SocialMediaShareButtons />
+                  </>
+               )}
                <Spacer size="20px" />
                <ProductPhotos images={product.assets?.images} />
                <Spacer size="40px" />
@@ -153,6 +155,14 @@ const ProductPage = ({ navigation, route }) => {
             </DetailsContainer>
             {Boolean(width > 768) && (
                <PricingContainer>
+                  <Title>{product.name}</Title>
+                  <Spacer size="16px" />
+                  <TagsContainer>
+                     {product?.tags?.map((tag, i) => (
+                        <Tag key={i}>{tag}</Tag>
+                     ))}
+                  </TagsContainer>
+                  <SocialMediaShareButtons />
                   <AddToCart
                      showInfo={false}
                      setIsModalVisible={true}
@@ -238,26 +248,11 @@ const SectionHeader = styled.Text`
    text-align: center;
 `
 
-const Flex = styled.View`
-   flex-direction: row;
-   align-items: center;
-   justify-content: space-between;
-   ${width <= 768 &&
-   css`
-      align-items: flex-start;
-      flex-direction: column;
-   `}
-`
-
 const TagsContainer = styled.View`
       flex-direction: row;
+      flex-wrap: wrap;
       align-items center;
-      ${
-         width <= 768 &&
-         css`
-            margin-bottom: 16px;
-         `
-      }
+      margin-bottom: 16px;
 `
 
 const Tag = styled(ContentText)`
