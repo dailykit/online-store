@@ -2,7 +2,7 @@ import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import { useAppContext } from '../context/app'
-import { width } from '../utils/Scalaing'
+import { width } from '../utils/Scaling'
 
 export const CategoryBanner = ({ navigation, title, showLink }) => {
    const { visual } = useAppContext()

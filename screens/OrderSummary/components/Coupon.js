@@ -20,7 +20,7 @@ const Coupon = ({ cart }) => {
          cartId: cart.id,
          params: {
             cartId: cart.id,
-            keycloakId: customer.keycloakId,
+            keycloakId: customer?.keycloakId,
          },
       },
       onSubscriptionData: ({ subscriptionData: { data = {} } = {} }) => {

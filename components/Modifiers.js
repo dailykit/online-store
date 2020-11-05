@@ -3,6 +3,8 @@ import CheckBox from './form/CheckBox'
 import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { discountedPrice } from '../utils'
+import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
    const { visual } = useAppContext()
@@ -145,14 +147,17 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                            disabled={!option.isActive}
                            title={`${option.name}`}
                            image={option.image}
-                           price={`$${
+                           price={`${new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: CURRENCY,
+                           }).format(
                               option.discount
                                  ? discountedPrice({
                                       value: option.price,
                                       discount: option.discount,
                                    }).toFixed(2)
                                  : option.price
-                           }`}
+                           )}`}
                            checked={Boolean(
                               selected.find(
                                  modifier =>

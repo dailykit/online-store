@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
-import { height, width } from '../utils/Scalaing'
+import { height, width } from '../utils/Scaling'
 
 export const DefaultPaymentFloater = ({ navigation }) => {
    const { cart, customerDetails } = useCartContext()

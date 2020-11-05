@@ -4,6 +4,8 @@ import React from 'react'
 import { Image, Text, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import defaultProductImage from '../assets/imgs/default-product-image.png'
+import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const OrderCard = ({ order, less }) => {
    const whatColor = status => {
@@ -162,7 +164,10 @@ const OrderCard = ({ order, less }) => {
                                  </View>
                               </View>
                               <Text style={styles.productPrice}>
-                                 $ {product.totalPrice.toFixed(2)}
+                                 {new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: CURRENCY,
+                                 }).format(product.totalPrice.toFixed(2))}
                               </Text>
                            </View>
                         ))}
@@ -179,21 +184,41 @@ const OrderCard = ({ order, less }) => {
                         </View>
                         <View style={styles.row}>
                            <Text>Item Total</Text>
-                           <Text>$ {order.itemTotal}</Text>
+                           <Text>
+                              {new Intl.NumberFormat('en-US', {
+                                 style: 'currency',
+                                 currency: CURRENCY,
+                              }).format(order.itemTotal)}
+                           </Text>
                         </View>
                         {order.tip && (
                            <View style={styles.row}>
                               <Text>Tip</Text>
-                              <Text>$ {order.tip}</Text>
+                              <Text>
+                                 {new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: CURRENCY,
+                                 }).format(order.tip)}
+                              </Text>
                            </View>
                         )}
                         <View style={styles.row}>
                            <Text>Delivery Price</Text>
-                           <Text>$ {order.deliveryPrice}</Text>
+                           <Text>
+                              {new Intl.NumberFormat('en-US', {
+                                 style: 'currency',
+                                 currency: CURRENCY,
+                              }).format(order.deliveryPrice)}
+                           </Text>
                         </View>
                         <View style={styles.row}>
                            <Text>Tax</Text>
-                           <Text>$ {order.tax}</Text>
+                           <Text>
+                              {new Intl.NumberFormat('en-US', {
+                                 style: 'currency',
+                                 currency: CURRENCY,
+                              }).format(order.tax)}
+                           </Text>
                         </View>
                      </View>
                   ),
@@ -202,7 +227,12 @@ const OrderCard = ({ order, less }) => {
          />
          <View style={styles.flexContainer}>
             <Text style={styles.total}>Total</Text>
-            <Text style={styles.total}>$ {order?.amountPaid}</Text>
+            <Text style={styles.total}>
+               {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: CURRENCY,
+               }).format(order?.amountPaid)}
+            </Text>
          </View>
       </>
    )

@@ -10,12 +10,14 @@ import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
 import { CREATE_CART, UPDATE_CART } from '../graphql'
 import { discountedPrice, useStoreToast } from '../utils'
-import { width } from '../utils/Scalaing'
+import { width } from '../utils/Scaling'
 import ComboProduct from './ComboProduct'
 import CustomizableProductItem from './CustomizableProductItem'
 import { Drawer } from './Drawer'
 import InventoryProductItem from './InventoryProductItem'
 import SimpleProductItem from './SimpleProductItem'
+import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    const [busy, setBusy] = useState(false)
@@ -213,6 +215,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                      style={{
                         fontSize: '0.8rem',
                         color: '#fff',
+                        fontStyle: 'italic',
                      }}
                   >
                      {discount}% off
@@ -322,15 +325,26 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                                  },
                               ]}
                            >
-                              $ {originalPrice(price, discount)?.toFixed(2)}
+                              {new Intl.NumberFormat('en-US', {
+                                 style: 'currency',
+                                 currency: CURRENCY,
+                              }).format(
+                                 originalPrice(price, discount)?.toFixed(2)
+                              )}
                            </Text>
                            <Text style={styles.price_text}>
-                              ${price?.toFixed(2)}
+                              {new Intl.NumberFormat('en-US', {
+                                 style: 'currency',
+                                 currency: CURRENCY,
+                              }).format(price?.toFixed(2))}
                            </Text>
                         </>
                      ) : (
                         <Text style={styles.price_text}>
-                           $ {price?.toFixed(2)}
+                           {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: CURRENCY,
+                           }).format(price?.toFixed(2))}
                         </Text>
                      )}
                   </View>
@@ -353,15 +367,26 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                                     },
                                  ]}
                               >
-                                 $ {originalPrice(price, discount)?.toFixed(2)}
+                                 {new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: CURRENCY,
+                                 }).format(
+                                    originalPrice(price, discount)?.toFixed(2)
+                                 )}
                               </Text>
                               <Text style={styles.price_text}>
-                                 ${price?.toFixed(2)}
+                                 {new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: CURRENCY,
+                                 }).format(price?.toFixed(2))}
                               </Text>
                            </>
                         ) : (
                            <Text style={styles.price_text}>
-                              $ {price?.toFixed(2)}
+                              {new Intl.NumberFormat('en-US', {
+                                 style: 'currency',
+                                 currency: CURRENCY,
+                              }).format(price?.toFixed(2))}
                            </Text>
                         )}
                      </View>
@@ -455,6 +480,7 @@ const styles = EStyleSheet.create({
       justifyContent: 'flex-end',
       alignItems: 'center',
       flexDirection: 'row',
+      alignSelf: 'flex-end',
    },
    button: {
       backgroundColor: '#3fa4ff',

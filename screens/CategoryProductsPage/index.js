@@ -8,7 +8,7 @@ import Footer from '../../components/Footer'
 import Products from '../../components/Products'
 import AppSkeleton from '../../components/skeletons/app'
 import { useAppContext } from '../../context/app'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 
 const CategoryProductsPage = ({ navigation, route }) => {
    const { category } = route.params

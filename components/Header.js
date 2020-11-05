@@ -2,16 +2,16 @@ import { Feather } from '@expo/vector-icons'
 import { useIsDrawerOpen } from '@react-navigation/drawer'
 import React from 'react'
 import { Text, View } from 'react-native'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import argonTheme from '../constants/Theme'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
-import { width } from '../utils/Scalaing'
+import { width } from '../utils/Scaling'
 import Icon from './Icon'
 
-const BasketButton = ({ isWhite }) => {
+const BasketButton = ({ isWhite, size = 24 }) => {
    const { cart } = useCartContext()
    const { visual } = useAppContext()
    let numberOfProducts = cart?.cartInfo?.products?.length || 0
@@ -20,26 +20,41 @@ const BasketButton = ({ isWhite }) => {
       <View style={{ position: 'relative' }}>
          {Boolean(numberOfProducts) && (
             <Text
-               style={{
-                  position: 'absolute',
-                  top: '-50%',
-                  right: '-50%',
-                  backgroundColor: visual.color,
-                  color: '#fff',
-                  borderRadius: 20,
-                  height: 25,
-                  width: 25,
-                  padding: 2,
-                  fontSize: 16,
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-               }}
+               style={
+                  width <= 768
+                     ? {
+                          position: 'absolute',
+                          backgroundColor: visual.color,
+                          color: '#fff',
+                          top: '-10px',
+                          right: '-8px',
+                          height: 16,
+                          width: 16,
+                          borderRadius: 8,
+                          fontSize: 10,
+                          textAlign: 'center',
+                       }
+                     : {
+                          position: 'absolute',
+                          top: '-50%',
+                          right: '-50%',
+                          backgroundColor: visual.color,
+                          color: '#fff',
+                          borderRadius: 20,
+                          height: 25,
+                          width: 25,
+                          padding: 2,
+                          fontSize: 16,
+                          textAlign: 'center',
+                          fontWeight: 'bold',
+                       }
+               }
             >
                {numberOfProducts}
             </Text>
          )}
          <Icon
-            size={24}
+            size={size}
             name="shopping-cart"
             color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
          />
@@ -113,10 +128,13 @@ const WebNav = ({ navigation }) => {
                      <NavLinkText white>Login</NavLinkText>
                   </NavButton>
                   <NavButton
+                     outline
                      color={visual.color}
                      onPress={() => open('Register')}
                   >
-                     <NavLinkText white>Sign Up</NavLinkText>
+                     <NavLinkText outline color={visual.color}>
+                        Sign Up
+                     </NavLinkText>
                   </NavButton>
                </>
             )}
@@ -146,6 +164,9 @@ const MobileNav = ({ navigation }) => {
          <NavRight>
             <NavLink onPress={() => navigation.navigate('Search')}>
                <Feather name="search" size={16} />
+            </NavLink>
+            <NavLink onPress={() => navigation.navigate('OrderSummary')}>
+               <BasketButton size={16} />
             </NavLink>
          </NavRight>
       </>
@@ -183,6 +204,11 @@ const NavLink = styled.TouchableOpacity`
 const NavLinkText = styled.Text`
    font-size: 1.1rem;
    color: ${props => (props.white ? '#fff' : '#111')};
+   ${props =>
+      props.outline &&
+      css`
+         color: ${props.color};
+      `}
 `
 
 const SearchContainer = styled.TouchableOpacity`
@@ -204,6 +230,13 @@ const NavRight = styled.View`
 
 const NavButton = styled(NavLink)`
    padding: 10px;
-   background-color: ${props => (props.blend ? '#ccc' : props.color || '#666')};
+   background-color: ${props => (props.outline ? '#fff' : props.color)};
+   border: 1px solid ${props => props.color};
    border-radius: 2px;
+   ${props =>
+      props.fade &&
+      css`
+         background: #ccc;
+         border: 1px solid #ccc;
+      `}
 `

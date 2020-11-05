@@ -1,7 +1,7 @@
 import React, { lazy, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import Cart, { ComboProductItemProceed } from '../../components/Cart'
-import { height } from '../../utils/Scalaing'
+import { height } from '../../utils/Scaling'
 import { styles } from './styles'
 const ComboProduct = lazy(() => import('../../components/ComboProduct'))
 const CustomizableProductItem = lazy(() =>
