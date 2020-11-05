@@ -1,26 +1,16 @@
-import { useLazyQuery } from '@apollo/react-hooks'
-import { Spinner } from 'native-base'
 import React from 'react'
-import {
-   Image,
-   SafeAreaView,
-   StyleSheet,
-   Text,
-   TouchableOpacity,
-   View,
-} from 'react-native'
-import { ScrollView } from 'react-native-gesture-handler'
-import defaultProductImage from '../../assets/imgs/default-product-image.png'
+import { useLazyQuery } from '@apollo/react-hooks'
+import styled, { css } from 'styled-components/native'
 import { Header } from '../../components'
-import CheckoutBar from '../../components/CheckoutBar'
 import { Drawer } from '../../components/Drawer'
-import HeaderBack from '../../components/HeaderBack'
 import Nutrition from '../../components/Nutrition'
-import Recommendations from '../../components/Recommendations'
+import PhotoShowcase from '../../components/PhotoShowcase'
 import AppSkeleton from '../../components/skeletons/app'
+import RecipeSkeleton from '../../components/skeletons/recipe'
+import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 import { useAppContext } from '../../context/app'
-import { INVENTORY_PRODUCT, SIMPLE_PRODUCT } from '../../graphql'
-import { width } from '../../utils/Scalaing'
+import { INVENTORY_PRODUCT } from '../../graphql'
+import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
 
 const ProductPage = ({ navigation, route }) => {
@@ -29,9 +19,26 @@ const ProductPage = ({ navigation, route }) => {
    const { visual, masterLoading } = useAppContext()
 
    const [product, setProduct] = React.useState({})
+   const [scrollHeight, setScrollHeight] = React.useState(0)
+   const [activeTab, setActiveTab] = React.useState('description')
+   const nutritionPosition = React.useRef(undefined)
+   const containerRef = React.useRef()
    const [isModalVisible, setIsModalVisible] = React.useState(false)
 
-   const [fetchInventoryProduct, { loading: IPLoading }] = useLazyQuery(
+   React.useEffect(() => {
+      if (
+         scrollHeight < nutritionPosition.current ||
+         nutritionPosition.current === undefined
+      ) {
+         return setActiveTab('description')
+      }
+      if (scrollHeight >= nutritionPosition.current) {
+         return setActiveTab('nutrition')
+      }
+      return setActiveTab('description')
+   }, [scrollHeight])
+
+   const [fetchInventoryProduct, { loading }] = useLazyQuery(
       INVENTORY_PRODUCT,
       {
          onCompleted: data => {
@@ -41,27 +48,10 @@ const ProductPage = ({ navigation, route }) => {
       }
    )
 
-   const [fetchSimpleRecipeProduct, { loading: SRPLoading }] = useLazyQuery(
-      SIMPLE_PRODUCT,
-      {
-         onCompleted: data => {
-            setProduct(data.simpleRecipeProduct)
-         },
-         fetchPolicy: 'cache-and-network',
-      }
-   )
-
    React.useEffect(() => {
       switch (type) {
          case 'inventoryProduct': {
             return fetchInventoryProduct({
-               variables: {
-                  id,
-               },
-            })
-         }
-         case 'simpleRecipeProduct': {
-            return fetchSimpleRecipeProduct({
                variables: {
                   id,
                },
@@ -77,13 +67,12 @@ const ProductPage = ({ navigation, route }) => {
       return <AppSkeleton />
    }
 
-   if (IPLoading || SRPLoading)
+   if (loading)
       return (
-         <View
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-         >
-            <Spinner size="large" />
-         </View>
+         <>
+            <Header title="Home" navigation={navigation} />
+            <RecipeSkeleton />
+         </>
       )
 
    return (
@@ -95,216 +84,266 @@ const ProductPage = ({ navigation, route }) => {
             type={product?.__typename?.split('_')[1]}
             id={product?.id}
             setIsModalVisible={setIsModalVisible}
+            showInfo={true}
          />
-         <SafeAreaView
-            style={[styles.safeArea, { paddingBottom: width < 768 ? 70 : 0 }]}
-         >
-            {width > 768 ? (
-               <Header title="Home" navigation={navigation} />
-            ) : (
-               <HeaderBack title="Go Back" navigation={navigation} />
-            )}
-            <ScrollView style={{ paddingHorizontal: '1rem' }}>
-               <View style={styles.container}>
-                  <View
-                     style={{
-                        alignItems: 'center',
-                        flex: 1,
-                        marginBottom: width > 768 ? 5 : 20,
-                     }}
-                  >
-                     <Image
-                        source={{
-                           uri:
-                              product?.assets?.images[0] || defaultProductImage,
-                        }}
-                        style={styles.image}
-                     />
-                  </View>
-                  <View style={{ flex: 1 }}>
-                     <Text style={styles.productName}>{product?.name}</Text>
-                     <View style={{ flexDirection: 'row', marginBottom: 10 }}>
-                        {product?.tags?.map(tag => (
-                           <Text style={styles.tag}>{tag.toUpperCase()}</Text>
+         <Header title="Home" navigation={navigation} />
+         <Wrapper>
+            <DetailsContainer
+               showsVerticalScrollIndicator={false}
+               stickyHeaderIndices={[4]}
+               ref={containerRef}
+               onScroll={e => setScrollHeight(e.nativeEvent.contentOffset.y)}
+            >
+               {Boolean(width <= 768) && (
+                  <>
+                     <Title>{product.name}</Title>
+                     <Spacer size="16px" />
+                     <TagsContainer>
+                        {product?.tags?.map((tag, i) => (
+                           <Tag key={i}>{tag}</Tag>
                         ))}
-                     </View>
-                     {product?.description && (
+                     </TagsContainer>
+                     <SocialMediaShareButtons />
+                  </>
+               )}
+               <Spacer size="20px" />
+               <PhotoShowcase images={product.assets?.images} />
+               <Spacer size="40px" />
+               <Tabs
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ marginHorizontal: 'auto' }}
+               >
+                  <Tab
+                     active={activeTab === 'description'}
+                     color={visual.color}
+                     onPress={() =>
+                        containerRef.current.scrollTo({
+                           y: 0,
+                        })
+                     }
+                  >
+                     <TabText
+                        active={activeTab === 'description'}
+                        color={visual.color}
+                     >
+                        Description
+                     </TabText>
+                  </Tab>
+                  {Boolean(
+                     product.nutritionalInfo || product.allergens?.length
+                  ) && (
+                     <Tab
+                        active={activeTab === 'nutrition'}
+                        color={visual.color}
+                        onPress={() =>
+                           containerRef.current.scrollTo({
+                              y: nutritionPosition.current,
+                           })
+                        }
+                     >
+                        <TabText
+                           active={activeTab === 'nutrition'}
+                           color={visual.color}
+                        >
+                           Nutrition and Allergens
+                        </TabText>
+                     </Tab>
+                  )}
+               </Tabs>
+               <Spacer size="28px" />
+               <ContentText style={{ textAlign: 'center' }}>
+                  {product.description}
+               </ContentText>
+               <Spacer size="68px" />
+               {Boolean(
+                  product.allergens?.length || product.nutritionalInfo
+               ) && (
+                  <>
+                     <SectionHeader
+                        color={visual.color}
+                        onLayout={e => {
+                           nutritionPosition.current =
+                              e.nativeEvent.layout.y - 60
+                        }}
+                     >
+                        Nutrition and Allergens
+                     </SectionHeader>
+                     {Boolean(product.nutritionalInfo) && (
                         <>
-                           <Text style={styles.sectionTitle}>Description</Text>
-                           <Text style={styles.text}>
-                              {product?.description}
-                           </Text>
+                           <Spacer size="20px" />
+                           <NutritionWrapper>
+                              <Nutrition values={product.nutritionalInfo} />
+                           </NutritionWrapper>
+                           <Spacer size="20px" />
                         </>
                      )}
-                     {product?.allergens && (
+                     {Boolean(product.allergens?.length) && (
                         <>
-                           <Text style={styles.sectionTitle}>Allergens</Text>
-                           <Text style={styles.text}>
+                           <Spacer size="20px" />
+                           <AllergensText style={{ textAlign: 'center' }}>
+                              Allergens:{' '}
                               {product.allergens
                                  .map(allergen => allergen.title)
                                  .join(', ')}
-                           </Text>
+                           </AllergensText>
                         </>
                      )}
-                     {product?.__typename?.includes('simpleRecipeProduct') && (
-                        <View style={{ marginBottom: 10 }}>
-                           <View style={{ flexDirection: 'row', width: 250 }}>
-                              <Text style={[styles.sectionTitle, { flex: 1 }]}>
-                                 Author
-                              </Text>
-                              <Text style={[styles.text, { flex: 1 }]}>
-                                 {product?.simpleRecipe?.author}
-                              </Text>
-                           </View>
-                           <View style={{ flexDirection: 'row', width: 250 }}>
-                              <Text style={[styles.sectionTitle, { flex: 1 }]}>
-                                 Cuisine
-                              </Text>
-                              <Text style={[styles.text, { flex: 1 }]}>
-                                 {product?.simpleRecipe?.cuisine}
-                              </Text>
-                           </View>
-                           <View style={{ flexDirection: 'row', width: 250 }}>
-                              <Text style={[styles.sectionTitle, { flex: 1 }]}>
-                                 Type
-                              </Text>
-                              <Text style={[styles.text, { flex: 1 }]}>
-                                 {product?.simpleRecipe?.type}
-                              </Text>
-                           </View>
-                           <TouchableOpacity
-                              onPress={() =>
-                                 navigation.navigate('Recipe', {
-                                    recipeId: product?.simpleRecipe?.id,
-                                 })
-                              }
-                           >
-                              <Text
-                                 style={[
-                                    styles.text,
-                                    {
-                                       color: visual.color,
-                                       textDecorationLine: 'underline',
-                                    },
-                                 ]}
-                              >
-                                 See Recipe for this product
-                              </Text>
-                           </TouchableOpacity>
-                        </View>
-                     )}
-                     {/* {product?.__typename?.includes('inventoryProduct')
-                ? product.inventoryProductOptions?.map((option) => (
-                    <View style={styles.option}>
-                      <Text style={styles.text}>{option.label}</Text>
-                      <Text style={[styles.text, { fontWeight: 'bold' }]}>
-                        $ {option.price[0].value}
-                      </Text>
-                    </View>
-                  ))
-                : product.simpleRecipeProductOptions?.map((option) => (
-                    <View style={styles.option}>
-                      <Text style={{ width: 120 }}>
-                        {option.type === 'mealKit'
-                          ? 'Meal Kit'
-                          : 'Ready to Eat'}
-                      </Text>
-                      <Text style={styles.text}>
-                        <Feather size={18} name='user' />{' '}
-                        {option.simpleRecipeYield.yield.serving}
-                      </Text>
-                      <Text
-                        style={[styles.text, { fontWeight: 'bold', width: 50 }]}
-                      >
-                        $ {option.price[0].value}
-                      </Text>
-                    </View>
-                  ))} */}
-                     {Boolean(product?.nutritionalInfo) && (
-                        <Nutrition values={product?.nutritionalInfo} />
-                     )}
-                     <AddToCart
-                        showInfo={false}
-                        setIsModalVisible={true}
-                        navigation={navigation}
-                        id={id}
-                        type={product?.__typename?.split('_')[1]}
-                        data={product}
-                     />
-
-                     {/* <TouchableOpacity
-                style={[styles.button, { backgroundColor: visual.color }]}
-                onPress={() => setIsModalVisible(true)}
-              >
-                <Text style={{ color: '#fff' }}>
-                  ADD TO CART <Feather size={14} name='plus' />
-                </Text>
-              </TouchableOpacity> */}
-                  </View>
-               </View>
-               {Boolean(product.recommendations) && (
-                  <Recommendations
-                     navigation={navigation}
-                     recommendations={product.recommendations}
-                  />
+                     <Spacer size="100px" />
+                  </>
                )}
-            </ScrollView>
-            {width < 768 && <CheckoutBar navigation={navigation} />}
-         </SafeAreaView>
+            </DetailsContainer>
+            {Boolean(width > 768) && (
+               <PricingContainer>
+                  <Title>{product.name}</Title>
+                  <Spacer size="16px" />
+                  <TagsContainer>
+                     {product?.tags?.map((tag, i) => (
+                        <Tag key={i}>{tag}</Tag>
+                     ))}
+                  </TagsContainer>
+                  <SocialMediaShareButtons />
+                  <AddToCart
+                     showInfo={false}
+                     setIsModalVisible={true}
+                     navigation={navigation}
+                     id={product.id}
+                     type={product?.__typename?.split('_')[1]}
+                     data={product}
+                  />
+               </PricingContainer>
+            )}
+         </Wrapper>
+         {Boolean(width <= 768) && (
+            <BuyBtn
+               color={visual.color}
+               onPress={() => setIsModalVisible(true)}
+            >
+               <BuyBtnText>Buy Now</BuyBtnText>
+            </BuyBtn>
+         )}
       </>
    )
 }
 
 export default ProductPage
 
-const styles = StyleSheet.create({
-   safeArea: {
-      flex: 1,
-      backgroundColor: '#fff',
-   },
-   container: {
-      paddingVertical: width > 768 ? 40 : 10,
-      paddingHorizontal: 10,
-      maxWidth: 1280,
-      width: '100%',
-      marginHorizontal: 'auto',
-      flexDirection: width > 768 ? 'row' : 'column',
-      marginBottom: '32px',
-   },
-   image: {
-      width: width > 768 ? 400 : width * 0.6,
-      height: width > 768 ? 400 : width * 0.6,
-      resizeMode: 'contain',
-   },
-   productName: {
-      fontSize: '2.125rem',
-      fontWeight: 'bold',
-      lineHeight: '2.5rem',
-      marginBottom: '1rem',
-      letterSpacing: 0.85,
-   },
-   sectionTitle: { fontSize: '100%', color: '#666', marginBottom: 5 },
-   tag: {
-      padding: 5,
-      backgroundColor: '#e3e3e3',
-      marginRight: 5,
-   },
-   text: {
-      fontSize: '1.1rem',
-      marginBottom: '1rem',
-   },
-   option: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      maxWidth: 400,
-   },
-   button: {
-      textAlign: 'center',
-      borderRadius: 4,
-      maxWidth: 200,
-      height: 40,
-      justifyContent: 'center',
-      alignItems: 'center',
-      marginVertical: 20,
-   },
-})
+const Wrapper = styled.View`
+   flex: 1;
+   flex-direction: row;
+   padding: 16px 48px;
+   background: #fefdfc;
+   ${width <= 768 &&
+   css`
+      padding: 8px 12px;
+   `}
+`
+
+const Spacer = styled.View`
+   height: ${props => props.size || '16px'};
+`
+
+const DetailsContainer = styled.ScrollView`
+   margin-right: 24px;
+   padding: 0 20px;
+   ${width <= 768 &&
+   css`
+      margin-right: 0;
+      padding: 0;
+   `}
+`
+
+const PricingContainer = styled.View`
+   background: #fff;
+   min-width: 31vw;
+   padding: 20px;
+   shadow-opacity: 1;
+   shadow-radius: 2px;
+   shadow-color: #f8f8f7;
+   shadow-offset: -5px -5px;
+   border-radius: 4px;
+`
+
+const ContentText = styled.Text`
+   line-height: 23px;
+   font-size: 18px;
+   color: #000;
+   ${width <= 768 &&
+   css`
+      line-height: 21px;
+      font-size: 16px;
+   `}
+`
+
+const Title = styled(ContentText)`
+   font-size: 28px;
+   line-height: 40px;
+   font-weight: bold;
+`
+
+const SectionHeader = styled.Text`
+   color: ${props => props.color || '#888d9d'};
+   font-size: 28px;
+   font-weight: 600;
+   text-align: center;
+`
+
+const TagsContainer = styled.View`
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items center;
+      margin-bottom: 16px;
+`
+
+const Tag = styled(ContentText)`
+   font-size: 14px;
+   padding: 4px 8px;
+   border-radius: 4px;
+   background: #eae8e8;
+   margin-right: 8px;
+`
+
+const NutritionWrapper = styled.View`
+   flex-direction: row;
+   justify-content: center;
+`
+
+const BuyBtn = styled.TouchableOpacity`
+   margin-top: 32px;
+   background: ${props => props.color || '#888d98'};
+   text-align: center;
+   padding: 16px;
+   ${width <= 768 &&
+   css`
+      margin-top: 0px;
+   `}
+`
+
+const BuyBtnText = styled.Text`
+   color: #fff;
+`
+
+const AllergensText = styled(ContentText)`
+   font-size: 20px;
+   font-weight: 600;
+`
+
+const Tabs = styled.ScrollView`
+   background: #fff;
+   border-bottom-width: 1px;
+   border-bottom-color: #cecece;
+`
+
+const Tab = styled.TouchableOpacity`
+   margin-right: 48px;
+   padding: 16px 0;
+   border-bottom-width: 3px;
+   border-bottom-color: ${props => (props.active ? props.color : '#fff')};
+`
+
+const TabText = styled.Text`
+   line-height: 24px;
+   font-size: 16px;
+   color: ${props => (props.active ? props.color : '#888D9D')};
+   font-weight: 600;
+`

@@ -7,7 +7,7 @@ import {
    INVENTORY_PRODUCTS,
    SIMPLE_RECIPE_PRODUCTS,
 } from '../graphql'
-import { width } from '../utils/Scalaing'
+import { width } from '../utils/Scaling'
 import Card from './Card'
 import CardSkeleton from './skeletons/card'
 

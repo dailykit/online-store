@@ -75,13 +75,21 @@ const CouponList = () => {
    if (loading) return <Spinner />
 
    return (
-      <Wrapper>
-         {data.coupons
-            .filter(coupon => coupon.visibilityCondition?.isValid)
-            .map(coupon => (
-               <Coupon coupon={coupon} applyCoupon={applyCoupon} />
-            ))}
-      </Wrapper>
+      <>
+         {data?.coupons?.length ? (
+            <Wrapper>
+               {data.coupons
+                  .filter(coupon => coupon.visibilityCondition?.isValid)
+                  .map(coupon => (
+                     <Coupon coupon={coupon} applyCoupon={applyCoupon} />
+                  ))}
+            </Wrapper>
+         ) : (
+            <EmptyWrapper>
+               <EmptyText>No coupons available right now!</EmptyText>
+            </EmptyWrapper>
+         )}
+      </>
    )
 }
 
@@ -179,4 +187,16 @@ const ButtonText = styled.Text`
 
 const Description = styled.Text`
    color: #686b78;
+`
+
+const EmptyWrapper = styled.View`
+   flex: 1;
+   align-items: center;
+   justify-content: center;
+`
+
+const EmptyText = styled.Text`
+   color: #686b78;
+   font-size: 16px;
+   font-weight: 600;
 `

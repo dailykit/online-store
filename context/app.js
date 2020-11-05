@@ -4,6 +4,7 @@ const AppContext = React.createContext()
 
 export const AppContextProvider = ({ children }) => {
    const [brandId, setBrandId] = useState(undefined)
+   const [paymentPartnerShipIds, setPaymentPartnershipIds] = useState(undefined)
    const [visual, setVisual] = useState({
       color: '#3fa4ff',
       slides: [],
@@ -32,6 +33,8 @@ export const AppContextProvider = ({ children }) => {
          value={{
             brandId,
             setBrandId,
+            paymentPartnerShipIds,
+            setPaymentPartnershipIds,
             setVisual,
             visual,
             setBrand,

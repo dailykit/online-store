@@ -1,15 +1,15 @@
-import { useLazyQuery, useQuery } from '@apollo/react-hooks'
-import { Spinner } from 'native-base'
 import React from 'react'
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import EStyleSheet from 'react-native-extended-stylesheet'
-import styled from 'styled-components'
-import CheckoutBar from '../../components/CheckoutBar'
+import { useLazyQuery } from '@apollo/react-hooks'
+import styled, { css } from 'styled-components/native'
+import Chef from '../../assets/svgs/Chef'
+import CookingTime from '../../assets/svgs/CookingTime'
+import Cuisine from '../../assets/svgs/Cuisine'
+import Utensils from '../../assets/svgs/Utensils'
 import { Drawer } from '../../components/Drawer'
 import Header from '../../components/Header'
 import Nutrition from '../../components/Nutrition'
-import Recommendations from '../../components/Recommendations'
 import AppSkeleton from '../../components/skeletons/app'
+import RecipeSkeleton from '../../components/skeletons/recipe'
 import { useAppContext } from '../../context/app'
 import {
    COMBO_PRODUCT,
@@ -17,40 +17,79 @@ import {
    SIMPLE_PRODUCT,
    SIMPLE_RECIPE,
 } from '../../graphql'
-import { height, width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
+import AddToCart from '../AddToCart'
+import PhotoShowcase from '../../components/PhotoShowcase'
+import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 
-const Recipe = ({ route, navigation }) => {
-   let { recipeId, refId, refType } = route.params
+const Recipe = ({ navigation, route }) => {
+   const { recipeId, refId, refType } = route.params
 
    const { visual, masterLoading } = useAppContext()
 
-   const [option, setOption] = React.useState(undefined)
    const [fetching, setFetching] = React.useState(false)
-   const [selected, setSelected] = React.useState(new Map())
+   const [simpleRecipe, setSimpleRecipe] = React.useState(undefined)
+   const [scrollHeight, setScrollHeight] = React.useState(0)
+   const [activeTab, setActiveTab] = React.useState('description')
+   const nutritionPosition = React.useRef(undefined)
+   const ingredientsPosition = React.useRef(undefined)
+   const cookingStepsPosition = React.useRef(undefined)
+   const containerRef = React.useRef()
+
+   React.useEffect(() => {
+      if (
+         scrollHeight < ingredientsPosition.current ||
+         ingredientsPosition.current === undefined
+      ) {
+         return setActiveTab('description')
+      }
+      if (
+         scrollHeight >= ingredientsPosition.current &&
+         (scrollHeight < cookingStepsPosition.current ||
+            cookingStepsPosition.current === undefined)
+      ) {
+         return setActiveTab('ingredients')
+      }
+      if (
+         scrollHeight >= cookingStepsPosition.current &&
+         (nutritionPosition.current === undefined ||
+            scrollHeight < nutritionPosition.current)
+      ) {
+         return setActiveTab('cookingSteps')
+      }
+      if (scrollHeight >= nutritionPosition.current) {
+         return setActiveTab('nutrition')
+      }
+      return setActiveTab('description')
+   }, [scrollHeight])
 
    // For Drawer
    const [isModalVisible, setIsModalVisible] = React.useState(false)
    const [refProduct, setRefProduct] = React.useState({})
 
-   const { data: { simpleRecipe = {} } = {}, loading, error } = useQuery(
-      SIMPLE_RECIPE,
-      {
-         variables: {
-            id: recipeId,
-         },
-         onCompleted: data => {
-            if (data.simpleRecipe.simpleRecipeYields[0]) {
-               setOption(data.simpleRecipe.simpleRecipeYields[0])
-            }
-         },
-         fetchPolicy: 'cache-and-network',
+   const [fetchRecipe, { loading, error }] = useLazyQuery(SIMPLE_RECIPE, {
+      onCompleted: data => {
+         if (data.simpleRecipe) {
+            setSimpleRecipe(data.simpleRecipe)
+         }
+      },
+      fetchPolicy: 'cache-and-network',
+   })
+
+   React.useEffect(() => {
+      if (recipeId) {
+         fetchRecipe({
+            variables: {
+               id: recipeId,
+            },
+         })
+         setSimpleRecipe(undefined)
       }
-   )
+   }, [recipeId])
 
    const [fetchSimpleRecipeProduct] = useLazyQuery(SIMPLE_PRODUCT, {
       onCompleted: data => {
          setRefProduct(data.simpleRecipeProduct)
-         setIsModalVisible(true)
          setFetching(false)
       },
       onError: error => {
@@ -63,7 +102,6 @@ const Recipe = ({ route, navigation }) => {
    const [fetchCustomizableProduct] = useLazyQuery(CUSTOMIZABLE_PRODUCT, {
       onCompleted: data => {
          setRefProduct(data.customizableProduct)
-         setIsModalVisible(true)
          setFetching(false)
       },
       onError: error => {
@@ -76,7 +114,6 @@ const Recipe = ({ route, navigation }) => {
    const [fetchComboProduct] = useLazyQuery(COMBO_PRODUCT, {
       onCompleted: data => {
          setRefProduct(data.comboProduct)
-         setIsModalVisible(true)
          setFetching(false)
       },
       onError: error => {
@@ -87,35 +124,113 @@ const Recipe = ({ route, navigation }) => {
    })
 
    const buy = () => {
-      if (fetching) return
-      else {
-         setFetching(true)
-         switch (refType) {
-            case 'simpleRecipeProduct':
-               return fetchSimpleRecipeProduct({ variables: { id: refId } })
-            case 'customizableProduct':
-               return fetchCustomizableProduct({ variables: { id: refId } })
-            case 'comboProduct':
-               return fetchComboProduct({ variables: { id: refId } })
-            default:
-               return console.log('No type matched for fetching!')
-         }
+      if (Object.keys(refProduct).length) {
+         setIsModalVisible(true)
       }
+   }
+
+   const renderPricing = () => {
+      switch (refType) {
+         case 'simpleRecipeProduct':
+            return (
+               <AddToCart
+                  showInfo={false}
+                  setIsModalVisible={true}
+                  navigation={navigation}
+                  id={refProduct.id}
+                  type={refProduct?.__typename?.split('_')[1]}
+                  data={refProduct}
+               />
+            )
+         case 'customizableProduct':
+            return (
+               <BuyBtn color={visual.color} onPress={buy}>
+                  <BuyBtnText>Buy Now</BuyBtnText>
+               </BuyBtn>
+            )
+         case 'comboProduct':
+            return (
+               <BuyBtn color={visual.color} onPress={buy}>
+                  <BuyBtnText>Buy Now</BuyBtnText>
+               </BuyBtn>
+            )
+         default:
+            return <ContentText>No matching product found!</ContentText>
+      }
+   }
+
+   React.useEffect(() => {
+      switch (refType) {
+         case 'simpleRecipeProduct':
+            return fetchSimpleRecipeProduct({ variables: { id: refId } })
+         case 'customizableProduct':
+            return fetchCustomizableProduct({ variables: { id: refId } })
+         case 'comboProduct':
+            return fetchComboProduct({ variables: { id: refId } })
+         default:
+            return console.log('No type matched for fetching!')
+      }
+   }, [refType, refId])
+
+   const renderCookingSteps = () => {
+      return (
+         <>
+            {simpleRecipe.procedures.map((procedure, k) => (
+               <>
+                  <ProcedureText>{procedure.title}</ProcedureText>
+                  <Spacer size={width <= 768 ? '16px' : '20px'} />
+                  <StepsWrapper>
+                     {procedure.steps
+                        .filter(step => step.isVisible)
+                        .map((step, i) => (
+                           <StepCard key={i}>
+                              <StepIndicator>
+                                 <StepIndicatorText>{i + 1}</StepIndicatorText>
+                              </StepIndicator>
+                              <ContentText>
+                                 <StepText>
+                                    {step.title ? step.title + ': ' : ''}
+                                 </StepText>
+                                 {step.description}
+                              </ContentText>
+                              {Boolean(step.assets.images.length) && (
+                                 <StepImage
+                                    source={{ uri: step.assets.images[0].url }}
+                                 />
+                              )}
+                           </StepCard>
+                        ))}
+                  </StepsWrapper>
+                  <Spacer size="40px" />
+               </>
+            ))}
+         </>
+      )
    }
 
    if (masterLoading) {
       return <AppSkeleton />
    }
 
-   if (loading) {
+   if (loading && !simpleRecipe) {
       return (
-         <View style={styles.center}>
-            <Spinner size="large" />
-         </View>
+         <>
+            <Header title="Home" navigation={navigation} />
+            <RecipeSkeleton />
+         </>
       )
    }
 
-   console.log(simpleRecipe)
+   if (!loading && (!simpleRecipe || error)) {
+      return (
+         <>
+            <Header title="Home" navigation={navigation} />
+            <ErrorScreen>
+               <ContentText>Failed to fetch Recipe!</ContentText>
+            </ErrorScreen>
+         </>
+      )
+   }
 
    return (
       <>
@@ -129,352 +244,539 @@ const Recipe = ({ route, navigation }) => {
             showInfo={true}
          />
          <Header title="Home" navigation={navigation} />
-         <ScrollView style={styles.container}>
-            <Image source={{ uri: simpleRecipe?.image }} style={styles.image} />
-            <View style={styles.info}>
-               <TouchableOpacity
-                  style={[styles.buyBtn, { backgroundColor: visual.color }]}
-                  onPress={buy}
+         {/* <Banner source={{ uri: simpleRecipe.image }}></Banner> */}
+         <Wrapper>
+            <DetailsContainer
+               showsVerticalScrollIndicator={false}
+               stickyHeaderIndices={[0]}
+               ref={containerRef}
+               onScroll={e => setScrollHeight(e.nativeEvent.contentOffset.y)}
+            >
+               <Tabs
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ marginHorizontal: 'auto' }}
                >
-                  <Text style={{ color: '#fff' }}>
-                     {fetching ? 'Wait...' : 'Buy Now'}
-                  </Text>
-               </TouchableOpacity>
-               {/* Name */}
-               <Text
-                  style={{
-                     fontSize: width > 768 ? 48 : 24,
-                     fontWeight: 'bold',
-                     marginBottom: 16,
-                  }}
-               >
-                  {simpleRecipe.name}
-               </Text>
-               {/* Description */}
-               {Boolean(simpleRecipe?.description) && (
-                  <View style={styles.section}>
-                     <Text style={styles.sectionTitle}>Description</Text>
-                     <Text style={styles.text}>{simpleRecipe.description}</Text>
-                  </View>
-               )}
-               {/* Basic Info */}
-               <View
-                  style={[
-                     styles.section,
-                     { flexDirection: width > 768 ? 'row' : 'column' },
-                  ]}
-               >
-                  <View>
-                     <View
-                        style={[
-                           styles.section,
-                           {
-                              flexDirection: 'row',
-                              flexWrap: 'wrap',
-                              marginBottom: 0,
-                           },
-                        ]}
+                  <Tab
+                     active={activeTab === 'description'}
+                     color={visual.color}
+                     onPress={() =>
+                        containerRef.current.scrollTo({
+                           y: 0,
+                        })
+                     }
+                  >
+                     <TabText
+                        active={activeTab === 'description'}
+                        color={visual.color}
                      >
-                        <View style={styles.tile}>
-                           <Text style={styles.sectionTitle}>Type</Text>
-                           <Text
-                              style={[
-                                 styles.text,
-                                 {
-                                    color:
-                                       simpleRecipe?.type === 'Non-vegetarian'
-                                          ? '#FF545A'
-                                          : '#FF545A',
-                                 },
-                              ]}
-                           >
-                              {simpleRecipe?.type}
-                           </Text>
-                        </View>
-                        <View style={styles.tile}>
-                           <Text style={styles.sectionTitle}>Cuisine</Text>
-                           <Text style={styles.text}>
-                              {simpleRecipe?.cuisine}
-                           </Text>
-                        </View>
-                        <View style={styles.tile}>
-                           <Text style={styles.sectionTitle}>Author</Text>
-                           <Text style={styles.text}>
-                              {simpleRecipe?.author}
-                           </Text>
-                        </View>
-                        <View style={styles.tile}>
-                           <Text style={styles.sectionTitle}>Cooking Time</Text>
-                           <Text style={styles.text}>
-                              {simpleRecipe?.cookingTime} mins.
-                           </Text>
-                        </View>
-                     </View>
-                     {Boolean(simpleRecipe?.utensils?.length) && (
-                        <View style={styles.section}>
-                           <Text style={styles.sectionTitle}>
-                              Utensils Required
-                           </Text>
-                           <Text style={styles.text}>
-                              {simpleRecipe.utensils.join(', ')}
-                           </Text>
-                        </View>
-                     )}
-                     {Boolean(option) && (
-                        <View style={styles.section}>
-                           <Text style={styles.sectionTitle}>Servings</Text>
-                           <View style={{ flexDirection: 'row' }}>
-                              {simpleRecipe.simpleRecipeYields.map(item => (
-                                 <TouchableOpacity
-                                    style={[
-                                       styles.tag,
-                                       {
-                                          backgroundColor:
-                                             item.id === option?.id
-                                                ? visual.color
-                                                : '#e3e3e3',
-                                       },
-                                    ]}
-                                    onPress={() => setOption(item)}
-                                 >
-                                    <Text
-                                       style={{
-                                          color:
-                                             item.id === option?.id
-                                                ? '#fff'
-                                                : '#111',
-                                       }}
-                                    >
-                                       {item.yield.serving}
-                                    </Text>
-                                 </TouchableOpacity>
-                              ))}
-                           </View>
-                        </View>
-                     )}
-                     {Boolean(option?.allergens?.length) && (
-                        <View style={styles.section}>
-                           <Text style={styles.sectionTitle}>Allergens</Text>
-                           <Text style={styles.text}>
-                              {option.allergens
-                                 .map(allergen => allergen.title)
-                                 .join(', ')}
-                           </Text>
-                        </View>
-                     )}
-                  </View>
-                  {Boolean(option?.nutritionalInfo) && (
-                     <View
-                        style={{
-                           marginLeft: width > 768 ? 60 : 0,
-                           width: '100%',
-                        }}
+                        Description
+                     </TabText>
+                  </Tab>
+                  <Tab
+                     active={activeTab === 'ingredients'}
+                     color={visual.color}
+                     onPress={() =>
+                        containerRef.current.scrollTo({
+                           y: ingredientsPosition.current,
+                        })
+                     }
+                  >
+                     <TabText
+                        active={activeTab === 'ingredients'}
+                        color={visual.color}
                      >
-                        <Nutrition values={option.nutritionalInfo} />
-                     </View>
+                        Ingredients
+                     </TabText>
+                  </Tab>
+                  {Boolean(simpleRecipe.procedures.length) && (
+                     <Tab
+                        active={activeTab === 'cookingSteps'}
+                        color={visual.color}
+                        onPress={() =>
+                           containerRef.current.scrollTo({
+                              y: cookingStepsPosition.current,
+                           })
+                        }
+                     >
+                        <TabText
+                           active={activeTab === 'cookingSteps'}
+                           color={visual.color}
+                        >
+                           Cooking Steps
+                        </TabText>
+                     </Tab>
                   )}
-               </View>
-               {Boolean(option) && (
+                  {Boolean(
+                     simpleRecipe.simpleRecipeYields[0].nutritionalInfo ||
+                        simpleRecipe.simpleRecipeYields[0].allergens?.length
+                  ) && (
+                     <Tab
+                        active={activeTab === 'nutrition'}
+                        color={visual.color}
+                        onPress={() =>
+                           containerRef.current.scrollTo({
+                              y: nutritionPosition.current,
+                           })
+                        }
+                     >
+                        <TabText
+                           active={activeTab === 'nutrition'}
+                           color={visual.color}
+                        >
+                           Nutrition and Allergens
+                        </TabText>
+                     </Tab>
+                  )}
+               </Tabs>
+               <Spacer size="20px" />
+               {Boolean(width <= 768) && (
                   <>
-                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Ingredients</Text>
-                        <ScrollView horizontal>
-                           {option.ingredientSachets.map(item => (
-                              <View
-                                 key={item.ingredientSachetId}
-                                 style={{ marginRight: 16 }}
-                              >
-                                 {/* Image */}
-                                 {item.ingredientSachet.ingredient.image ? (
-                                    <Image
-                                       style={{
-                                          height: 100,
-                                          width: 100,
-                                          marginHorizontal: 'auto',
-                                          borderRadius: 8,
-                                       }}
-                                       source={{
-                                          uri:
-                                             item.ingredientSachet.ingredient
-                                                .image,
-                                       }}
-                                    />
-                                 ) : (
-                                    <View
-                                       style={{ height: 100, width: 100 }}
-                                    ></View>
-                                 )}
-                                 {/* Slip Name */}
-                                 <Text
-                                    style={{
-                                       fontSize: 16,
-                                       textAlign: 'center',
-                                    }}
-                                 >
-                                    {item.slipName}
-                                 </Text>
-                                 {/* Quantity */}
-                                 <Text
-                                    style={{
-                                       fontSize: 14,
-                                       textAlign: 'center',
-                                       color: '#666',
-                                    }}
-                                 >
-                                    {`${item.ingredientSachet.quantity} ${item.ingredientSachet.unit}`}
-                                 </Text>
-                              </View>
-                           ))}
-                        </ScrollView>
-                        {/* <FlatList
-                           data={option.ingredientSachets}
-                           renderItem={item => (
-                              <View key={item.ingredientSachetId}>
-                                 <Text style={{ color: 'green' }}>
-                                    {item.slipName}
-                                 </Text>
-                              </View>
-                           )}
-                           keyExtractor={item => item.ingredientSachetId}
-                           extraData={selected}
-                        /> */}
-                     </View>
+                     <Title>{refProduct?.name}</Title>
+                     <Spacer size="8px" />
+                     <TypeWrapper type={simpleRecipe.type}>
+                        <TypeText type={simpleRecipe.type}>
+                           {simpleRecipe.type}
+                        </TypeText>
+                     </TypeWrapper>
+                     <Spacer size="8px" />
+                     <SocialMediaShareButtons />
+                     <Spacer size="16px" />
                   </>
                )}
-               {/* Procedure */}
-               {Boolean(simpleRecipe?.procedures?.length) && (
-                  <View style={styles.section}>
-                     <Text style={styles.sectionTitle}>Cooking Steps</Text>
-                     {simpleRecipe.procedures.map(procedure => (
-                        <View style={styles.procedure}>
-                           <Text style={styles.procedureTitle}>
-                              {procedure.title}
-                           </Text>
-                           {procedure.steps
-                              .filter(step => step.isVisible)
-                              .map(step => (
-                                 <View style={styles.step}>
-                                    {step.assets?.images[0] && (
-                                       <Image
-                                          style={{
-                                             height: 100,
-                                             width: 100,
-                                             margin: 8,
-                                             borderRadius: 2,
-                                          }}
-                                          source={{
-                                             uri: step.assets?.images[0].url,
-                                          }}
-                                       />
-                                    )}
-                                    <View style={styles.stepInfo}>
-                                       <Text
-                                          style={[
-                                             styles.text,
-                                             { fontWeight: 'bold' },
-                                          ]}
-                                       >
-                                          {step.title}
-                                       </Text>
-                                       <Text style={styles.text}>
-                                          {step.description}
-                                       </Text>
-                                    </View>
-                                 </View>
-                              ))}
-                        </View>
+               <PhotoShowcase
+                  images={[simpleRecipe.image] || []}
+                  fullWidth={true}
+               />
+               <Spacer size="40px" />
+               <InfoContainer>
+                  {Boolean(simpleRecipe.cuisine) && (
+                     <Info>
+                        <Cuisine
+                           size={width <= 768 ? 24 : 40}
+                           color={visual.color}
+                        />
+                        <InfoText>{simpleRecipe.cuisine}</InfoText>
+                     </Info>
+                  )}
+                  {Boolean(simpleRecipe.cookingTime) && (
+                     <Info>
+                        <CookingTime
+                           size={width <= 768 ? 24 : 40}
+                           color={visual.color}
+                        />
+                        <InfoText>{simpleRecipe.cookingTime} mins.</InfoText>
+                     </Info>
+                  )}
+                  {Boolean(simpleRecipe.author) && (
+                     <Info>
+                        <Chef
+                           size={width <= 768 ? 24 : 40}
+                           color={visual.color}
+                        />
+                        <InfoText>{simpleRecipe.author}</InfoText>
+                     </Info>
+                  )}
+                  {Boolean(simpleRecipe.utensils?.length) && (
+                     <Info>
+                        <Utensils
+                           size={width <= 768 ? 24 : 40}
+                           color={visual.color}
+                        />
+                        <InfoText>{simpleRecipe.utensils.join(', ')}</InfoText>
+                     </Info>
+                  )}
+               </InfoContainer>
+               <Spacer size="24px" />
+               <ContentText style={{ textAlign: 'center' }}>
+                  {simpleRecipe.description}
+               </ContentText>
+               <Spacer size="68px" />
+               <SectionHeader
+                  color={visual.color}
+                  onLayout={e => {
+                     ingredientsPosition.current = e.nativeEvent.layout.y - 60
+                  }}
+               >
+                  {
+                     simpleRecipe.simpleRecipeYields[0].ingredientSachets.filter(
+                        ing => ing.isVisible
+                     ).length
+                  }{' '}
+                  Ingredients
+               </SectionHeader>
+               <Spacer size="20px" />
+               <Ingredients>
+                  {simpleRecipe.simpleRecipeYields[0].ingredientSachets
+                     .filter(ing => ing.isVisible)
+                     .map((ing, i) => (
+                        <IngredientWrapper>
+                           <ContentText
+                              key={ing.id}
+                           >{`${ing.ingredientSachet.quantity} ${ing.ingredientSachet.unit} ${ing.slipName}`}</ContentText>
+                           {Boolean(ing.ingredientSachet.ingredient.image) && (
+                              <IngredientImage
+                                 source={{
+                                    uri: ing.ingredientSachet.ingredient.image,
+                                 }}
+                              />
+                           )}
+                        </IngredientWrapper>
                      ))}
-                  </View>
+               </Ingredients>
+               <Spacer size="68px" />
+               {Boolean(simpleRecipe.procedures.length) && (
+                  <>
+                     <SectionHeader
+                        color={visual.color}
+                        nativeID="cookingSteps"
+                        onLayout={e => {
+                           cookingStepsPosition.current =
+                              e.nativeEvent.layout.y - 60
+                        }}
+                     >
+                        Cooking Steps
+                     </SectionHeader>
+                     <Spacer size="40px" />
+                     {renderCookingSteps()}
+                     <Spacer size="28px" />
+                  </>
                )}
                {Boolean(
-                  simpleRecipe?.simpleRecipeProducts.find(
-                     product => product.id === refId
-                  )?.recommendations
+                  simpleRecipe.simpleRecipeYields[0].nutritionalInfo ||
+                     simpleRecipe.simpleRecipeYields[0].allergens?.length
                ) && (
-                  <Recommendations
-                     navigation={navigation}
-                     recommendations={
-                        simpleRecipe?.simpleRecipeProducts.find(
-                           product => product.id === refId
-                        )?.recommendations
-                     }
-                  />
+                  <>
+                     <SectionHeader
+                        color={visual.color}
+                        onLayout={e => {
+                           nutritionPosition.current =
+                              e.nativeEvent.layout.y - 60
+                        }}
+                     >
+                        Nutrition and Allergens
+                     </SectionHeader>
+                     {Boolean(
+                        simpleRecipe.simpleRecipeYields[0].nutritionalInfo
+                     ) && (
+                        <>
+                           <Spacer size="20px" />
+                           <NutritionWrapper>
+                              <Nutrition
+                                 values={
+                                    simpleRecipe.simpleRecipeYields[0]
+                                       .nutritionalInfo
+                                 }
+                              />
+                           </NutritionWrapper>
+                           <Spacer size="20px" />
+                        </>
+                     )}
+                     {Boolean(
+                        simpleRecipe.simpleRecipeYields[0].allergens?.length
+                     ) && (
+                        <>
+                           <Spacer size="20px" />
+                           <AllergensText style={{ textAlign: 'center' }}>
+                              Allergens:{' '}
+                              {simpleRecipe.simpleRecipeYields[0].allergens
+                                 .map(allergen => allergen.title)
+                                 .join(', ')}
+                           </AllergensText>
+                        </>
+                     )}
+                     <Spacer size="100px" />
+                  </>
                )}
-            </View>
-         </ScrollView>
-         {width < 768 && <CheckoutBar navigation={navigation} />}
+            </DetailsContainer>
+            {Boolean(width > 768) && (
+               <PricingContainer>
+                  {fetching ? (
+                     <ContentText>Loading...</ContentText>
+                  ) : (
+                     <>
+                        <Title>{refProduct.name}</Title>
+                        <Spacer size="8px" />
+                        <SubSectionWrapper>
+                           <TypeWrapper type={simpleRecipe.type}>
+                              <TypeText type={simpleRecipe.type}>
+                                 {simpleRecipe.type}
+                              </TypeText>
+                           </TypeWrapper>
+                           <SocialMediaShareButtons />
+                        </SubSectionWrapper>
+                        <Spacer size="16px" />
+                        {renderPricing()}
+                     </>
+                  )}
+               </PricingContainer>
+            )}
+         </Wrapper>
+         {Boolean(width <= 768) && (
+            <BuyBtn color={visual.color} onPress={buy}>
+               <BuyBtnText>Buy Now</BuyBtnText>
+            </BuyBtn>
+         )}
       </>
    )
 }
 
 export default Recipe
 
-const styles = EStyleSheet.create({
-   container: {
-      backgroundColor: '#fff',
-   },
-   image: {
-      width: width,
-      height: height * 0.5,
-      resizeMode: 'cover',
-   },
-   info: {
-      margin: width > 768 ? 40 : 8,
-      position: 'relative',
-   },
-   buyBtn: {
-      position: 'absolute',
-      top: -65,
-      right: 0,
-      padding: 16,
-      borderRadius: 4,
-   },
-   section: {
-      marginBottom: width > 768 ? 32 : 16,
-   },
-   sectionTitle: {
-      color: '#666',
-      fontSize: 14,
-      marginBottom: 8,
-   },
-   text: {
-      fontSize: width > 768 ? 18 : 16,
-   },
-   tag: {
-      padding: 10,
-      backgroundColor: '#e3e3e3',
-      marginRight: 5,
-      borderRadius: 2,
-   },
-   tile: {
-      marginRight: 32,
-      marginBottom: width > 768 ? 32 : 16,
-   },
-   procedure: {
-      paddingVertical: width > 768 ? 16 : 8,
-   },
-   procedureTitle: {
-      fontWeight: 'bold',
-      color: '#666',
-      marginBottom: 8,
-      fontSize: 16,
-   },
-   step: {
-      backgroundColor: '#fff',
-      borderRadius: 4,
-      marginBottom: 8,
-      padding: width > 768 ? 16 : 8,
-      flexDirection: width > 768 ? 'row' : 'column',
-      shadowColor: '#000',
-      shadowOffset: {
-         width: 0,
-         height: 1,
-      },
-      shadowOpacity: 0.2,
-      shadowRadius: 1.41,
-      elevation: 2,
-   },
-   stepInfo: {
-      margin: 8,
-   },
-})
+const Banner = styled.ImageBackground`
+   width: ${width}px;
+   height: 250px;
+`
+
+const ErrorScreen = styled.View`
+   flex: 1;
+   align-items: center;
+   justify-content: center;
+`
+
+const Wrapper = styled.View`
+   flex: 1;
+   flex-direction: row;
+   padding: 16px 48px;
+   background: #fefdfc;
+   ${width <= 768 &&
+   css`
+      padding: 8px 12px;
+   `}
+`
+
+const InfoContainer = styled.View`
+   flex-direction: row;
+   align-items: start;
+   justify-content: space-evenly;
+   flex-wrap: wrap;
+`
+
+const Spacer = styled.View`
+   height: ${props => props.size || '16px'};
+`
+
+const DetailsContainer = styled.ScrollView`
+   margin-right: 24px;
+   padding: 0 20px;
+   ${width <= 768 &&
+   css`
+      margin-right: 0;
+      padding: 0;
+   `}
+`
+
+const Tabs = styled.ScrollView`
+   background: #fff;
+   border-bottom-width: 1px;
+   border-bottom-color: #cecece;
+`
+
+const Tab = styled.TouchableOpacity`
+   margin-right: 48px;
+   padding: 16px 0;
+   border-bottom-width: 3px;
+   border-bottom-color: ${props => (props.active ? props.color : '#fff')};
+`
+
+const TabText = styled.Text`
+   line-height: 24px;
+   font-size: 16px;
+   color: ${props => (props.active ? props.color : '#888D9D')};
+   font-weight: 600;
+`
+
+const SectionHeader = styled.Text`
+   color: ${props => props.color || '#888d9d'};
+   font-size: 28px;
+   font-weight: 600;
+   text-align: center;
+`
+
+const ContentText = styled.Text`
+   line-height: 23px;
+   font-size: 18px;
+   color: #000;
+   ${width <= 768 &&
+   css`
+      line-height: 21px;
+      font-size: 16px;
+   `}
+`
+
+const ProcedureText = styled(ContentText)`
+   font-size: 20px;
+   font-weight: 600;
+   color: #000;
+   text-transform: uppercase;
+   text-align: center;
+`
+
+const StepsWrapper = styled.View`
+   flex-direction: row;
+   flex-wrap: wrap;
+   margin: 0 auto;
+`
+
+const StepCard = styled.View`
+   border: 1px solid #eae8e8;
+   border-radius: 4px;
+   padding: 16px;
+   width: 360px;
+   margin: 20px 10px;
+   background: #fff;
+   position: relative;
+   ${width <= 768 &&
+   css`
+      width: ${width - 24}px;
+      margin: 20px 0px;
+   `}
+`
+
+const StepIndicator = styled.View`
+   width: 40px;
+   height: 40px;
+   border-radius: 20px;
+   align-items: center;
+   justify-content: center;
+   border: 1px solid #eae8e8;
+   background: #fff;
+   position: absolute;
+   top: -20px;
+   left: -10px;
+   ${width <= 768 &&
+   css`
+      left: 0;
+      top: -24px;
+   `}
+`
+
+const StepIndicatorText = styled.Text`
+   color: #636363;
+   font-size: 18px;
+   font-weight: bold;
+`
+
+const StepText = styled(ContentText)`
+   font-weight: bold;
+   color: #000;
+`
+
+const StepImage = styled.Image`
+   width: 328px;
+   height: 200px;
+   border-radius: 4px;
+   margin-top: 16px;
+   ${width <= 768 &&
+   css`
+      width: ${width - 24 - 32}px;
+   `}
+`
+
+const PricingContainer = styled.View`
+   background: #fff;
+   min-width: 31vw;
+   padding: 20px;
+   shadow-opacity: 1;
+   shadow-radius: 2px;
+   shadow-color: #f8f8f7;
+   shadow-offset: -5px -5px;
+   border-radius: 4px;
+`
+
+const Title = styled(ContentText)`
+   font-size: 28px;
+   line-height: 40px;
+   font-weight: bold;
+`
+
+const TypeWrapper = styled.Text`
+   border: 2px solid
+      ${props => (props.type === 'Non-vegetarian' ? '#FF5A52' : '#53C22B')};
+   border-radius: 32px;
+   align-items: center;
+   justify-content: center;
+   padding: 4px 12px;
+   width: fit-content;
+`
+
+const TypeText = styled.Text`
+   color: ${props => (props.type === 'Non-vegetarian' ? '#FF5A52' : '#53C22B')};
+   font-weight: bold;
+   text-transform: uppercase;
+`
+
+const Info = styled.View`
+   align-items: center;
+`
+
+const InfoText = styled(ContentText)`
+   font-size: 20px;
+   color: #000;
+   max-width: 200px;
+   margin-top: 8px;
+   text-align: center;
+   ${width <= 768 &&
+   css`
+      font-size: 18px;
+      margin-bottom: 8px;
+   `}
+`
+
+const BuyBtn = styled.TouchableOpacity`
+   margin-top: 32px;
+   background: ${props => props.color || '#888d98'};
+   text-align: center;
+   padding: 16px;
+   ${width <= 768 &&
+   css`
+      margin-top: 0px;
+   `}
+`
+
+const BuyBtnText = styled.Text`
+   color: #fff;
+`
+
+const IngredientWrapper = styled.View`
+   background: #fff;
+   border-radius: 7px;
+   padding: 16px;
+   border: 1px solid #eae8e8;
+   flex-direction: row;
+   align-items: center;
+   width: 295px;
+   justify-content: space-between;
+   margin-right: 20px;
+   margin-bottom: 20px;
+`
+
+const IngredientImage = styled.Image`
+   width: 56px;
+   height: 56px;
+   border-radius: 28px;
+   margin-left: 16px;
+`
+
+const Ingredients = styled.View`
+   flex-direction: row;
+   flex-wrap: wrap;
+   justify-content: center;
+`
+
+const NutritionWrapper = styled.View`
+   flex-direction: row;
+   justify-content: center;
+`
+
+const SubSectionWrapper = styled.View`
+   flex-direction: row;
+   flex-wrap: wrap;
+   align-items: center;
+   justify-content: space-between;
+`
+
+const AllergensText = styled(ContentText)`
+   font-size: 20px;
+   font-weight: 600;
+`

@@ -9,7 +9,7 @@ import {
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
 import { priceSort } from '../../utils'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 import Modifiers from '../Modifiers'
 import ServingSelect from '../ServingSelect'
 import { styles } from './styles'
@@ -186,10 +186,10 @@ const InventoryProductCollapsed = ({
                            price={parseFloat(item_data.price[0].value)}
                            discount={parseFloat(item_data.price[0].discount)}
                            setProductOption={() => setProductOption(item_data)}
-                           id={item_data.id}
                            setSelectedOption={() =>
                               setSelectedOption(item_data)
                            }
+                           type="inventoryProduct"
                         />
                      )
                   }

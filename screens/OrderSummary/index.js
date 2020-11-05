@@ -23,25 +23,76 @@ import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
 import { useStoreToast } from '../../utils'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 import Coupon from './components/Coupon'
 import Tip from './components/Tip'
 import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
 import PayWithWallet from './components/PayWithWallet'
+import {
+   HASURA_GRAPHQL_ADMIN_SECRET,
+   HASURA_URL,
+   CURRENCY,
+} from 'react-native-dotenv'
+import CartSkeleton from '../../components/skeletons/cart'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
-   const { cart } = useCartContext()
-   const { visual, masterLoading } = useAppContext()
+   const { isAuthenticated } = useAuth()
+   const { cart, settingCart } = useCartContext()
+   const {
+      visual,
+      brand,
+      masterLoading,
+      paymentPartnerShipIds,
+   } = useAppContext()
 
    String.prototype.SRPType = function () {
       return this === 'readyToEat' ? 'Ready to Eat' : 'Meal Kit'
    }
 
+   React.useEffect(() => {
+      ;(async () => {
+         if (cart && paymentPartnerShipIds?.length && isAuthenticated) {
+            await window.payments.provider({
+               cart,
+               currency: CURRENCY,
+               partnershipIds: paymentPartnerShipIds,
+               admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
+               datahub_url: HASURA_URL,
+            })
+         }
+      })()
+   }, [cart, paymentPartnerShipIds, isAuthenticated])
+
+   React.useEffect(() => {
+      if (isAuthenticated) {
+         const brandObject = {
+            name: brand.name,
+            logo: brand.logo,
+            description: '',
+         }
+         window.payments.checkout({
+            cart: { ...cart, brand: brandObject },
+            datahub_url: HASURA_URL,
+            admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
+            currency: CURRENCY,
+         })
+      }
+   }, [cart, isAuthenticated, brand])
+
+   console.log(cart)
+
    if (masterLoading) {
       return <AppSkeleton />
    }
 
-   console.log(cart)
+   if (settingCart) {
+      return (
+         <>
+            <Header title="Home" navigation={navigation} />
+            <CartSkeleton />
+         </>
+      )
+   }
 
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
@@ -233,20 +284,30 @@ const Checkout = ({ cart, navigation }) => {
             </CheckoutSectionHeading>
             {isAuthenticated && cart?.fulfillmentInfo && (
                <CheckoutSectionContent>
-                  <DefaultPaymentFloater navigation={navigation} />
-                  <CTA
-                     disabled={!cart.isValid.status}
-                     color={visual.color}
-                     onPress={() =>
-                        cart.isValid.status && open('Payment', { navigation })
-                     }
-                  >
-                     <CTAText>
-                        {cart.totalPrice
-                           ? `PAY $${cart.totalPrice}`
-                           : 'PLACE ORDER'}
-                     </CTAText>
-                  </CTA>
+                  {CURRENCY === 'INR' ? (
+                     <GenericPayment nativeID="payment" />
+                  ) : (
+                     <>
+                        <DefaultPaymentFloater navigation={navigation} />
+                        <CTA
+                           disabled={!cart.isValid.status}
+                           color={visual.color}
+                           onPress={() =>
+                              cart.isValid.status &&
+                              open('Payment', { navigation })
+                           }
+                        >
+                           <CTAText>
+                              {cart.totalPrice
+                                 ? `PAY ${new Intl.NumberFormat('en-US', {
+                                      style: 'currency',
+                                      currency: CURRENCY,
+                                   }).format(cart.totalPrice)}`
+                                 : 'PLACE ORDER'}
+                           </CTAText>
+                        </CTA>
+                     </>
+                  )}
                   {!cart.isValid.status && (
                      <Error>
                         <ErrorText>{cart.isValid.error}</ErrorText>
@@ -547,14 +608,21 @@ const Cart = ({ cart }) => {
                      <CartItemPriceContainer>
                         {Boolean(product.discount) && (
                            <CartItemDiscount>
-                              ${' '}
-                              {(product.discount + product.totalPrice).toFixed(
-                                 2
+                              {new Intl.NumberFormat('en-US', {
+                                 style: 'currency',
+                                 currency: CURRENCY,
+                              }).format(
+                                 (
+                                    product.discount + product.totalPrice
+                                 ).toFixed(2)
                               )}
                            </CartItemDiscount>
                         )}
                         <CartItemPrice>
-                           $ {product.totalPrice.toFixed(2)}
+                           {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: CURRENCY,
+                           }).format(product.totalPrice.toFixed(2))}
                         </CartItemPrice>
                      </CartItemPriceContainer>
                   </CartItemRight>
@@ -577,27 +645,42 @@ const Cart = ({ cart }) => {
             <CartBillingDetail>
                <CartBillingDetailText>Item Total</CartBillingDetailText>
                <CartBillingDetailText>
-                  $ {cart.itemTotal.toFixed(2)}
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(cart.itemTotal.toFixed(2))}
                </CartBillingDetailText>
             </CartBillingDetail>
             <CartBillingDetail>
                <CartBillingDetailText>Delivery Fee</CartBillingDetailText>
                <CartBillingDetailText>
-                  $ {cart.deliveryPrice}
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(cart.deliveryPrice)}
                </CartBillingDetailText>
             </CartBillingDetail>
             {Boolean(cart.discount) && (
                <CartBillingDetail>
                   <CartBillingDetailText>Discount</CartBillingDetailText>
                   <CartBillingDetailText>
-                     - $ {cart.discount}
+                     -{' '}
+                     {new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: CURRENCY,
+                     }).format(cart.discount)}
                   </CartBillingDetailText>
                </CartBillingDetail>
             )}
             <Divider margin="8px" />
             <CartBillingDetail>
                <CartBillingDetailText>Taxes and Charges</CartBillingDetailText>
-               <CartBillingDetailText>$ {cart.tax}</CartBillingDetailText>
+               <CartBillingDetailText>
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(cart.tax)}
+               </CartBillingDetailText>
             </CartBillingDetail>
             <Tip cart={cart} />
          </CartBilling>
@@ -608,13 +691,17 @@ const Cart = ({ cart }) => {
             <CartFooter>
                <CartDiscountText>YOU SAVED</CartDiscountText>
                <CartDiscountText>
-                  ${' '}
-                  {(
-                     cart.cartInfo.products.reduce(
-                        (acc, item) => acc + item.discount,
-                        0
-                     ) + cart.discount
-                  ).toFixed(2)}
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(
+                     (
+                        cart.cartInfo.products.reduce(
+                           (acc, item) => acc + item.discount,
+                           0
+                        ) + cart.discount
+                     ).toFixed(2)
+                  )}
                </CartDiscountText>
             </CartFooter>
          )}
@@ -632,7 +719,12 @@ const Cart = ({ cart }) => {
          )}
          <CartFooter>
             <CartFooterText>TO PAY</CartFooterText>
-            <CartFooterText>$ {cart.totalPrice.toFixed(2)}</CartFooterText>
+            <CartFooterText>
+               {new Intl.NumberFormat('en-US', {
+                  style: 'currency',
+                  currency: CURRENCY,
+               }).format(cart.totalPrice.toFixed(2))}
+            </CartFooterText>
          </CartFooter>
       </StyledCart>
    )
@@ -977,3 +1069,5 @@ const HelpText = styled(CartBillingDetailText)`
    margin-bottom: 0.5rem;
    font-style: italic;
 `
+
+const GenericPayment = styled.View``

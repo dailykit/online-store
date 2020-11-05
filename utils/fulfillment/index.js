@@ -238,6 +238,8 @@ export const isDeliveryAvailable = recurrences => {
                   } else {
                      return { status: false }
                   }
+               } else {
+                  return { status: false }
                }
             }
          } else {
@@ -328,6 +330,8 @@ export const generateDeliverySlots = recurrences => {
                         })
                      }
                   }
+               } else {
+                  return { status: false }
                }
             })
          } else {

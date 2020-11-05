@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons'
 import React from 'react'
 import { Text, TouchableOpacity } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
-import { height, width } from '../utils/Scalaing'
+import { height, width } from '../utils/Scaling'
 
 const HeaderBack = ({ title, navigation }) => {
    return (

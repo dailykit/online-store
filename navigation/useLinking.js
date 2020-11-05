@@ -11,6 +11,9 @@ export default function (containerRef) {
                Home: {
                   path: '/',
                },
+               LoginSuccess: {
+                  path: 'LoginSuccess',
+               },
                ProfileScreen: {
                   path: 'ProfileScreen',
                },
@@ -30,8 +33,8 @@ export default function (containerRef) {
                Search: {
                   path: 'Search',
                },
-               Recipe: {
-                  path: 'Recipe',
+               recipe: {
+                  path: 'recipe',
                   parse: {
                      recipeId: Number,
                      refId: Number,

@@ -1,7 +1,7 @@
 import { View } from 'native-base'
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { height, width } from '../utils/Scalaing'
+import { height, width } from '../utils/Scaling'
 
 const Container = ({ children }) => {
    return (

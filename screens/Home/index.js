@@ -15,7 +15,7 @@ import { SafetyBanner } from '../../components/SafetyBanner'
 import AppSkeleton from '../../components/skeletons/app'
 import MenuSkeleton from '../../components/skeletons/menu'
 import { useAppContext } from '../../context/app'
-import { height, width } from '../../utils/Scalaing'
+import { height, width } from '../../utils/Scaling'
 import { styles } from './styles'
 import { useAuth } from '../../context/auth'
 
@@ -40,7 +40,7 @@ const Home = props => {
       console.log('window.parent.location', window.parent.location)
       if (
          isAuthenticated &&
-         window.location.pathname.includes('login-success')
+         window.location.pathname.includes('LoginSuccess')
       ) {
          console.log('Logged in and not on success page...')
          if (window.location !== window.parent.location) {

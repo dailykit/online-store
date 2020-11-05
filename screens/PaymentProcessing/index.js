@@ -7,18 +7,19 @@ import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { CART_BY_PK, UPDATE_CART } from '../../graphql'
 
-const PaymentProcessing = ({ navigation }) => {
+const PaymentProcessing = ({ cartId }) => {
    const { cart, customer } = useCartContext()
-   const { visual, availability } = useAppContext()
-   const { setIsDrawerOpen } = useDrawerContext()
+   const { visual } = useAppContext()
+   const { setIsDrawerOpen, navigation } = useDrawerContext()
 
-   const [cartId, setCartId] = React.useState(undefined)
+   const [_cartId, set_CartId] = React.useState(undefined)
    const [progress, setProgress] = React.useState('Sending your order...')
 
    // Subscription
    const { data, loading, error } = useSubscription(CART_BY_PK, {
+      skip: Boolean(!cartId && !_cartId),
       variables: {
-         id: cartId,
+         id: cartId || _cartId,
       },
    })
 
@@ -34,20 +35,24 @@ const PaymentProcessing = ({ navigation }) => {
 
    //Effects
    React.useEffect(() => {
-      if (cart?.id) {
-         updateCart({
-            variables: {
-               id: cart.id,
-               set: {
-                  status: 'PROCESS',
-                  amount: cart.totalPrice,
-                  couponDiscount: cart.discount,
+      // !cartId = payment made without razorpay
+      if (!cartId) {
+         if (cart?.id) {
+            console.log('Paying through stripe...')
+            updateCart({
+               variables: {
+                  id: cart.id,
+                  set: {
+                     status: 'PROCESS',
+                     amount: cart.totalPrice,
+                     couponDiscount: cart.discount,
+                  },
                },
-            },
-         })
-         setCartId(cart.id)
-      } else {
-         navigation.navigate('Home')
+            })
+            set_CartId(cart.id)
+         } else {
+            navigation.navigate('Home')
+         }
       }
    }, [])
 
@@ -64,10 +69,14 @@ const PaymentProcessing = ({ navigation }) => {
                   break
                } else {
                   setTimeout(() => {
-                     navigation.navigate('Order', {
-                        orderId: data.cartByPK.orderId,
-                     })
-                     setIsDrawerOpen(false)
+                     if (navigation) {
+                        navigation.navigate('Order', {
+                           orderId: data.cartByPK.orderId,
+                        })
+                        setIsDrawerOpen(false)
+                     } else {
+                        console.log('Navigation failed!')
+                     }
                   }, 2000)
                   break
                }

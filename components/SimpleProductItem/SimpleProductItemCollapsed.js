@@ -1,4 +1,3 @@
-import { MaterialIcons } from '@expo/vector-icons'
 import React, { useState } from 'react'
 import {
    Image,
@@ -10,10 +9,11 @@ import {
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
 import { priceSort } from '../../utils'
-import { width } from '../../utils/Scalaing'
+import { width } from '../../utils/Scaling'
 import Modifiers from '../Modifiers'
 import ServingSelect from '../ServingSelect'
 import { styles } from './styles'
+import ServingTypes from '../ServingTypes'
 
 const SimpleProductItemCollapsed = ({
    navigation,
@@ -28,11 +28,18 @@ const SimpleProductItemCollapsed = ({
    onValidityChange,
 }) => {
    const { visual } = useAppContext()
+   const [types, setTypes] = useState([])
    const [typeSelected, setTypeSelected] = useState('mealKit')
    const [selectedOption, setSelectedOption] = useState(undefined)
    const [servingIndex, setServingIndex] = useState(undefined)
 
+   const generateTypes = srp => {
+      const _types = new Set(srp.simpleRecipeProductOptions.map(op => op.type))
+      setTypes([..._types])
+   }
+
    React.useEffect(() => {
+      generateTypes(simpleRecipeProduct)
       const op =
          simpleRecipeProduct.defaultSimpleRecipeProductOption ||
          simpleRecipeProduct.simpleRecipeProductOptions.sort(priceSort)[0]
@@ -68,7 +75,7 @@ const SimpleProductItemCollapsed = ({
          {showInfo && (
             <TouchableOpacity
                onPress={() => {
-                  navigation.navigate('Recipe', {
+                  navigation.navigate('recipe', {
                      recipeId: simpleRecipeProduct.simpleRecipe.id,
                      refId: refId || simpleRecipeProduct.id,
                      refType: refType || 'simpleRecipeProduct',
@@ -180,61 +187,12 @@ const SimpleProductItemCollapsed = ({
          )}
          {tunnelItem && isSelected && (
             <View style={{ paddingHorizontal: 20 }}>
-               <View style={styles.type_container}>
-                  <View style={styles.type_container_right}>
-                     <TouchableOpacity
-                        style={[
-                           styles.type_button,
-                           typeSelected === 'mealKit'
-                              ? styles.selected_type_conatiner
-                              : {},
-                        ]}
-                        onPress={() => setTypeSelected('mealKit')}
-                     >
-                        <Text style={styles.type_text}>Meal Kit</Text>
-                        {typeSelected === 'mealKit' && (
-                           <View
-                              style={[
-                                 styles.done_container,
-                                 { backgroundColor: visual.color },
-                              ]}
-                           >
-                              <MaterialIcons
-                                 name="done"
-                                 size={16}
-                                 color="#fff"
-                              />
-                           </View>
-                        )}
-                     </TouchableOpacity>
-                     <TouchableOpacity
-                        onPress={() => setTypeSelected('readyToEat')}
-                        style={[
-                           styles.type_button,
-                           typeSelected === 'readyToEat'
-                              ? styles.selected_type_conatiner
-                              : {},
-                        ]}
-                     >
-                        <Text style={styles.type_text}>Ready To Eat</Text>
-                        {typeSelected === 'readyToEat' && (
-                           <View
-                              style={[
-                                 styles.done_container,
-                                 { backgroundColor: visual.color },
-                              ]}
-                           >
-                              <MaterialIcons
-                                 name="done"
-                                 size={16}
-                                 color="#fff"
-                              />
-                           </View>
-                        )}
-                     </TouchableOpacity>
-                  </View>
-               </View>
-               <Text style={styles.options_text}>Avaliable Servings:</Text>
+               <ServingTypes
+                  types={types}
+                  selected={typeSelected}
+                  onSelect={setTypeSelected}
+               />
+               <Text style={styles.options_text}>Available Servings:</Text>
                {simpleRecipeProduct.simpleRecipeProductOptions
                   .filter(serving => serving.type === typeSelected)
                   .map((item_data, key) => {
@@ -247,18 +205,11 @@ const SimpleProductItemCollapsed = ({
                            size={item_data.simpleRecipeYield.yield.serving}
                            price={parseFloat(item_data.price[0].value)}
                            discount={parseFloat(item_data.price[0].discount)}
-                           display={
-                              typeSelected === 'mealKit'
-                                 ? 'Meal Kit'
-                                 : 'Ready To Eat'
-                           }
-                           type={item_data.type}
-                           typeSelected={typeSelected}
                            setProductOption={() => setProductOption(item_data)}
-                           id={item_data.id}
                            setSelectedOption={() =>
                               setSelectedOption(item_data)
                            }
+                           type="simpleRecipeProduct"
                         />
                      )
                   })}

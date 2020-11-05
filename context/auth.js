@@ -41,12 +41,12 @@ export const AuthProvider = ({ children }) => {
       initialize()
       setLoginUrl(
          keycloak.createLoginUrl({
-            redirectUri: `${window.location.origin}/store/login-success`,
+            redirectUri: `${window.location.origin}/store/LoginSuccess`,
          })
       )
       setRegisterUrl(
          keycloak.createRegisterUrl({
-            redirectUri: `${window.location.origin}/store/login-success`,
+            redirectUri: `${window.location.origin}/store/LoginSuccess`,
          })
       )
    }, [])
@@ -73,13 +73,15 @@ export const AuthProvider = ({ children }) => {
 
    const login = () =>
       keycloak.login({
-         redirectUri: `${window.location.origin}/store/login-success`,
+         redirectUri: `${window.location.origin}/store/LoginSuccess`,
       })
    const logout = () =>
-      keycloak.logout({ redirectUri: `${window.location.origin}/store` })
+      keycloak.logout({
+         redirectUri: `${window.location.origin}/store`,
+      })
    const register = () =>
       keycloak.register({
-         redirectUri: `${window.location.origin}/store/login-success`,
+         redirectUri: `${window.location.origin}/store/LoginSuccess`,
       })
 
    return (

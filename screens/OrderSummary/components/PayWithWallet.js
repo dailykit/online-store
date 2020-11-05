@@ -5,6 +5,8 @@ import { useAppContext } from '../../../context/app'
 import { UPDATE_CART } from '../../../graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
+import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const PayWithWallet = () => {
    const { wallet, cart } = useCartContext()
@@ -76,7 +78,10 @@ const PayWithWallet = () => {
                            <Feather color="#FF5A52" name="x" size={16} />
                         </Remove>
                         <FieldText>
-                           {cart.walletAmountUsed.toFixed(2)}
+                           {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: CURRENCY,
+                           }).format(cart.walletAmountUsed.toFixed(2))}
                         </FieldText>
                      </AmountContainer>
                   </Field>
@@ -94,7 +99,10 @@ const PayWithWallet = () => {
                            <AmountText>
                               Max:{' '}
                               <Amount>
-                                 $ {cart.walletAmountUsable.toFixed(2)}
+                                 {new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: CURRENCY,
+                                 }).format(cart.walletAmountUsable.toFixed(2))}
                               </Amount>
                            </AmountText>
                         </>
@@ -102,7 +110,13 @@ const PayWithWallet = () => {
                         <Content>
                            <Header>Pay using Wallet?</Header>
                            <AmountText>
-                              Balance: <Amount>$ {wallet.amount}</Amount>
+                              Balance:{' '}
+                              <Amount>
+                                 {new Intl.NumberFormat('en-US', {
+                                    style: 'currency',
+                                    currency: CURRENCY,
+                                 }).format(wallet.amount)}
+                              </Amount>
                            </AmountText>
                         </Content>
                      )}

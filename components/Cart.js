@@ -16,7 +16,9 @@ import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
 import { CREATE_CART, UPDATE_CART } from '../graphql/mutations'
 import { discountedPrice, useStoreToast, uuid } from '../utils'
-import { width } from '../utils/Scalaing'
+import { width } from '../utils/Scaling'
+import { CURRENCY } from 'react-native-dotenv'
+// 12
 
 const Cart = ({
    navigation,
@@ -298,7 +300,10 @@ const Cart = ({
                               fontSize: 16,
                            }}
                         >
-                           ${(priceShown * quantity).toFixed(2)}
+                           {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: CURRENCY,
+                           }).format((priceShown * quantity).toFixed(2))}
                         </Text>
                      </View>
                   </View>
