@@ -308,7 +308,8 @@ const Recipe = ({ navigation, route }) => {
                      </Tab>
                   )}
                   {Boolean(
-                     simpleRecipe.simpleRecipeYields[0].nutritionalInfo
+                     simpleRecipe.simpleRecipeYields[0].nutritionalInfo ||
+                        simpleRecipe.simpleRecipeYields[0].allergens?.length
                   ) && (
                      <Tab
                         active={activeTab === 'nutrition'}
@@ -438,7 +439,10 @@ const Recipe = ({ navigation, route }) => {
                      <Spacer size="28px" />
                   </>
                )}
-               {Boolean(simpleRecipe.simpleRecipeYields[0].nutritionalInfo) && (
+               {Boolean(
+                  simpleRecipe.simpleRecipeYields[0].nutritionalInfo ||
+                     simpleRecipe.simpleRecipeYields[0].allergens?.length
+               ) && (
                   <>
                      <SectionHeader
                         color={visual.color}
@@ -449,6 +453,19 @@ const Recipe = ({ navigation, route }) => {
                      >
                         Nutrition and Allergens
                      </SectionHeader>
+                     {Boolean(
+                        simpleRecipe.simpleRecipeYields[0].allergens?.length
+                     ) && (
+                        <>
+                           <Spacer size="20px" />
+                           <ContentText style={{ textAlign: 'center' }}>
+                              Allergens:{' '}
+                              {simpleRecipe.simpleRecipeYields[0].allergens
+                                 .map(allergen => allergen.title)
+                                 .join(', ')}
+                           </ContentText>
+                        </>
+                     )}
                      {Boolean(
                         simpleRecipe.simpleRecipeYields[0].nutritionalInfo
                      ) && (

@@ -120,18 +120,35 @@ const ProductPage = ({ navigation, route }) => {
                   {product.description}
                </ContentText>
                <Spacer size="68px" />
-               <SectionHeader color={visual.color}>
-                  Nutrition and Allergens
-               </SectionHeader>
-               {Boolean(product.nutritionalInfo) && (
+               {Boolean(
+                  product.allergens?.length || product.nutritionalInfo
+               ) && (
                   <>
-                     <Spacer size="20px" />
-                     <NutritionWrapper>
-                        <Nutrition values={product.nutritionalInfo} />
-                     </NutritionWrapper>
+                     <SectionHeader color={visual.color}>
+                        Nutrition and Allergens
+                     </SectionHeader>
+                     {Boolean(product.allergens?.length) && (
+                        <>
+                           <Spacer size="20px" />
+                           <ContentText style={{ textAlign: 'center' }}>
+                              Allergens:{' '}
+                              {product.allergens
+                                 .map(allergen => allergen.title)
+                                 .join(', ')}
+                           </ContentText>
+                        </>
+                     )}
+                     {Boolean(product.nutritionalInfo) && (
+                        <>
+                           <Spacer size="20px" />
+                           <NutritionWrapper>
+                              <Nutrition values={product.nutritionalInfo} />
+                           </NutritionWrapper>
+                        </>
+                     )}
+                     <Spacer size="40px" />
                   </>
                )}
-               <Spacer size="40px" />
             </DetailsContainer>
             <PricingContainer>
                <AddToCart
