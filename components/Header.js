@@ -113,7 +113,7 @@ const WebNav = ({ navigation }) => {
                <BasketButton />
             </NavLink>
             {isAuthenticated ? (
-               <NavButton blend onPress={logout}>
+               <NavButton fade onPress={logout}>
                   <NavLinkText white>Logout</NavLinkText>
                </NavButton>
             ) : (

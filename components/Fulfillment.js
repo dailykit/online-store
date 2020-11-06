@@ -220,7 +220,9 @@ const Fulfillment = ({ navigation, setEditing }) => {
                               const result = generateDeliverySlots(
                                  preOrderDelivery[0].recurrences
                               )
+                              console.log('Fulfillment -> result', result)
                               if (result.status) {
+                                 console.log('Generating mini slots...')
                                  const miniSlots = generateMiniSlots(
                                     result.data,
                                     15
@@ -236,13 +238,12 @@ const Fulfillment = ({ navigation, setEditing }) => {
                                        },
                                     })
                                  } else {
-                                    setOops(
-                                       'Sorry! No time slots available for selected options.'
-                                    )
+                                    setOops('Sorry! No time slots available.')
                                  }
                               } else {
                                  setOops(
-                                    'Sorry! No time slots available for selected options.'
+                                    result.message ||
+                                       'Sorry! No time slots available for selected options.'
                                  )
                               }
                            } else {
@@ -269,7 +270,8 @@ const Fulfillment = ({ navigation, setEditing }) => {
                                  })
                               } else {
                                  setOops(
-                                    'Sorry! Delivery not available at the moment.'
+                                    result.message ||
+                                       'Sorry! Delivery not available at the moment.'
                                  )
                               }
                            } else {
@@ -349,38 +351,42 @@ const Fulfillment = ({ navigation, setEditing }) => {
          <ScrollView>
             <Text style={[styles.text, { opacity: 0.6 }]}>Order for:</Text>
             <View style={{ flexDirection: 'row', marginBottom: 20 }}>
-               <TouchableOpacity
-                  onPress={() => setType('DELIVERY')}
-                  style={styles.radioButton}
-               >
-                  <Text style={styles.text}>Delivery</Text>
-                  {type === 'DELIVERY' && (
-                     <View
-                        style={[
-                           styles.check,
-                           { backgroundColor: visual.color },
-                        ]}
-                     >
-                        <MaterialIcons name="done" size={16} color="#fff" />
-                     </View>
-                  )}
-               </TouchableOpacity>
-               <TouchableOpacity
-                  onPress={() => setType('PICKUP')}
-                  style={styles.radioButton}
-               >
-                  <Text style={styles.text}>Pick up</Text>
-                  {type === 'PICKUP' && (
-                     <View
-                        style={[
-                           styles.check,
-                           { backgroundColor: visual.color },
-                        ]}
-                     >
-                        <MaterialIcons name="done" size={16} color="#fff" />
-                     </View>
-                  )}
-               </TouchableOpacity>
+               {Boolean(availability.delivery.isAvailable) && (
+                  <TouchableOpacity
+                     onPress={() => setType('DELIVERY')}
+                     style={styles.radioButton}
+                  >
+                     <Text style={styles.text}>Delivery</Text>
+                     {type === 'DELIVERY' && (
+                        <View
+                           style={[
+                              styles.check,
+                              { backgroundColor: visual.color },
+                           ]}
+                        >
+                           <MaterialIcons name="done" size={16} color="#fff" />
+                        </View>
+                     )}
+                  </TouchableOpacity>
+               )}
+               {Boolean(availability.pickup.isAvailable) && (
+                  <TouchableOpacity
+                     onPress={() => setType('PICKUP')}
+                     style={styles.radioButton}
+                  >
+                     <Text style={styles.text}>Pick up</Text>
+                     {type === 'PICKUP' && (
+                        <View
+                           style={[
+                              styles.check,
+                              { backgroundColor: visual.color },
+                           ]}
+                        >
+                           <MaterialIcons name="done" size={16} color="#fff" />
+                        </View>
+                     )}
+                  </TouchableOpacity>
+               )}
             </View>
             {type === 'DELIVERY' && (
                <View style={{ marginBottom: 20 }}>

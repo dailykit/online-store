@@ -2,46 +2,47 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { MaterialIcons } from '@expo/vector-icons'
 import { useAppContext } from '../context/app'
-import { useMutation } from '@apollo/react-hooks'
-import { UPDATE_CUSTOMER_REFERRAL } from '../graphql'
+import { useLazyQuery } from '@apollo/react-hooks'
+import { SET_REFERRAL_CODE } from '../graphql'
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
 
 const ReferralCode = () => {
-   const { visual } = useAppContext()
+   const { visual, brandId } = useAppContext()
    const { customerReferral } = useCartContext()
    const { setIsDrawerOpen } = useDrawerContext()
 
-   const [code, setCode] = React.useState('')
-   const [busy, setBusy] = React.useState(false)
+   const [input, setInput] = React.useState('')
+   const [error, setError] = React.useState('')
 
    // Mutation
-   const [updateCustomerReferral] = useMutation(UPDATE_CUSTOMER_REFERRAL, {
-      variables: {
-         id: customerReferral?.id,
-         set: {
-            referredByCode: code,
-         },
-      },
-      onCompleted: () => {
-         setIsDrawerOpen(false)
+   const [setReferralCode, { loading }] = useLazyQuery(SET_REFERRAL_CODE, {
+      onCompleted: data => {
+         if (data?.crm_setReferralCode[0]?.success) {
+            setError('')
+            setIsDrawerOpen(false)
+         } else {
+            setError(data?.crm_setReferralCode[0]?.message)
+         }
       },
       onError: error => {
          console.log(error)
+         setError('Something went wrong! Please try again later.')
       },
    })
 
    // Handlers
    const submit = () => {
-      try {
-         if (code && customerReferral) {
-            setBusy(true)
-            updateCustomerReferral()
-         }
-      } catch (err) {
-         console.log(err)
-      } finally {
-         setBusy(false)
+      if (input && customerReferral && brandId) {
+         setReferralCode({
+            variables: {
+               params: {
+                  input,
+                  brandId,
+                  referralCode: customerReferral.referralCode,
+               },
+            },
+         })
       }
    }
 
@@ -56,13 +57,15 @@ const ReferralCode = () => {
             <HeaderText>Add Referral Code to earn rewards!</HeaderText>
          </Header>
          <Body>
+            {Boolean(error) && <ErrorText>{error}</ErrorText>}
             <Input
-               placeholder="Enter referral code"
-               value={code}
-               onChangeText={text => setCode(text)}
+               placeholder="Enter referral code or email"
+               value={input}
+               onChangeText={text => setInput(text)}
+               autoFocus={true}
             />
-            <CTA color={visual.color} disabled={busy} onPress={submit}>
-               <CTAText> {busy ? 'Submitting...' : 'Submit'} </CTAText>
+            <CTA color={visual.color} disabled={loading} onPress={submit}>
+               <CTAText> {loading ? 'Submitting...' : 'Submit'} </CTAText>
             </CTA>
          </Body>
       </Wrapper>
@@ -97,6 +100,10 @@ const Input = styled.TextInput`
    margin-bottom: 1rem;
    border-color: #686b78;
    text-align: center;
+   padding: 4px;
+   width: 360px;
+   font-size: 18px;
+   border-radius: 2px;
 `
 
 const CTA = styled.TouchableOpacity`
@@ -111,4 +118,10 @@ const CTA = styled.TouchableOpacity`
 const CTAText = styled.Text`
    color: #fff;
    text-align: center;
+`
+
+const ErrorText = styled.Text`
+   color: #ff5a52;
+   text-align: center;
+   margin-bottom: 0.5rem;
 `
