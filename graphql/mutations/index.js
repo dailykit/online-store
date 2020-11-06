@@ -201,14 +201,3 @@ export const DELETE_ORDER_CART_REWARDS = gql`
       }
    }
 `
-
-export const UPDATE_CUSTOMER_REFERRAL = gql`
-   mutation UpdateCustomerReferral(
-      $id: Int!
-      $set: crm_customerReferral_set_input
-   ) {
-      updateCustomerReferral(pk_columns: { id: $id }, _set: $set) {
-         id
-      }
-   }
-`

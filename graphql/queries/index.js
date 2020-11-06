@@ -1362,3 +1362,12 @@ export const BRANDS = gql`
       }
    }
 `
+
+export const SET_REFERRAL_CODE = gql`
+   query SetReferralCode($params: jsonb!) {
+      crm_setReferralCode(args: { params: $params }) {
+         success
+         message
+      }
+   }
+`
