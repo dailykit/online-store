@@ -21,6 +21,7 @@ import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
 import PhotoShowcase from '../../components/PhotoShowcase'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
+import Recommendations from '../../components/Recommendations'
 
 const Recipe = ({ navigation, route }) => {
    const { recipeId, refId, refType } = route.params
@@ -485,7 +486,17 @@ const Recipe = ({ navigation, route }) => {
                            </AllergensText>
                         </>
                      )}
-                     <Spacer size="100px" />
+                     <Spacer size="20px" />
+                  </>
+               )}
+               {Boolean(refProduct?.recommendations) && (
+                  <>
+                     <Spacer size="80px" />
+                     <Recommendations
+                        navigation={navigation}
+                        recommendations={refProduct?.recommendations}
+                     />
+                     <Spacer size="68px" />
                   </>
                )}
             </DetailsContainer>

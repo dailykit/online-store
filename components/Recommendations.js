@@ -9,42 +9,42 @@ const Recommendations = ({ navigation, recommendations }) => {
    React.useEffect(() => {
       if (recommendations) {
          const temp = recommendations.map(recommendation => {
-            const inventoryProducts = recommendation.products.map(product => {
+            const inventoryProducts = []
+            const simpleRecipeProducts = []
+            recommendation.products.forEach(product => {
                if (product.type === 'inventoryProduct') {
-                  return product.id
+                  inventoryProducts.push(product.id)
+               } else {
+                  simpleRecipeProducts.push(product.id)
                }
             })
-            const simpleRecipeProducts = recommendation.products.map(
-               product => {
-                  if (product.type === 'simpleRecipeProduct') {
-                     return product.id
-                  }
-               }
-            )
             return {
                name: recommendation.type,
                inventoryProducts,
                simpleRecipeProducts,
             }
          })
-         setData(temp)
+         console.log('Recommendations -> temp', temp)
+         setData([...temp])
       }
-   }, [])
+   }, [recommendations])
 
    return (
       <Wrapper>
-         <Heading> Recommendations </Heading>
+         <Heading> Recommended Products </Heading>
          {data.map(category => (
             <Category>
                <CategoryBanner
                   navigation={navigation}
                   title={category.name}
                   showLink={false}
+                  recommendations={true}
                />
                <Products
                   navigation={navigation}
                   category={category}
                   horizontal={true}
+                  recommendations={true}
                />
             </Category>
          ))}
@@ -57,9 +57,13 @@ export default Recommendations
 const Wrapper = styled.View``
 
 const Heading = styled.Text`
-   font-size: 1.2rem;
-   color: #666;
-   font-weight: bold;
+   font-size: 20px;
+   color: #000;
+   font-weight: 600;
+   margin-bottom: 24px;
+   text-align: center;
 `
 
-const Category = styled.View``
+const Category = styled.View`
+   margin-bottom: 32px;
+`

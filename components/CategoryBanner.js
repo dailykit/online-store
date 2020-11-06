@@ -4,11 +4,27 @@ import EStyleSheet from 'react-native-extended-stylesheet'
 import { useAppContext } from '../context/app'
 import { width } from '../utils/Scaling'
 
-export const CategoryBanner = ({ navigation, title, showLink }) => {
+export const CategoryBanner = ({
+   navigation,
+   title,
+   showLink,
+   recommendations = false,
+}) => {
    const { visual } = useAppContext()
 
    return (
-      <View style={styles.container}>
+      <View
+         style={[
+            styles.container,
+            {
+               marginHorizontal: recommendations
+                  ? 'auto'
+                  : width > 768
+                  ? 20
+                  : 5,
+            },
+         ]}
+      >
          <Text style={styles.title}>{title}</Text>
          {showLink && (
             <TouchableOpacity
@@ -40,7 +56,6 @@ const styles = EStyleSheet.create({
       justifyContent: 'space-between',
       borderBottomColor: '#eaeded',
       borderBottomWidth: 1,
-      marginHorizontal: width > 768 ? 20 : 5,
    },
    title: {
       fontSize: width > 768 ? '1.3rem' : '1.1rem',
