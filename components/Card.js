@@ -235,6 +235,9 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         product={product}
                         navigation={navigation}
                         setPrice={setPrice}
+                        clickHandler={() =>
+                           product.isPopupAllowed && setIsModalVisible(true)
+                        }
                         {...restProps}
                      />
                   </>
@@ -256,6 +259,9 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         {...restProps}
                         setPrice={price => setPrice(price)}
                         setDiscount={setDiscount}
+                        clickHandler={() =>
+                           product.isPopupAllowed && setIsModalVisible(true)
+                        }
                      />
                   </>
                )}
