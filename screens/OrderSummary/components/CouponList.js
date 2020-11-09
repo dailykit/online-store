@@ -16,6 +16,7 @@ const CouponList = () => {
    const { toastr } = useStoreToast()
 
    const [applying, setApplying] = React.useState(false)
+   const [availableCoupons, setAvailableCoupons] = React.useState([])
 
    // Subscription
    const { data, loading, error } = useSubscription(COUPONS, {
@@ -25,6 +26,12 @@ const CouponList = () => {
             keycloakId: customer.keycloakId,
          },
          brandId,
+      },
+      onSubscriptionData: data => {
+         const coupons = data.subscriptionData.data.coupons
+         setAvailableCoupons([
+            ...coupons.filter(coupon => coupon.visibilityCondition?.isValid),
+         ])
       },
    })
 
@@ -76,13 +83,11 @@ const CouponList = () => {
 
    return (
       <>
-         {data?.coupons?.length ? (
+         {availableCoupons.length ? (
             <Wrapper>
-               {data.coupons
-                  .filter(coupon => coupon.visibilityCondition?.isValid)
-                  .map(coupon => (
-                     <Coupon coupon={coupon} applyCoupon={applyCoupon} />
-                  ))}
+               {availableCoupons.map(coupon => (
+                  <Coupon coupon={coupon} applyCoupon={applyCoupon} />
+               ))}
             </Wrapper>
          ) : (
             <EmptyWrapper>
