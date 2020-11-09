@@ -3,11 +3,11 @@ import styled from 'styled-components/native'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 import { COUPONS, CREATE_ORDER_CART_REWARDS } from '../../../graphql'
 import { useCartContext } from '../../../context/cart'
-import { Spinner, Text } from 'native-base'
 import { useAppContext } from '../../../context/app'
 import { Feather } from '@expo/vector-icons'
 import { useDrawerContext } from '../../../context/drawer'
 import { useStoreToast } from '../../../utils'
+import CouponsSkeleton from '../../../components/skeletons/coupons'
 
 const CouponList = () => {
    const { cart, customer } = useCartContext()
@@ -79,7 +79,7 @@ const CouponList = () => {
       }
    }
 
-   if (loading) return <Spinner />
+   if (loading) return <CouponsSkeleton />
 
    return (
       <>
