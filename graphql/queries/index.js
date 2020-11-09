@@ -520,6 +520,7 @@ export const SIMPLE_PRODUCT = gql`
          default
          tags
          description
+         recommendations
          assets
          isPopupAllowed
          defaultCartItem

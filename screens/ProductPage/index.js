@@ -12,6 +12,7 @@ import { useAppContext } from '../../context/app'
 import { INVENTORY_PRODUCT } from '../../graphql'
 import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
+import Recommendations from '../../components/Recommendations'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
@@ -189,7 +190,17 @@ const ProductPage = ({ navigation, route }) => {
                            </AllergensText>
                         </>
                      )}
-                     <Spacer size="100px" />
+                     <Spacer size="20px" />
+                  </>
+               )}
+               {Boolean(product.recommendations) && (
+                  <>
+                     <Spacer size="80px" />
+                     <Recommendations
+                        navigation={navigation}
+                        recommendations={product.recommendations}
+                     />
+                     <Spacer size="68px" />
                   </>
                )}
             </DetailsContainer>

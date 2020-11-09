@@ -11,7 +11,12 @@ import { width } from '../utils/Scaling'
 import Card from './Card'
 import CardSkeleton from './skeletons/card'
 
-const Products = ({ category, navigation, horizontal }) => {
+const Products = ({
+   category,
+   navigation,
+   horizontal,
+   recommendations = false,
+}) => {
    const [products, setProducts] = React.useState([])
 
    React.useEffect(() => {
@@ -85,7 +90,11 @@ const Products = ({ category, navigation, horizontal }) => {
       ].some(item => item)
    )
       return (
-         <SafeAreaView style={{ margin: width > 768 ? 20 : 5 }}>
+         <SafeAreaView
+            style={{
+               margin: recommendations ? 0 : width > 768 ? 20 : 5,
+            }}
+         >
             {horizontal ? (
                <FlatList
                   showsHorizontalScrollIndicator={true}
@@ -108,7 +117,9 @@ const Products = ({ category, navigation, horizontal }) => {
       )
 
    return (
-      <SafeAreaView style={{ margin: width > 768 ? 20 : 5 }}>
+      <SafeAreaView
+         style={{ margin: recommendations ? 0 : width > 768 ? 20 : 5 }}
+      >
          {Boolean(products.length) &&
             (horizontal ? (
                <FlatList

@@ -3,11 +3,11 @@ import styled from 'styled-components/native'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 import { COUPONS, CREATE_ORDER_CART_REWARDS } from '../../../graphql'
 import { useCartContext } from '../../../context/cart'
-import { Spinner, Text } from 'native-base'
 import { useAppContext } from '../../../context/app'
 import { Feather } from '@expo/vector-icons'
 import { useDrawerContext } from '../../../context/drawer'
 import { useStoreToast } from '../../../utils'
+import CouponsSkeleton from '../../../components/skeletons/coupons'
 
 const CouponList = () => {
    const { cart, customer } = useCartContext()
@@ -16,6 +16,7 @@ const CouponList = () => {
    const { toastr } = useStoreToast()
 
    const [applying, setApplying] = React.useState(false)
+   const [availableCoupons, setAvailableCoupons] = React.useState([])
 
    // Subscription
    const { data, loading, error } = useSubscription(COUPONS, {
@@ -25,6 +26,12 @@ const CouponList = () => {
             keycloakId: customer.keycloakId,
          },
          brandId,
+      },
+      onSubscriptionData: data => {
+         const coupons = data.subscriptionData.data.coupons
+         setAvailableCoupons([
+            ...coupons.filter(coupon => coupon.visibilityCondition?.isValid),
+         ])
       },
    })
 
@@ -72,17 +79,15 @@ const CouponList = () => {
       }
    }
 
-   if (loading) return <Spinner />
+   if (loading) return <CouponsSkeleton />
 
    return (
       <>
-         {data?.coupons?.length ? (
+         {availableCoupons.length ? (
             <Wrapper>
-               {data.coupons
-                  .filter(coupon => coupon.visibilityCondition?.isValid)
-                  .map(coupon => (
-                     <Coupon coupon={coupon} applyCoupon={applyCoupon} />
-                  ))}
+               {availableCoupons.map(coupon => (
+                  <Coupon coupon={coupon} applyCoupon={applyCoupon} />
+               ))}
             </Wrapper>
          ) : (
             <EmptyWrapper>

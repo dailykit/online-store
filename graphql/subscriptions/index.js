@@ -285,6 +285,7 @@ export const COUPONS = gql`
       coupons(
          where: {
             isActive: { _eq: true }
+            isArchived: { _eq: false }
             brands: { brandId: { _eq: $brandId }, isActive: { _eq: true } }
          }
       ) {
