@@ -99,7 +99,7 @@ const DrawerLayout = () => {
          case 'ReferralCode':
             return <ReferralCode />
          default:
-            return <Text>Oops! No such component.</Text>
+            return <Text>.</Text>
       }
    }
 
