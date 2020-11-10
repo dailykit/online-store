@@ -748,6 +748,7 @@ const CTA = styled.TouchableOpacity`
    align-items: center;
    justify-content: center;
    opacity: ${props => (props.disabled ? 0.6 : 1)};
+   margin-bottom: 1rem;
 `
 
 const CTAText = styled.Text`
