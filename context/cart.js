@@ -63,7 +63,7 @@ export const CartContextProvider = ({ children }) => {
                },
             })
          } else {
-            console.log('Unkown update!')
+            console.log('Unknown update!')
          }
       }
    }, [saved])
