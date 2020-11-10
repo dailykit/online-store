@@ -151,22 +151,24 @@ const ProductPage = ({ navigation, route }) => {
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={{ marginHorizontal: 'auto' }}
                >
-                  <Tab
-                     active={activeTab === 'description'}
-                     color={visual.color}
-                     onPress={() =>
-                        containerRef.current.scrollTo({
-                           y: 0,
-                        })
-                     }
-                  >
-                     <TabText
+                  {Boolean(product.description) && (
+                     <Tab
                         active={activeTab === 'description'}
                         color={visual.color}
+                        onPress={() =>
+                           containerRef.current.scrollTo({
+                              y: 0,
+                           })
+                        }
                      >
-                        Description
-                     </TabText>
-                  </Tab>
+                        <TabText
+                           active={activeTab === 'description'}
+                           color={visual.color}
+                        >
+                           Description
+                        </TabText>
+                     </Tab>
+                  )}
                   {Boolean(
                      product.nutritionalInfo || product.allergens?.length
                   ) && (
@@ -188,10 +190,14 @@ const ProductPage = ({ navigation, route }) => {
                      </Tab>
                   )}
                </Tabs>
-               <Spacer size="28px" />
-               <ContentText style={{ textAlign: 'center' }}>
-                  {product.description}
-               </ContentText>
+               {Boolean(product.description) && (
+                  <>
+                     <Spacer size="28px" />
+                     <ContentText style={{ textAlign: 'center' }}>
+                        {product.description}
+                     </ContentText>
+                  </>
+               )}
                <Spacer size="68px" />
                {Boolean(
                   product.allergens?.length || product.nutritionalInfo

@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components/native'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scaling'
+import defaultProductImage from '../../assets/imgs/default-product-image.png'
 
 const PhotoShowcase = ({ images, fullWidth }) => {
    const { visual } = useAppContext()
@@ -13,13 +14,14 @@ const PhotoShowcase = ({ images, fullWidth }) => {
       }
    }, [images])
 
-   if (!images || !images.length) return null
    return (
       <Wrapper>
          <Display
             fullWidth={fullWidth}
-            style={{ resizeMode: fullWidth ? 'cover' : 'contain' }}
-            source={{ uri: selectedPhoto }}
+            style={{
+               resizeMode: fullWidth && selectedPhoto ? 'cover' : 'contain',
+            }}
+            source={{ uri: selectedPhoto || defaultProductImage }}
          />
          {Boolean(images?.length > 1) && (
             <PhotoSlider horizontal showsHorizontalScrollIndicator={false}>
