@@ -197,6 +197,16 @@ const Address = () => {
    const [saving, setSaving] = React.useState(false)
    const [formError, setFormError] = React.useState('')
 
+   const charLimit = 50
+   const handleChange = (text, field) => {
+      if (text.length <= charLimit) {
+         setPopulated({ ...populated, [field]: text })
+      } else {
+         const updatedText = text.slice(0, 50)
+         setPopulated({ ...populated, [field]: updatedText })
+      }
+   }
+
    const formatAddress = async address => {
       const response = await fetch(
          `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&address=${encodeURIComponent(
@@ -358,22 +368,24 @@ const Address = () => {
             <FormField>
                <FormFieldLabel>Address Line 1*</FormFieldLabel>
                <FormFieldInput
-                  onChangeText={text =>
-                     setPopulated({ ...populated, line1: text })
-                  }
+                  onChangeText={text => handleChange(text, 'line1')}
                   value={populated?.line1 || ''}
                   editable={Boolean(populated)}
                />
+               {Boolean(populated?.line1) && (
+                  <WordLimit>{`${populated.line1.length}/${charLimit}`}</WordLimit>
+               )}
             </FormField>
             <FormField>
                <FormFieldLabel>Address Line 2</FormFieldLabel>
                <FormFieldInput
-                  onChangeText={text =>
-                     setPopulated({ ...populated, line2: text })
-                  }
+                  onChangeText={text => handleChange(text, 'line2')}
                   value={populated?.line2 || ''}
                   editable={Boolean(populated)}
                />
+               {Boolean(populated?.line2) && (
+                  <WordLimit>{`${populated.line2.length}/${charLimit}`}</WordLimit>
+               )}
             </FormField>
             <Grid>
                <FormField>
@@ -746,4 +758,9 @@ const Grid = styled.View`
    display: grid;
    grid-template-columns: repeat(2, 1fr);
    grid-gap: 16px;
+`
+
+const WordLimit = styled.Text`
+   font-size: 12px;
+   text-align: right;
 `
