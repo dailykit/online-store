@@ -200,7 +200,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
                            break
                         }
                         default: {
-                           return setOops('Unkown error!')
+                           return setOops('Unknown error!')
                         }
                      }
                   } else {
@@ -280,7 +280,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
                            break
                         }
                         default: {
-                           return setOops('Unkown error!')
+                           return setOops('Unknown error!')
                         }
                      }
                   } else {
@@ -289,7 +289,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
                   break
                }
                default: {
-                  return setOops('Unkown error!')
+                  return setOops('Unknown error!')
                }
             }
          }
