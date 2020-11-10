@@ -365,6 +365,16 @@ const Address = () => {
                   editable={Boolean(populated)}
                />
             </FormField>
+            <FormField>
+               <FormFieldLabel>Address Line 2</FormFieldLabel>
+               <FormFieldInput
+                  onChangeText={text =>
+                     setPopulated({ ...populated, line2: text })
+                  }
+                  value={populated?.line2 || ''}
+                  editable={Boolean(populated)}
+               />
+            </FormField>
             <Grid>
                <FormField>
                   <FormFieldLabel>City*</FormFieldLabel>
