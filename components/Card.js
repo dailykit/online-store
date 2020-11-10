@@ -236,7 +236,11 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         navigation={navigation}
                         setPrice={setPrice}
                         clickHandler={() =>
-                           product.isPopupAllowed && setIsModalVisible(true)
+                           product.isPopupAllowed &&
+                           navigation.navigate('ProductPage', {
+                              id: product.id,
+                              type: 'comboProduct',
+                           })
                         }
                         {...restProps}
                      />
@@ -260,7 +264,11 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         setPrice={price => setPrice(price)}
                         setDiscount={setDiscount}
                         clickHandler={() =>
-                           product.isPopupAllowed && setIsModalVisible(true)
+                           product.isPopupAllowed &&
+                           navigation.navigate('ProductPage', {
+                              id: product.id,
+                              type: 'customizableProduct',
+                           })
                         }
                      />
                   </>

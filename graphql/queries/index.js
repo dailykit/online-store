@@ -200,6 +200,8 @@ export const COMBO_PRODUCT = gql`
       comboProduct(id: $id) {
          id
          name
+         description
+         tags
          isPopupAllowed
          defaultCartItem
          assets
@@ -384,6 +386,8 @@ export const CUSTOMIZABLE_PRODUCT = gql`
       customizableProduct(id: $id) {
          id
          name
+         description
+         tags
          isPopupAllowed
          defaultCartItem
          assets
