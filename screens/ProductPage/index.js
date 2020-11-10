@@ -9,7 +9,11 @@ import AppSkeleton from '../../components/skeletons/app'
 import RecipeSkeleton from '../../components/skeletons/recipe'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 import { useAppContext } from '../../context/app'
-import { INVENTORY_PRODUCT } from '../../graphql'
+import {
+   COMBO_PRODUCT,
+   CUSTOMIZABLE_PRODUCT,
+   INVENTORY_PRODUCT,
+} from '../../graphql'
 import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
 import Recommendations from '../../components/Recommendations'
@@ -39,11 +43,29 @@ const ProductPage = ({ navigation, route }) => {
       return setActiveTab('description')
    }, [scrollHeight])
 
-   const [fetchInventoryProduct, { loading }] = useLazyQuery(
+   const [fetchInventoryProduct, { loading: IPLoading }] = useLazyQuery(
       INVENTORY_PRODUCT,
       {
          onCompleted: data => {
             setProduct(data.inventoryProduct)
+         },
+         fetchPolicy: 'cache-and-network',
+      }
+   )
+   const [fetchCustomizableProduct, { loading: CUSLoading }] = useLazyQuery(
+      CUSTOMIZABLE_PRODUCT,
+      {
+         onCompleted: data => {
+            setProduct(data.customizableProduct)
+         },
+         fetchPolicy: 'cache-and-network',
+      }
+   )
+   const [fetchComboProduct, { loading: COMLoading }] = useLazyQuery(
+      COMBO_PRODUCT,
+      {
+         onCompleted: data => {
+            setProduct(data.comboProduct)
          },
          fetchPolicy: 'cache-and-network',
       }
@@ -53,6 +75,20 @@ const ProductPage = ({ navigation, route }) => {
       switch (type) {
          case 'inventoryProduct': {
             return fetchInventoryProduct({
+               variables: {
+                  id,
+               },
+            })
+         }
+         case 'customizableProduct': {
+            return fetchCustomizableProduct({
+               variables: {
+                  id,
+               },
+            })
+         }
+         case 'comboProduct': {
+            return fetchComboProduct({
                variables: {
                   id,
                },
@@ -68,7 +104,7 @@ const ProductPage = ({ navigation, route }) => {
       return <AppSkeleton />
    }
 
-   if (loading)
+   if (IPLoading || COMLoading || CUSLoading)
       return (
          <>
             <Header title="Home" navigation={navigation} />
