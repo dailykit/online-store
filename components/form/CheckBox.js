@@ -33,24 +33,28 @@ const CheckBox = ({
          />
          {Boolean(image) && <Img source={{ uri: image }} />}
          <Title>{title}</Title>
-         <Price strike={Boolean(discount)}>
-            {new Intl.NumberFormat('en-US', {
-               style: 'currency',
-               currency: CURRENCY,
-            }).format(price)}
-         </Price>
-         {Boolean(discount) && (
-            <Price>
-               {new Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: CURRENCY,
-               }).format(
-                  discountedPrice({
-                     value: price,
-                     discount: discount,
-                  }).toFixed(2)
+         {Boolean(price) && (
+            <>
+               <Price strike={Boolean(discount)}>
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(price)}
+               </Price>
+               {Boolean(discount) && (
+                  <Price>
+                     {new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: CURRENCY,
+                     }).format(
+                        discountedPrice({
+                           value: price,
+                           discount: discount,
+                        }).toFixed(2)
+                     )}
+                  </Price>
                )}
-            </Price>
+            </>
          )}
       </Wrapper>
    )
