@@ -743,7 +743,7 @@ const GridLayout = styled.View`
    padding: 2rem;
    display: grid;
    background: #e9ecee;
-   grid-template-columns: 1fr 400px;
+   grid-template-columns: auto 500px;
    height: calc(100vh - 66px);
    overflow-y: auto;
 `
@@ -947,7 +947,7 @@ const CartItemImage = styled.Image`
 const CartItemInfo = styled.View`
    margin-left: 10px;
    margin-right: 5px;
-   width: ${width > 768 ? '120px' : '100px'};
+   width: ${width > 768 ? '220px' : '100px'};
 `
 
 const CartItemName = styled.Text`
