@@ -257,9 +257,18 @@ const Checkout = ({ cart, navigation }) => {
                            {cart?.fulfillmentInfo?.type.includes(
                               'DELIVERY'
                            ) && (
-                              <SelectedFulfillmentAddress>
-                                 {`${cart.address.line1}, ${cart.address.line2}, ${cart.address.city}, ${cart.address.state}, ${cart.address.country}`}
-                              </SelectedFulfillmentAddress>
+                              <>
+                                 {Boolean(cart.address) ? (
+                                    <SelectedFulfillmentAddress>
+                                       {`${cart?.address?.line1}, ${cart?.address?.line2}, ${cart?.address?.city}, ${cart?.address?.state}, ${cart?.address?.country}`}
+                                    </SelectedFulfillmentAddress>
+                                 ) : (
+                                    <HelpText>
+                                       We could not resolve your address. Please
+                                       select your address again!
+                                    </HelpText>
+                                 )}
+                              </>
                            )}
                         </SelectedFulfillment>
                      )}
