@@ -164,7 +164,7 @@ export default function OnboardingStack(props) {
                      }
                      case 'Location': {
                         availabilityState.location =
-                           brandSettings[0]?.value.address || value.address
+                           brandSettings[0]?.value || value
                         return
                      }
                      case 'Loyalty Points Availability': {
@@ -195,6 +195,11 @@ export default function OnboardingStack(props) {
                      }
                   }
                }
+            )
+
+            console.log(
+               'OnboardingStack -> availabilityState',
+               availabilityState
             )
             setBrand({ ...brandState })
             setVisual({ ...visualState })
