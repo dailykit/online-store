@@ -11,6 +11,7 @@ import { Spinner, View } from 'native-base'
 import React from 'react'
 import { MAPS_API_KEY, PAYMENTS_API_URL } from 'react-native-dotenv'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import MapView from 'react-native-maps'
 import styled, { css } from 'styled-components/native'
 import { useAppContext } from '../../context/app'
 import { useAuth } from '../../context/auth'
@@ -24,6 +25,8 @@ import {
 } from '../../graphql'
 import { useScript } from '../../utils/useScript'
 import { createSetupIntent } from './api'
+
+import MapMarker from '../../assets/imgs/location home @1x.png'
 
 const DailyKeyBackup = ({ params }) => {
    const { path } = params
@@ -207,6 +210,21 @@ const Address = () => {
       }
    }
 
+   const setNewCoordinates = pos => {
+      setFormError('')
+      const newLat = pos.latLng.lat().toString()
+      const newLng = pos.latLng.lng().toString()
+      if (newLat && newLng) {
+         setPopulated({
+            ...populated,
+            lat: newLat,
+            lng: newLng,
+         })
+      } else {
+         setFormError('Failed to set location!')
+      }
+   }
+
    const formatAddress = async address => {
       const response = await fetch(
          `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&address=${encodeURIComponent(
@@ -268,6 +286,7 @@ const Address = () => {
 
    const save = async () => {
       try {
+         console.log(populated)
          setSaving(true)
          setFormError('')
          if (!validateFields()) {
@@ -364,6 +383,27 @@ const Address = () => {
                      }}
                   />
                </FormField>
+            )}
+            {Boolean(populated?.lat && populated?.lng) && (
+               <MapView
+                  provider="google"
+                  region={{
+                     latitude: +populated.lat,
+                     longitude: +populated.lng,
+                  }}
+                  style={{ height: 150, marginBottom: 16 }}
+               >
+                  <MapView.Marker
+                     coordinate={{
+                        latitude: +populated.lat,
+                        longitude: +populated.lng,
+                     }}
+                     icon={MapMarker}
+                     title="You are here"
+                     draggable
+                     onDragEnd={setNewCoordinates}
+                  />
+               </MapView>
             )}
             <FormField>
                <FormFieldLabel>Address Line 1*</FormFieldLabel>

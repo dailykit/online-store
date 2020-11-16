@@ -13,7 +13,7 @@ import { CURRENCY } from 'react-native-dotenv'
 // 12
 
 const ProfileScreen = ({ navigation }) => {
-   const { visual, masterLoading } = useAppContext()
+   const { visual, masterLoading, availability } = useAppContext()
    const { customer, customerDetails } = useCartContext()
 
    if (masterLoading) {
@@ -36,7 +36,7 @@ const ProfileScreen = ({ navigation }) => {
                   }`}</BannerName>
                )}
             </Banner>
-            <ReferralCode />
+            {Boolean(availability?.referral?.isAvailable) && <ReferralCode />}
             <PersonalDetails />
             <Addresses />
             {Boolean(CURRENCY !== 'INR') && <Cards />}

@@ -83,6 +83,12 @@ const WebNav = ({ navigation }) => {
 
    const [query, setQuery] = React.useState('')
 
+   const navigateToExternalLink = link => {
+      if (window) {
+         window.open(link, '_blank')
+      }
+   }
+
    return (
       <>
          <NavLeft>
@@ -90,9 +96,13 @@ const WebNav = ({ navigation }) => {
             <NavLink onPress={() => navigation.navigate('Home')}>
                <NavLinkText>{brand.name || 'Home'}</NavLinkText>
             </NavLink>
-            <NavLink>
-               <NavLinkText>About Us</NavLinkText>
-            </NavLink>
+            {Boolean(brand.navLinks?.aboutUs) && (
+               <NavLink
+                  onPress={() => navigateToExternalLink(brand.navLinks.aboutUs)}
+               >
+                  <NavLinkText>About Us</NavLinkText>
+               </NavLink>
+            )}
             <SearchContainer onPress={() => navigation.navigate('Search')}>
                <Feather name="search" size={18} color="#aaa" />
                <SearchText>Search</SearchText>
