@@ -138,6 +138,10 @@ export default function OnboardingStack(props) {
                            brandSettings[0]?.value.name || value.name
                         return
                      }
+                     case 'Nav Links': {
+                        brandState.navLinks = brandSettings[0]?.value || value
+                        return
+                     }
                      case 'Primary Color': {
                         visualState.color =
                            brandSettings[0]?.value.color || value.color
