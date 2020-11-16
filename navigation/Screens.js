@@ -162,6 +162,11 @@ export default function OnboardingStack(props) {
                            brandSettings[0]?.value || value
                         return
                      }
+                     case 'Referral Availability': {
+                        availabilityState.referral =
+                           brandSettings[0]?.value || value
+                        return
+                     }
                      case 'Location': {
                         availabilityState.location =
                            brandSettings[0]?.value || value
@@ -307,7 +312,10 @@ export default function OnboardingStack(props) {
                })
             }
             console.log('Customer created: ', data.createCustomer)
-            open('ReferralCode')
+            if (availability?.referral?.isAvailable) {
+               console.log('Referral available')
+               open('ReferralCode')
+            }
          },
          onError: error => {
             console.log(error)
@@ -597,9 +605,11 @@ export default function OnboardingStack(props) {
          subscribingCart,
          settingsMapped,
       })
-      if (!isInitialized) {
+      if (false && !isInitialized) {
+         console.log('OnboardingStack -> isInitialized', isInitialized)
          setMasterLoading(true)
       } else {
+         console.log('OnboardingStack -> isInitialized', isInitialized)
          if (isAuthenticated) {
             const status = [
                Boolean(brandId), // 1
