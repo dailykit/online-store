@@ -609,11 +609,9 @@ export default function OnboardingStack(props) {
          subscribingCart,
          settingsMapped,
       })
-      if (false && !isInitialized) {
-         console.log('OnboardingStack -> isInitialized', isInitialized)
+      if (!isInitialized) {
          setMasterLoading(true)
       } else {
-         console.log('OnboardingStack -> isInitialized', isInitialized)
          if (isAuthenticated) {
             const status = [
                Boolean(brandId), // 1
