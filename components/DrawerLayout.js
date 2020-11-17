@@ -126,7 +126,7 @@ const DrawerLayout = () => {
                style={{ position: 'absolute', right: 8, top: -40 }}
             />
          </TouchableOpacity>
-         {drawerView === 'DailyKeyBackup' && (
+         {/* {drawerView === 'DailyKeyBackup' && (
             <TouchableOpacity
                style={{
                   width: width > 1280 ? 640 : width,
@@ -146,7 +146,7 @@ const DrawerLayout = () => {
                   Trouble with adding details? Click here!
                </Text>
             </TouchableOpacity>
-         )}
+         )} */}
          <View style={width > 1280 ? styles.container : styles.phoneContainer}>
             <View
                style={width > 1280 ? styles.component : styles.phoneComponent}
