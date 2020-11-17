@@ -61,9 +61,11 @@ const DailyKeyBackup = ({ params }) => {
          </Header>
          <Body>
             <CustomerInfo>
-               <CustomerName>{`Hello ${customerDetails?.firstName || ''} ${
-                  customerDetails?.lastName || ''
-               }`}</CustomerName>
+               {Boolean(!path.includes('address')) && (
+                  <CustomerName>{`Hello ${customerDetails?.firstName || ''} ${
+                     customerDetails?.lastName || ''
+                  }`}</CustomerName>
+               )}
             </CustomerInfo>
             {path.includes('profile') && <Profile />}
             {path.includes('address') && <Address />}
@@ -420,7 +422,7 @@ const Address = () => {
                      latitude: +populated.lat,
                      longitude: +populated.lng,
                   }}
-                  style={{ height: 150, marginBottom: 16 }}
+                  style={{ height: 200, marginBottom: 16 }}
                >
                   <MapView.Marker
                      coordinate={{
