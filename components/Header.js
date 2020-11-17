@@ -8,6 +8,7 @@ import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
+import { isKeycloakSupported } from '../utils'
 import { width } from '../utils/Scaling'
 import Icon from './Icon'
 
@@ -130,17 +131,22 @@ const WebNav = ({ navigation }) => {
                <>
                   <NavButton
                      color={visual.color}
-                     onPress={() => {
-                        console.log('Login clicked')
-                        open('Login')
-                     }}
+                     onPress={() =>
+                        isKeycloakSupported()
+                           ? open('Login')
+                           : open('LoginSelf')
+                     }
                   >
                      <NavLinkText white>Login</NavLinkText>
                   </NavButton>
                   <NavButton
                      outline
                      color={visual.color}
-                     onPress={() => open('Register')}
+                     onPress={() =>
+                        isKeycloakSupported()
+                           ? open('Register')
+                           : open('RegisterSelf')
+                     }
                   >
                      <NavLinkText outline color={visual.color}>
                         Sign Up

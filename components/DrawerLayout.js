@@ -19,6 +19,8 @@ import Fulfillment from './Fulfillment'
 import CouponList from '../screens/OrderSummary/components/CouponList'
 import ReferralCode from './ReferralCode'
 import { useAppContext } from '../context/app'
+import Login from '../screens/Login'
+import Register from '../screens/Register'
 
 const DrawerLayout = () => {
    const {
@@ -90,8 +92,12 @@ const DrawerLayout = () => {
             return <Fulfillment />
          case 'Login':
             return <Keycloak type="login" />
+         case 'LoginSelf':
+            return <Login />
          case 'Register':
             return <Keycloak type="register" />
+         case 'RegisterSelf':
+            return <Register />
          case 'Payment':
             return <PaymentProcessing {...params} />
          case 'CouponList':
