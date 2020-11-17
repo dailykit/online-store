@@ -95,6 +95,12 @@ const Fulfillment = ({ navigation, setEditing }) => {
    React.useEffect(() => {
       setTime('')
       setOops('')
+      console.log('User LatLng: ', cart?.address?.lat, cart?.address?.lng)
+      console.log(
+         'Store LatLng: ',
+         availability.location.lat,
+         availability.location.lng
+      )
       if (
          cart?.address?.lat &&
          cart?.address?.lng &&
@@ -102,8 +108,8 @@ const Fulfillment = ({ navigation, setEditing }) => {
          availability?.location?.lng
       ) {
          const distance = getDistance(
-            cart?.address?.lat,
-            cart?.address?.lng,
+            +cart?.address?.lat,
+            +cart?.address?.lng,
             +availability.location.lat,
             +availability.location.lng
          )
