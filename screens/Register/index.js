@@ -1,47 +1,58 @@
 import React from 'react'
 import styled from 'styled-components/native'
+import { registerUser } from '../../api'
 import { useAppContext } from '../../context/app'
+import { useDrawerContext } from '../../context/drawer'
+import { useStoreToast } from '../../utils'
 
 const Register = () => {
    const { visual } = useAppContext()
+   const { open } = useDrawerContext()
+   const { toastr } = useStoreToast()
 
-   const [lastname, setLastname] = React.useState('')
-   const [firstname, setFirstname] = React.useState('')
    const [email, setEmail] = React.useState('')
    const [password, setPassword] = React.useState('')
    const [confirmPassword, setConfirmPassword] = React.useState('')
+   const [error, setError] = React.useState('')
 
-   const submit = () => {
-      console.log({ email, password, firstname, lastname, confirmPassword })
+   const submit = async () => {
+      try {
+         setError('')
+         if (password.trim() !== confirmPassword.trim()) {
+            return setError('Password and Confirm password do not match!')
+         }
+         const data = await registerUser({ email, password })
+         console.log(data)
+         toastr('success', 'Account created!')
+         open('LoginSelf')
+      } catch (err) {
+         console.log(err)
+         setError(err.message)
+      }
    }
 
    return (
       <Wrapper>
          <Heading>Register</Heading>
+         {Boolean(error) && <ErrorText> {error} </ErrorText>}
          <Content>
-            <Label>First Name</Label>
-            <Field
-               value={firstname}
-               onChangeText={text => setFirstname(text)}
-            />
-            <Label>Last Name</Label>
-            <Field value={lastname} onChangeText={text => setLastname(text)} />
             <Label>Email</Label>
             <Field value={email} onChangeText={text => setEmail(text)} />
             <Label>Password</Label>
-            <Field value={password} onChangeText={text => setPassword(text)} />
+            <Field
+               value={password}
+               secureTextEntry={true}
+               onChangeText={text => setPassword(text)}
+            />
             <Label>Confirm Password</Label>
             <Field
                value={confirmPassword}
+               secureTextEntry={true}
                onChangeText={text => setConfirmPassword(text)}
             />
             <CTA
                disabled={
-                  !email.trim() ||
-                  !password.trim() ||
-                  !firstname.trim() ||
-                  !lastname.trim() ||
-                  !confirmPassword.trim()
+                  !email.trim() || !password.trim() || !confirmPassword.trim()
                }
                onPress={submit}
                color={visual.color}
@@ -64,6 +75,10 @@ const Heading = styled.Text`
    font-weight: 600;
    margin-bottom: 1.5rem;
    text-align: center;
+`
+const ErrorText = styled.Text`
+   color: red;
+   margin-bottom: 0.5rem;
 `
 
 const Content = styled.View``

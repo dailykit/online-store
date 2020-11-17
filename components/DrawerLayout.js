@@ -67,9 +67,15 @@ const DrawerLayout = () => {
    React.useEffect(() => {
       if (
          !isDrawerOpen &&
-         ['AddDetails', 'Login', 'Register', 'Payment', 'CouponList'].includes(
-            drawerView
-         )
+         [
+            'AddDetails',
+            'Login',
+            'Register',
+            'Payment',
+            'CouponList',
+            'LoginSelf',
+            'RegisterSelf',
+         ].includes(drawerView)
       ) {
          setDrawerView(undefined)
       }
