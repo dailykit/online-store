@@ -160,6 +160,12 @@ const Checkout = ({ cart, navigation }) => {
 
    const [editing, setEditing] = React.useState(false)
 
+   React.useEffect(() => {
+      if (!cart.fulfillmentInfo) {
+         setEditing(true)
+      }
+   }, [cart.fulfillmentInfo])
+
    return (
       <StyledCheckout>
          <CheckoutSection>
@@ -239,7 +245,7 @@ const Checkout = ({ cart, navigation }) => {
             {isAuthenticated && (
                <CheckoutSectionWrapper>
                   <CheckoutSectionContent style={{ flex: 1 }}>
-                     {editing || !cart?.fulfillmentInfo ? (
+                     {editing ? (
                         <Fulfillment
                            navigation={navigation}
                            setEditing={setEditing}
@@ -285,7 +291,7 @@ const Checkout = ({ cart, navigation }) => {
                         </SelectedFulfillment>
                      )}
                   </CheckoutSectionContent>
-                  {(!editing || !cart?.fulfillmentInfo) && (
+                  {!editing && (
                      <TouchableOpacity onPress={() => setEditing(true)}>
                         <Feather
                            name="edit"
