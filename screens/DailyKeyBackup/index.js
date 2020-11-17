@@ -420,25 +420,30 @@ const Address = () => {
                </FormField>
             )}
             {Boolean(populated?.lat && populated?.lng) && (
-               <MapView
-                  provider="google"
-                  region={{
-                     latitude: +populated.lat,
-                     longitude: +populated.lng,
-                  }}
-                  style={{ height: 200, marginBottom: 16 }}
-               >
-                  <MapView.Marker
-                     coordinate={{
+               <>
+                  <MapView
+                     provider="google"
+                     region={{
                         latitude: +populated.lat,
                         longitude: +populated.lng,
                      }}
-                     icon={MapMarker}
-                     title="You are here"
-                     draggable
-                     onDragEnd={setNewCoordinates}
-                  />
-               </MapView>
+                     style={{ height: 200 }}
+                  >
+                     <MapView.Marker
+                        coordinate={{
+                           latitude: +populated.lat,
+                           longitude: +populated.lng,
+                        }}
+                        icon={MapMarker}
+                        title="You are here"
+                        draggable
+                        onDragEnd={setNewCoordinates}
+                     />
+                  </MapView>
+                  <Coords>
+                     {`Lat: ${populated.lat} Lng:${populated.lng}`}
+                  </Coords>
+               </>
             )}
             <FormField>
                <FormFieldLabel>Address Line 1*</FormFieldLabel>
@@ -853,4 +858,10 @@ const Grid = styled.View`
 const WordLimit = styled.Text`
    font-size: 12px;
    text-align: right;
+`
+
+const Coords = styled.Text`
+   font-size: 10px;
+   color: #aaa;
+   margin-bottom: 1rem;
 `
