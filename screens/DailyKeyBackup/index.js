@@ -263,7 +263,11 @@ const Address = () => {
             }
          })
 
-         setPopulated({ ...address, label: '', notes: '' })
+         if (address.line1.includes('undefined')) {
+            address.line1 = ''
+         }
+
+         setPopulated({ ...address, landmark: '', label: '', notes: '' })
       }
    }
 
@@ -380,7 +384,7 @@ const Address = () => {
          <Form>
             {loaded && !error && (
                <FormField>
-                  <FormFieldLabel>Search Address</FormFieldLabel>
+                  <FormFieldLabel>Search Address on Google</FormFieldLabel>
                   <GooglePlacesAutocomplete
                      placeholder="Address..."
                      onPress={data => formatAddress(data)}
@@ -442,6 +446,7 @@ const Address = () => {
                   onChangeText={text => handleChange(text, 'line1')}
                   value={populated?.line1 || ''}
                   editable={Boolean(populated)}
+                  placeholder="Enter House Number/Flat Number"
                />
                {Boolean(populated?.line1) && (
                   <WordLimit>{`${populated.line1.length}/${charLimit}`}</WordLimit>
@@ -453,10 +458,22 @@ const Address = () => {
                   onChangeText={text => handleChange(text, 'line2')}
                   value={populated?.line2 || ''}
                   editable={Boolean(populated)}
+                  placeholder="Enter Apartment Building/Complex/Locality Name"
                />
                {Boolean(populated?.line2) && (
                   <WordLimit>{`${populated.line2.length}/${charLimit}`}</WordLimit>
                )}
+            </FormField>
+            <FormField>
+               <FormFieldLabel>Landmark</FormFieldLabel>
+               <FormFieldInput
+                  onChangeText={text =>
+                     setPopulated({ ...populated, landmark: text })
+                  }
+                  value={populated?.landmark || ''}
+                  editable={Boolean(populated)}
+                  placeholder="Enter Nearby Landmark"
+               />
             </FormField>
             <Grid>
                <FormField>
@@ -516,13 +533,14 @@ const Address = () => {
                />
             </FormField>
             <FormField>
-               <FormFieldLabel>Drop Off Instructions (Landmark)</FormFieldLabel>
+               <FormFieldLabel>Drop Off Instructions</FormFieldLabel>
                <FormFieldInput
                   onChangeText={text =>
                      setPopulated({ ...populated, notes: text })
                   }
                   value={populated?.notes || ''}
                   editable={Boolean(populated)}
+                  placeholder="Ex: Leave at Door"
                />
             </FormField>
          </Form>
