@@ -378,7 +378,7 @@ const Address = () => {
          </ContentHeader>
          {Boolean(formError) && <Error>{formError}</Error>}
          <Form>
-            {loaded && !error && isLocationDenied && (
+            {loaded && !error && (
                <FormField>
                   <FormFieldLabel>Search Address</FormFieldLabel>
                   <GooglePlacesAutocomplete
@@ -516,7 +516,7 @@ const Address = () => {
                />
             </FormField>
             <FormField>
-               <FormFieldLabel>Drop Off Instructions</FormFieldLabel>
+               <FormFieldLabel>Drop Off Instructions (Landmark)</FormFieldLabel>
                <FormFieldInput
                   onChangeText={text =>
                      setPopulated({ ...populated, notes: text })
