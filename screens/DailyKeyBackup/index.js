@@ -61,9 +61,11 @@ const DailyKeyBackup = ({ params }) => {
          </Header>
          <Body>
             <CustomerInfo>
-               <CustomerName>{`Hello ${customerDetails?.firstName || ''} ${
-                  customerDetails?.lastName || ''
-               }`}</CustomerName>
+               {Boolean(!path.includes('address')) && (
+                  <CustomerName>{`Hello ${customerDetails?.firstName || ''} ${
+                     customerDetails?.lastName || ''
+                  }`}</CustomerName>
+               )}
             </CustomerInfo>
             {path.includes('profile') && <Profile />}
             {path.includes('address') && <Address />}
@@ -196,6 +198,8 @@ const Address = () => {
    const { setSaved, setIsDrawerOpen } = useDrawerContext()
    const { user } = useAuth()
 
+   const [tracking, setTracking] = React.useState(true)
+   const [isLocationDenied, setIsLocationDenied] = React.useState(false)
    const [populated, setPopulated] = React.useState(undefined)
    const [saving, setSaving] = React.useState(false)
    const [formError, setFormError] = React.useState('')
@@ -225,13 +229,7 @@ const Address = () => {
       }
    }
 
-   const formatAddress = async address => {
-      const response = await fetch(
-         `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&address=${encodeURIComponent(
-            address.description
-         )}`
-      )
-      const data = await response.json()
+   const resolveAddress = data => {
       if (data.status === 'OK' && data.results.length > 0) {
          const [result] = data.results
 
@@ -269,9 +267,21 @@ const Address = () => {
       }
    }
 
+   const formatAddress = async address => {
+      const response = await fetch(
+         `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&address=${encodeURIComponent(
+            address.description
+         )}`
+      )
+      const data = await response.json()
+      resolveAddress(data)
+   }
+
    const validateFields = () => {
       if (
          populated &&
+         populated.lat &&
+         populated.lng &&
          populated.line1 &&
          populated.city &&
          populated.state &&
@@ -330,7 +340,28 @@ const Address = () => {
       }
    }
 
-   if (!loaded) {
+   React.useEffect(() => {
+      if (window.navigator) {
+         window.navigator.geolocation.getCurrentPosition(
+            async data => {
+               console.log(data.coords)
+               const response = await fetch(
+                  `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&latlng=${data.coords.latitude.toString()},${data.coords.longitude.toString()}`
+               )
+               const res = await response.json()
+               resolveAddress(res)
+               setTracking(false)
+            },
+            error => {
+               console.log(error)
+               setIsLocationDenied(true)
+               setTracking(false)
+            }
+         )
+      }
+   }, [])
+
+   if (!loaded || tracking) {
       return (
          <View
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
@@ -391,7 +422,7 @@ const Address = () => {
                      latitude: +populated.lat,
                      longitude: +populated.lng,
                   }}
-                  style={{ height: 150, marginBottom: 16 }}
+                  style={{ height: 200, marginBottom: 16 }}
                >
                   <MapView.Marker
                      coordinate={{
@@ -485,7 +516,7 @@ const Address = () => {
                />
             </FormField>
             <FormField>
-               <FormFieldLabel>Drop Off Instructions</FormFieldLabel>
+               <FormFieldLabel>Drop Off Instructions (Landmark)</FormFieldLabel>
                <FormFieldInput
                   onChangeText={text =>
                      setPopulated({ ...populated, notes: text })

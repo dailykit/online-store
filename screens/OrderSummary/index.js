@@ -11,7 +11,7 @@ import {
    TouchableOpacity,
    View,
 } from 'react-native'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { DefaultPaymentFloater } from '../../components/DefaultFloater'
 import Fulfillment from '../../components/Fulfillment'
@@ -259,9 +259,21 @@ const Checkout = ({ cart, navigation }) => {
                            ) && (
                               <>
                                  {Boolean(cart.address) ? (
-                                    <SelectedFulfillmentAddress>
-                                       {`${cart?.address?.line1}, ${cart?.address?.line2}, ${cart?.address?.city}, ${cart?.address?.state}, ${cart?.address?.country}`}
-                                    </SelectedFulfillmentAddress>
+                                    <>
+                                       {Boolean(cart?.address?.label) && (
+                                          <SelectedFulfillmentAddress label>
+                                             {cart?.address?.label}
+                                          </SelectedFulfillmentAddress>
+                                       )}
+                                       <SelectedFulfillmentAddress>
+                                          {`${cart?.address?.line1}, ${cart?.address?.line2}, ${cart?.address?.city}, ${cart?.address?.state}, ${cart?.address?.country}`}
+                                       </SelectedFulfillmentAddress>
+                                       {Boolean(cart?.address?.notes) && (
+                                          <SelectedFulfillmentAddress notes>
+                                             {cart?.address?.notes}
+                                          </SelectedFulfillmentAddress>
+                                       )}
+                                    </>
                                  ) : (
                                     <HelpText>
                                        We could not resolve your address. Please
@@ -273,7 +285,7 @@ const Checkout = ({ cart, navigation }) => {
                         </SelectedFulfillment>
                      )}
                   </CheckoutSectionContent>
-                  {!editing && (
+                  {(!editing || !cart?.fulfillmentInfo) && (
                      <TouchableOpacity onPress={() => setEditing(true)}>
                         <Feather
                            name="edit"
@@ -861,6 +873,17 @@ const SelectedFulfillmentAddress = styled.Text`
    color: #7e808c;
    font-weight: 400;
    font-size: 16px;
+   ${props =>
+      props.label &&
+      css`
+         font-weight: 600;
+      `}
+   ${props =>
+      props.notes &&
+      css`
+         font-size: 14px;
+         margin-top: 0.5rem;
+      `}
 `
 
 const CTA = styled.TouchableOpacity`
