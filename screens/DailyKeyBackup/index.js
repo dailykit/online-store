@@ -26,7 +26,7 @@ import {
 import { useScript } from '../../utils/useScript'
 import { createSetupIntent } from './api'
 
-import MapMarker from '../../assets/imgs/location home @1x.png'
+import MapMarker from '../../assets/imgs/location home @2x.png'
 
 const DailyKeyBackup = ({ params }) => {
    const { path } = params
@@ -263,7 +263,7 @@ const Address = () => {
             }
          })
 
-         if (address.line1.includes('undefined')) {
+         if (!address.line1 || address.line1.includes('undefined')) {
             address.line1 = ''
          }
 
