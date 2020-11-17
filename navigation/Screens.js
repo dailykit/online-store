@@ -60,7 +60,7 @@ export default function OnboardingStack(props) {
 
    const [settingsMapped, setSettingsMapped] = React.useState(false)
 
-   const { user, isInitialized, isAuthenticated, keycloak } = useAuth()
+   const { user, isInitialized, isAuthenticated } = useAuth()
    const {
       customer,
       cart,
