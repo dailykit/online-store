@@ -196,6 +196,8 @@ const Address = () => {
    const { setSaved, setIsDrawerOpen } = useDrawerContext()
    const { user } = useAuth()
 
+   const [tracking, setTracking] = React.useState(true)
+   const [isLocationDenied, setIsLocationDenied] = React.useState(false)
    const [populated, setPopulated] = React.useState(undefined)
    const [saving, setSaving] = React.useState(false)
    const [formError, setFormError] = React.useState('')
@@ -272,6 +274,8 @@ const Address = () => {
    const validateFields = () => {
       if (
          populated &&
+         populated.lat &&
+         populated.lng &&
          populated.line1 &&
          populated.city &&
          populated.state &&
@@ -330,7 +334,35 @@ const Address = () => {
       }
    }
 
-   if (!loaded) {
+   React.useEffect(() => {
+      if (window.navigator) {
+         window.navigator.geolocation.getCurrentPosition(
+            data => {
+               console.log(data.coords)
+               setPopulated({
+                  lat: data.coords.latitude.toString(),
+                  lng: data.coords.longitude.toString(),
+                  line1: '',
+                  line2: '',
+                  city: '',
+                  state: '',
+                  zipcode: '',
+                  country: '',
+                  label: '',
+                  notes: '',
+               })
+               setTracking(false)
+            },
+            error => {
+               console.log(error)
+               setIsLocationDenied(true)
+               setTracking(false)
+            }
+         )
+      }
+   }, [])
+
+   if (!loaded || tracking) {
       return (
          <View
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
@@ -347,7 +379,7 @@ const Address = () => {
          </ContentHeader>
          {Boolean(formError) && <Error>{formError}</Error>}
          <Form>
-            {loaded && !error && (
+            {loaded && !error && isLocationDenied && (
                <FormField>
                   <FormFieldLabel>Search Address</FormFieldLabel>
                   <GooglePlacesAutocomplete
