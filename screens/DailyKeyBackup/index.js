@@ -227,13 +227,7 @@ const Address = () => {
       }
    }
 
-   const formatAddress = async address => {
-      const response = await fetch(
-         `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&address=${encodeURIComponent(
-            address.description
-         )}`
-      )
-      const data = await response.json()
+   const resolveAddress = data => {
       if (data.status === 'OK' && data.results.length > 0) {
          const [result] = data.results
 
@@ -269,6 +263,16 @@ const Address = () => {
 
          setPopulated({ ...address, label: '', notes: '' })
       }
+   }
+
+   const formatAddress = async address => {
+      const response = await fetch(
+         `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&address=${encodeURIComponent(
+            address.description
+         )}`
+      )
+      const data = await response.json()
+      resolveAddress(data)
    }
 
    const validateFields = () => {
@@ -337,20 +341,13 @@ const Address = () => {
    React.useEffect(() => {
       if (window.navigator) {
          window.navigator.geolocation.getCurrentPosition(
-            data => {
+            async data => {
                console.log(data.coords)
-               setPopulated({
-                  lat: data.coords.latitude.toString(),
-                  lng: data.coords.longitude.toString(),
-                  line1: '',
-                  line2: '',
-                  city: '',
-                  state: '',
-                  zipcode: '',
-                  country: '',
-                  label: '',
-                  notes: '',
-               })
+               const response = await fetch(
+                  `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&latlng=${data.coords.latitude.toString()},${data.coords.longitude.toString()}`
+               )
+               const res = await response.json()
+               resolveAddress(res)
                setTracking(false)
             },
             error => {

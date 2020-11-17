@@ -273,7 +273,7 @@ const Checkout = ({ cart, navigation }) => {
                         </SelectedFulfillment>
                      )}
                   </CheckoutSectionContent>
-                  {!editing && (
+                  {(!editing || !cart?.fulfillmentInfo) && (
                      <TouchableOpacity onPress={() => setEditing(true)}>
                         <Feather
                            name="edit"
