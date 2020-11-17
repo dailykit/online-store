@@ -40,7 +40,7 @@
       "graphql": "15.0.0",
       "graphql-tag": "2.10.3",
       "jwt-decode": "2.2.0",
-      "keycloak-js": "10.0.1",
+      "keycloak-js": "11.0.3",
       "modal-enhanced-react-native-web": "0.2.0",
       "moment": "2.25.3",
       "native-base": "2.13.8",
