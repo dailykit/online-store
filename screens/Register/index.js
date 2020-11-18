@@ -14,12 +14,17 @@ const Register = () => {
    const [password, setPassword] = React.useState('')
    const [confirmPassword, setConfirmPassword] = React.useState('')
    const [error, setError] = React.useState('')
+   const [loading, setLoading] = React.useState(false)
 
    const submit = async () => {
       try {
          setError('')
+         setLoading(true)
+         if (password.trim().length < 6) {
+            throw new Error('Password must contain at least 6 characters!')
+         }
          if (password.trim() !== confirmPassword.trim()) {
-            return setError('Password and Confirm password do not match!')
+            throw new Error('Password and Confirm password do not match!')
          }
          const data = await registerUser({ email, password })
          console.log(data)
@@ -31,6 +36,8 @@ const Register = () => {
       } catch (err) {
          console.log(err)
          setError(err.message)
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -55,12 +62,15 @@ const Register = () => {
             />
             <CTA
                disabled={
-                  !email.trim() || !password.trim() || !confirmPassword.trim()
+                  !email.trim() ||
+                  !password.trim() ||
+                  !confirmPassword.trim() ||
+                  loading
                }
                onPress={submit}
                color={visual.color}
             >
-               <CTAText>Submit</CTAText>
+               <CTAText>{loading ? 'Submitting...' : 'Submit'}</CTAText>
             </CTA>
          </Content>
       </Wrapper>
