@@ -338,7 +338,8 @@ const Address = () => {
             throw Error('An error occured, please try again!')
          }
       } catch (err) {
-         setFormError(err.message)
+         console.log(err)
+         setFormError('An error occured, please try again!')
       } finally {
          setSaving(false)
       }
