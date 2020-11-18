@@ -6,6 +6,8 @@ import { useAppContext } from '../../context/app'
 import { useDrawerContext } from '../../context/drawer'
 import { useStoreToast } from '../../utils'
 
+const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+
 const Register = () => {
    const { visual } = useAppContext()
    const { open } = useDrawerContext()
@@ -23,13 +25,16 @@ const Register = () => {
          setError('')
          setMessage('')
          setLoading(true)
+         if (!emailRegex.test(email)) {
+            throw new Error('Enter a valid email!')
+         }
          if (password.trim().length < 6) {
             throw new Error('Password must contain at least 6 characters!')
          }
          if (password.trim() !== confirmPassword.trim()) {
-            throw new Error('Password and Confirm password do not match!')
+            throw new Error('Password and Confirm password must match!')
          }
-         const { data } = await registerUser({ email, password })
+         const { data, errors } = await registerUser({ email, password })
          if (data?.registerCustomer?.success) {
             setMessage('Account created! Logging you in...')
             const { data, error } = await loginUser({ email, password })
@@ -37,8 +42,12 @@ const Register = () => {
                await AsyncStorage.setItem('token', data.access_token)
                window.location.href = `${window.location.origin}/store`
             }
-         } else {
-            throw new Error('Failed to create account with these credentials!')
+         }
+         if (errors?.length) {
+            throw Error(
+               errors[0].message.replace(/username/gi, 'email') ||
+                  'Something went wrong!'
+            )
          }
       } catch (err) {
          console.log(err)
