@@ -39,7 +39,6 @@ const Login = () => {
    return (
       <Wrapper>
          <Heading>Login</Heading>
-         {Boolean(error) && <ErrorText> {error} </ErrorText>}
          <Content>
             <Label>Email</Label>
             <Field value={email} onChangeText={text => setEmail(text)} />
@@ -56,6 +55,7 @@ const Login = () => {
             >
                <CTAText>{loading ? 'Submitting...' : 'Submit'}</CTAText>
             </CTA>
+            {Boolean(error) && <ErrorText> {error} </ErrorText>}
          </Content>
       </Wrapper>
    )
@@ -78,7 +78,6 @@ const Content = styled.View``
 
 const ErrorText = styled.Text`
    color: red;
-   margin-bottom: 0.5rem;
 `
 
 const Label = styled.Text`
@@ -98,6 +97,7 @@ const CTA = styled.TouchableOpacity`
    text-align: center;
    padding: 0.5rem;
    border-radius: 2px;
+   margin-bottom: 0.5rem;
 `
 
 const CTAText = styled.Text`

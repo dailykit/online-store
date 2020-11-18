@@ -1,6 +1,7 @@
 import React from 'react'
+import { AsyncStorage } from 'react-native'
 import styled from 'styled-components/native'
-import { registerUser } from '../../api'
+import { loginUser, registerUser } from '../../api'
 import { useAppContext } from '../../context/app'
 import { useDrawerContext } from '../../context/drawer'
 import { useStoreToast } from '../../utils'
@@ -14,11 +15,13 @@ const Register = () => {
    const [password, setPassword] = React.useState('')
    const [confirmPassword, setConfirmPassword] = React.useState('')
    const [error, setError] = React.useState('')
+   const [message, setMessage] = React.useState('')
    const [loading, setLoading] = React.useState(false)
 
    const submit = async () => {
       try {
          setError('')
+         setMessage('')
          setLoading(true)
          if (password.trim().length < 6) {
             throw new Error('Password must contain at least 6 characters!')
@@ -28,7 +31,12 @@ const Register = () => {
          }
          const { data } = await registerUser({ email, password })
          if (data?.registerCustomer?.success) {
-            open('LoginSelf')
+            setMessage('Account created! Logging you in...')
+            const { data, error } = await loginUser({ email, password })
+            if (data?.access_token) {
+               await AsyncStorage.setItem('token', data.access_token)
+               window.location.href = `${window.location.origin}/store`
+            }
          } else {
             throw new Error('Failed to create account with these credentials!')
          }
@@ -43,7 +51,6 @@ const Register = () => {
    return (
       <Wrapper>
          <Heading>Register</Heading>
-         {Boolean(error) && <ErrorText> {error} </ErrorText>}
          <Content>
             <Label>Email</Label>
             <Field value={email} onChangeText={text => setEmail(text)} />
@@ -71,6 +78,8 @@ const Register = () => {
             >
                <CTAText>{loading ? 'Submitting...' : 'Submit'}</CTAText>
             </CTA>
+            {Boolean(message) && <MessageText> {message} </MessageText>}
+            {Boolean(error) && <ErrorText> {error} </ErrorText>}
          </Content>
       </Wrapper>
    )
@@ -90,7 +99,10 @@ const Heading = styled.Text`
 `
 const ErrorText = styled.Text`
    color: red;
-   margin-bottom: 0.5rem;
+`
+
+const MessageText = styled.Text`
+   color: green;
 `
 
 const Content = styled.View``
@@ -112,6 +124,7 @@ const CTA = styled.TouchableOpacity`
    text-align: center;
    padding: 0.5rem;
    border-radius: 2px;
+   margin-bottom: 0.5rem;
 `
 
 const CTAText = styled.Text`
