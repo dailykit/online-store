@@ -11,21 +11,28 @@ const Login = () => {
    const [email, setEmail] = React.useState('')
    const [password, setPassword] = React.useState('')
    const [error, setError] = React.useState('')
+   const [loading, setLoading] = React.useState(false)
 
    const submit = async () => {
       try {
          setError('')
+         setLoading(true)
          console.log({ email, password })
-         const data = await loginUser({ email, password })
+         const { data, error } = await loginUser({ email, password })
          if (data?.access_token) {
             await AsyncStorage.setItem('token', data.access_token)
             window.location.href = `${window.location.origin}/store`
          } else {
-            throw 'Email or Password is incorrect!'
+            throw new Error('Email or Password is incorrect!')
          }
       } catch (err) {
-         console.log(err)
-         setError(err.message)
+         if (err.response.status === 401) {
+            setError('Email or Password is incorrect!')
+         } else {
+            setError(err.message)
+         }
+      } finally {
+         setLoading(false)
       }
    }
 
@@ -43,11 +50,11 @@ const Login = () => {
                onChangeText={text => setPassword(text)}
             />
             <CTA
-               disabled={!email.trim() || !password.trim()}
+               disabled={!email.trim() || !password.trim() || loading}
                onPress={submit}
                color={visual.color}
             >
-               <CTAText>Submit</CTAText>
+               <CTAText>{loading ? 'Submitting...' : 'Submit'}</CTAText>
             </CTA>
          </Content>
       </Wrapper>

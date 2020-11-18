@@ -32,7 +32,7 @@ export const loginUser = async ({ email, password }) => {
       },
       data: searchParams,
    })
-   return response.data
+   return response
 }
 
 export const registerUser = async ({ email, password }) => {
