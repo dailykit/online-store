@@ -1,6 +1,9 @@
 import * as axios from 'axios'
-import { CLIENTID, SECURE_PASSWORD } from 'react-native-dotenv'
-import base64 from 'base-64'
+import {
+   CLIENTID,
+   HASURA_URL,
+   HASURA_GRAPHQL_ADMIN_SECRET,
+} from 'react-native-dotenv'
 
 // Constants sdfs
 const BASE_URL = `https://secure.dailykit.org/auth/realms/consumers/protocol/openid-connect/token`
@@ -34,14 +37,25 @@ export const loginUser = async ({ email, password }) => {
 
 export const registerUser = async ({ email, password }) => {
    const response = await axios({
-      url: SIGNUP_URL,
+      url: HASURA_URL,
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',
+         'x-hasura-admin-secret': HASURA_GRAPHQL_ADMIN_SECRET,
       },
       data: {
-         email,
-         password,
+         query: `
+            mutation registerCustomer($email: String!, $password: String!){
+               registerCustomer(email: $email, password: $password) {
+               success
+               message
+               }
+            }
+         `,
+         variables: {
+            email,
+            password,
+         },
       },
    })
    return response.data

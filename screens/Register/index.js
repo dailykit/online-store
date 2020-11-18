@@ -26,12 +26,11 @@ const Register = () => {
          if (password.trim() !== confirmPassword.trim()) {
             throw new Error('Password and Confirm password do not match!')
          }
-         const data = await registerUser({ email, password })
-         console.log(data)
-         if (data.success) {
+         const { data } = await registerUser({ email, password })
+         if (data?.registerCustomer?.success) {
             open('LoginSelf')
          } else {
-            toastr('error', 'Could not create account!')
+            throw new Error('Failed to create account with these credentials!')
          }
       } catch (err) {
          console.log(err)
