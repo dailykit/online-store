@@ -68,6 +68,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
          const brandObject = {
             name: brand.name,
             logo: brand.logo,
+            color: visual.color,
             description: '',
          }
          window.payments.checkout({

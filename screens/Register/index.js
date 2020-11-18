@@ -23,8 +23,11 @@ const Register = () => {
          }
          const data = await registerUser({ email, password })
          console.log(data)
-         toastr('success', 'Account created!')
-         open('LoginSelf')
+         if (data.success) {
+            open('LoginSelf')
+         } else {
+            toastr('error', 'Could not create account!')
+         }
       } catch (err) {
          console.log(err)
          setError(err.message)
