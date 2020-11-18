@@ -163,10 +163,14 @@ const getBrowser = () => {
 
 export const isKeycloakSupported = () => {
    const [browser, version] = getBrowser().split('/')
-   if (browser === 'Chrome' && +version.split('.')[0] > 80) {
+   console.log({ browser, version })
+   const v = +version.split('.')[0]
+   if (browser === 'Chrome' && v >= 66) {
       return true
-   } else if (browser === 'Safari') {
-      return false
+   } else if (browser === 'Safari' && v >= 13) {
+      return true
+   } else if (browser === 'Firefox' && v >= 60) {
+      return true
    } else {
       return false
    }
