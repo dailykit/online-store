@@ -34,6 +34,7 @@ import {
    CURRENCY,
 } from 'react-native-dotenv'
 import CartSkeleton from '../../components/skeletons/cart'
+import { isKeycloakSupported } from '../../utils'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { isAuthenticated } = useAuth()
@@ -181,13 +182,21 @@ const Checkout = ({ cart, navigation }) => {
                      <CTAContainer>
                         <Button
                            color={visual.color}
-                           onPress={() => open('Login')}
+                           onPress={() =>
+                              isKeycloakSupported()
+                                 ? open('Login')
+                                 : open('LoginSelf')
+                           }
                         >
                            <ButtonText color={visual.color}>LOGIN</ButtonText>
                         </Button>
                         <Button
                            color={visual.color}
-                           onPress={() => open('Register')}
+                           onPress={() =>
+                              isKeycloakSupported()
+                                 ? open('Register')
+                                 : open('RegisterSelf')
+                           }
                         >
                            <ButtonText color={visual.color}>SIGN UP</ButtonText>
                         </Button>
