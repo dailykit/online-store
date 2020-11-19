@@ -71,7 +71,6 @@ export default function OnboardingStack(props) {
       setLoyaltyPoints,
       customerReferral,
       setCustomerReferral,
-      setSettingCart,
    } = useCartContext()
    const {
       brandId,
@@ -89,6 +88,8 @@ export default function OnboardingStack(props) {
    const { open } = useDrawerContext()
 
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
+   const [settingCart, setSettingCart] = React.useState(true)
+   const [settingUser, setSettingUser] = React.useState(true)
 
    // Query for Brand ID
    useQuery(BRANDS, {
@@ -315,6 +316,7 @@ export default function OnboardingStack(props) {
                   },
                })
             }
+            setSettingUser(false)
             console.log('Customer created: ', data.createCustomer)
             if (availability?.referral?.isAvailable) {
                console.log('Referral available')
@@ -380,6 +382,8 @@ export default function OnboardingStack(props) {
                   setCart(data.customer.orderCarts[0])
                }
 
+               setSettingUser(false)
+
                // update any pending cart (w/o signup)
                if (cartId) {
                   updateCart({
@@ -438,6 +442,8 @@ export default function OnboardingStack(props) {
                brandId,
             },
          })
+      } else {
+         setSettingUser(false)
       }
    }, [brandId, user])
 
@@ -608,6 +614,8 @@ export default function OnboardingStack(props) {
          user: Object.keys(user).length,
          subscribingCart,
          settingsMapped,
+         settingCart,
+         settingUser,
       })
       if (!isInitialized) {
          setMasterLoading(true)
@@ -622,6 +630,8 @@ export default function OnboardingStack(props) {
                Object.keys(user).length, // > 0
                !subscribingCart, // true
                settingsMapped, // true
+               !settingCart,
+               !settingUser,
             ].every(notLoading => notLoading)
             if (status) {
                setMasterLoading(false)
@@ -631,6 +641,7 @@ export default function OnboardingStack(props) {
                Boolean(brandId), // 1
                settingsMapped, // true
                !fetchingCart, // true
+               !settingCart,
             ].every(notLoading => notLoading)
             if (status) {
                setMasterLoading(false)
@@ -648,6 +659,8 @@ export default function OnboardingStack(props) {
       subscribingCart,
       isAuthenticated,
       settingsMapped,
+      settingCart,
+      settingUser,
    ])
 
    return (

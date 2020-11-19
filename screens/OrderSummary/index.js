@@ -37,7 +37,7 @@ import CartSkeleton from '../../components/skeletons/cart'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { isAuthenticated } = useAuth()
-   const { cart, settingCart } = useCartContext()
+   const { cart } = useCartContext()
    const {
       visual,
       brand,
@@ -83,15 +83,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    if (masterLoading) {
       return <AppSkeleton />
-   }
-
-   if (settingCart) {
-      return (
-         <>
-            <Header title="Home" navigation={navigation} />
-            <CartSkeleton />
-         </>
-      )
    }
 
    return (
