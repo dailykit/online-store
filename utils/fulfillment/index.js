@@ -1,16 +1,22 @@
 import { rrulestr } from 'rrule'
+import * as moment from 'moment'
 
 export const generateTimeStamp = (time, date) => {
+   console.log('generateTimeStamp -> time, date', { time, date })
    let formatedTime = time.split(':')
    formatedTime =
       makeDoubleDigit(formatedTime[0]) + ':' + makeDoubleDigit(formatedTime[1])
-   const currTimestamp = new Date(Date.now()).toISOString()
-   const selectedDate = new Date(date).toISOString()
+
+   const currTimestamp = moment().toISOString(true)
+   const selectedDate = moment(date).toISOString(true)
    const from = `${selectedDate.split('T')[0]}T${formatedTime}:00.${
       currTimestamp.split('.')[1]
    }`
-   let to = new Date(from)
-   to = new Date(to.setMinutes(to.getMinutes() + 15)).toISOString()
+   console.log('generateTimeStamp -> from', from)
+   const to = moment(from)
+      .minutes(moment(from).minutes() + 15)
+      .toISOString(true)
+   console.log('generateTimeStamp -> to', to)
    return { from, to }
 }
 
