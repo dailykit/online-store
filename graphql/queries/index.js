@@ -71,6 +71,9 @@ export const SIMPLE_RECIPE = gql`
          description
          utensils
          notIncluded
+         showIngredients
+         showIngredientsQuantity
+         showProcedures
          procedures
          simpleRecipeYields(order_by: { yield: asc }) {
             id
@@ -126,6 +129,8 @@ export const CUSTOMER = gql`
                city
                country
                notes
+               label
+               landmark
                lat
                lng
             }
@@ -138,6 +143,8 @@ export const CUSTOMER = gql`
                city
                country
                notes
+               label
+               landmark
                lat
                lng
             }
