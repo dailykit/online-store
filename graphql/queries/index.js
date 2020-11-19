@@ -70,6 +70,7 @@ export const SIMPLE_RECIPE = gql`
          cuisine
          description
          utensils
+         notIncluded
          procedures
          simpleRecipeYields(order_by: { yield: asc }) {
             id
