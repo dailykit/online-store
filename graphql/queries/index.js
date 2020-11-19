@@ -126,6 +126,8 @@ export const CUSTOMER = gql`
                city
                country
                notes
+               label
+               landmark
                lat
                lng
             }
@@ -138,6 +140,8 @@ export const CUSTOMER = gql`
                city
                country
                notes
+               label
+               landmark
                lat
                lng
             }

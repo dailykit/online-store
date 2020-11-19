@@ -21,6 +21,7 @@ export const styles = EStyleSheet.create({
       borderColor: '#dedede',
       marginBottom: 4,
       padding: 8,
+      minHeight: 100,
    },
    addressTextContainer: {
       flex: 3,

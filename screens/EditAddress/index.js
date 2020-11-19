@@ -17,6 +17,8 @@ export default ({ navigation }) => {
 
    const [loading, setLoading] = React.useState(false)
 
+   console.log('customerDetails', customerDetails)
+
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
@@ -108,13 +110,20 @@ export default ({ navigation }) => {
                   ]}
                >
                   <View style={styles.addressTextContainer}>
+                     <Text style={[styles.addressText, { fontWeight: 600 }]}>
+                        {address.label}
+                     </Text>
                      <Text style={styles.addressText}>{address.line1}</Text>
                      <Text style={styles.addressText}>{address.line2}</Text>
+                     <Text style={styles.addressText}>{address.landmark}</Text>
                      <Text style={styles.addressText}>
-                        {address.city + ', ' + address.state}
+                        {`${address.city}, ${address.state}, ${address.country} - ${address.zipcode} `}
                      </Text>
-                     <Text style={styles.addressText}>{address.country}</Text>
-                     <Text style={styles.addressText}>{address.zipcode}</Text>
+                     <Text
+                        style={[styles.addressText, { fontStyle: 'italic' }]}
+                     >
+                        {address.notes}
+                     </Text>
                   </View>
                   <View style={styles.addressSelectedContainer}>
                      <View
