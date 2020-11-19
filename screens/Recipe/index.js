@@ -425,6 +425,15 @@ const Recipe = ({ navigation, route }) => {
                         </IngredientWrapper>
                      ))}
                </Ingredients>
+               {Boolean(simpleRecipe.notIncluded?.length) && (
+                  <>
+                     <Spacer size="32px" />
+                     <NotIncludedText>
+                        What's not included:{' '}
+                        {simpleRecipe.notIncluded.join(', ')}
+                     </NotIncludedText>
+                  </>
+               )}
                <Spacer size="68px" />
                {Boolean(simpleRecipe.procedures.length) && (
                   <>
@@ -773,6 +782,11 @@ const Ingredients = styled.View`
    flex-direction: row;
    flex-wrap: wrap;
    justify-content: center;
+`
+
+const NotIncludedText = styled(ContentText)`
+   font-style: italic;
+   text-align: center;
 `
 
 const NutritionWrapper = styled.View`
