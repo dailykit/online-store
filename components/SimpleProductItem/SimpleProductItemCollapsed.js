@@ -202,7 +202,10 @@ const SimpleProductItemCollapsed = ({
                            index={key + 1}
                            isSelected={servingIndex == key ? true : false}
                            setServingIndex={index => setServingIndex(index)}
-                           size={item_data.simpleRecipeYield.yield.serving}
+                           size={
+                              item_data.simpleRecipeYield.yield.label ||
+                              item_data.simpleRecipeYield.yield.serving
+                           }
                            price={parseFloat(item_data.price[0].value)}
                            discount={parseFloat(item_data.price[0].discount)}
                            setProductOption={() => setProductOption(item_data)}

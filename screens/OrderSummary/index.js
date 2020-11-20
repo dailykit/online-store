@@ -535,7 +535,7 @@ const Cart = ({ cart }) => {
                               numberOfLines={1}
                            >
                               {`${product.option.type?.SRPType()} x${
-                                 product.option.serving
+                                 product.option.label || product.option.serving
                               }`}
                            </CartItemLabel>
                         )}

@@ -273,6 +273,8 @@ const Item = ({
                                        }
                                        size={
                                           item_data.simpleRecipeYield.yield
+                                             .label ||
+                                          item_data.simpleRecipeYield.yield
                                              .serving
                                        }
                                        price={parseFloat(
