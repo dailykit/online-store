@@ -466,11 +466,24 @@ const Cart = ({ cart }) => {
       <StyledCart>
          <CartHeader>
             <CartHeaderTextLeft>Total</CartHeaderTextLeft>
-            <CartHeaderTextRight>
-               {`${cart.cartInfo.products.length} Item${
-                  cart.cartInfo.products.length > 1 ? 's' : ''
-               }`}
-            </CartHeaderTextRight>
+            <CartHeaderRight>
+               <CartClearBtn
+                  onPress={() =>
+                     deleteCarts({
+                        variables: {
+                           ids: [cart.id],
+                        },
+                     })
+                  }
+               >
+                  <Feather name="trash-2" size={16} color="#FF5A52" />
+               </CartClearBtn>
+               <CartHeaderTextRight>
+                  {`${cart.cartInfo.products.length} Item${
+                     cart.cartInfo.products.length > 1 ? 's' : ''
+                  }`}
+               </CartHeaderTextRight>
+            </CartHeaderRight>
          </CartHeader>
          <CartItems>
             {cart.cartInfo.products.map(product => (
@@ -941,6 +954,15 @@ const CartHeader = styled.View`
 const CartHeaderTextLeft = styled.Text`
    font-weight: bold;
    color: #93808c;
+`
+
+const CartHeaderRight = styled.View`
+   flex-direction: row;
+   align-items: center;
+`
+
+const CartClearBtn = styled.TouchableOpacity`
+   margin-right: 0.5rem;
 `
 
 const CartHeaderTextRight = styled.Text`
