@@ -358,7 +358,10 @@ const Cart = ({ cart }) => {
    const [deleteCarts] = useMutation(DELETE_CARTS, {
       onCompleted: data => {
          console.log('Carts deleted: ', data.deleteCarts.returning)
-         AsyncStorage.clear()
+         if (data.deleteCarts.returning.length) {
+            AsyncStorage.removeItem('PENDING_CART_ID')
+            setCart(undefined)
+         }
       },
       onError: error => {
          console.log('Deleteing carts error: ', error)
