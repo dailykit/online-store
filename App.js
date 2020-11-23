@@ -1,8 +1,5 @@
 import { ApolloProvider } from '@apollo/react-hooks'
-import * as eva from '@eva-design/eva'
-import { Ionicons } from '@expo/vector-icons'
 import { NavigationContainer } from '@react-navigation/native'
-import { ApplicationProvider } from '@ui-kitten/components'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
 import { split } from 'apollo-link'
@@ -189,20 +186,18 @@ const App = () => {
                               {Platform.OS == 'ios' && (
                                  <StatusBar barStyle="dark-content" />
                               )}
-                              <ApplicationProvider {...eva} theme={eva.light}>
-                                 <ApolloProvider client={client}>
-                                    <AuthProvider>
-                                       <AppContextProvider>
-                                          <DrawerContextProvider>
-                                             <CartContextProvider>
-                                                <Screens />
-                                                <DrawerLayout />
-                                             </CartContextProvider>
-                                          </DrawerContextProvider>
-                                       </AppContextProvider>
-                                    </AuthProvider>
-                                 </ApolloProvider>
-                              </ApplicationProvider>
+                              <ApolloProvider client={client}>
+                                 <AuthProvider>
+                                    <AppContextProvider>
+                                       <DrawerContextProvider>
+                                          <CartContextProvider>
+                                             <Screens />
+                                             <DrawerLayout />
+                                          </CartContextProvider>
+                                       </DrawerContextProvider>
+                                    </AppContextProvider>
+                                 </AuthProvider>
+                              </ApolloProvider>
                            </View>
                         </SafeAreaView>
                      </NavigationContainer>
