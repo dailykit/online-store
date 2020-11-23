@@ -547,9 +547,9 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       if (cartId && cart?.customerId) {
-         console.log('Cleared local storage!')
+         console.log('Removed pending cart id!')
          setCartId(null)
-         AsyncStorage.clear()
+         AsyncStorage.removeItem('PENDING_CART_ID')
       }
    }, [cart])
 
