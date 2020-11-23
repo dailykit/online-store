@@ -165,6 +165,10 @@ export const isKeycloakSupported = () => {
    const [browser, version] = getBrowser().split('/')
    console.log({ browser, version })
    const v = +version.split('.')[0]
+   const { userAgent } = window.navigator
+   if (userAgent.includes('Mac') || userAgent.includes('Apple')) {
+      return false
+   }
    if (browser === 'Chrome' && v >= 66) {
       return true
    } else if (browser === 'Firefox' && v >= 60) {
