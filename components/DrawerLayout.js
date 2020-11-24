@@ -21,6 +21,7 @@ import ReferralCode from './ReferralCode'
 import { useAppContext } from '../context/app'
 import Login from '../screens/Login'
 import Register from '../screens/Register'
+import DeliveryBreakup from './DeliveryBreakup'
 
 const DrawerLayout = () => {
    const {
@@ -75,6 +76,7 @@ const DrawerLayout = () => {
             'CouponList',
             'LoginSelf',
             'RegisterSelf',
+            'DailyKeyBackup',
          ].includes(drawerView)
       ) {
          setDrawerView(undefined)
@@ -110,6 +112,8 @@ const DrawerLayout = () => {
             return <CouponList />
          case 'ReferralCode':
             return <ReferralCode />
+         case 'DeliveryBreakup':
+            return <DeliveryBreakup />
          default:
             return <Text>.</Text>
       }

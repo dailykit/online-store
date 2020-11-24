@@ -358,3 +358,32 @@ export const CUSTOMER_REFERRAL = gql`
       }
    }
 `
+
+export const DELIVERY_BREAKUP = gql`
+   subscription DeliveryBreakup($brandId: Int!) {
+      recurrences(
+         where: {
+            _and: [
+               { type: { _ilike: "%DELIVERY%" } }
+               { brands: { brandId: { _eq: $brandId } } }
+            ]
+         }
+      ) {
+         type
+         rrule
+         timeSlots {
+            from
+            to
+            mileRanges {
+               from
+               to
+               charges {
+                  orderValueFrom
+                  orderValueUpto
+                  charge
+               }
+            }
+         }
+      }
+   }
+`
