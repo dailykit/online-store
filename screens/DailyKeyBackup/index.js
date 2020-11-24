@@ -346,9 +346,16 @@ const Address = () => {
       }
    }
 
+   const cannotFindLocation = () => {
+      console.log('Could not find location!')
+      setMode('SELF')
+      setTracking(false)
+   }
+
    React.useEffect(() => {
       if (mode === 'AUTOMATIC' && window.navigator) {
          setTracking(true)
+         const timer = setTimeout(cannotFindLocation, 8000)
          window.navigator.geolocation.getCurrentPosition(
             async data => {
                console.log(data.coords)
@@ -365,6 +372,11 @@ const Address = () => {
                setTracking(false)
             }
          )
+         return () => {
+            if (timer) {
+               clearTimeout(timer)
+            }
+         }
       }
    }, [mode])
 
