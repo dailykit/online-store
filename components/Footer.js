@@ -16,11 +16,24 @@ const Footer = () => {
             justifyContent: 'space-between',
          }}
       >
-         <Text
-            style={{ fontWeight: 'bold', fontSize: '1.3rem', color: '#fff' }}
-         >
-            {brand.name}
-         </Text>
+         <View>
+            <Text
+               style={{
+                  fontWeight: 'bold',
+                  fontSize: '1.3rem',
+                  color: '#fff',
+                  marginBottom: 16,
+               }}
+            >
+               {brand.name}
+            </Text>
+            <Text style={{ fontSize: '0.9rem', color: '#fff' }}>
+               Have trouble placing an order? Contact us:{' '}
+               <Text style={{ fontWeight: '600' }}>
+                  {brand.contact.phoneNo || brand.contact.email}
+               </Text>
+            </Text>
+         </View>
          <Text style={{ color: '#fff' }}>Powered by DailyKIT</Text>
       </View>
    )
