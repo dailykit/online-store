@@ -2380,6 +2380,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/picker/-/picker-1.6.1.tgz#f893bf4982e549c954696d08a47e1d8e72762310"
   integrity sha512-JuCOtim1tZhB3KoJhbuPj3pFweUnj4XgukktJk0MyUOB8wA3uCEHW+xsGYu8ZDYiyR0M6qXctz7Fz2qYFuTUSQ==
 
+"@react-native-picker/picker@^1.9.3":
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.9.3.tgz#60fba63445c539928f9cd32973ffa4c3221ffd83"
+  integrity sha512-8wNd1Cold2mciTq5Djo4c+FU1x4+weqmR8WAFWOJ1yfkh0sOiAa/9SdFbHZK2fWZCK+W08iLqWWi5KGQDaqlWw==
+
 "@react-navigation/compat@5.0.0":
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@react-navigation/compat/-/compat-5.0.0.tgz#3cf7d1dc3058e3402f423e7691b6c7fbf2dfa9ce"
@@ -9702,11 +9707,6 @@ react-native-svg@12.1.0:
   dependencies:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
-
-react-native-table-component@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-table-component/-/react-native-table-component-1.2.1.tgz#5f1e0f159b1dff9df0d5601c4a5ab99d1aa99a25"
-  integrity sha512-sapwO0bONfQtpWg3GVMwP5D3lGEJlxPB3c7fb0soXBynvCa+SBktacVZ9OmYJnIbRJ3uW5pS4tzNc8GmE+UScw==
 
 react-native-vector-icons@^6.6.0:
   version "6.7.0"

@@ -1,7 +1,8 @@
 import { useSubscription } from '@apollo/react-hooks'
 import React from 'react'
+import { Text, View } from 'react-native'
 import { rrulestr } from 'rrule'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { DELIVERY_BREAKUP } from '../graphql'
 
@@ -36,40 +37,112 @@ const DeliveryBreakup = () => {
    return (
       <Wrapper>
          <Heading> Delivery Charges </Heading>
-         {Boolean(now.length) && (
-            <>
-               <SubHeading> On-Demand Delivery </SubHeading>
-               <TableRow>
-                  <TableData></TableData>
-                  <TableData>Time</TableData>
-                  <TableData>Distance</TableData>
-                  <TableData>Charges</TableData>
-               </TableRow>
-               {now.map(rec => (
+         <Table>
+            {Boolean(now.length) && (
+               <>
+                  <SubHeading> On-Demand Delivery </SubHeading>
                   <TableRow>
-                     <TableData>{rrulestr(rec.rrule).toText()}</TableData>
-                     <TableData>
-                        {rec.timeSlots.map(slot => (
-                           <TableData>
-                              {slot.from} - {slot.to}
-                              {slot.mileRanges.map(range => (
-                                 <TableData>
-                                    {range.from} - {range.to}
-                                 </TableData>
-                              ))}
-                           </TableData>
-                        ))}
-                     </TableData>
-                     <TableData>Charges</TableData>
+                     <TableData head></TableData>
+                     <TableData head>Time</TableData>
+                     <TableData head>Distance</TableData>
+                     <TableData head>Order Value</TableData>
+                     <TableData head>Charges</TableData>
                   </TableRow>
-               ))}
-            </>
-         )}
-         {Boolean(later.length) && (
-            <>
-               <SubHeading> Pre-Order Delivery </SubHeading>
-            </>
-         )}
+                  {now.map(rec => (
+                     <TableRow>
+                        <TableData>{rrulestr(rec.rrule).toText()}</TableData>
+                        <TableData>
+                           {rec.timeSlots.map(slot => (
+                              <Col>
+                                 <TableData>
+                                    {slot.from
+                                       .split(':')
+                                       .splice(0, 2)
+                                       .join(':')}{' '}
+                                    -{' '}
+                                    {slot.to.split(':').splice(0, 2).join(':')}
+                                 </TableData>
+                                 <Col column>
+                                    {slot.mileRanges.map(range => (
+                                       <Col>
+                                          <TableData>
+                                             {range.from} - {range.to}
+                                          </TableData>
+                                          <Col column>
+                                             {range.charges.map(charge => (
+                                                <Col>
+                                                   <TableData>
+                                                      {`${charge.orderValueFrom} - ${charge.orderValueUpto}`}
+                                                   </TableData>
+                                                   <TableData>
+                                                      {charge.charge}
+                                                   </TableData>
+                                                </Col>
+                                             ))}
+                                          </Col>
+                                       </Col>
+                                    ))}
+                                 </Col>
+                              </Col>
+                           ))}
+                        </TableData>
+                     </TableRow>
+                  ))}
+               </>
+            )}
+            {Boolean(later.length) && (
+               <>
+                  <SubHeading> Pre-Order Delivery </SubHeading>
+                  <TableRow>
+                     <TableData head></TableData>
+                     <TableData head>Time</TableData>
+                     <TableData head>Distance</TableData>
+                     <TableData head>Order Value</TableData>
+                     <TableData head>Charges</TableData>
+                  </TableRow>
+                  {later.map(rec => (
+                     <TableRow>
+                        <TableData>{`RRULE here`}</TableData>
+                        <TableData>
+                           {rec.timeSlots.map(slot => (
+                              <Col>
+                                 <TableData>
+                                    {slot.from
+                                       .split(':')
+                                       .splice(0, 2)
+                                       .join(':')}{' '}
+                                    -{' '}
+                                    {slot.to.split(':').splice(0, 2).join(':')}
+                                 </TableData>
+                                 <Col column>
+                                    {slot.mileRanges.map(range => (
+                                       <Col>
+                                          <TableData>
+                                             {range.from} - {range.to}
+                                          </TableData>
+                                          <Col column>
+                                             {range.charges.map(charge => (
+                                                <Col>
+                                                   <TableData>
+                                                      {`${charge.orderValueFrom} - ${charge.orderValueUpto}`}
+                                                   </TableData>
+                                                   <TableData>
+                                                      {charge.charge}
+                                                   </TableData>
+                                                </Col>
+                                             ))}
+                                          </Col>
+                                       </Col>
+                                    ))}
+                                 </Col>
+                              </Col>
+                           ))}
+                        </TableData>
+                     </TableRow>
+                  ))}
+               </>
+            )}
+         </Table>
       </Wrapper>
    )
 }
@@ -87,6 +160,10 @@ const Heading = styled.Text`
    margin-bottom: 1.5rem;
 `
 
+const Table = styled.View`
+   margin: 0 auto;
+`
+
 const SubHeading = styled.Text`
    font-size: 1rem;
    text-align: center;
@@ -97,9 +174,26 @@ const SubHeading = styled.Text`
 const TableRow = styled.View`
    flex-direction: row;
    align-items: center;
-   justify-content: space-between;
 `
 
 const TableData = styled.Text`
-   min-width: 200px;
+   min-width: 110px;
+   padding: 4px 0;
+   ${props =>
+      props.head &&
+      css`
+         font-weight: 600;
+         padding: 8px 0px;
+         color: #666;
+      `}
+`
+
+const Col = styled.View`
+   flex-direction: row;
+   align-items: start;
+   ${props =>
+      props.column &&
+      css`
+         flex-direction: column;
+      `}
 `
