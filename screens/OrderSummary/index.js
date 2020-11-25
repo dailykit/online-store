@@ -26,6 +26,7 @@ import { useStoreToast } from '../../utils'
 import { width } from '../../utils/Scaling'
 import Coupon from './components/Coupon'
 import Tip from './components/Tip'
+import Footer from '../../components/Footer'
 import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
 import PayWithWallet from './components/PayWithWallet'
 import {
@@ -88,7 +89,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    }
 
    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
          {cart?.cartInfo?.products?.length ? (
             <>
@@ -111,6 +112,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   padding: 20,
+                  minHeight: '100vh',
                }}
             >
                <Text
@@ -140,7 +142,8 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                </TouchableOpacity>
             </View>
          )}
-      </SafeAreaView>
+         <Footer />
+      </ScrollView>
    )
 }
 
