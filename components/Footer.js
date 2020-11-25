@@ -16,18 +16,25 @@ const Footer = () => {
             justifyContent: 'space-between',
          }}
       >
-         <View>
+         <View style={{ marginBottom: width < 768 ? 24 : 0 }}>
             <Text
                style={{
                   fontWeight: 'bold',
                   fontSize: '1.3rem',
                   color: '#fff',
                   marginBottom: 16,
+                  textAlign: width < 786 ? 'center' : 'left',
                }}
             >
                {brand.name}
             </Text>
-            <Text style={{ fontSize: '0.9rem', color: '#fff' }}>
+            <Text
+               style={{
+                  fontSize: '0.9rem',
+                  color: '#fff',
+                  textAlign: width < 786 ? 'center' : 'left',
+               }}
+            >
                Have trouble placing an order? Contact us:{' '}
                <Text style={{ fontWeight: '600' }}>
                   {brand.contact.phoneNo || brand.contact.email}
