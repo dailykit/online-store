@@ -123,9 +123,9 @@ const WebNav = ({ navigation }) => {
             <NavLink onPress={() => navigation.navigate('OrderSummary')}>
                <BasketButton />
             </NavLink>
-            {/* <NavLink onPress={() => open('DeliveryBreakup')}>
+            <NavLink onPress={() => open('DeliveryBreakup')}>
                <NavLinkText>Del Brk</NavLinkText>
-            </NavLink> */}
+            </NavLink>
             {isAuthenticated ? (
                <NavButton fade onPress={logout}>
                   <NavLinkText white>Logout</NavLinkText>

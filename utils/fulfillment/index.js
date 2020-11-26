@@ -278,7 +278,7 @@ export const isDeliveryAvailable = recurrences => {
 
 export const generateDeliverySlots = recurrences => {
    let data = []
-   recurrences.forEach(rec => {
+   for (let rec of recurrences) {
       const now = new Date() // now
       const start = new Date(now.getTime() - 1000 * 60 * 60 * 24) // yesterday
       // const start = now;
@@ -290,21 +290,13 @@ export const generateDeliverySlots = recurrences => {
                // if multiple mile ranges, only first one will be taken
                if (timeslot.mileRanges.length) {
                   const leadTime = timeslot.mileRanges[0].leadTime
-                  const timeslotFromArr = timeslot.from.split(':')
-                  const timeslotToArr = timeslot.to.split(':')
+                  const [fromHr, fromMin, fromSec] = timeslot.from.split(':')
+                  const [toHr, toMin, toSec] = timeslot.to.split(':')
                   const fromTimeStamp = new Date(
-                     date.setHours(
-                        timeslotFromArr[0],
-                        timeslotFromArr[1],
-                        timeslotFromArr[2]
-                     )
+                     date.setHours(fromHr, fromMin, fromSec)
                   )
                   const toTimeStamp = new Date(
-                     date.setHours(
-                        timeslotToArr[0],
-                        timeslotToArr[1],
-                        timeslotToArr[2]
-                     )
+                     date.setHours(toHr, toMin, toSec)
                   )
                   // start + lead time < to
                   const leadMiliSecs = leadTime * 60000
@@ -367,6 +359,6 @@ export const generateDeliverySlots = recurrences => {
             return { status: false, message: 'Sorry! No time slots available.' }
          }
       })
-   })
+   }
    return { status: true, data }
 }

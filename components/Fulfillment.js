@@ -228,7 +228,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
                               )
                               console.log('Fulfillment -> result', result)
                               if (result.status) {
-                                 console.log('Generating mini slots...')
                                  const miniSlots = generateMiniSlots(
                                     result.data,
                                     15
