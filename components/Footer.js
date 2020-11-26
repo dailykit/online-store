@@ -1,10 +1,12 @@
 import React from 'react'
 import { Text, View } from 'react-native'
 import { useAppContext } from '../context/app'
+import { useDrawerContext } from '../context/drawer'
 import { width } from '../utils/Scaling'
 
 const Footer = () => {
    const { visual, brand } = useAppContext()
+   const { open } = useDrawerContext()
 
    return (
       <View
@@ -39,6 +41,17 @@ const Footer = () => {
                <Text style={{ fontWeight: '600' }}>
                   {brand.contact.phoneNo || brand.contact.email}
                </Text>
+            </Text>
+            <Text
+               style={{
+                  fontSize: '0.9rem',
+                  color: '#fff',
+                  textAlign: width < 786 ? 'center' : 'left',
+                  textDecorationLine: 'underline',
+               }}
+               onPress={() => open('DeliveryBreakup')}
+            >
+               View delivery breakup
             </Text>
          </View>
          <Text style={{ color: '#fff' }}>Powered by DailyKIT</Text>

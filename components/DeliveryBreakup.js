@@ -1,13 +1,13 @@
+import React from 'react'
 import { useSubscription } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
-import React from 'react'
 import { Picker } from '@react-native-picker/picker'
+import { CURRENCY } from 'react-native-dotenv'
 import { rrulestr } from 'rrule'
 import styled, { css } from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { DELIVERY_BREAKUP } from '../graphql'
 import { generateMiniSlots, makeDoubleDigit } from '../utils/fulfillment'
-import { CURRENCY } from 'react-native-dotenv'
 
 const DeliveryBreakup = () => {
    const { brandId, visual } = useAppContext()
@@ -130,6 +130,7 @@ const DeliveryBreakup = () => {
    if (loading) return <Heading> Loading </Heading>
 
    return (
+      // <ScrollView horizontal style={{ flex: 1 }}>
       <Wrapper>
          <Heading> Delivery Charges </Heading>
          {Boolean(message) && <Message>{message}</Message>}
@@ -245,10 +246,11 @@ const DeliveryBreakup = () => {
          {Boolean(viewData?.length) && (
             <Message>
                *In case of any clashes/inconsistencies, lowest value will be
-               considered
+               considered.
             </Message>
          )}
       </Wrapper>
+      // </ScrollView>
    )
 }
 
@@ -323,6 +325,7 @@ const TableData = styled.Text`
       props.right &&
       css`
          text-align: right;
+         min-width: 140px;
       `}
 `
 
