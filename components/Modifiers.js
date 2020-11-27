@@ -58,6 +58,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                      productType: option.productType,
                      quantity: option.productQuantity,
                      image: option.image,
+                     operationConfigId: option.operationConfig.id,
                   },
                ])
             } else {
@@ -71,6 +72,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                   productType: option.productType,
                   quantity: option.productQuantity,
                   image: option.image,
+                  operationConfigId: option.operationConfig.id,
                }
                setSelected([...updatedModifers])
             }
