@@ -29,6 +29,7 @@ import {
    GET_MENU,
    CREATE_BRAND_CUSTOMER,
    PAYMENT_PARTNERSHIP,
+   POWER_QUERY,
 } from '../graphql'
 import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
@@ -91,144 +92,114 @@ export default function OnboardingStack(props) {
    const [settingCart, setSettingCart] = React.useState(true)
    const [settingUser, setSettingUser] = React.useState(true)
 
-   // Query for Brand ID
-   useQuery(BRANDS, {
-      variables: {
-         domain: window.location.hostname,
-      },
-      onCompleted: data => {
-         if (data.brands.length) {
-            const domain = window.location.hostname
-            const brand =
-               data.brands.find(brand => brand.domain === domain) ||
-               data.brands.find(brand => brand.isDefault)
-            setBrandId(brand.id)
-         } else {
-            console.log('COULD NOT RESOLVE BRAND')
-         }
-      },
-      onError: error => {
-         console.log(error)
-      },
-   })
-
-   // Query for settings
-   const { loading: settingsLoading, error: settingsError } = useSubscription(
-      STORE_SETTINGS,
+   const [powerQuery, { loading: runningPowerQuery }] = useLazyQuery(
+      POWER_QUERY,
       {
-         variables: {
-            brandId,
+         onCompleted: ({ onDemand_getStoreData }) => {
+            const data = onDemand_getStoreData[0]
+            console.log('🚀', data)
+            setBrandId(data.brandId)
+            setCustomer(data.customer)
+            setBrand(data.settings.brand)
+            setVisual(data.settings.visual)
+            setAvailability(data.settings.availability)
+            setRewardsSettings(data.settings.rewardsSettings)
          },
-         skip: Boolean(!brandId),
-         onSubscriptionData: data => {
-            let brandState = {}
-            let visualState = {}
-            let availabilityState = {}
-            let rewardsState = {}
-
-            data.subscriptionData.data.storeSettings.forEach(
-               ({ identifier, value, brandSettings }) => {
-                  switch (identifier) {
-                     case 'Brand Logo': {
-                        brandState.logo =
-                           brandSettings[0]?.value.url || value.url
-                        return
-                     }
-                     case 'Brand Name': {
-                        brandState.name =
-                           brandSettings[0]?.value.name || value.name
-                        return
-                     }
-                     case 'Nav Links': {
-                        brandState.navLinks = brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Contact': {
-                        brandState.contact = brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Primary Color': {
-                        visualState.color =
-                           brandSettings[0]?.value.color || value.color
-                        return
-                     }
-                     case 'Slides': {
-                        visualState.slides = brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Store Availability': {
-                        availabilityState.store =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Pickup Availability': {
-                        availabilityState.pickup =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Delivery Availability': {
-                        availabilityState.delivery =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Referral Availability': {
-                        availabilityState.referral =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Location': {
-                        availabilityState.location =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Loyalty Points Availability': {
-                        rewardsState.isLoyaltyPointsAvailable =
-                           brandSettings[0]?.value.isAvailable ??
-                           value.isAvailable
-                        return
-                     }
-                     case 'Wallet Availability': {
-                        rewardsState.isWalletAvailable =
-                           brandSettings[0]?.value.isAvailable ??
-                           value.isAvailable
-                        return
-                     }
-                     case 'Coupons Availability': {
-                        rewardsState.isCouponsAvailable =
-                           brandSettings[0]?.value.isAvailable ??
-                           value.isAvailable
-                        return
-                     }
-                     case 'Loyalty Points Usage': {
-                        rewardsState.loyaltyPointsUsage =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     default: {
-                        return
-                     }
-                  }
-               }
-            )
-
-            console.log(
-               'OnboardingStack -> availabilityState',
-               availabilityState
-            )
-            setBrand({ ...brandState })
-            setVisual({ ...visualState })
-            setAvailability({ ...availabilityState })
-            setRewardsSettings({ ...rewardsState })
-
-            setSettingsMapped(true)
+         onError: error => {
+            console.log(error)
          },
       }
    )
 
-   if (settingsError) {
-      setSettingsMapped(true)
-      console.log(error)
-   }
+   React.useEffect(() => {
+      if (isInitialized) {
+         console.log('🚀 isAuthenticated', isAuthenticated)
+         if (isAuthenticated && user.email) {
+            powerQuery({
+               variables: {
+                  params: {
+                     domain: window.location.hostname,
+                     clientId: CLIENTID,
+                     keycloakId: user.sub || user.id,
+                     email: user.email,
+                  },
+               },
+            })
+         } else {
+            powerQuery({
+               variables: {
+                  params: {
+                     domain: window.location.hostname,
+                     clientId: CLIENTID,
+                  },
+               },
+            })
+            setSettingUser(false)
+         }
+      }
+   }, [isInitialized, isAuthenticated, user])
+
+   const [fetchCustomer, { error, loading: fetchingCustomer }] = useLazyQuery(
+      CUSTOMER,
+      {
+         onCompleted: data => {
+            console.log('Customer:', data)
+
+            if (data.customer) {
+               setCustomer(data.customer)
+               setCustomerDetails(data.customer.platform_customer)
+
+               // check if any exisiting carts
+               if (data.customer.orderCarts.length) {
+                  console.log('Found cart with customer...')
+                  setCart(data.customer.orderCarts[0])
+               }
+
+               setSettingUser(false)
+
+               // update any pending cart (w/o signup)
+               if (cartId) {
+                  updateCart({
+                     variables: {
+                        id: cartId,
+                        set: {
+                           customerId: data.customer.id,
+                           customerKeycloakId: data.customer.keycloakId,
+                           stripeCustomerId:
+                              data.customer.platform_customer
+                                 ?.stripeCustomerId || null,
+                           paymentMethodId:
+                              data.customer.platform_customer
+                                 ?.defaultPaymentMethodId || null,
+                           customerInfo: {
+                              customerFirstName:
+                                 data.customer.platform_customer?.firstName,
+                              customerLastName:
+                                 data.customer.platform_customer?.lastName,
+                              customerPhone:
+                                 data.customer.platform_customer?.phoneNumber,
+                              customerEmail:
+                                 data.customer.platform_customer?.email,
+                           },
+                        },
+                     },
+                  })
+               }
+            }
+         },
+      }
+   )
+
+   React.useEffect(() => {
+      if (customer && customer.id && brandId) {
+         fetchCustomer({
+            variables: {
+               keycloakId: user.sub || user.userid,
+               brandId,
+            },
+         })
+      }
+   }, [customer, brandId])
 
    // Payment Partnership
    const [fetchPaymentPartnerships] = useLazyQuery(PAYMENT_PARTNERSHIP, {
@@ -247,7 +218,7 @@ export default function OnboardingStack(props) {
    })
 
    React.useEffect(() => {
-      if (brandId) {
+      if (brandId && CURRENCY === 'INR') {
          console.log('Fetching payment partnership...')
          fetchPaymentPartnerships({
             variables: {
@@ -298,160 +269,6 @@ export default function OnboardingStack(props) {
          setSettingCart(false)
       },
    })
-
-   // Mutation for creating customer
-   const [createCustomer, { loading: creatingCustomer }] = useMutation(
-      CREATE_CUSTOMER,
-      {
-         onCompleted: data => {
-            setCustomer(data.createCustomer)
-            setCustomerDetails(data.createCustomer.platform_customer)
-            // Check for any pending cart
-            if (cartId) {
-               updateCart({
-                  variables: {
-                     id: cartId,
-                     set: {
-                        customerId: data.createCustomer.id,
-                        customerKeycloakId: data.createCustomer.keycloakId,
-                        stripeCustomerId: null,
-                        customerInfo: null,
-                     },
-                  },
-               })
-            }
-            setSettingUser(false)
-            console.log('Customer created: ', data.createCustomer)
-            if (availability?.referral?.isAvailable) {
-               console.log('Referral available')
-               open('ReferralCode')
-            }
-         },
-         onError: error => {
-            console.log(error)
-         },
-      }
-   )
-
-   const [
-      createBrandCustomer,
-      { loading: creatingBrandCustomer },
-   ] = useMutation(CREATE_BRAND_CUSTOMER, {
-      onCompleted: data => {
-         setCustomer({
-            ...customer,
-            brandCustomers: [
-               ...customer.brandCustomers,
-               data.createBrandCustomer,
-            ],
-         })
-         console.log('Created brand customer!')
-      },
-      onError: error => {
-         console.log(error)
-         console.error('Could not create brand customer!')
-      },
-   })
-
-   // Query Customer and Data from platform
-   const [fetchCustomer, { error, loading: fetchingCustomer }] = useLazyQuery(
-      CUSTOMER,
-      {
-         onCompleted: data => {
-            console.log('Customer:', data)
-
-            if (data.customer) {
-               setCustomer(data.customer)
-               setCustomerDetails(data.customer.platform_customer)
-
-               // check if customer exists on brand
-               const brandCustomerRecord = data.customer.brandCustomers.find(
-                  record => record.brandId === brandId
-               )
-               console.log('brandCustomerRecord', brandCustomerRecord)
-               if (!brandCustomerRecord) {
-                  createBrandCustomer({
-                     variables: {
-                        object: {
-                           brandId,
-                           keycloakId: data.customer.keycloakId,
-                        },
-                     },
-                  })
-               }
-
-               // check if any exisiting carts
-               if (data.customer.orderCarts.length) {
-                  console.log('Found cart with customer...')
-                  setCart(data.customer.orderCarts[0])
-               }
-
-               setSettingUser(false)
-
-               // update any pending cart (w/o signup)
-               if (cartId) {
-                  updateCart({
-                     variables: {
-                        id: cartId,
-                        set: {
-                           customerId: data.customer.id,
-                           customerKeycloakId: data.customer.keycloakId,
-                           stripeCustomerId:
-                              data.customer.platform_customer
-                                 ?.stripeCustomerId || null,
-                           paymentMethodId:
-                              data.customer.platform_customer
-                                 ?.defaultPaymentMethodId || null,
-                           customerInfo: {
-                              customerFirstName:
-                                 data.customer.platform_customer?.firstName,
-                              customerLastName:
-                                 data.customer.platform_customer?.lastName,
-                              customerPhone:
-                                 data.customer.platform_customer?.phoneNumber,
-                              customerEmail:
-                                 data.customer.platform_customer?.email,
-                           },
-                        },
-                     },
-                  })
-               }
-            } else {
-               createCustomer({
-                  variables: {
-                     object: {
-                        keycloakId: user.sub || user.userid,
-                        email: user.email,
-                        source: 'online store',
-                        clientId: CLIENTID,
-                        sourceBrandId: brandId,
-                        brandCustomers: {
-                           data: {
-                              brandId,
-                           },
-                        },
-                     },
-                  },
-               })
-            }
-         },
-      }
-   )
-
-   React.useEffect(() => {
-      if (brandId && (user.sub || user.id)) {
-         fetchCustomer({
-            variables: {
-               keycloakId: user.sub || user.userid,
-               brandId,
-            },
-         })
-      } else {
-         setSettingUser(false)
-      }
-   }, [brandId, user])
-
-   // if (error) console.log('Customer fetch error: ', error)
 
    // Subscription for Wallet, Loyalty Points
    useSubscription(CUSTOMER_REFERRAL, {
@@ -610,16 +427,14 @@ export default function OnboardingStack(props) {
    React.useEffect(() => {
       console.table({
          brandId,
-         fetchingCustomer,
-         creatingCustomer,
-         creatingBrandCustomer,
          fetchingCart,
+         fetchingCustomer,
          isInitialized,
-         user: Object.keys(user).length,
          subscribingCart,
-         settingsMapped,
+         isAuthenticated,
          settingCart,
          settingUser,
+         runningPowerQuery,
       })
       if (!isInitialized) {
          setMasterLoading(true)
@@ -627,15 +442,11 @@ export default function OnboardingStack(props) {
          if (isAuthenticated) {
             const status = [
                Boolean(brandId), // 1
-               !fetchingCustomer, // true
-               !creatingCustomer, // true
-               !creatingBrandCustomer, // true
                !fetchingCart, // true
-               Object.keys(user).length, // > 0
+               !fetchingCustomer, //true
                !subscribingCart, // true
-               settingsMapped, // true
-               !settingCart,
-               !settingUser,
+               !runningPowerQuery, // true
+               !settingUser, // true
             ].every(notLoading => notLoading)
             if (status) {
                setMasterLoading(false)
@@ -643,9 +454,9 @@ export default function OnboardingStack(props) {
          } else {
             const status = [
                Boolean(brandId), // 1
-               settingsMapped, // true
                !fetchingCart, // true
                !settingCart,
+               !runningPowerQuery,
             ].every(notLoading => notLoading)
             if (status) {
                setMasterLoading(false)
@@ -654,17 +465,14 @@ export default function OnboardingStack(props) {
       }
    }, [
       brandId,
-      fetchingCustomer,
-      creatingCustomer,
-      creatingBrandCustomer,
       fetchingCart,
+      fetchingCustomer,
       isInitialized,
-      user,
       subscribingCart,
       isAuthenticated,
-      settingsMapped,
       settingCart,
       settingUser,
+      runningPowerQuery,
    ])
 
    return (
