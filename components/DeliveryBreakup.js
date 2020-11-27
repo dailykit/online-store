@@ -8,6 +8,7 @@ import styled, { css } from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { DELIVERY_BREAKUP } from '../graphql'
 import { generateMiniSlots, makeDoubleDigit } from '../utils/fulfillment'
+import { width } from '../utils/Scaling'
 
 const DeliveryBreakup = () => {
    const { brandId, visual } = useAppContext()
@@ -206,18 +207,22 @@ const DeliveryBreakup = () => {
                   <TableRow>
                      <TableData head>Distance</TableData>
                      <TableData head right>
-                        Order Value
+                        {width > 768
+                           ? 'Order Value'
+                           : 'Order Value and Charges'}
                      </TableData>
-                     <TableData head right>
-                        Charges
-                     </TableData>
+                     {Boolean(width > 768) && (
+                        <TableData head right>
+                           Charges
+                        </TableData>
+                     )}
                   </TableRow>
                   {viewData.map(mileRange => (
                      <TableRow key={mileRange.id}>
                         <TableData>{renderDistanceRange(mileRange)}</TableData>
                         <Col column>
                            {mileRange.charges.map(charge => (
-                              <Col key={charge.id}>
+                              <Col column={width <= 768} key={charge.id}>
                                  <TableData right>
                                     {`${new Intl.NumberFormat('en-US', {
                                        style: 'currency',
@@ -229,7 +234,7 @@ const DeliveryBreakup = () => {
                                        currency: CURRENCY,
                                     }).format(charge.orderValueUpto)}`}
                                  </TableData>
-                                 <TableData right>
+                                 <TableData right shade={width <= 768}>
                                     {new Intl.NumberFormat('en-US', {
                                        style: 'currency',
                                        currency: CURRENCY,
@@ -326,6 +331,11 @@ const TableData = styled.Text`
       css`
          text-align: right;
          min-width: 140px;
+      `}
+      ${props =>
+      props.shade &&
+      css`
+         font-weight: 600;
       `}
 `
 
