@@ -31,17 +31,20 @@ import {
    PAYMENT_PARTNERSHIP,
    POWER_QUERY,
 } from '../graphql'
-import CategoryProductsPage from '../screens/CategoryProductsPage'
 // screens
-import Home from '../screens/Home'
-import LoginSuccess from '../screens/LoginSuccess'
-import Order from '../screens/Order'
-import OrderHistory from '../screens/OrderHistory'
-import OrderSummary from '../screens/OrderSummary'
-import ProductPage from '../screens/ProductPage'
-import ProfileScreen from '../screens/ProfileScreen'
-import Recipe from '../screens/Recipe'
-import Search from '../screens/Search'
+const Home = React.lazy(() => import('../screens/Home'))
+const LoginSuccess = React.lazy(() => import('../screens/LoginSuccess'))
+const Order = React.lazy(() => import('../screens/Order'))
+const OrderHistory = React.lazy(() => import('../screens/OrderHistory'))
+const OrderSummary = React.lazy(() => import('../screens/OrderSummary'))
+const ProductPage = React.lazy(() => import('../screens/ProductPage'))
+const CategoryProductsPage = React.lazy(() =>
+   import('../screens/CategoryProductsPage')
+)
+const ProfileScreen = React.lazy(() => import('../screens/ProfileScreen'))
+const Recipe = React.lazy(() => import('../screens/Recipe'))
+const Search = React.lazy(() => import('../screens/Search'))
+
 import { mergeCarts } from '../utils'
 import { width } from '../utils/Scaling'
 import { useScript } from '../utils/useScript'
