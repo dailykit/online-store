@@ -498,21 +498,20 @@ function AppStack(props) {
       }
       console.log(initRender, width)
       console.log('Setting initRender...')
-      setInitRender(false)
+      setTimeout(() => setInitRender(false), 1)
    }, [])
 
    return (
       <Drawer.Navigator
          style={{ flex: 1 }}
          drawerContent={props => <CustomDrawerContent {...props} />}
-         drawerStyle={
-            initRender
-               ? { backgroundColor: 'black' }
-               : {
-                    backgroundColor: 'white',
-                    width: width * 0.8,
-                 }
-         }
+         // drawerType={initRender ? 'permanent' : 'front'}
+         openByDefault={false}
+         drawerStyle={{
+            width: 299,
+            display: initRender ? 'none' : 'flex',
+            backgroundColor: initRender ? 'transparent' : 'white',
+         }}
          gestureHandlerProps={{ enabled: false }}
          drawerContentOptions={{
             activeTintcolor: 'white',
