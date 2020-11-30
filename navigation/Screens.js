@@ -152,7 +152,7 @@ export default function OnboardingStack(props) {
                setCustomer(data.customer)
                setCustomerDetails(data.customer.platform_customer)
 
-               // check if any exisiting carts
+               // check if any existing carts
                if (data.customer.orderCarts.length) {
                   console.log('Found cart with customer...')
                   setCart(data.customer.orderCarts[0])
@@ -195,6 +195,7 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       if (customer && customer.id && brandId) {
+         console.log('Fetching customer....')
          fetchCustomer({
             variables: {
                keycloakId: user.sub || user.userid,
@@ -334,6 +335,7 @@ export default function OnboardingStack(props) {
    const [fetchCart, { loading: fetchingCart }] = useLazyQuery(FETCH_CART, {
       onCompleted: data => {
          if (data?.cartByPK?.id) {
+            console.log('Setting cart......', data.cartByPK)
             setCart(data.cartByPK)
             setSettingCart(false)
          }
@@ -343,7 +345,7 @@ export default function OnboardingStack(props) {
       },
    })
 
-   const [updateCart, { loading: updatingCart }] = useMutation(UPDATE_CART, {
+   const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
          console.log('Cart updated!')
       },
@@ -357,7 +359,7 @@ export default function OnboardingStack(props) {
          const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
          console.log('Pending Cart ID: ', cartId)
          setCartId(cartId)
-         if ((!user.sub || !user.id) && cartId) {
+         if (!isAuthenticated && cartId && brandId) {
             fetchCart({
                variables: {
                   id: cartId,
@@ -367,7 +369,7 @@ export default function OnboardingStack(props) {
             setSettingCart(false)
          }
       })()
-   }, [user])
+   }, [isAuthenticated, brandId])
 
    React.useEffect(() => {
       if (cartId && cart?.customerId) {
