@@ -35,6 +35,7 @@ export const useStoreToast = () => {
             color: '#fff',
             closeIconColor: '#fff',
             iconColor: '#fff',
+            duration: 1500,
          })
       } else if (type === 'error') {
          toast({
@@ -44,6 +45,7 @@ export const useStoreToast = () => {
             color: '#fff',
             closeIconColor: '#fff',
             iconColor: '#fff',
+            duration: 1500,
          })
       } else {
          toast({
@@ -53,6 +55,7 @@ export const useStoreToast = () => {
             color: '#fff',
             closeIconColor: '#fff',
             iconColor: '#fff',
+            duration: 1500,
          })
       }
    }
