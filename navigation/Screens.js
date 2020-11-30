@@ -356,17 +356,19 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       ;(async () => {
-         const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
-         console.log('Pending Cart ID: ', cartId)
-         setCartId(cartId)
-         if (!isAuthenticated && cartId && brandId) {
-            fetchCart({
-               variables: {
-                  id: cartId,
-               },
-            })
-         } else {
-            setSettingCart(false)
+         if (brandId) {
+            const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
+            console.log('Pending Cart ID: ', cartId)
+            setCartId(cartId)
+            if (!isAuthenticated && cartId) {
+               fetchCart({
+                  variables: {
+                     id: cartId,
+                  },
+               })
+            } else {
+               setSettingCart(false)
+            }
          }
       })()
    }, [isAuthenticated, brandId])
@@ -452,6 +454,7 @@ export default function OnboardingStack(props) {
                !subscribingCart, // true
                !runningPowerQuery, // true
                !settingUser, // true
+               !settingCart, // true
             ].every(notLoading => notLoading)
             if (status) {
                setMasterLoading(false)
