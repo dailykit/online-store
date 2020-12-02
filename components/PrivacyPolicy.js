@@ -13,7 +13,7 @@ const PrivacyPolicy = () => {
    }, [])
 
    return (
-      <Wrapper>
+      <Wrapper stickyHeaderIndices={[0]}>
          <Heading> Privacy Policy </Heading>
          <Content nativeID="privacy-policy"></Content>
       </Wrapper>
@@ -22,15 +22,17 @@ const PrivacyPolicy = () => {
 
 export default PrivacyPolicy
 
-const Wrapper = styled.View`
+const Wrapper = styled.ScrollView`
    padding: 1rem;
+   padding-top: 0;
 `
 
 const Heading = styled.Text`
    font-size: 1.2rem;
    text-align: center;
    font-weight: 600;
-   margin-bottom: 1.5rem;
+   padding: 1rem;
+   background: #fff;
 `
 
 const Content = styled.Text`

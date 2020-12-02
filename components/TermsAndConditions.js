@@ -13,7 +13,7 @@ const TermsAndConditions = () => {
    }, [])
 
    return (
-      <Wrapper>
+      <Wrapper stickyHeaderIndices={[0]}>
          <Heading> Terms and Conditions </Heading>
          <Content nativeID="terms-and-conditions"></Content>
       </Wrapper>
@@ -22,15 +22,17 @@ const TermsAndConditions = () => {
 
 export default TermsAndConditions
 
-const Wrapper = styled.View`
+const Wrapper = styled.ScrollView`
    padding: 1rem;
+   padding-top: 0;
 `
 
 const Heading = styled.Text`
    font-size: 1.2rem;
    text-align: center;
    font-weight: 600;
-   margin-bottom: 1.5rem;
+   padding: 1rem;
+   background: #fff;
 `
 
 const Content = styled.Text`

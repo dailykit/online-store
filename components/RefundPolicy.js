@@ -13,7 +13,7 @@ const RefundPolicy = () => {
    }, [])
 
    return (
-      <Wrapper>
+      <Wrapper stickyHeaderIndices={[0]}>
          <Heading> Refund Policy </Heading>
          <Content nativeID="refund-policy"></Content>
       </Wrapper>
@@ -22,15 +22,17 @@ const RefundPolicy = () => {
 
 export default RefundPolicy
 
-const Wrapper = styled.View`
+const Wrapper = styled.ScrollView`
    padding: 1rem;
+   padding-top: 0;
 `
 
 const Heading = styled.Text`
    font-size: 1.2rem;
    text-align: center;
    font-weight: 600;
-   margin-bottom: 1.5rem;
+   padding: 1rem;
+   background: #fff;
 `
 
 const Content = styled.Text`
