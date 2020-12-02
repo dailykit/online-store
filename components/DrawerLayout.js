@@ -22,6 +22,9 @@ import { useAppContext } from '../context/app'
 import Login from '../screens/Login'
 import Register from '../screens/Register'
 import DeliveryBreakup from './DeliveryBreakup'
+import TermsAndConditions from './TermsAndConditions'
+import PrivacyPolicy from './PrivacyPolicy'
+import RefundPolicy from './RefundPolicy'
 
 const DrawerLayout = () => {
    const {
@@ -114,6 +117,12 @@ const DrawerLayout = () => {
             return <ReferralCode />
          case 'DeliveryBreakup':
             return <DeliveryBreakup />
+         case 'TermsAndConditions':
+            return <TermsAndConditions />
+         case 'PrivacyPolicy':
+            return <PrivacyPolicy />
+         case 'RefundPolicy':
+            return <RefundPolicy />
          default:
             return <Text>.</Text>
       }
