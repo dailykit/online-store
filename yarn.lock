@@ -2375,12 +2375,7 @@
     wcwidth "^1.0.1"
     ws "^1.1.0"
 
-"@react-native-community/picker@1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@react-native-community/picker/-/picker-1.6.1.tgz#f893bf4982e549c954696d08a47e1d8e72762310"
-  integrity sha512-JuCOtim1tZhB3KoJhbuPj3pFweUnj4XgukktJk0MyUOB8wA3uCEHW+xsGYu8ZDYiyR0M6qXctz7Fz2qYFuTUSQ==
-
-"@react-native-picker/picker@^1.9.3":
+"@react-native-picker/picker@1.9.3":
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-1.9.3.tgz#60fba63445c539928f9cd32973ffa4c3221ffd83"
   integrity sha512-8wNd1Cold2mciTq5Djo4c+FU1x4+weqmR8WAFWOJ1yfkh0sOiAa/9SdFbHZK2fWZCK+W08iLqWWi5KGQDaqlWw==
@@ -7614,6 +7609,11 @@ map-visit@^1.0.0:
   integrity sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
   dependencies:
     object-visit "^1.0.0"
+
+marked@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-1.2.5.tgz#a44b31f2a0b8b5bfd610f00d55d1952d1ac1dfdb"
+  integrity sha512-2AlqgYnVPOc9WDyWu7S5DJaEZsfk6dNh/neatQ3IHUW4QLutM/VPSH9lG7bif+XjFWc9K9XR3QvR+fXuECmfdA==
 
 marker-clusterer-plus@^2.1.4:
   version "2.1.4"

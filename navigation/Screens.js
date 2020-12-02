@@ -147,6 +147,21 @@ export default function OnboardingStack(props) {
                         brandState.contact = brandSettings[0]?.value || value
                         return
                      }
+                     case 'Terms and Conditions': {
+                        brandState.termsAndConditions =
+                           brandSettings[0]?.value?.value || value.value
+                        return
+                     }
+                     case 'Privacy Policy': {
+                        brandState.privacyPolicy =
+                           brandSettings[0]?.value?.value || value.value
+                        return
+                     }
+                     case 'Refund Policy': {
+                        brandState.refundPolicy =
+                           brandSettings[0]?.value?.value || value.value
+                        return
+                     }
                      case 'Primary Color': {
                         visualState.color =
                            brandSettings[0]?.value.color || value.color
