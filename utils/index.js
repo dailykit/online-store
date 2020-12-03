@@ -180,3 +180,7 @@ export const isKeycloakSupported = () => {
       return false
    }
 }
+
+export const imageUrl = (url, size = 400) => {
+   return url?.replace('/images/', `/resized-${size}/`) || url
+}
