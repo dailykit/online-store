@@ -84,11 +84,23 @@ const DeliveryBreakup = () => {
                if (slots.length) {
                   setPickerData(slots)
                   setSelectedDate(slots[0].date)
+                  if (slots[0].slots.length) {
+                     setSelectedTime(slots[0].slots[0].range)
+                  }
                }
             }
          }
       }
    }, [selected])
+
+   React.useEffect(() => {
+      if (selectedDate) {
+         const day = pickerData.find(({ date }) => date === selectedDate)
+         if (day.slots.length) {
+            setSelectedTime(day.slots[0].range)
+         }
+      }
+   }, [selectedDate])
 
    React.useEffect(() => {
       if (selectedDate && selectedTime) {
