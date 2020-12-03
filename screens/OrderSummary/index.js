@@ -22,7 +22,7 @@ import { useAuth } from '../../context/auth'
 import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
-import { useStoreToast } from '../../utils'
+import { imageUrl, useStoreToast } from '../../utils'
 import { width } from '../../utils/Scaling'
 import Coupon from './components/Coupon'
 import Tip from './components/Tip'
@@ -494,7 +494,9 @@ const Cart = ({ cart }) => {
                   <CartItemLeft>
                      <CartItemImage
                         source={{
-                           uri: product.image || defaultProductImage,
+                           uri:
+                              imageUrl(product.image, 60) ||
+                              defaultProductImage,
                         }}
                      />
                      <CartItemInfo>

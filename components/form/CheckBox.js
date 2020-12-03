@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components/native'
 import { Feather } from '@expo/vector-icons'
-import { discountedPrice } from '../../utils'
+import { discountedPrice, imageUrl } from '../../utils'
 import { CURRENCY } from 'react-native-dotenv'
 
 const CheckBox = ({
@@ -31,7 +31,7 @@ const CheckBox = ({
             color={checked ? color : '#666'}
             style={{ marginRight: 16 }}
          />
-         {Boolean(image) && <Img source={{ uri: image }} />}
+         {Boolean(image) && <Img source={{ uri: imageUrl(image, 60) }} />}
          <Title>{title}</Title>
          {Boolean(price) && (
             <>

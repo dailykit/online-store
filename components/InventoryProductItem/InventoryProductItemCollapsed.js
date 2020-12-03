@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
-import { priceSort } from '../../utils'
+import { imageUrl, priceSort } from '../../utils'
 import { width } from '../../utils/Scaling'
 import Modifiers from '../Modifiers'
 import ServingSelect from '../ServingSelect'
@@ -81,7 +81,7 @@ const InventoryProductCollapsed = ({
                   source={{
                      uri: tunnelItem
                         ? inventoryProduct?.assets?.images[0]
-                           ? inventoryProduct?.assets?.images[0]
+                           ? imageUrl(inventoryProduct?.assets?.images[0], 400)
                            : defaultProductImage
                         : '#fff',
                   }}
@@ -98,7 +98,7 @@ const InventoryProductCollapsed = ({
                   <Image
                      source={{
                         uri: inventoryProduct?.assets?.images[0]
-                           ? inventoryProduct?.assets?.images[0]
+                           ? imageUrl(inventoryProduct?.assets?.images[0], 400)
                            : defaultProductImage,
                      }}
                      style={styles.item_image}
