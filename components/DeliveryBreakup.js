@@ -66,10 +66,12 @@ const DeliveryBreakup = () => {
          setMessage('')
          if (selected === 'now') {
             const now = recurrences.filter(rec => rec.type.includes('ONDEMAND'))
+            console.log({ now })
             if (now.length) {
                const result = isDeliveryAvailable(now)
+               console.log({ result })
                if (result.status) {
-                  setMileRangeIds([result.mileRangeId])
+                  setMileRangeIds(result.mileRangeIds)
                } else {
                   setMessage(result.message)
                   setViewData([])
@@ -113,6 +115,7 @@ const DeliveryBreakup = () => {
          const res = extractedMileRanges.current[selected].filter(({ id }) =>
             mileRangeIds.includes(id)
          )
+         console.log('🚀 viewData', res)
          setViewData(res)
       }
    }, [selected, mileRangeIds])
@@ -438,6 +441,8 @@ function generateDeliverySlots(recurrences) {
 }
 
 function isDeliveryAvailable(recurrences) {
+   let status = false
+   let mileRangeIds = []
    for (let rec of recurrences) {
       const now = new Date() // now
       const start = new Date(now.getTime() - 1000 * 60 * 60 * 24) // yesterday
@@ -447,59 +452,34 @@ function isDeliveryAvailable(recurrences) {
          if (rec.timeSlots.length) {
             for (let timeslot of rec.timeSlots) {
                if (timeslot.mileRanges.length) {
-                  const timeslotFromArr = timeslot.from.split(':')
-                  const timeslotToArr = timeslot.to.split(':')
-                  const fromTimeStamp = new Date(now.getTime())
-                  fromTimeStamp.setHours(
-                     timeslotFromArr[0],
-                     timeslotFromArr[1],
-                     timeslotFromArr[2]
-                  )
-                  const toTimeStamp = new Date(now.getTime())
-                  toTimeStamp.setHours(
-                     timeslotToArr[0],
-                     timeslotToArr[1],
-                     timeslotToArr[2]
-                  )
-                  // check if current time falls within time slot
-                  if (
-                     now.getTime() > fromTimeStamp.getTime() &&
-                     now.getTime() < toTimeStamp.getTime()
-                  ) {
-                     return {
-                        status: true,
-                        mileRangeId: timeslot.mileRanges[0].id,
+                  for (let mileRange of timeslot.mileRanges) {
+                     const timeslotFromArr = timeslot.from.split(':')
+                     const timeslotToArr = timeslot.to.split(':')
+                     const fromTimeStamp = new Date(now.getTime())
+                     fromTimeStamp.setHours(
+                        timeslotFromArr[0],
+                        timeslotFromArr[1],
+                        timeslotFromArr[2]
+                     )
+                     const toTimeStamp = new Date(now.getTime())
+                     toTimeStamp.setHours(
+                        timeslotToArr[0],
+                        timeslotToArr[1],
+                        timeslotToArr[2]
+                     )
+                     // check if current time falls within time slot
+                     if (
+                        now.getTime() > fromTimeStamp.getTime() &&
+                        now.getTime() < toTimeStamp.getTime()
+                     ) {
+                        status = true
+                        mileRangeIds.push(mileRange.id)
                      }
-                  } else {
-                     console.log('isDeliveryAvailable -> time failure')
-                     return {
-                        status: false,
-                        message:
-                           'Sorry, We do not offer Delivery at this time.',
-                     }
-                  }
-               } else {
-                  console.log('isDeliveryAvailable -> mile range failure')
-                  return {
-                     status: false,
-                     message:
-                        'Sorry, you seem to be placed far out of our delivery range.',
                   }
                }
             }
-         } else {
-            console.log('isDeliveryAvailable -> time slots failure')
-            return {
-               status: false,
-               message: 'Sorry, We do not offer Delivery at this time.',
-            }
-         }
-      } else {
-         console.log('isDeliveryAvailable -> dates failure')
-         return {
-            status: false,
-            message: 'Sorry, We do not offer Delivery on this day.',
          }
       }
    }
+   return { status, mileRangeIds }
 }
