@@ -25,7 +25,6 @@ const DeliveryBreakup = () => {
    const [recurrences, setRecurrences] = React.useState([])
 
    const storeMileRanges = recurrences => {
-      console.log('🚀  recurrences', recurrences)
       recurrences.forEach(recurrence =>
          recurrence.timeSlots.forEach(timeSlot => {
             if (recurrence.type.includes('ONDEMAND')) {
@@ -66,10 +65,8 @@ const DeliveryBreakup = () => {
          setMessage('')
          if (selected === 'now') {
             const now = recurrences.filter(rec => rec.type.includes('ONDEMAND'))
-            console.log({ now })
             if (now.length) {
                const result = isDeliveryAvailable(now)
-               console.log({ result })
                if (result.status) {
                   setMileRangeIds(result.mileRangeIds)
                } else {
@@ -83,12 +80,11 @@ const DeliveryBreakup = () => {
             )
             const { status, data } = generateDeliverySlots(later)
             if (status && data.length) {
-               const miniSlots = generateMiniSlots(data, 15)
-               if (miniSlots.length) {
-                  setPickerData(miniSlots)
-                  setSelectedDate(miniSlots[0].date)
+               const slots = unifySlots(data)
+               if (slots.length) {
+                  setPickerData(slots)
+                  setSelectedDate(slots[0].date)
                }
-               console.log('miniSlots', miniSlots)
             }
          }
       }
@@ -99,23 +95,20 @@ const DeliveryBreakup = () => {
          const dateObject = pickerData.find(({ date }) => date === selectedDate)
          if (dateObject) {
             const timeObject = dateObject.slots.find(
-               ({ time }) => time === selectedTime
+               ({ range }) => range === selectedTime
             )
-            console.log({ timeObject })
             if (timeObject) {
-               setMileRangeIds([timeObject.mileRangeId])
+               setMileRangeIds(timeObject.mileRangeIds)
             }
          }
       }
    }, [selectedDate, selectedTime])
 
    React.useEffect(() => {
-      console.log({ selected, mileRangeIds })
       if (selected && mileRangeIds?.length) {
          const res = extractedMileRanges.current[selected].filter(({ id }) =>
             mileRangeIds.includes(id)
          )
-         console.log('🚀 viewData', res)
          setViewData(res)
       }
    }, [selected, mileRangeIds])
@@ -197,8 +190,8 @@ const DeliveryBreakup = () => {
                      .slots.map((slot, index) => (
                         <Picker.Item
                            key={index}
-                           label={slot.time}
-                           value={slot.time}
+                           label={slot.range}
+                           value={slot.range}
                         />
                      ))}
                </Picker>
@@ -438,6 +431,25 @@ function generateDeliverySlots(recurrences) {
       })
    }
    return { status: true, data }
+}
+
+function unifySlots(slots) {
+   return slots.map(slot => {
+      const newSlot = { date: slot.date, slots: [] }
+      slot.slots.forEach(s => {
+         const range = `${s.start} - ${s.end}`
+         const index = newSlot.slots.findIndex(el => el.range === range)
+         if (index !== -1) {
+            newSlot.slots[index].mileRangeIds.push(s.mileRangeId)
+         } else {
+            newSlot.slots.push({
+               range,
+               mileRangeIds: [s.mileRangeId],
+            })
+         }
+      })
+      return newSlot
+   })
 }
 
 function isDeliveryAvailable(recurrences) {
