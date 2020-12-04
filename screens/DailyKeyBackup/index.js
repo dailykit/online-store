@@ -438,7 +438,7 @@ const Address = () => {
                         components:
                            CURRENCY === 'INR' ? 'country:in' : 'country:us',
                         location: `${availability.location.lat},${availability.location.lng}`,
-                        radius: 100000,
+                        radius: 30000,
                      }}
                      requestUrl={{
                         url: `${DAILYOS_SERVER_URL}/api`,
