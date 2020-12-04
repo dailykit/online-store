@@ -5,6 +5,7 @@ import { Image, Text, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import defaultProductImage from '../assets/imgs/default-product-image.png'
 import { CURRENCY } from 'react-native-dotenv'
+import { imageUrl } from '../utils'
 // 12
 
 const OrderCard = ({ order, less }) => {
@@ -125,7 +126,8 @@ const OrderCard = ({ order, less }) => {
                                  <Image
                                     source={{
                                        uri:
-                                          product.image || defaultProductImage,
+                                          imageUrl(product.image, 60) ||
+                                          defaultProductImage,
                                     }}
                                     style={{
                                        height: 60,

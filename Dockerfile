@@ -8,6 +8,7 @@ ARG DAILYKEY_URL
 ARG MAPS_API_KEY
 ARG PAYMENTS_API_URL
 ARG CURRENCY
+ARG SECURE_PASSWORD
 WORKDIR /usr/src/app
 COPY package.json ./
 RUN npm install
@@ -21,6 +22,7 @@ RUN echo "DAILYKEY_URL=${DAILYKEY_URL}" >> .env
 RUN echo "MAPS_API_KEY=${MAPS_API_KEY}" >> .env
 RUN echo "PAYMENTS_API_URL=${PAYMENTS_API_URL}" >> .env
 RUN echo "CURRENCY=${CURRENCY}" >> .env
+RUN echo "SECURE_PASSWORD=${SECURE_PASSWORD}" >> .env
 
 ENV PATH /app/node_modules/.bin:$PATH
 

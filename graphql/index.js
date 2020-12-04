@@ -47,6 +47,7 @@ import {
    WALLETS,
    LOYALTY_POINTS,
    CUSTOMER_REFERRAL,
+   DELIVERY_BREAKUP,
 } from './subscriptions'
 
 export {
@@ -92,4 +93,5 @@ export {
    CART_PAYMENT,
    PAYMENT_PARTNERSHIP,
    SET_REFERRAL_CODE,
+   DELIVERY_BREAKUP,
 }

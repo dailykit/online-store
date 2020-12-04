@@ -60,7 +60,7 @@ export default function OnboardingStack(props) {
 
    const [settingsMapped, setSettingsMapped] = React.useState(false)
 
-   const { user, isInitialized, isAuthenticated, keycloak } = useAuth()
+   const { user, isInitialized, isAuthenticated } = useAuth()
    const {
       customer,
       cart,
@@ -141,6 +141,25 @@ export default function OnboardingStack(props) {
                      }
                      case 'Nav Links': {
                         brandState.navLinks = brandSettings[0]?.value || value
+                        return
+                     }
+                     case 'Contact': {
+                        brandState.contact = brandSettings[0]?.value || value
+                        return
+                     }
+                     case 'Terms and Conditions': {
+                        brandState.termsAndConditions =
+                           brandSettings[0]?.value?.value || value.value
+                        return
+                     }
+                     case 'Privacy Policy': {
+                        brandState.privacyPolicy =
+                           brandSettings[0]?.value?.value || value.value
+                        return
+                     }
+                     case 'Refund Policy': {
+                        brandState.refundPolicy =
+                           brandSettings[0]?.value?.value || value.value
                         return
                      }
                      case 'Primary Color': {
@@ -547,9 +566,9 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       if (cartId && cart?.customerId) {
-         console.log('Cleared local storage!')
+         console.log('Removed pending cart id!')
          setCartId(null)
-         AsyncStorage.clear()
+         AsyncStorage.removeItem('PENDING_CART_ID')
       }
    }, [cart])
 

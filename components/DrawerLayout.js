@@ -19,6 +19,12 @@ import Fulfillment from './Fulfillment'
 import CouponList from '../screens/OrderSummary/components/CouponList'
 import ReferralCode from './ReferralCode'
 import { useAppContext } from '../context/app'
+import Login from '../screens/Login'
+import Register from '../screens/Register'
+import DeliveryBreakup from './DeliveryBreakup'
+import TermsAndConditions from './TermsAndConditions'
+import PrivacyPolicy from './PrivacyPolicy'
+import RefundPolicy from './RefundPolicy'
 
 const DrawerLayout = () => {
    const {
@@ -65,9 +71,16 @@ const DrawerLayout = () => {
    React.useEffect(() => {
       if (
          !isDrawerOpen &&
-         ['AddDetails', 'Login', 'Register', 'Payment', 'CouponList'].includes(
-            drawerView
-         )
+         [
+            'AddDetails',
+            'Login',
+            'Register',
+            'Payment',
+            'CouponList',
+            'LoginSelf',
+            'RegisterSelf',
+            'DailyKeyBackup',
+         ].includes(drawerView)
       ) {
          setDrawerView(undefined)
       }
@@ -90,14 +103,26 @@ const DrawerLayout = () => {
             return <Fulfillment />
          case 'Login':
             return <Keycloak type="login" />
+         case 'LoginSelf':
+            return <Login />
          case 'Register':
             return <Keycloak type="register" />
+         case 'RegisterSelf':
+            return <Register />
          case 'Payment':
             return <PaymentProcessing {...params} />
          case 'CouponList':
             return <CouponList />
          case 'ReferralCode':
             return <ReferralCode />
+         case 'DeliveryBreakup':
+            return <DeliveryBreakup />
+         case 'TermsAndConditions':
+            return <TermsAndConditions />
+         case 'PrivacyPolicy':
+            return <PrivacyPolicy />
+         case 'RefundPolicy':
+            return <RefundPolicy />
          default:
             return <Text>.</Text>
       }

@@ -198,7 +198,8 @@ const Address = () => {
    const { setSaved, setIsDrawerOpen } = useDrawerContext()
    const { user } = useAuth()
 
-   const [tracking, setTracking] = React.useState(true)
+   const [mode, setMode] = React.useState('UNKNOWN')
+   const [tracking, setTracking] = React.useState(false)
    const [isLocationDenied, setIsLocationDenied] = React.useState(false)
    const [populated, setPopulated] = React.useState(undefined)
    const [saving, setSaving] = React.useState(false)
@@ -338,14 +339,23 @@ const Address = () => {
             throw Error('An error occured, please try again!')
          }
       } catch (err) {
-         setFormError(err.message)
+         console.log(err)
+         setFormError('An error occured, please try again!')
       } finally {
          setSaving(false)
       }
    }
 
+   const cannotFindLocation = () => {
+      console.log('Could not find location!')
+      setMode('SELF')
+      setTracking(false)
+   }
+
    React.useEffect(() => {
-      if (window.navigator) {
+      if (mode === 'AUTOMATIC' && window.navigator) {
+         setTracking(true)
+         const timer = setTimeout(cannotFindLocation, 8000)
          window.navigator.geolocation.getCurrentPosition(
             async data => {
                console.log(data.coords)
@@ -362,8 +372,13 @@ const Address = () => {
                setTracking(false)
             }
          )
+         return () => {
+            if (timer) {
+               clearTimeout(timer)
+            }
+         }
       }
-   }, [])
+   }, [mode])
 
    if (!loaded || tracking) {
       return (
@@ -371,6 +386,27 @@ const Address = () => {
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
          >
             <Spinner />
+         </View>
+      )
+   }
+
+   if (mode === 'UNKNOWN') {
+      return (
+         <View
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+         >
+            <ConfirmText>How do you want to set your location?</ConfirmText>
+            <ConfirmCTAContainer>
+               <ConfirmCTA
+                  onPress={() => setMode('AUTOMATIC')}
+                  color={visual.color}
+               >
+                  <ConfirmCTAText>Automatic</ConfirmCTAText>
+               </ConfirmCTA>
+               <ConfirmCTA onPress={() => setMode('SELF')} color={visual.color}>
+                  <ConfirmCTAText>I'll add myself</ConfirmCTAText>
+               </ConfirmCTA>
+            </ConfirmCTAContainer>
          </View>
       )
    }
@@ -864,4 +900,25 @@ const Coords = styled.Text`
    font-size: 10px;
    color: #aaa;
    margin-bottom: 1rem;
+`
+
+const ConfirmText = styled.Text`
+   margin-bottom: 1rem;
+`
+
+const ConfirmCTAContainer = styled.View`
+   flex-direction: row;
+   align-items: center;
+`
+
+const ConfirmCTA = styled.TouchableOpacity`
+   padding: 8px;
+   background: ${props => props.color || '#666'};
+   margin: 0 8px;
+   border-radius: 2px;
+`
+
+const ConfirmCTAText = styled.Text`
+   text-align: center;
+   color: #fff;
 `

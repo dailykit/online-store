@@ -3,6 +3,7 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import Carousel from 'react-native-banner-carousel'
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { useAppContext } from '../../context/app'
+import { imageUrl } from '../../utils'
 import { width } from '../../utils/Scaling'
 
 const CustomizableProductItemCollapsed = ({ product, clickHandler }) => {
@@ -37,7 +38,7 @@ const CustomizableProductItemCollapsed = ({ product, clickHandler }) => {
                   width: '100%',
                   resizeMode: 'cover',
                }}
-               source={{ uri: product.assets.images[0] }}
+               source={{ uri: imageUrl(product.assets?.images[0], 400) }}
             />
          ) : (
             <Carousel
@@ -66,7 +67,7 @@ const CustomizableProductItemCollapsed = ({ product, clickHandler }) => {
                            resizeMode: 'contain',
                            marginHorizontal: 'auto',
                         }}
-                        source={{ uri: slide }}
+                        source={{ uri: imageUrl(slide) }}
                      />
                   </View>
                ))}

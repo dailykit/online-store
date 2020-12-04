@@ -22,6 +22,7 @@ import AddToCart from '../AddToCart'
 import PhotoShowcase from '../../components/PhotoShowcase'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 import Recommendations from '../../components/Recommendations'
+import { View } from 'react-native'
 
 const Recipe = ({ navigation, route }) => {
    const { recipeId, refId, refType } = route.params
@@ -339,11 +340,24 @@ const Recipe = ({ navigation, route }) => {
                   <>
                      <Title>{refProduct?.name}</Title>
                      <Spacer size="8px" />
-                     <TypeWrapper type={simpleRecipe.type}>
-                        <TypeText type={simpleRecipe.type}>
-                           {simpleRecipe.type}
-                        </TypeText>
-                     </TypeWrapper>
+                     <View
+                        style={{
+                           flexDirection: 'row',
+                           alignItems: 'center',
+                           justifyContent: 'space-between',
+                        }}
+                     >
+                        <TypeWrapper type={simpleRecipe.type}>
+                           <TypeText type={simpleRecipe.type}>
+                              {simpleRecipe.type}
+                           </TypeText>
+                        </TypeWrapper>
+                        {Boolean(width <= 768) && (
+                           <BuyBtn color={visual.color} onPress={buy} small>
+                              <BuyBtnText>Buy Now</BuyBtnText>
+                           </BuyBtn>
+                        )}
+                     </View>
                      <Spacer size="8px" />
                      <SocialMediaShareButtons />
                      <Spacer size="16px" />
@@ -770,6 +784,12 @@ const BuyBtn = styled.TouchableOpacity`
    css`
       margin-top: 0px;
    `}
+
+   ${props =>
+      props.small &&
+      css`
+         padding: 8px;
+      `}
 `
 
 const BuyBtnText = styled.Text`

@@ -22,10 +22,11 @@ import { useAuth } from '../../context/auth'
 import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
-import { useStoreToast } from '../../utils'
+import { imageUrl, useStoreToast } from '../../utils'
 import { width } from '../../utils/Scaling'
 import Coupon from './components/Coupon'
 import Tip from './components/Tip'
+import Footer from '../../components/Footer'
 import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
 import PayWithWallet from './components/PayWithWallet'
 import {
@@ -34,6 +35,7 @@ import {
    CURRENCY,
 } from 'react-native-dotenv'
 import CartSkeleton from '../../components/skeletons/cart'
+import { isKeycloakSupported } from '../../utils'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { isAuthenticated } = useAuth()
@@ -68,6 +70,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
          const brandObject = {
             name: brand.name,
             logo: brand.logo,
+            color: visual.color,
             description: '',
          }
          window.payments.checkout({
@@ -86,7 +89,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    }
 
    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
          {cart?.cartInfo?.products?.length ? (
             <>
@@ -109,6 +112,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   padding: 20,
+                  minHeight: '100vh',
                }}
             >
                <Text
@@ -138,7 +142,8 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                </TouchableOpacity>
             </View>
          )}
-      </SafeAreaView>
+         <Footer />
+      </ScrollView>
    )
 }
 
@@ -171,13 +176,21 @@ const Checkout = ({ cart, navigation }) => {
                      <CTAContainer>
                         <Button
                            color={visual.color}
-                           onPress={() => open('Login')}
+                           onPress={() =>
+                              isKeycloakSupported()
+                                 ? open('Login')
+                                 : open('LoginSelf')
+                           }
                         >
                            <ButtonText color={visual.color}>LOGIN</ButtonText>
                         </Button>
                         <Button
                            color={visual.color}
-                           onPress={() => open('Register')}
+                           onPress={() =>
+                              isKeycloakSupported()
+                                 ? open('Register')
+                                 : open('RegisterSelf')
+                           }
                         >
                            <ButtonText color={visual.color}>SIGN UP</ButtonText>
                         </Button>
@@ -348,7 +361,10 @@ const Cart = ({ cart }) => {
    const [deleteCarts] = useMutation(DELETE_CARTS, {
       onCompleted: data => {
          console.log('Carts deleted: ', data.deleteCarts.returning)
-         AsyncStorage.clear()
+         if (data.deleteCarts.returning.length) {
+            AsyncStorage.removeItem('PENDING_CART_ID')
+            setCart(undefined)
+         }
       },
       onError: error => {
          console.log('Deleteing carts error: ', error)
@@ -453,11 +469,24 @@ const Cart = ({ cart }) => {
       <StyledCart>
          <CartHeader>
             <CartHeaderTextLeft>Total</CartHeaderTextLeft>
-            <CartHeaderTextRight>
-               {`${cart.cartInfo.products.length} Item${
-                  cart.cartInfo.products.length > 1 ? 's' : ''
-               }`}
-            </CartHeaderTextRight>
+            <CartHeaderRight>
+               <CartClearBtn
+                  onPress={() =>
+                     deleteCarts({
+                        variables: {
+                           ids: [cart.id],
+                        },
+                     })
+                  }
+               >
+                  <Feather name="trash-2" size={16} color="#FF5A52" />
+               </CartClearBtn>
+               <CartHeaderTextRight>
+                  {`${cart.cartInfo.products.length} Item${
+                     cart.cartInfo.products.length > 1 ? 's' : ''
+                  }`}
+               </CartHeaderTextRight>
+            </CartHeaderRight>
          </CartHeader>
          <CartItems>
             {cart.cartInfo.products.map(product => (
@@ -465,7 +494,9 @@ const Cart = ({ cart }) => {
                   <CartItemLeft>
                      <CartItemImage
                         source={{
-                           uri: product.image || defaultProductImage,
+                           uri:
+                              imageUrl(product.image, 60) ||
+                              defaultProductImage,
                         }}
                      />
                      <CartItemInfo>
@@ -928,6 +959,15 @@ const CartHeader = styled.View`
 const CartHeaderTextLeft = styled.Text`
    font-weight: bold;
    color: #93808c;
+`
+
+const CartHeaderRight = styled.View`
+   flex-direction: row;
+   align-items: center;
+`
+
+const CartClearBtn = styled.TouchableOpacity`
+   margin-right: 0.5rem;
 `
 
 const CartHeaderTextRight = styled.Text`

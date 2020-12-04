@@ -1,6 +1,6 @@
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 import { Feather, MaterialIcons } from '@expo/vector-icons'
-import { Picker } from '@react-native-community/picker'
+import { Picker } from '@react-native-picker/picker'
 import { Spinner } from 'native-base'
 import React from 'react'
 import {
@@ -228,7 +228,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
                               )
                               console.log('Fulfillment -> result', result)
                               if (result.status) {
-                                 console.log('Generating mini slots...')
                                  const miniSlots = generateMiniSlots(
                                     result.data,
                                     15
@@ -432,7 +431,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
                         onPress={() => setTime('PREORDER')}
                         style={[styles.radioButton]}
                      >
-                        <Text style={styles.text}>Schedule for later</Text>
+                        <Text style={styles.text}>Later</Text>
                         {time === 'PREORDER' && (
                            <View
                               style={[

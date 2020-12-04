@@ -155,6 +155,7 @@ export const CREATE_CUSTOMER_ADDRESS = gql`
          line2
          city
          state
+         landmark
          country
          zipcode
          label

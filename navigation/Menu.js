@@ -5,6 +5,7 @@ import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { useDrawerContext } from '../context/drawer'
+import { isKeycloakSupported } from '../utils'
 
 function CustomDrawerContent({
    drawerPosition,
@@ -84,11 +85,23 @@ function CustomDrawerContent({
                   </>
                ) : (
                   <>
-                     <NavItem onPress={() => open('Login')}>
+                     <NavItem
+                        onPress={() =>
+                           isKeycloakSupported()
+                              ? open('Login')
+                              : open('LoginSelf')
+                        }
+                     >
                         <Feather name="log-in" size={16} color={visual.color} />
                         <NavItemText>Login</NavItemText>
                      </NavItem>
-                     <NavItem onPress={() => open('Register')}>
+                     <NavItem
+                        onPress={() =>
+                           isKeycloakSupported()
+                              ? open('Register')
+                              : open('RegisterSelf')
+                        }
+                     >
                         <Feather
                            name="user-plus"
                            size={16}
