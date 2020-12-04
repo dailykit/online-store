@@ -9,7 +9,12 @@ import { loadStripe } from '@stripe/stripe-js'
 import axios from 'axios'
 import { Spinner, View } from 'native-base'
 import React from 'react'
-import { MAPS_API_KEY, PAYMENTS_API_URL, CURRENCY } from 'react-native-dotenv'
+import {
+   MAPS_API_KEY,
+   PAYMENTS_API_URL,
+   CURRENCY,
+   DAILYOS_SERVER_URL,
+} from 'react-native-dotenv'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import MapView from 'react-native-maps'
 import styled, { css } from 'styled-components/native'
@@ -423,7 +428,7 @@ const Address = () => {
                   <FormFieldLabel>Search Address on Google</FormFieldLabel>
                   <GooglePlacesAutocomplete
                      placeholder="Address..."
-                     currentLocation={true}
+                     debounce={300}
                      onPress={data => formatAddress(data)}
                      onFail={error => console.error(error)}
                      fetchDetails={true}
@@ -433,10 +438,10 @@ const Address = () => {
                         components:
                            CURRENCY === 'INR' ? 'country:in' : 'country:us',
                         location: `${availability.location.lat},${availability.location.lng}`,
+                        radius: 100000,
                      }}
                      requestUrl={{
-                        url:
-                           'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
+                        url: `${DAILYOS_SERVER_URL}/api`,
                         useOnPlatform: 'web',
                      }}
                      styles={{
