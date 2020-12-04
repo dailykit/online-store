@@ -9,7 +9,7 @@ import { loadStripe } from '@stripe/stripe-js'
 import axios from 'axios'
 import { Spinner, View } from 'native-base'
 import React from 'react'
-import { MAPS_API_KEY, PAYMENTS_API_URL } from 'react-native-dotenv'
+import { MAPS_API_KEY, PAYMENTS_API_URL, CURRENCY } from 'react-native-dotenv'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import MapView from 'react-native-maps'
 import styled, { css } from 'styled-components/native'
@@ -194,7 +194,7 @@ const Address = () => {
    const [createCustomerAddress] = useMutation(CREATE_CUSTOMER_ADDRESS)
 
    const { customerDetails } = useCartContext()
-   const { visual } = useAppContext()
+   const { visual, availability } = useAppContext()
    const { setSaved, setIsDrawerOpen } = useDrawerContext()
    const { user } = useAuth()
 
@@ -423,12 +423,16 @@ const Address = () => {
                   <FormFieldLabel>Search Address on Google</FormFieldLabel>
                   <GooglePlacesAutocomplete
                      placeholder="Address..."
+                     currentLocation={true}
                      onPress={data => formatAddress(data)}
                      onFail={error => console.error(error)}
                      fetchDetails={true}
                      query={{
                         key: MAPS_API_KEY,
                         language: 'en',
+                        components:
+                           CURRENCY === 'INR' ? 'country:in' : 'country:us',
+                        location: `${availability.location.lat},${availability.location.lng}`,
                      }}
                      requestUrl={{
                         url:
