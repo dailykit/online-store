@@ -437,8 +437,11 @@ const Address = () => {
                         language: 'en',
                         components:
                            CURRENCY === 'INR' ? 'country:in' : 'country:us',
-                        location: `${availability.location.lat},${availability.location.lng}`,
+                        location: populated.lat
+                           ? `${populated.lat},${populated.lng}`
+                           : `${availability.location.lat},${availability.location.lng}`,
                         radius: 30000,
+                        types: 'geocode',
                      }}
                      requestUrl={{
                         url: `${DAILYOS_SERVER_URL}/api`,
