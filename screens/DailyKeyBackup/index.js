@@ -437,7 +437,7 @@ const Address = () => {
                         language: 'en',
                         components:
                            CURRENCY === 'INR' ? 'country:in' : 'country:us',
-                        location: populated.lat
+                        location: populated?.lat
                            ? `${populated.lat},${populated.lng}`
                            : `${availability.location.lat},${availability.location.lng}`,
                         radius: 30000,
