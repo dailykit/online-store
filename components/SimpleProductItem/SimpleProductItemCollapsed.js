@@ -68,12 +68,18 @@ const SimpleProductItemCollapsed = ({
       }
    }, [typeSelected, servingIndex])
 
+   const beautifyType = type => {
+      return type === 'mealKit' ? 'Meal Kit' : 'Ready to Eat'
+   }
+
    const renderServing = serving => {
       if (serving) {
          if (serving.label) {
-            return serving.label
+            return `${serving.label} | ${beautifyType(selectedOption?.type)}`
          } else {
-            return `x${serving.serving}`
+            return `Serves ${serving.serving} | ${beautifyType(
+               selectedOption?.type
+            )}`
          }
       }
    }
@@ -172,23 +178,22 @@ const SimpleProductItemCollapsed = ({
                         >{`${simpleRecipeProduct.name} `}</Text>
                      </View>
                      <View style={styles.item_three_lower}>
-                        <Text
-                           style={[
-                              styles.item_details,
-                              {
-                                 fontWeight: 'normal',
-                                 fontSize: width > 768 || tunnelItem ? 18 : 14,
-                              },
-                           ]}
-                           numberOfLines={1}
-                           ellipsizeMode="tail"
-                        >
-                           {tunnelItem
-                              ? simpleRecipeProduct.simpleRecipe.cuisine
-                              : selectedOption?.type === 'mealKit'
-                              ? 'Meal Kit'
-                              : 'Ready to Eat'}
-                        </Text>
+                        {Boolean(tunnelItem) && (
+                           <Text
+                              style={[
+                                 styles.item_details,
+                                 {
+                                    fontWeight: 'normal',
+                                    fontSize:
+                                       width > 768 || tunnelItem ? 18 : 14,
+                                 },
+                              ]}
+                              numberOfLines={1}
+                              ellipsizeMode="tail"
+                           >
+                              {simpleRecipeProduct.simpleRecipe.cuisine}
+                           </Text>
+                        )}
                         <Text
                            style={[
                               styles.item_chef,
