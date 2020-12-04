@@ -110,10 +110,10 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
          await checkValidity()
          console.log('isValid', isValid.current)
          onValidityChange(isValid.current)
-         if (isValid.current) {
-            console.log('Selected: ', selected)
-            onModifiersSelected(selected)
-         }
+         // if (isValid.current) {
+         console.log('Selected: ', selected)
+         onModifiersSelected(selected)
+         // }
       })()
    }, [selected])
 
