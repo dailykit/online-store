@@ -68,6 +68,24 @@ const SimpleProductItemCollapsed = ({
       }
    }, [typeSelected, servingIndex])
 
+   const renderServing = serving => {
+      if (serving) {
+         if (serving.label) {
+            return serving.label
+         } else {
+            return `x${serving.serving}`
+         }
+      }
+   }
+
+   const getServingFontSize = () => {
+      if (tunnelItem) {
+         return width > 768 ? 18 : 14
+      } else {
+         return 12
+      }
+   }
+
    if (servingIndex === undefined) return null
 
    return (
@@ -176,15 +194,15 @@ const SimpleProductItemCollapsed = ({
                               styles.item_chef,
                               {
                                  fontWeight: 'normal',
-                                 fontSize: width > 768 ? 18 : 14,
+                                 fontSize: getServingFontSize(),
                               },
                            ]}
                         >
                            {tunnelItem
                               ? simpleRecipeProduct.simpleRecipe.author
-                              : 'x' +
-                                selectedOption?.simpleRecipeYield?.yield
-                                   ?.serving}
+                              : renderServing(
+                                   selectedOption?.simpleRecipeYield?.yield
+                                )}
                         </Text>
                      </View>
                   </View>
