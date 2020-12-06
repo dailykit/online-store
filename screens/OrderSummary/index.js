@@ -500,7 +500,7 @@ const Cart = ({ cart }) => {
                         }}
                      />
                      <CartItemInfo>
-                        <CartItemName numberOfLines={1} ellipsizeMode="tail">
+                        <CartItemName numberOfLines={2} ellipsizeMode="tail">
                            {product.name}
                         </CartItemName>
                         {product.type === 'comboProduct' &&
@@ -1007,7 +1007,7 @@ const CartItemImage = styled.Image`
 const CartItemInfo = styled.View`
    margin-left: 10px;
    margin-right: 5px;
-   width: ${width > 768 ? '220px' : '100px'};
+   width: ${width > 768 ? '220px' : '150px'};
 `
 
 const CartItemName = styled.Text`
