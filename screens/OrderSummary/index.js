@@ -505,7 +505,7 @@ const Cart = ({ cart }) => {
                            <>
                               <CartItemLabel
                                  ellipsizeMode="tail"
-                                 numberOfLines={1}
+                                 numberOfLines={2}
                               >
                                  {`${component.comboProductComponentLabel}: ${component.name}`}
                               </CartItemLabel>
@@ -558,14 +558,14 @@ const Cart = ({ cart }) => {
                            </>
                         ))}
                      {product.type === 'simpleRecipeProduct' && (
-                        <CartItemLabel ellipsizeMode="tail" numberOfLines={1}>
+                        <CartItemLabel ellipsizeMode="tail" numberOfLines={2}>
                            {`${product.option.type?.SRPType()} | ${
                               product.option.label || product.option.serving
                            }`}
                         </CartItemLabel>
                      )}
                      {product.type === 'inventoryProduct' && (
-                        <CartItemLabel ellipsizeMode="tail" numberOfLines={1}>
+                        <CartItemLabel ellipsizeMode="tail" numberOfLines={2}>
                            {`${product.option.label}`}
                         </CartItemLabel>
                      )}
