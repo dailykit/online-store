@@ -11,6 +11,9 @@ module.exports = async function (env, argv) {
       },
       argv
    )
+   config.output = {
+      filename: '[name].[contenthash].js',
+   }
    config.resolve.alias['react-native-maps'] = 'react-native-web-maps'
    config.resolve.alias['react-native'] = 'react-native-web'
    config.resolve.alias['react-native-banner-carousel'] =
