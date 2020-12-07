@@ -40,7 +40,11 @@ const CustomizableProductItem = ({
       if (type === 'simpleRecipeProduct') {
          newItem.option.type = option.type
          newItem.option.serving = option.simpleRecipeYield.yield.serving
-         delete newItem.option.label
+         if (option.simpleRecipeYield.yield.label) {
+            newItem.option.serving = option.simpleRecipeYield.yield.label
+         } else {
+            delete newItem.option.label
+         }
       } else {
          newItem.option.label = option.label
          delete newItem.option.type

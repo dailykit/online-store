@@ -153,6 +153,7 @@ const OrderCard = ({ order, less }) => {
                                           {product.type ===
                                              'simpleRecipeProduct' &&
                                              `${product.option.type?.SRPType()} x${
+                                                product.option.label ||
                                                 product.option.serving
                                              }`}
                                           {product.type ===

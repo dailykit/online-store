@@ -68,6 +68,30 @@ const SimpleProductItemCollapsed = ({
       }
    }, [typeSelected, servingIndex])
 
+   const beautifyType = type => {
+      return type === 'mealKit' ? 'Meal Kit' : 'Ready to Eat'
+   }
+
+   const renderServing = serving => {
+      if (serving) {
+         if (serving.label) {
+            return `${serving.label} | ${beautifyType(selectedOption?.type)}`
+         } else {
+            return `Serves ${serving.serving} | ${beautifyType(
+               selectedOption?.type
+            )}`
+         }
+      }
+   }
+
+   const getServingFontSize = () => {
+      if (tunnelItem) {
+         return width > 768 ? 18 : 14
+      } else {
+         return 12
+      }
+   }
+
    if (servingIndex === undefined) return null
 
    return (
@@ -154,37 +178,36 @@ const SimpleProductItemCollapsed = ({
                         >{`${simpleRecipeProduct.name} `}</Text>
                      </View>
                      <View style={styles.item_three_lower}>
-                        <Text
-                           style={[
-                              styles.item_details,
-                              {
-                                 fontWeight: 'normal',
-                                 fontSize: width > 768 || tunnelItem ? 18 : 14,
-                              },
-                           ]}
-                           numberOfLines={1}
-                           ellipsizeMode="tail"
-                        >
-                           {tunnelItem
-                              ? simpleRecipeProduct.simpleRecipe.cuisine
-                              : selectedOption?.type === 'mealKit'
-                              ? 'Meal Kit'
-                              : 'Ready to Eat'}
-                        </Text>
+                        {Boolean(tunnelItem) && (
+                           <Text
+                              style={[
+                                 styles.item_details,
+                                 {
+                                    fontWeight: 'normal',
+                                    fontSize:
+                                       width > 768 || tunnelItem ? 18 : 14,
+                                 },
+                              ]}
+                              numberOfLines={1}
+                              ellipsizeMode="tail"
+                           >
+                              {simpleRecipeProduct.simpleRecipe.cuisine}
+                           </Text>
+                        )}
                         <Text
                            style={[
                               styles.item_chef,
                               {
                                  fontWeight: 'normal',
-                                 fontSize: width > 768 ? 18 : 14,
+                                 fontSize: getServingFontSize(),
                               },
                            ]}
                         >
                            {tunnelItem
                               ? simpleRecipeProduct.simpleRecipe.author
-                              : 'x' +
-                                selectedOption?.simpleRecipeYield?.yield
-                                   ?.serving}
+                              : renderServing(
+                                   selectedOption?.simpleRecipeYield?.yield
+                                )}
                         </Text>
                      </View>
                   </View>
@@ -208,7 +231,10 @@ const SimpleProductItemCollapsed = ({
                            index={key + 1}
                            isSelected={servingIndex == key ? true : false}
                            setServingIndex={index => setServingIndex(index)}
-                           size={item_data.simpleRecipeYield.yield.serving}
+                           size={
+                              item_data.simpleRecipeYield.yield.label ||
+                              item_data.simpleRecipeYield.yield.serving
+                           }
                            price={parseFloat(item_data.price[0].value)}
                            discount={parseFloat(item_data.price[0].discount)}
                            setProductOption={() => setProductOption(item_data)}

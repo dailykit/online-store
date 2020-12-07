@@ -42,6 +42,9 @@ const SimpleProductItem = ({
             id: option.id,
             type: option.type,
             serving: option.simpleRecipeYield.yield.serving,
+            ...(option.simpleRecipeYield.yield.label && {
+               label: option.simpleRecipeYield.yield.label,
+            }),
          },
          price: parseFloat(option.price[0].value),
          discount: parseFloat(option.price[0].discount),
