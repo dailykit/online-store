@@ -80,6 +80,7 @@ export default function OnboardingStack(props) {
       availability,
       setAvailability,
       setRewardsSettings,
+      setAppSettings,
       setMenuData,
       setMasterLoading,
       setMenuLoading,
@@ -125,6 +126,7 @@ export default function OnboardingStack(props) {
             let visualState = {}
             let availabilityState = {}
             let rewardsState = {}
+            let appState = {}
 
             data.subscriptionData.data.storeSettings.forEach(
                ({ identifier, value, brandSettings }) => {
@@ -219,6 +221,11 @@ export default function OnboardingStack(props) {
                            brandSettings[0]?.value || value
                         return
                      }
+                     case 'Scripts': {
+                        appState.scripts =
+                           brandSettings[0]?.value?.value || value?.value
+                        return
+                     }
                      default: {
                         return
                      }
@@ -234,6 +241,7 @@ export default function OnboardingStack(props) {
             setVisual({ ...visualState })
             setAvailability({ ...availabilityState })
             setRewardsSettings({ ...rewardsState })
+            setAppSettings({ ...appState })
 
             setSettingsMapped(true)
          },
