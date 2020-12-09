@@ -8,6 +8,7 @@ import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { useCartContext } from '../context/cart'
 import { useDrawerContext } from '../context/drawer'
+import { isKeycloakSupported } from '../utils'
 import { width } from '../utils/Scaling'
 import Icon from './Icon'
 
@@ -83,6 +84,12 @@ const WebNav = ({ navigation }) => {
 
    const [query, setQuery] = React.useState('')
 
+   const navigateToExternalLink = link => {
+      if (window) {
+         window.open(link, '_blank')
+      }
+   }
+
    return (
       <>
          <NavLeft>
@@ -90,9 +97,13 @@ const WebNav = ({ navigation }) => {
             <NavLink onPress={() => navigation.navigate('Home')}>
                <NavLinkText>{brand.name || 'Home'}</NavLinkText>
             </NavLink>
-            <NavLink>
-               <NavLinkText>About Us</NavLinkText>
-            </NavLink>
+            {Boolean(brand.navLinks?.aboutUs) && (
+               <NavLink
+                  onPress={() => navigateToExternalLink(brand.navLinks.aboutUs)}
+               >
+                  <NavLinkText>About Us</NavLinkText>
+               </NavLink>
+            )}
             <SearchContainer onPress={() => navigation.navigate('Search')}>
                <Feather name="search" size={18} color="#aaa" />
                <SearchText>Search</SearchText>
@@ -120,17 +131,22 @@ const WebNav = ({ navigation }) => {
                <>
                   <NavButton
                      color={visual.color}
-                     onPress={() => {
-                        console.log('Login clicked')
-                        open('Login')
-                     }}
+                     onPress={() =>
+                        isKeycloakSupported()
+                           ? open('Login')
+                           : open('LoginSelf')
+                     }
                   >
                      <NavLinkText white>Login</NavLinkText>
                   </NavButton>
                   <NavButton
                      outline
                      color={visual.color}
-                     onPress={() => open('Register')}
+                     onPress={() =>
+                        isKeycloakSupported()
+                           ? open('Register')
+                           : open('RegisterSelf')
+                     }
                   >
                      <NavLinkText outline color={visual.color}>
                         Sign Up

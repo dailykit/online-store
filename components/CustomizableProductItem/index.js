@@ -22,6 +22,7 @@ const CustomizableProductItem = ({
    refType,
    comboProductComponent,
    onModifiersValidityChange,
+   clickHandler,
 }) => {
    const [expanded, setExpanded] = useState(false)
    const [numberOfOptions, setnumberOfOptions] = useState(0)
@@ -39,7 +40,11 @@ const CustomizableProductItem = ({
       if (type === 'simpleRecipeProduct') {
          newItem.option.type = option.type
          newItem.option.serving = option.simpleRecipeYield.yield.serving
-         delete newItem.option.label
+         if (option.simpleRecipeYield.yield.label) {
+            newItem.option.serving = option.simpleRecipeYield.yield.label
+         } else {
+            delete newItem.option.label
+         }
       } else {
          newItem.option.label = option.label
          delete newItem.option.type
@@ -167,19 +172,8 @@ const CustomizableProductItem = ({
    }
    return (
       <CustomizableProductItemCollapsed
-         isSelected={isSelected}
-         _id={_id}
-         data={default_first_product}
-         setSelected={setSelected}
-         isLast={isLast}
-         openModal={openModal}
-         navigation={navigation}
-         setExpanded={setExpanded}
-         label={''}
-         independantItem={independantItem ? true : false}
-         numberOfOptions={numberOfOptions}
-         tunnelItem={tunnelItem}
          product={product}
+         clickHandler={clickHandler}
       />
    )
 }

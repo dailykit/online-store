@@ -21,6 +21,8 @@ import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
 import PhotoShowcase from '../../components/PhotoShowcase'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
+import Recommendations from '../../components/Recommendations'
+import { View } from 'react-native'
 
 const Recipe = ({ navigation, route }) => {
    const { recipeId, refId, refType } = route.params
@@ -37,6 +39,9 @@ const Recipe = ({ navigation, route }) => {
    const containerRef = React.useRef()
 
    React.useEffect(() => {
+      if (scrollHeight >= nutritionPosition.current) {
+         return setActiveTab('nutrition')
+      }
       if (
          scrollHeight < ingredientsPosition.current ||
          ingredientsPosition.current === undefined
@@ -57,9 +62,7 @@ const Recipe = ({ navigation, route }) => {
       ) {
          return setActiveTab('cookingSteps')
       }
-      if (scrollHeight >= nutritionPosition.current) {
-         return setActiveTab('nutrition')
-      }
+
       return setActiveTab('description')
    }, [scrollHeight])
 
@@ -273,40 +276,43 @@ const Recipe = ({ navigation, route }) => {
                         Description
                      </TabText>
                   </Tab>
-                  <Tab
-                     active={activeTab === 'ingredients'}
-                     color={visual.color}
-                     onPress={() =>
-                        containerRef.current.scrollTo({
-                           y: ingredientsPosition.current,
-                        })
-                     }
-                  >
-                     <TabText
-                        active={activeTab === 'ingredients'}
-                        color={visual.color}
-                     >
-                        Ingredients
-                     </TabText>
-                  </Tab>
-                  {Boolean(simpleRecipe.procedures.length) && (
+                  {simpleRecipe.showIngredients && (
                      <Tab
-                        active={activeTab === 'cookingSteps'}
+                        active={activeTab === 'ingredients'}
                         color={visual.color}
                         onPress={() =>
                            containerRef.current.scrollTo({
-                              y: cookingStepsPosition.current,
+                              y: ingredientsPosition.current,
                            })
                         }
                      >
                         <TabText
-                           active={activeTab === 'cookingSteps'}
+                           active={activeTab === 'ingredients'}
                            color={visual.color}
                         >
-                           Cooking Steps
+                           Ingredients
                         </TabText>
                      </Tab>
                   )}
+                  {simpleRecipe.showProcedures &&
+                     Boolean(simpleRecipe.procedures.length) && (
+                        <Tab
+                           active={activeTab === 'cookingSteps'}
+                           color={visual.color}
+                           onPress={() =>
+                              containerRef.current.scrollTo({
+                                 y: cookingStepsPosition.current,
+                              })
+                           }
+                        >
+                           <TabText
+                              active={activeTab === 'cookingSteps'}
+                              color={visual.color}
+                           >
+                              Cooking Steps
+                           </TabText>
+                        </Tab>
+                     )}
                   {Boolean(
                      simpleRecipe.simpleRecipeYields[0].nutritionalInfo ||
                         simpleRecipe.simpleRecipeYields[0].allergens?.length
@@ -334,11 +340,24 @@ const Recipe = ({ navigation, route }) => {
                   <>
                      <Title>{refProduct?.name}</Title>
                      <Spacer size="8px" />
-                     <TypeWrapper type={simpleRecipe.type}>
-                        <TypeText type={simpleRecipe.type}>
-                           {simpleRecipe.type}
-                        </TypeText>
-                     </TypeWrapper>
+                     <View
+                        style={{
+                           flexDirection: 'row',
+                           alignItems: 'center',
+                           justifyContent: 'space-between',
+                        }}
+                     >
+                        <TypeWrapper type={simpleRecipe.type}>
+                           <TypeText type={simpleRecipe.type}>
+                              {simpleRecipe.type}
+                           </TypeText>
+                        </TypeWrapper>
+                        {Boolean(width <= 768) && (
+                           <BuyBtn color={visual.color} onPress={buy} small>
+                              <BuyBtnText>Buy Now</BuyBtnText>
+                           </BuyBtn>
+                        )}
+                     </View>
                      <Spacer size="8px" />
                      <SocialMediaShareButtons />
                      <Spacer size="16px" />
@@ -392,56 +411,79 @@ const Recipe = ({ navigation, route }) => {
                   {simpleRecipe.description}
                </ContentText>
                <Spacer size="68px" />
-               <SectionHeader
-                  color={visual.color}
-                  onLayout={e => {
-                     ingredientsPosition.current = e.nativeEvent.layout.y - 60
-                  }}
-               >
-                  {
-                     simpleRecipe.simpleRecipeYields[0].ingredientSachets.filter(
-                        ing => ing.isVisible
-                     ).length
-                  }{' '}
-                  Ingredients
-               </SectionHeader>
-               <Spacer size="20px" />
-               <Ingredients>
-                  {simpleRecipe.simpleRecipeYields[0].ingredientSachets
-                     .filter(ing => ing.isVisible)
-                     .map((ing, i) => (
-                        <IngredientWrapper>
-                           <ContentText
-                              key={ing.id}
-                           >{`${ing.ingredientSachet.quantity} ${ing.ingredientSachet.unit} ${ing.slipName}`}</ContentText>
-                           {Boolean(ing.ingredientSachet.ingredient.image) && (
-                              <IngredientImage
-                                 source={{
-                                    uri: ing.ingredientSachet.ingredient.image,
-                                 }}
-                              />
-                           )}
-                        </IngredientWrapper>
-                     ))}
-               </Ingredients>
-               <Spacer size="68px" />
-               {Boolean(simpleRecipe.procedures.length) && (
+               {simpleRecipe.showIngredients && (
                   <>
                      <SectionHeader
                         color={visual.color}
-                        nativeID="cookingSteps"
                         onLayout={e => {
-                           cookingStepsPosition.current =
+                           ingredientsPosition.current =
                               e.nativeEvent.layout.y - 60
                         }}
                      >
-                        Cooking Steps
+                        {
+                           simpleRecipe.simpleRecipeYields[0].ingredientSachets.filter(
+                              ing => ing.isVisible
+                           ).length
+                        }{' '}
+                        Ingredients
                      </SectionHeader>
-                     <Spacer size="40px" />
-                     {renderCookingSteps()}
-                     <Spacer size="28px" />
+                     <Spacer size="20px" />
+                     <Ingredients>
+                        {simpleRecipe.simpleRecipeYields[0].ingredientSachets
+                           .filter(ing => ing.isVisible)
+                           .map((ing, i) => (
+                              <IngredientWrapper>
+                                 <ContentText key={ing.id}>{`${
+                                    simpleRecipe.showIngredientsQuantity
+                                       ? ing.ingredientSachet.quantity +
+                                         ' ' +
+                                         ing.ingredientSachet.unit
+                                       : ''
+                                 } ${ing.slipName}`}</ContentText>
+                                 {Boolean(
+                                    ing.ingredientSachet.ingredient.image
+                                 ) && (
+                                    <IngredientImage
+                                       source={{
+                                          uri:
+                                             ing.ingredientSachet.ingredient
+                                                .image,
+                                       }}
+                                    />
+                                 )}
+                              </IngredientWrapper>
+                           ))}
+                     </Ingredients>
+                     {Boolean(simpleRecipe.notIncluded?.length) && (
+                        <>
+                           <Spacer size="32px" />
+                           <NotIncludedText>
+                              What's not included:{' '}
+                              {simpleRecipe.notIncluded.join(', ')}
+                           </NotIncludedText>
+                        </>
+                     )}
+                     <Spacer size="68px" />
                   </>
                )}
+               {simpleRecipe.showProcedures &&
+                  Boolean(simpleRecipe.procedures.length) && (
+                     <>
+                        <SectionHeader
+                           color={visual.color}
+                           nativeID="cookingSteps"
+                           onLayout={e => {
+                              cookingStepsPosition.current =
+                                 e.nativeEvent.layout.y - 60
+                           }}
+                        >
+                           Cooking Steps
+                        </SectionHeader>
+                        <Spacer size="40px" />
+                        {renderCookingSteps()}
+                        <Spacer size="28px" />
+                     </>
+                  )}
                {Boolean(
                   simpleRecipe.simpleRecipeYields[0].nutritionalInfo ||
                      simpleRecipe.simpleRecipeYields[0].allergens?.length
@@ -485,7 +527,17 @@ const Recipe = ({ navigation, route }) => {
                            </AllergensText>
                         </>
                      )}
-                     <Spacer size="100px" />
+                     <Spacer size="20px" />
+                  </>
+               )}
+               {Boolean(refProduct?.recommendations) && (
+                  <>
+                     <Spacer size="80px" />
+                     <Recommendations
+                        navigation={navigation}
+                        recommendations={refProduct?.recommendations}
+                     />
+                     <Spacer size="68px" />
                   </>
                )}
             </DetailsContainer>
@@ -732,6 +784,12 @@ const BuyBtn = styled.TouchableOpacity`
    css`
       margin-top: 0px;
    `}
+
+   ${props =>
+      props.small &&
+      css`
+         padding: 8px;
+      `}
 `
 
 const BuyBtnText = styled.Text`
@@ -762,6 +820,11 @@ const Ingredients = styled.View`
    flex-direction: row;
    flex-wrap: wrap;
    justify-content: center;
+`
+
+const NotIncludedText = styled(ContentText)`
+   font-style: italic;
+   text-align: center;
 `
 
 const NutritionWrapper = styled.View`

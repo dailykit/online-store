@@ -7,7 +7,6 @@ import MapView from 'react-native-maps'
 import orderdelivered from '../../assets/imgs/orderdelivered.png'
 import orderpickup from '../../assets/imgs/orderpickup.png'
 import orderpreparing from '../../assets/imgs/orderpreparing.png'
-import restaurant from '../../assets/imgs/restaurant @1x.png'
 import { Header } from '../../components'
 import Auth from '../../components/error/Auth'
 import OrderCard from '../../components/OrderCard'
@@ -158,43 +157,41 @@ const Delivery = ({ order }) => {
                {/* Map */}
                {order.deliveryInfo.tracking.location.isAvailable && (
                   <MapView
-                     initialRegion={{
-                        latitude: order.deliveryInfo.tracking.location.latitude,
-                        longitude:
-                           order.deliveryInfo.tracking.location.longitude,
+                     provider="google"
+                     region={{
+                        latitude: +order.deliveryInfo.tracking.location
+                           .latitude,
+                        longitude: +order.deliveryInfo.tracking.location
+                           .longitude,
                      }}
                      style={styles.map}
                   >
                      <MapView.Marker
                         coordinate={{
-                           latitude:
-                              order.deliveryInfo.pickup.pickupInfo
-                                 .organizationAddress.latitude,
-                           longitude:
-                              order.deliveryInfo.pickup.pickupInfo
-                                 .organizationAddress.longitude,
+                           latitude: +order.deliveryInfo.pickup.pickupInfo
+                              .organizationAddress.latitude,
+                           longitude: +order.deliveryInfo.pickup.pickupInfo
+                              .organizationAddress.longitude,
                         }}
-                        image={require('../../assets/imgs/restaurant @1x.png')}
+                        icon={require('../../assets/imgs/restaurant @1x.png')}
                      />
                      <MapView.Marker
                         coordinate={{
-                           latitude:
-                              order.deliveryInfo.tracking.location.latitude,
-                           longitude:
-                              order.deliveryInfo.tracking.location.longitude,
+                           latitude: +order.deliveryInfo.tracking.location
+                              .latitude,
+                           longitude: +order.deliveryInfo.tracking.location
+                              .longitude,
                         }}
-                        image={require('../../assets/imgs/location delivery truck @1x.png')}
+                        icon={require('../../assets/imgs/location delivery truck @1x.png')}
                      />
                      <MapView.Marker
                         coordinate={{
-                           latitude:
-                              order.deliveryInfo.dropoff.dropoffInfo
-                                 .customerAddress.latitude,
-                           longitude:
-                              order.deliveryInfo.dropoff.dropoffInfo
-                                 .customerAddress.longitude,
+                           latitude: +order.deliveryInfo.dropoff.dropoffInfo
+                              .customerAddress.latitude,
+                           longitude: +order.deliveryInfo.dropoff.dropoffInfo
+                              .customerAddress.longitude,
                         }}
-                        image={require('../../assets/imgs/location home @1x.png')}
+                        icon={require('../../assets/imgs/location home @1x.png')}
                      />
                   </MapView>
                )}
@@ -344,6 +341,7 @@ const Pickup = ({ order }) => {
             <>
                {/* Restaurant Map */}
                <MapView
+                  provider="google"
                   initialRegion={{
                      latitude: +address.latitude,
                      longitude: +address.longitude,
@@ -354,14 +352,13 @@ const Pickup = ({ order }) => {
                      coordinate={{
                         latitude: +address.latitude,
                         longitude: +address.longitude,
-                        title:
-                           order.deliveryInfo.pickup.pickupInfo
-                              .organizationName,
-                        description: 'Pickup order here!',
                      }}
-                  >
-                     <Image source={restaurant} height="20" width="20" />
-                  </MapView.Marker>
+                     title={
+                        order.deliveryInfo.pickup.pickupInfo.organizationName
+                     }
+                     description="Pickup order from here!"
+                     icon={require('../../assets/imgs/restaurant @2x .png')}
+                  />
                </MapView>
                {/* Order Status */}
                <View style={styles.orderStatus}>

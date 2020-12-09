@@ -19,6 +19,7 @@ export const AppContextProvider = ({ children }) => {
    })
    const [availability, setAvailability] = useState(undefined)
    const [rewardsSettings, setRewardsSettings] = useState(undefined)
+   const [appSettings, setAppSettings] = useState(undefined)
 
    const [menuData, setMenuData] = React.useState([])
    const [masterLoading, setMasterLoading] = React.useState(true)
@@ -27,6 +28,17 @@ export const AppContextProvider = ({ children }) => {
    React.useEffect(() => {
       console.log('Master loading:', masterLoading)
    }, [masterLoading])
+
+   React.useEffect(() => {
+      if (appSettings?.scripts) {
+         const body = document.getElementsByTagName('body')[0]
+         const tempElement = document.createElement('div')
+         tempElement.innerHTML = appSettings.scripts
+         Array.from(tempElement.children).forEach(script => {
+            body.appendChild(script)
+         })
+      }
+   }, [appSettings])
 
    return (
       <AppContext.Provider
@@ -41,6 +53,8 @@ export const AppContextProvider = ({ children }) => {
             brand,
             setAvailability,
             availability,
+            appSettings,
+            setAppSettings,
             rewardsSettings,
             setRewardsSettings,
             menuData,

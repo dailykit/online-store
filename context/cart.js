@@ -63,7 +63,7 @@ export const CartContextProvider = ({ children }) => {
                },
             })
          } else {
-            console.log('Unkown update!')
+            console.log('Unknown update!')
          }
       }
    }, [saved])
@@ -71,7 +71,6 @@ export const CartContextProvider = ({ children }) => {
    // From Hasura
    const [customer, setCustomer] = useState(undefined)
    const [cart, setCart] = useState(undefined)
-   const [settingCart, setSettingCart] = useState(true)
    // From platform
    const [customerDetails, setCustomerDetails] = useState(undefined)
    // Wallet and Loyalty Points
@@ -303,8 +302,6 @@ export const CartContextProvider = ({ children }) => {
             setLoyaltyPoints,
             customerReferral,
             setCustomerReferral,
-            settingCart,
-            setSettingCart,
          }}
       >
          {children}

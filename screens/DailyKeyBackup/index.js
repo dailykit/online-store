@@ -9,8 +9,14 @@ import { loadStripe } from '@stripe/stripe-js'
 import axios from 'axios'
 import { Spinner, View } from 'native-base'
 import React from 'react'
-import { MAPS_API_KEY, PAYMENTS_API_URL } from 'react-native-dotenv'
+import {
+   MAPS_API_KEY,
+   PAYMENTS_API_URL,
+   CURRENCY,
+   DAILYOS_SERVER_URL,
+} from 'react-native-dotenv'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
+import MapView from 'react-native-maps'
 import styled, { css } from 'styled-components/native'
 import { useAppContext } from '../../context/app'
 import { useAuth } from '../../context/auth'
@@ -24,6 +30,8 @@ import {
 } from '../../graphql'
 import { useScript } from '../../utils/useScript'
 import { createSetupIntent } from './api'
+
+import MapMarker from '../../assets/imgs/location home @2x.png'
 
 const DailyKeyBackup = ({ params }) => {
    const { path } = params
@@ -58,9 +66,11 @@ const DailyKeyBackup = ({ params }) => {
          </Header>
          <Body>
             <CustomerInfo>
-               <CustomerName>{`Hello ${customerDetails?.firstName || ''} ${
-                  customerDetails?.lastName || ''
-               }`}</CustomerName>
+               {Boolean(!path.includes('address')) && (
+                  <CustomerName>{`Hello ${customerDetails?.firstName || ''} ${
+                     customerDetails?.lastName || ''
+                  }`}</CustomerName>
+               )}
             </CustomerInfo>
             {path.includes('profile') && <Profile />}
             {path.includes('address') && <Address />}
@@ -189,21 +199,43 @@ const Address = () => {
    const [createCustomerAddress] = useMutation(CREATE_CUSTOMER_ADDRESS)
 
    const { customerDetails } = useCartContext()
-   const { visual } = useAppContext()
+   const { visual, availability } = useAppContext()
    const { setSaved, setIsDrawerOpen } = useDrawerContext()
    const { user } = useAuth()
 
+   const [mode, setMode] = React.useState('UNKNOWN')
+   const [tracking, setTracking] = React.useState(false)
+   const [isLocationDenied, setIsLocationDenied] = React.useState(false)
    const [populated, setPopulated] = React.useState(undefined)
    const [saving, setSaving] = React.useState(false)
    const [formError, setFormError] = React.useState('')
 
-   const formatAddress = async address => {
-      const response = await fetch(
-         `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&address=${encodeURIComponent(
-            address.description
-         )}`
-      )
-      const data = await response.json()
+   const charLimit = 50
+   const handleChange = (text, field) => {
+      if (text.length <= charLimit) {
+         setPopulated({ ...populated, [field]: text })
+      } else {
+         const updatedText = text.slice(0, 50)
+         setPopulated({ ...populated, [field]: updatedText })
+      }
+   }
+
+   const setNewCoordinates = pos => {
+      setFormError('')
+      const newLat = pos.latLng.lat().toString()
+      const newLng = pos.latLng.lng().toString()
+      if (newLat && newLng) {
+         setPopulated({
+            ...populated,
+            lat: newLat,
+            lng: newLng,
+         })
+      } else {
+         setFormError('Failed to set location!')
+      }
+   }
+
+   const resolveAddress = data => {
       if (data.status === 'OK' && data.results.length > 0) {
          const [result] = data.results
 
@@ -237,13 +269,29 @@ const Address = () => {
             }
          })
 
-         setPopulated({ ...address, label: '', notes: '' })
+         if (!address.line1 || address.line1.includes('undefined')) {
+            address.line1 = ''
+         }
+
+         setPopulated({ ...address, landmark: '', label: '', notes: '' })
       }
+   }
+
+   const formatAddress = async address => {
+      const response = await fetch(
+         `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&address=${encodeURIComponent(
+            address.description
+         )}`
+      )
+      const data = await response.json()
+      resolveAddress(data)
    }
 
    const validateFields = () => {
       if (
          populated &&
+         populated.lat &&
+         populated.lng &&
          populated.line1 &&
          populated.city &&
          populated.state &&
@@ -258,6 +306,7 @@ const Address = () => {
 
    const save = async () => {
       try {
+         console.log(populated)
          setSaving(true)
          setFormError('')
          if (!validateFields()) {
@@ -295,18 +344,74 @@ const Address = () => {
             throw Error('An error occured, please try again!')
          }
       } catch (err) {
-         setFormError(err.message)
+         console.log(err)
+         setFormError('An error occured, please try again!')
       } finally {
          setSaving(false)
       }
    }
 
-   if (!loaded) {
+   const cannotFindLocation = () => {
+      console.log('Could not find location!')
+      setMode('SELF')
+      setTracking(false)
+   }
+
+   React.useEffect(() => {
+      if (mode === 'AUTOMATIC' && window.navigator) {
+         setTracking(true)
+         const timer = setTimeout(cannotFindLocation, 8000)
+         window.navigator.geolocation.getCurrentPosition(
+            async data => {
+               console.log(data.coords)
+               const response = await fetch(
+                  `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&latlng=${data.coords.latitude.toString()},${data.coords.longitude.toString()}`
+               )
+               const res = await response.json()
+               resolveAddress(res)
+               setTracking(false)
+            },
+            error => {
+               console.log(error)
+               setIsLocationDenied(true)
+               setTracking(false)
+            }
+         )
+         return () => {
+            if (timer) {
+               clearTimeout(timer)
+            }
+         }
+      }
+   }, [mode])
+
+   if (!loaded || tracking) {
       return (
          <View
             style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
          >
             <Spinner />
+         </View>
+      )
+   }
+
+   if (mode === 'UNKNOWN') {
+      return (
+         <View
+            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
+         >
+            <ConfirmText>How do you want to set your location?</ConfirmText>
+            <ConfirmCTAContainer>
+               <ConfirmCTA
+                  onPress={() => setMode('AUTOMATIC')}
+                  color={visual.color}
+               >
+                  <ConfirmCTAText>Automatic</ConfirmCTAText>
+               </ConfirmCTA>
+               <ConfirmCTA onPress={() => setMode('SELF')} color={visual.color}>
+                  <ConfirmCTAText>I'll add myself</ConfirmCTAText>
+               </ConfirmCTA>
+            </ConfirmCTAContainer>
          </View>
       )
    }
@@ -320,19 +425,26 @@ const Address = () => {
          <Form>
             {loaded && !error && (
                <FormField>
-                  <FormFieldLabel>Search Address</FormFieldLabel>
+                  <FormFieldLabel>Search Address on Google</FormFieldLabel>
                   <GooglePlacesAutocomplete
                      placeholder="Address..."
+                     debounce={300}
                      onPress={data => formatAddress(data)}
                      onFail={error => console.error(error)}
                      fetchDetails={true}
                      query={{
                         key: MAPS_API_KEY,
                         language: 'en',
+                        components:
+                           CURRENCY === 'INR' ? 'country:in' : 'country:us',
+                        location: populated?.lat
+                           ? `${populated.lat},${populated.lng}`
+                           : `${availability.location.lat},${availability.location.lng}`,
+                        radius: 30000,
+                        types: 'geocode',
                      }}
                      requestUrl={{
-                        url:
-                           'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api',
+                        url: `${DAILYOS_SERVER_URL}/api`,
                         useOnPlatform: 'web',
                      }}
                      styles={{
@@ -355,14 +467,65 @@ const Address = () => {
                   />
                </FormField>
             )}
+            {Boolean(populated?.lat && populated?.lng) && (
+               <>
+                  <MapView
+                     provider="google"
+                     region={{
+                        latitude: +populated.lat,
+                        longitude: +populated.lng,
+                     }}
+                     style={{ height: 200 }}
+                  >
+                     <MapView.Marker
+                        coordinate={{
+                           latitude: +populated.lat,
+                           longitude: +populated.lng,
+                        }}
+                        icon={MapMarker}
+                        title="You are here"
+                        draggable
+                        onDragEnd={setNewCoordinates}
+                     />
+                  </MapView>
+                  <Coords>
+                     {`Lat: ${populated.lat} Lng:${populated.lng}`}
+                  </Coords>
+               </>
+            )}
             <FormField>
                <FormFieldLabel>Address Line 1*</FormFieldLabel>
                <FormFieldInput
-                  onChangeText={text =>
-                     setPopulated({ ...populated, line1: text })
-                  }
+                  onChangeText={text => handleChange(text, 'line1')}
                   value={populated?.line1 || ''}
                   editable={Boolean(populated)}
+                  placeholder="Enter House Number/Flat Number"
+               />
+               {Boolean(populated?.line1) && (
+                  <WordLimit>{`${populated.line1.length}/${charLimit}`}</WordLimit>
+               )}
+            </FormField>
+            <FormField>
+               <FormFieldLabel>Address Line 2</FormFieldLabel>
+               <FormFieldInput
+                  onChangeText={text => handleChange(text, 'line2')}
+                  value={populated?.line2 || ''}
+                  editable={Boolean(populated)}
+                  placeholder="Enter Apartment Building/Complex/Locality Name"
+               />
+               {Boolean(populated?.line2) && (
+                  <WordLimit>{`${populated.line2.length}/${charLimit}`}</WordLimit>
+               )}
+            </FormField>
+            <FormField>
+               <FormFieldLabel>Landmark</FormFieldLabel>
+               <FormFieldInput
+                  onChangeText={text =>
+                     setPopulated({ ...populated, landmark: text })
+                  }
+                  value={populated?.landmark || ''}
+                  editable={Boolean(populated)}
+                  placeholder="Enter Nearby Landmark"
                />
             </FormField>
             <Grid>
@@ -430,6 +593,7 @@ const Address = () => {
                   }
                   value={populated?.notes || ''}
                   editable={Boolean(populated)}
+                  placeholder="Ex: Leave at Door"
                />
             </FormField>
          </Form>
@@ -726,6 +890,7 @@ const CTA = styled.TouchableOpacity`
    align-items: center;
    justify-content: center;
    opacity: ${props => (props.disabled ? 0.6 : 1)};
+   margin-bottom: 1rem;
 `
 
 const CTAText = styled.Text`
@@ -736,4 +901,36 @@ const Grid = styled.View`
    display: grid;
    grid-template-columns: repeat(2, 1fr);
    grid-gap: 16px;
+`
+
+const WordLimit = styled.Text`
+   font-size: 12px;
+   text-align: right;
+`
+
+const Coords = styled.Text`
+   font-size: 10px;
+   color: #aaa;
+   margin-bottom: 1rem;
+`
+
+const ConfirmText = styled.Text`
+   margin-bottom: 1rem;
+`
+
+const ConfirmCTAContainer = styled.View`
+   flex-direction: row;
+   align-items: center;
+`
+
+const ConfirmCTA = styled.TouchableOpacity`
+   padding: 8px;
+   background: ${props => props.color || '#666'};
+   margin: 0 8px;
+   border-radius: 2px;
+`
+
+const ConfirmCTAText = styled.Text`
+   text-align: center;
+   color: #fff;
 `

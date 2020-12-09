@@ -2,9 +2,6 @@ import React from 'react'
 import CheckBox from './form/CheckBox'
 import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
-import { discountedPrice } from '../utils'
-import { CURRENCY } from 'react-native-dotenv'
-// 12
 
 const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
    const { visual } = useAppContext()
@@ -61,6 +58,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                      productType: option.productType,
                      quantity: option.productQuantity,
                      image: option.image,
+                     operationConfigId: option.operationConfig.id,
                   },
                ])
             } else {
@@ -74,6 +72,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                   productType: option.productType,
                   quantity: option.productQuantity,
                   image: option.image,
+                  operationConfigId: option.operationConfig.id,
                }
                setSelected([...updatedModifers])
             }
@@ -111,10 +110,10 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
          await checkValidity()
          console.log('isValid', isValid.current)
          onValidityChange(isValid.current)
-         if (isValid.current) {
-            console.log('Selected: ', selected)
-            onModifiersSelected(selected)
-         }
+         // if (isValid.current) {
+         console.log('Selected: ', selected)
+         onModifiersSelected(selected)
+         // }
       })()
    }, [selected])
 
@@ -147,17 +146,8 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                            disabled={!option.isActive}
                            title={`${option.name}`}
                            image={option.image}
-                           price={`${new Intl.NumberFormat('en-US', {
-                              style: 'currency',
-                              currency: CURRENCY,
-                           }).format(
-                              option.discount
-                                 ? discountedPrice({
-                                      value: option.price,
-                                      discount: option.discount,
-                                   }).toFixed(2)
-                                 : option.price
-                           )}`}
+                           price={option.price}
+                           discount={option.discount}
                            checked={Boolean(
                               selected.find(
                                  modifier =>

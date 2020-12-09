@@ -60,7 +60,7 @@ export default function OnboardingStack(props) {
 
    const [settingsMapped, setSettingsMapped] = React.useState(false)
 
-   const { user, isInitialized, isAuthenticated, keycloak } = useAuth()
+   const { user, isInitialized, isAuthenticated } = useAuth()
    const {
       customer,
       cart,
@@ -71,7 +71,6 @@ export default function OnboardingStack(props) {
       setLoyaltyPoints,
       customerReferral,
       setCustomerReferral,
-      setSettingCart,
    } = useCartContext()
    const {
       brandId,
@@ -81,6 +80,7 @@ export default function OnboardingStack(props) {
       availability,
       setAvailability,
       setRewardsSettings,
+      setAppSettings,
       setMenuData,
       setMasterLoading,
       setMenuLoading,
@@ -89,6 +89,8 @@ export default function OnboardingStack(props) {
    const { open } = useDrawerContext()
 
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
+   const [settingCart, setSettingCart] = React.useState(true)
+   const [settingUser, setSettingUser] = React.useState(true)
 
    // Query for Brand ID
    useQuery(BRANDS, {
@@ -124,6 +126,7 @@ export default function OnboardingStack(props) {
             let visualState = {}
             let availabilityState = {}
             let rewardsState = {}
+            let appState = {}
 
             data.subscriptionData.data.storeSettings.forEach(
                ({ identifier, value, brandSettings }) => {
@@ -136,6 +139,29 @@ export default function OnboardingStack(props) {
                      case 'Brand Name': {
                         brandState.name =
                            brandSettings[0]?.value.name || value.name
+                        return
+                     }
+                     case 'Nav Links': {
+                        brandState.navLinks = brandSettings[0]?.value || value
+                        return
+                     }
+                     case 'Contact': {
+                        brandState.contact = brandSettings[0]?.value || value
+                        return
+                     }
+                     case 'Terms and Conditions': {
+                        brandState.termsAndConditions =
+                           brandSettings[0]?.value?.value || value.value
+                        return
+                     }
+                     case 'Privacy Policy': {
+                        brandState.privacyPolicy =
+                           brandSettings[0]?.value?.value || value.value
+                        return
+                     }
+                     case 'Refund Policy': {
+                        brandState.refundPolicy =
+                           brandSettings[0]?.value?.value || value.value
                         return
                      }
                      case 'Primary Color': {
@@ -162,9 +188,14 @@ export default function OnboardingStack(props) {
                            brandSettings[0]?.value || value
                         return
                      }
+                     case 'Referral Availability': {
+                        availabilityState.referral =
+                           brandSettings[0]?.value || value
+                        return
+                     }
                      case 'Location': {
                         availabilityState.location =
-                           brandSettings[0]?.value.address || value.address
+                           brandSettings[0]?.value || value
                         return
                      }
                      case 'Loyalty Points Availability': {
@@ -190,16 +221,27 @@ export default function OnboardingStack(props) {
                            brandSettings[0]?.value || value
                         return
                      }
+                     case 'Scripts': {
+                        appState.scripts =
+                           brandSettings[0]?.value?.value || value?.value
+                        return
+                     }
                      default: {
                         return
                      }
                   }
                }
             )
+
+            console.log(
+               'OnboardingStack -> availabilityState',
+               availabilityState
+            )
             setBrand({ ...brandState })
             setVisual({ ...visualState })
             setAvailability({ ...availabilityState })
             setRewardsSettings({ ...rewardsState })
+            setAppSettings({ ...appState })
 
             setSettingsMapped(true)
          },
@@ -301,8 +343,12 @@ export default function OnboardingStack(props) {
                   },
                })
             }
+            setSettingUser(false)
             console.log('Customer created: ', data.createCustomer)
-            open('ReferralCode')
+            if (availability?.referral?.isAvailable) {
+               console.log('Referral available')
+               open('ReferralCode')
+            }
          },
          onError: error => {
             console.log(error)
@@ -363,6 +409,8 @@ export default function OnboardingStack(props) {
                   setCart(data.customer.orderCarts[0])
                }
 
+               setSettingUser(false)
+
                // update any pending cart (w/o signup)
                if (cartId) {
                   updateCart({
@@ -421,6 +469,8 @@ export default function OnboardingStack(props) {
                brandId,
             },
          })
+      } else {
+         setSettingUser(false)
       }
    }, [brandId, user])
 
@@ -524,9 +574,9 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       if (cartId && cart?.customerId) {
-         console.log('Cleared local storage!')
+         console.log('Removed pending cart id!')
          setCartId(null)
-         AsyncStorage.clear()
+         AsyncStorage.removeItem('PENDING_CART_ID')
       }
    }, [cart])
 
@@ -591,6 +641,8 @@ export default function OnboardingStack(props) {
          user: Object.keys(user).length,
          subscribingCart,
          settingsMapped,
+         settingCart,
+         settingUser,
       })
       if (!isInitialized) {
          setMasterLoading(true)
@@ -605,6 +657,8 @@ export default function OnboardingStack(props) {
                Object.keys(user).length, // > 0
                !subscribingCart, // true
                settingsMapped, // true
+               !settingCart,
+               !settingUser,
             ].every(notLoading => notLoading)
             if (status) {
                setMasterLoading(false)
@@ -614,6 +668,7 @@ export default function OnboardingStack(props) {
                Boolean(brandId), // 1
                settingsMapped, // true
                !fetchingCart, // true
+               !settingCart,
             ].every(notLoading => notLoading)
             if (status) {
                setMasterLoading(false)
@@ -631,6 +686,8 @@ export default function OnboardingStack(props) {
       subscribingCart,
       isAuthenticated,
       settingsMapped,
+      settingCart,
+      settingUser,
    ])
 
    return (

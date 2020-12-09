@@ -11,7 +11,7 @@ import {
    TouchableOpacity,
    View,
 } from 'react-native'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { DefaultPaymentFloater } from '../../components/DefaultFloater'
 import Fulfillment from '../../components/Fulfillment'
@@ -22,10 +22,11 @@ import { useAuth } from '../../context/auth'
 import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
-import { useStoreToast } from '../../utils'
+import { imageUrl, useStoreToast } from '../../utils'
 import { width } from '../../utils/Scaling'
 import Coupon from './components/Coupon'
 import Tip from './components/Tip'
+import Footer from '../../components/Footer'
 import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
 import PayWithWallet from './components/PayWithWallet'
 import {
@@ -34,10 +35,11 @@ import {
    CURRENCY,
 } from 'react-native-dotenv'
 import CartSkeleton from '../../components/skeletons/cart'
+import { isKeycloakSupported } from '../../utils'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const { isAuthenticated } = useAuth()
-   const { cart, settingCart } = useCartContext()
+   const { cart } = useCartContext()
    const {
       visual,
       brand,
@@ -68,6 +70,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
          const brandObject = {
             name: brand.name,
             logo: brand.logo,
+            color: visual.color,
             description: '',
          }
          window.payments.checkout({
@@ -85,17 +88,8 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       return <AppSkeleton />
    }
 
-   if (settingCart) {
-      return (
-         <>
-            <Header title="Home" navigation={navigation} />
-            <CartSkeleton />
-         </>
-      )
-   }
-
    return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Header title="Home" navigation={navigation} />
          {cart?.cartInfo?.products?.length ? (
             <>
@@ -118,6 +112,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                   padding: 20,
+                  minHeight: '100vh',
                }}
             >
                <Text
@@ -147,7 +142,8 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                </TouchableOpacity>
             </View>
          )}
-      </SafeAreaView>
+         <Footer />
+      </ScrollView>
    )
 }
 
@@ -159,6 +155,12 @@ const Checkout = ({ cart, navigation }) => {
    const { isAuthenticated } = useAuth()
 
    const [editing, setEditing] = React.useState(false)
+
+   React.useEffect(() => {
+      if (!cart.fulfillmentInfo) {
+         setEditing(true)
+      }
+   }, [cart.fulfillmentInfo])
 
    return (
       <StyledCheckout>
@@ -174,13 +176,21 @@ const Checkout = ({ cart, navigation }) => {
                      <CTAContainer>
                         <Button
                            color={visual.color}
-                           onPress={() => open('Login')}
+                           onPress={() =>
+                              isKeycloakSupported()
+                                 ? open('Login')
+                                 : open('LoginSelf')
+                           }
                         >
                            <ButtonText color={visual.color}>LOGIN</ButtonText>
                         </Button>
                         <Button
                            color={visual.color}
-                           onPress={() => open('Register')}
+                           onPress={() =>
+                              isKeycloakSupported()
+                                 ? open('Register')
+                                 : open('RegisterSelf')
+                           }
                         >
                            <ButtonText color={visual.color}>SIGN UP</ButtonText>
                         </Button>
@@ -239,7 +249,7 @@ const Checkout = ({ cart, navigation }) => {
             {isAuthenticated && (
                <CheckoutSectionWrapper>
                   <CheckoutSectionContent style={{ flex: 1 }}>
-                     {editing || !cart?.fulfillmentInfo ? (
+                     {editing ? (
                         <Fulfillment
                            navigation={navigation}
                            setEditing={setEditing}
@@ -257,9 +267,30 @@ const Checkout = ({ cart, navigation }) => {
                            {cart?.fulfillmentInfo?.type.includes(
                               'DELIVERY'
                            ) && (
-                              <SelectedFulfillmentAddress>
-                                 {`${cart.address.line1}, ${cart.address.line2}, ${cart.address.city}, ${cart.address.state}, ${cart.address.country}`}
-                              </SelectedFulfillmentAddress>
+                              <>
+                                 {Boolean(cart.address) ? (
+                                    <>
+                                       {Boolean(cart?.address?.label) && (
+                                          <SelectedFulfillmentAddress label>
+                                             {cart?.address?.label}
+                                          </SelectedFulfillmentAddress>
+                                       )}
+                                       <SelectedFulfillmentAddress>
+                                          {`${cart?.address?.line1}, ${cart?.address?.line2}, ${cart?.address?.city}, ${cart?.address?.state}, ${cart?.address?.country}`}
+                                       </SelectedFulfillmentAddress>
+                                       {Boolean(cart?.address?.notes) && (
+                                          <SelectedFulfillmentAddress notes>
+                                             {cart?.address?.notes}
+                                          </SelectedFulfillmentAddress>
+                                       )}
+                                    </>
+                                 ) : (
+                                    <HelpText>
+                                       We could not resolve your address. Please
+                                       select your address again!
+                                    </HelpText>
+                                 )}
+                              </>
                            )}
                         </SelectedFulfillment>
                      )}
@@ -330,7 +361,10 @@ const Cart = ({ cart }) => {
    const [deleteCarts] = useMutation(DELETE_CARTS, {
       onCompleted: data => {
          console.log('Carts deleted: ', data.deleteCarts.returning)
-         AsyncStorage.clear()
+         if (data.deleteCarts.returning.length) {
+            AsyncStorage.removeItem('PENDING_CART_ID')
+            setCart(undefined)
+         }
       },
       onError: error => {
          console.log('Deleteing carts error: ', error)
@@ -435,197 +469,189 @@ const Cart = ({ cart }) => {
       <StyledCart>
          <CartHeader>
             <CartHeaderTextLeft>Total</CartHeaderTextLeft>
-            <CartHeaderTextRight>
-               {`${cart.cartInfo.products.length} Item${
-                  cart.cartInfo.products.length > 1 ? 's' : ''
-               }`}
-            </CartHeaderTextRight>
+            <CartHeaderRight>
+               <CartClearBtn
+                  onPress={() =>
+                     deleteCarts({
+                        variables: {
+                           ids: [cart.id],
+                        },
+                     })
+                  }
+               >
+                  <Feather name="trash-2" size={16} color="#FF5A52" />
+               </CartClearBtn>
+               <CartHeaderTextRight>
+                  {`${cart.cartInfo.products.length} Item${
+                     cart.cartInfo.products.length > 1 ? 's' : ''
+                  }`}
+               </CartHeaderTextRight>
+            </CartHeaderRight>
          </CartHeader>
          <CartItems>
             {cart.cartInfo.products.map(product => (
                <CartItem>
-                  <CartItemLeft>
-                     <CartItemImage
-                        source={{
-                           uri: product.image || defaultProductImage,
-                        }}
-                     />
-                     <CartItemInfo>
-                        <CartItemName numberOfLines={1} ellipsizeMode="tail">
-                           {product.name}
-                        </CartItemName>
-                        {product.type === 'comboProduct' &&
-                           product.components.map(component => (
-                              <>
-                                 <CartItemLabel
-                                    ellipsizeMode="tail"
-                                    numberOfLines={1}
-                                 >
-                                    {`${component.comboProductComponentLabel}: ${component.name}`}
-                                 </CartItemLabel>
-                                 {Boolean(component.modifiers?.length) && (
-                                    <AccordianContainer>
-                                       <Accordion
-                                          dataArray={[
-                                             {
-                                                title: `Add-Ons (${component.modifiers.length})`,
-                                                content: (
-                                                   <>
-                                                      {component.modifiers.map(
-                                                         modifier => (
-                                                            <StyledAccordianContentText
-                                                               ellipsizeMode="tail"
-                                                               numberOfLines={1}
-                                                            >
-                                                               {`${modifier.category} - ${modifier.name}`}
-                                                            </StyledAccordianContentText>
-                                                         )
-                                                      )}
-                                                   </>
-                                                ),
-                                             },
-                                          ]}
-                                          renderHeader={(item, expanded) => (
-                                             <StyledAccordianHeader>
-                                                <StyledAccordianHeaderText>
-                                                   {item.title}
-                                                </StyledAccordianHeaderText>
-                                                <Feather
-                                                   name={
-                                                      expanded
-                                                         ? 'chevron-up'
-                                                         : 'chevron-down'
-                                                   }
-                                                   color="#666"
-                                                   size={14}
-                                                />
-                                             </StyledAccordianHeader>
-                                          )}
-                                          renderContent={item => (
-                                             <StyledAccordianContent>
-                                                {item.content}
-                                             </StyledAccordianContent>
-                                          )}
-                                       />
-                                    </AccordianContainer>
-                                 )}
-                              </>
-                           ))}
-                        {product.type === 'simpleRecipeProduct' && (
-                           <CartItemLabel
-                              ellipsizeMode="tail"
-                              numberOfLines={1}
-                           >
-                              {`${product.option.type?.SRPType()} x${
-                                 product.option.serving
-                              }`}
-                           </CartItemLabel>
-                        )}
-                        {product.type === 'inventoryProduct' && (
-                           <CartItemLabel
-                              ellipsizeMode="tail"
-                              numberOfLines={1}
-                           >
-                              {`${product.option.label}`}
-                           </CartItemLabel>
-                        )}
-                        {Boolean(product.modifiers?.length) && (
-                           <AccordianContainer>
-                              <Accordion
-                                 dataArray={[
-                                    {
-                                       title: `Add-Ons (${product.modifiers.length})`,
-                                       content: (
-                                          <>
-                                             {product.modifiers.map(
-                                                modifier => (
-                                                   <StyledAccordianContentText
-                                                      ellipsizeMode="tail"
-                                                      numberOfLines={1}
-                                                   >
-                                                      {`${modifier.category} - ${modifier.name}`}
-                                                   </StyledAccordianContentText>
-                                                )
-                                             )}
-                                          </>
-                                       ),
-                                    },
-                                 ]}
-                                 renderHeader={(item, expanded) => (
-                                    <StyledAccordianHeader>
-                                       <StyledAccordianHeaderText>
-                                          {item.title}
-                                       </StyledAccordianHeaderText>
-                                       <Feather
-                                          name={
-                                             expanded
-                                                ? 'chevron-up'
-                                                : 'chevron-down'
-                                          }
-                                          color="#666"
-                                          size={14}
-                                       />
-                                    </StyledAccordianHeader>
-                                 )}
-                                 renderContent={item => (
-                                    <StyledAccordianContent>
-                                       {item.content}
-                                    </StyledAccordianContent>
-                                 )}
-                              />
-                           </AccordianContainer>
-                        )}
-                     </CartItemInfo>
-                  </CartItemLeft>
-                  <CartItemRight>
-                     <CartItemQuantity>
-                        <CartItemQuantityButton
-                           onPress={() =>
-                              updateQuantity(product, product.quantity - 1)
-                           }
-                        >
-                           <Feather
-                              name="minus"
-                              size={16}
-                              color={visual.color}
-                           />
-                        </CartItemQuantityButton>
-                        <CartItemQuantityValue>
-                           {product.quantity}
-                        </CartItemQuantityValue>
-                        <CartItemQuantityButton
-                           onPress={() =>
-                              updateQuantity(product, product.quantity + 1)
-                           }
-                        >
-                           <Feather
-                              name="plus"
-                              size={16}
-                              color={visual.color}
-                           />
-                        </CartItemQuantityButton>
-                     </CartItemQuantity>
-                     <CartItemPriceContainer>
-                        {Boolean(product.discount) && (
-                           <CartItemDiscount>
-                              {new Intl.NumberFormat('en-US', {
-                                 style: 'currency',
-                                 currency: CURRENCY,
-                              }).format(
-                                 (
-                                    product.discount + product.totalPrice
-                                 ).toFixed(2)
+                  <CartItemImage
+                     source={{
+                        uri: imageUrl(product.image, 60) || defaultProductImage,
+                     }}
+                  />
+                  <CartItemInfo>
+                     <CartItemName numberOfLines={2} ellipsizeMode="tail">
+                        {product.name}
+                     </CartItemName>
+                     {product.type === 'comboProduct' &&
+                        product.components.map(component => (
+                           <>
+                              <CartItemLabel
+                                 ellipsizeMode="tail"
+                                 numberOfLines={2}
+                              >
+                                 {`${component.comboProductComponentLabel}: ${component.name}`}
+                              </CartItemLabel>
+                              {Boolean(component.modifiers?.length) && (
+                                 <AccordianContainer>
+                                    <Accordion
+                                       dataArray={[
+                                          {
+                                             title: `Add-Ons (${component.modifiers.length})`,
+                                             content: (
+                                                <>
+                                                   {component.modifiers.map(
+                                                      modifier => (
+                                                         <StyledAccordianContentText
+                                                            ellipsizeMode="tail"
+                                                            numberOfLines={1}
+                                                         >
+                                                            {`${modifier.category} - ${modifier.name}`}
+                                                         </StyledAccordianContentText>
+                                                      )
+                                                   )}
+                                                </>
+                                             ),
+                                          },
+                                       ]}
+                                       renderHeader={(item, expanded) => (
+                                          <StyledAccordianHeader>
+                                             <StyledAccordianHeaderText>
+                                                {item.title}
+                                             </StyledAccordianHeaderText>
+                                             <Feather
+                                                name={
+                                                   expanded
+                                                      ? 'chevron-up'
+                                                      : 'chevron-down'
+                                                }
+                                                color="#666"
+                                                size={14}
+                                             />
+                                          </StyledAccordianHeader>
+                                       )}
+                                       renderContent={item => (
+                                          <StyledAccordianContent>
+                                             {item.content}
+                                          </StyledAccordianContent>
+                                       )}
+                                    />
+                                 </AccordianContainer>
                               )}
-                           </CartItemDiscount>
-                        )}
-                        <CartItemPrice>
+                           </>
+                        ))}
+                     {product.type === 'simpleRecipeProduct' && (
+                        <CartItemLabel ellipsizeMode="tail" numberOfLines={2}>
+                           {`${product.option.type?.SRPType()} | ${
+                              product.option.label || product.option.serving
+                           }`}
+                        </CartItemLabel>
+                     )}
+                     {product.type === 'inventoryProduct' && (
+                        <CartItemLabel ellipsizeMode="tail" numberOfLines={2}>
+                           {`${product.option.label}`}
+                        </CartItemLabel>
+                     )}
+                     {Boolean(product.modifiers?.length) && (
+                        <AccordianContainer>
+                           <Accordion
+                              dataArray={[
+                                 {
+                                    title: `Add-Ons (${product.modifiers.length})`,
+                                    content: (
+                                       <>
+                                          {product.modifiers.map(modifier => (
+                                             <StyledAccordianContentText
+                                                ellipsizeMode="tail"
+                                                numberOfLines={1}
+                                             >
+                                                {`${modifier.category} - ${modifier.name}`}
+                                             </StyledAccordianContentText>
+                                          ))}
+                                       </>
+                                    ),
+                                 },
+                              ]}
+                              renderHeader={(item, expanded) => (
+                                 <StyledAccordianHeader>
+                                    <StyledAccordianHeaderText>
+                                       {item.title}
+                                    </StyledAccordianHeaderText>
+                                    <Feather
+                                       name={
+                                          expanded
+                                             ? 'chevron-up'
+                                             : 'chevron-down'
+                                       }
+                                       color="#666"
+                                       size={14}
+                                    />
+                                 </StyledAccordianHeader>
+                              )}
+                              renderContent={item => (
+                                 <StyledAccordianContent>
+                                    {item.content}
+                                 </StyledAccordianContent>
+                              )}
+                           />
+                        </AccordianContainer>
+                     )}
+                  </CartItemInfo>
+
+                  <CartItemQuantity>
+                     <CartItemQuantityButton
+                        onPress={() =>
+                           updateQuantity(product, product.quantity - 1)
+                        }
+                     >
+                        <Feather name="minus" size={16} color={visual.color} />
+                     </CartItemQuantityButton>
+                     <CartItemQuantityValue>
+                        {product.quantity}
+                     </CartItemQuantityValue>
+                     <CartItemQuantityButton
+                        onPress={() =>
+                           updateQuantity(product, product.quantity + 1)
+                        }
+                     >
+                        <Feather name="plus" size={16} color={visual.color} />
+                     </CartItemQuantityButton>
+                  </CartItemQuantity>
+                  <CartItemPriceContainer>
+                     {Boolean(product.discount) && (
+                        <CartItemDiscount>
                            {new Intl.NumberFormat('en-US', {
                               style: 'currency',
                               currency: CURRENCY,
-                           }).format(product.totalPrice.toFixed(2))}
-                        </CartItemPrice>
-                     </CartItemPriceContainer>
-                  </CartItemRight>
+                           }).format(
+                              (product.discount + product.totalPrice).toFixed(2)
+                           )}
+                        </CartItemDiscount>
+                     )}
+                     <CartItemPrice>
+                        {new Intl.NumberFormat('en-US', {
+                           style: 'currency',
+                           currency: CURRENCY,
+                        }).format(product.totalPrice.toFixed(2))}
+                     </CartItemPrice>
+                  </CartItemPriceContainer>
                </CartItem>
             ))}
          </CartItems>
@@ -734,7 +760,7 @@ const GridLayout = styled.View`
    padding: 2rem;
    display: grid;
    background: #e9ecee;
-   grid-template-columns: 1fr 400px;
+   grid-template-columns: auto 500px;
    height: calc(100vh - 66px);
    overflow-y: auto;
 `
@@ -852,6 +878,17 @@ const SelectedFulfillmentAddress = styled.Text`
    color: #7e808c;
    font-weight: 400;
    font-size: 16px;
+   ${props =>
+      props.label &&
+      css`
+         font-weight: 600;
+      `}
+   ${props =>
+      props.notes &&
+      css`
+         font-size: 14px;
+         margin-top: 0.5rem;
+      `}
 `
 
 const CTA = styled.TouchableOpacity`
@@ -901,6 +938,15 @@ const CartHeaderTextLeft = styled.Text`
    color: #93808c;
 `
 
+const CartHeaderRight = styled.View`
+   flex-direction: row;
+   align-items: center;
+`
+
+const CartClearBtn = styled.TouchableOpacity`
+   margin-right: 0.5rem;
+`
+
 const CartHeaderTextRight = styled.Text`
    font-weight: bold;
    color: #282c3f;
@@ -914,9 +960,12 @@ const CartItems = styled.View`
 
 const CartItem = styled.View`
    padding: ${width > 768 ? '10px 30px' : '10px'};
-   flex-direction: row;
-   align-items: center;
-   justify-content: space-between;
+   display: grid;
+   grid-template-columns: 50px auto 60px 50px;
+   column-gap: 8px;
+   grid-column-gap: 8px;
+   gap: 0px 8px;
+   align-items: start;
 `
 
 const CartItemLeft = styled.View`
@@ -935,11 +984,7 @@ const CartItemImage = styled.Image`
    object-fit: cover;
 `
 
-const CartItemInfo = styled.View`
-   margin-left: 10px;
-   margin-right: 5px;
-   width: ${width > 768 ? '120px' : '100px'};
-`
+const CartItemInfo = styled.View``
 
 const CartItemName = styled.Text`
    font-size: 14px;
@@ -979,7 +1024,6 @@ const CartItemQuantity = styled.View`
    border: 1px solid #ccc;
    flex-direction: row;
    align-items: center;
-   margin-right: 16px;
 `
 
 const CartItemQuantityButton = styled.TouchableOpacity`

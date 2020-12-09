@@ -1,16 +1,22 @@
 import { rrulestr } from 'rrule'
+import * as moment from 'moment'
 
 export const generateTimeStamp = (time, date) => {
+   console.log('generateTimeStamp -> time, date', { time, date })
    let formatedTime = time.split(':')
    formatedTime =
       makeDoubleDigit(formatedTime[0]) + ':' + makeDoubleDigit(formatedTime[1])
-   const currTimestamp = new Date(Date.now()).toISOString()
-   const selectedDate = new Date(date).toISOString()
+
+   const currTimestamp = moment().toISOString(true)
+   const selectedDate = moment(date).toISOString(true)
    const from = `${selectedDate.split('T')[0]}T${formatedTime}:00.${
       currTimestamp.split('.')[1]
    }`
-   let to = new Date(from)
-   to = new Date(to.setMinutes(to.getMinutes() + 15)).toISOString()
+   console.log('generateTimeStamp -> from', from)
+   const to = moment(from)
+      .minutes(moment(from).minutes() + 15)
+      .toISOString(true)
+   console.log('generateTimeStamp -> to', to)
    return { from, to }
 }
 
@@ -272,7 +278,7 @@ export const isDeliveryAvailable = recurrences => {
 
 export const generateDeliverySlots = recurrences => {
    let data = []
-   recurrences.forEach(rec => {
+   for (let rec of recurrences) {
       const now = new Date() // now
       const start = new Date(now.getTime() - 1000 * 60 * 60 * 24) // yesterday
       // const start = now;
@@ -284,21 +290,13 @@ export const generateDeliverySlots = recurrences => {
                // if multiple mile ranges, only first one will be taken
                if (timeslot.mileRanges.length) {
                   const leadTime = timeslot.mileRanges[0].leadTime
-                  const timeslotFromArr = timeslot.from.split(':')
-                  const timeslotToArr = timeslot.to.split(':')
+                  const [fromHr, fromMin, fromSec] = timeslot.from.split(':')
+                  const [toHr, toMin, toSec] = timeslot.to.split(':')
                   const fromTimeStamp = new Date(
-                     date.setHours(
-                        timeslotFromArr[0],
-                        timeslotFromArr[1],
-                        timeslotFromArr[2]
-                     )
+                     date.setHours(fromHr, fromMin, fromSec)
                   )
                   const toTimeStamp = new Date(
-                     date.setHours(
-                        timeslotToArr[0],
-                        timeslotToArr[1],
-                        timeslotToArr[2]
-                     )
+                     date.setHours(toHr, toMin, toSec)
                   )
                   // start + lead time < to
                   const leadMiliSecs = leadTime * 60000
@@ -361,6 +359,6 @@ export const generateDeliverySlots = recurrences => {
             return { status: false, message: 'Sorry! No time slots available.' }
          }
       })
-   })
+   }
    return { status: true, data }
 }

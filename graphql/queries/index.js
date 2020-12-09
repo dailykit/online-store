@@ -70,6 +70,10 @@ export const SIMPLE_RECIPE = gql`
          cuisine
          description
          utensils
+         notIncluded
+         showIngredients
+         showIngredientsQuantity
+         showProcedures
          procedures
          simpleRecipeYields(order_by: { yield: asc }) {
             id
@@ -125,6 +129,8 @@ export const CUSTOMER = gql`
                city
                country
                notes
+               label
+               landmark
                lat
                lng
             }
@@ -137,6 +143,8 @@ export const CUSTOMER = gql`
                city
                country
                notes
+               label
+               landmark
                lat
                lng
             }
@@ -200,6 +208,8 @@ export const COMBO_PRODUCT = gql`
       comboProduct(id: $id) {
          id
          name
+         description
+         tags
          isPopupAllowed
          defaultCartItem
          assets
@@ -384,6 +394,8 @@ export const CUSTOMIZABLE_PRODUCT = gql`
       customizableProduct(id: $id) {
          id
          name
+         description
+         tags
          isPopupAllowed
          defaultCartItem
          assets
@@ -520,6 +532,7 @@ export const SIMPLE_PRODUCT = gql`
          default
          tags
          description
+         recommendations
          assets
          isPopupAllowed
          defaultCartItem

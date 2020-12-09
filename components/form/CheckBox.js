@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components/native'
 import { Feather } from '@expo/vector-icons'
+import { discountedPrice, imageUrl } from '../../utils'
+import { CURRENCY } from 'react-native-dotenv'
 
 const CheckBox = ({
    type,
@@ -10,6 +12,7 @@ const CheckBox = ({
    image,
    title,
    price,
+   discount,
    onPress,
 }) => {
    return (
@@ -28,9 +31,31 @@ const CheckBox = ({
             color={checked ? color : '#666'}
             style={{ marginRight: 16 }}
          />
-         {Boolean(image) && <Img source={{ uri: image }} />}
+         {Boolean(image) && <Img source={{ uri: imageUrl(image, 60) }} />}
          <Title>{title}</Title>
-         <Price>{price}</Price>
+         {Boolean(price) && (
+            <>
+               <Price strike={Boolean(discount)}>
+                  {new Intl.NumberFormat('en-US', {
+                     style: 'currency',
+                     currency: CURRENCY,
+                  }).format(price)}
+               </Price>
+               {Boolean(discount) && (
+                  <Price>
+                     {new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: CURRENCY,
+                     }).format(
+                        discountedPrice({
+                           value: price,
+                           discount: discount,
+                        }).toFixed(2)
+                     )}
+                  </Price>
+               )}
+            </>
+         )}
       </Wrapper>
    )
 }
@@ -54,7 +79,7 @@ const Img = styled.Image`
 `
 
 const Title = styled.Text`
-   margin-right: 8px;
+   margin-right: 16px;
    color: #43484d;
    font-weight: bold;
 `
@@ -62,4 +87,6 @@ const Title = styled.Text`
 const Price = styled.Text`
    color: #43484d;
    font-size: 14px;
+   margin-right: 8px;
+   text-decoration: ${props => (props.strike ? 'line-through' : 'none')};
 `

@@ -22,6 +22,7 @@ const ComboProduct = ({
    setPrice,
    product,
    onModifiersValidityChange,
+   clickHandler,
 }) => {
    const [selected, setSelected] = useState(0)
 
@@ -102,7 +103,7 @@ const ComboProduct = ({
    let selectedArr = product.comboProductComponents?.map((el, _id) => false)
    // if (comboProductComponents == undefined) return <Text>Bad Data</Text>;
    return (
-      <View style={styles.container}>
+      <TouchableOpacity onPress={clickHandler} style={styles.container}>
          {tunnelItem ? (
             <>
                <View
@@ -337,7 +338,7 @@ const ComboProduct = ({
                </Text>
             </View>
          )}
-      </View>
+      </TouchableOpacity>
    )
 }
 

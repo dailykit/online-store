@@ -235,6 +235,13 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         product={product}
                         navigation={navigation}
                         setPrice={setPrice}
+                        clickHandler={() =>
+                           product.isPopupAllowed &&
+                           navigation.navigate('ProductPage', {
+                              id: product.id,
+                              type: 'comboProduct',
+                           })
+                        }
                         {...restProps}
                      />
                   </>
@@ -256,6 +263,13 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         {...restProps}
                         setPrice={price => setPrice(price)}
                         setDiscount={setDiscount}
+                        clickHandler={() =>
+                           product.isPopupAllowed &&
+                           navigation.navigate('ProductPage', {
+                              id: product.id,
+                              type: 'customizableProduct',
+                           })
+                        }
                      />
                   </>
                )}
