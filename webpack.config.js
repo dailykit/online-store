@@ -9,7 +9,7 @@ module.exports = async function (env, argv) {
       'react-native-banner-carousel': 'react-native-web-banner-carousel',
    }
    config.output = {
-      filename: '[name].[contenthash:6].bundle.js',
+      filename: '[name].[hash:6].bundle.js',
       path: path.resolve(__dirname, 'web-build/'),
       publicPath: '/store/',
    }

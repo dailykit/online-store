@@ -84,6 +84,7 @@ export default function OnboardingStack(props) {
       availability,
       setAvailability,
       setRewardsSettings,
+      setAppSettings,
       setMenuData,
       setMasterLoading,
       setMenuLoading,
