@@ -36,8 +36,16 @@ import {
 } from 'react-native-dotenv'
 import CartSkeleton from '../../components/skeletons/cart'
 import { isKeycloakSupported } from '../../utils'
+import { useScript } from '../../utils/useScript'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
+   const [razorpayLoaded, razorpayError] = useScript(
+      `https://checkout.razorpay.com/v1/checkout.js`
+   )
+   const [paymentJsLoaded, paymentJsError] = useScript(
+      `https://s3.us-east-2.amazonaws.com/dailykit.org/payments.min.js`
+   )
+
    const { isAuthenticated } = useAuth()
    const { cart } = useCartContext()
    const {
@@ -53,7 +61,13 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    React.useEffect(() => {
       ;(async () => {
-         if (cart && paymentPartnerShipIds?.length && isAuthenticated) {
+         if (
+            cart &&
+            paymentPartnerShipIds?.length &&
+            isAuthenticated &&
+            razorpayLoaded &&
+            paymentJsLoaded
+         ) {
             await window.payments.provider({
                cart,
                currency: CURRENCY,
@@ -63,10 +77,16 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             })
          }
       })()
-   }, [cart, paymentPartnerShipIds, isAuthenticated])
+   }, [
+      cart,
+      paymentPartnerShipIds,
+      isAuthenticated,
+      paymentJsLoaded,
+      razorpayLoaded,
+   ])
 
    React.useEffect(() => {
-      if (isAuthenticated) {
+      if (isAuthenticated && razorpayLoaded && paymentJsLoaded) {
          const brandObject = {
             name: brand.name,
             logo: brand.logo,
@@ -80,11 +100,11 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             currency: CURRENCY,
          })
       }
-   }, [cart, isAuthenticated, brand])
+   }, [cart, isAuthenticated, brand, paymentJsLoaded, razorpayLoaded])
 
-   console.log(cart)
+   console.log('Cart:', cart)
 
-   if (masterLoading) {
+   if (masterLoading || !razorpayLoaded || !paymentJsLoaded) {
       return <AppSkeleton />
    }
 

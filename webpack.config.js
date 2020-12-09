@@ -1,19 +1,17 @@
+const path = require('path')
 const createExpoWebpackConfigAsync = require('@expo/webpack-config')
 
 module.exports = async function (env, argv) {
-   const config = await createExpoWebpackConfigAsync(
-      {
-         ...env,
-         babel: {
-            dangerouslyAddModulePathsToTranspile: ['@ui-kitten/components'],
-         },
-         offline: false,
-      },
-      argv
-   )
-   config.resolve.alias['react-native-maps'] = 'react-native-web-maps'
-   config.resolve.alias['react-native'] = 'react-native-web'
-   config.resolve.alias['react-native-banner-carousel'] =
-      'react-native-web-banner-carousel'
+   const config = await createExpoWebpackConfigAsync(env, argv)
+   config.resolve.alias = {
+      'react-native-maps': 'react-native-web-maps',
+      'react-native': 'react-native-web',
+      'react-native-banner-carousel': 'react-native-web-banner-carousel',
+   }
+   config.output = {
+      filename: '[name].[hash:6].bundle.js',
+      path: path.resolve(__dirname, 'web-build/'),
+      publicPath: '/store/',
+   }
    return config
 }

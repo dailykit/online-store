@@ -1384,3 +1384,14 @@ export const SET_REFERRAL_CODE = gql`
       }
    }
 `
+
+export const POWER_QUERY = gql`
+   query GetStoreData($params: jsonb!) {
+      onDemand_getStoreData(args: { params: $params }) {
+         id
+         brandId
+         settings
+         customer
+      }
+   }
+`

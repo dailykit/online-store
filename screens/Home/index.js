@@ -105,9 +105,6 @@ const Home = props => {
                      </Text>
                   </View>
                </View>
-               <View style={styles.flexContainer}>
-                  <Spinner size="large" />
-               </View>
                <View style={{ height: height * 0.08 }} />
             </ScrollView>
             <Cart to="OrderSummary" {...props} text="Checkout" />
