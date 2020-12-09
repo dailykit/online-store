@@ -43,7 +43,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       `https://checkout.razorpay.com/v1/checkout.js`
    )
    const [paymentJsLoaded, paymentJsError] = useScript(
-      `https://s3.us-east-2.amazonaws.com/dailykit.org/payments.js`
+      `https://s3.us-east-2.amazonaws.com/dailykit.org/payments.min.js`
    )
 
    const { isAuthenticated } = useAuth()
