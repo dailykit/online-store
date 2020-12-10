@@ -11,7 +11,6 @@ module.exports = async function (env, argv) {
    config.output = {
       filename: '[name].[hash:6].bundle.js',
       path: path.resolve(__dirname, 'web-build/'),
-      publicPath: '/store/',
    }
    return config
 }
