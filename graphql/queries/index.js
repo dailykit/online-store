@@ -232,6 +232,7 @@ export const COMBO_PRODUCT = gql`
                }
                customizableProductOptions {
                   id
+                  options
                   inventoryProduct {
                      id
                      assets
@@ -401,6 +402,7 @@ export const CUSTOMIZABLE_PRODUCT = gql`
          assets
          customizableProductOptions {
             id
+            options
             inventoryProduct {
                id
                assets
@@ -682,6 +684,7 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
          assets
          customizableProductOptions {
             id
+            options
             inventoryProduct {
                id
                assets
@@ -792,6 +795,7 @@ export const COMBO_PRODUCTS = gql`
                }
                customizableProductOptions {
                   id
+                  options
                   inventoryProduct {
                      id
                      assets
