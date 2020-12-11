@@ -1,3 +1,7 @@
+const capitalizeString = str => {
+   return str[0].toUpperCase() + str.slice(1)
+}
+
 const containsOptionId = (id, listedOptions) => {
    const index = listedOptions.findIndex(op => op.optionId === id)
    if (index === -1) {
@@ -58,6 +62,10 @@ export const resolvePrices = products => {
                      }
                   }
                })
+            // overwriting(only if listed options are provided) default to be first element from available options because it may be the case that default option was not provided in listed options
+            customizableProductOption[type][
+               `default${capitalizeString(type)}Option`
+            ] = updatedProductOptions[0]
             customizableProductOption[type][
                `${type}Options`
             ] = updatedProductOptions
