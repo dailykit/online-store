@@ -11,7 +11,7 @@ const containsOptionId = (id, listedOptions) => {
    }
 }
 
-export const resolvePrices = products => {
+export const resolveCustomizableProductPrices = products => {
    let updatedProducts = []
    for (const product of products) {
       product.customizableProductOptions.map(customizableProductOption => {
@@ -70,6 +70,79 @@ export const resolvePrices = products => {
                `${type}Options`
             ] = updatedProductOptions
             console.log('🐔 Product: ', product)
+         }
+      })
+      updatedProducts = [...updatedProducts, product]
+   }
+   return updatedProducts
+}
+
+export const resolveComboProductPrices = products => {
+   let updatedProducts = []
+   for (const product of products) {
+      product.comboProductComponents.map(comboProductComponent => {
+         if (comboProductComponent.options?.length) {
+            console.log('🍚 Product: ', product)
+            let type = comboProductComponent.inventoryProduct
+               ? 'inventoryProduct'
+               : comboProductComponent.simpleRecipeProduct
+               ? 'simpleRecipeProduct'
+               : 'customizableProduct'
+
+            if (type === 'inventoryProduct' || type === 'simpleRecipeProduct') {
+               const updatedProductOptions = comboProductComponent[type][
+                  `${type}Options`
+               ]
+                  .filter(({ id }) =>
+                     containsOptionId(id, comboProductComponent.options)
+                  )
+                  .map(op => {
+                     const listedOption = comboProductComponent.options.find(
+                        ({ optionId }) => optionId === op.id
+                     )
+                     if (product.price) {
+                        return {
+                           ...op,
+                           price: [
+                              {
+                                 rrule: '',
+                                 value: product.price.value,
+                                 discount: product.price.discount,
+                              },
+                           ],
+                        }
+                     } else {
+                        if (
+                           'price' in listedOption &&
+                           'discount' in listedOption
+                        ) {
+                           const updatedOption = {
+                              ...op,
+                              price: [
+                                 {
+                                    rrule: '',
+                                    value: listedOption.price,
+                                    discount: listedOption.discount,
+                                 },
+                              ],
+                           }
+                           return updatedOption
+                        } else {
+                           return op
+                        }
+                     }
+                  })
+               comboProductComponent[type][
+                  `default${capitalizeString(type)}Option`
+               ] = updatedProductOptions[0]
+               comboProductComponent[type][
+                  `${type}Options`
+               ] = updatedProductOptions
+               console.log('🐿 Product: ', product)
+            } else {
+               // customizable product
+               return comboProductComponent
+            }
          }
       })
       updatedProducts = [...updatedProducts, product]

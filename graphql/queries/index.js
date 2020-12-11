@@ -777,9 +777,11 @@ export const COMBO_PRODUCTS = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
          comboProductComponents {
             id
             label
+            options
             customizableProductId
             inventoryProductId
             simpleRecipeProductId
