@@ -10,6 +10,7 @@ import {
 import { width } from '../utils/Scaling'
 import Card from './Card'
 import CardSkeleton from './skeletons/card'
+import { resolvePrices } from '../utils/products'
 
 const Products = ({
    category,
@@ -63,7 +64,10 @@ const Products = ({
          ids: category.customizableProducts,
       },
       onCompleted: data => {
-         setProducts([...products, ...data.customizableProducts])
+         const updatedCustomizableProducts = resolvePrices(
+            data.customizableProducts
+         )
+         setProducts([...products, ...updatedCustomizableProducts])
       },
       fetchPolicy: 'cache-and-network',
    })

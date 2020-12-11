@@ -42,31 +42,6 @@ const Item = ({
       setTypes([..._types])
    }
 
-   const containsOptionId = (id, listedOptions) => {
-      const index = listedOptions.findIndex(op => op.optionId === id)
-      if (index === -1) {
-         return false
-      } else {
-         return true
-      }
-   }
-
-   const getActiveOptions = (options, listedOptions) => {
-      console.log({ options, listedOptions })
-      if (!listedOptions || !listedOptions.length) {
-         return options
-      } else {
-         const availableOptions = options.filter(op =>
-            containsOptionId(op.id, listedOptions)
-         )
-         console.log(
-            '🚀 ~ file: CustomizableProductItemExpanded.js ~ line 61 ~ getActiveOptions ~ availableOptions',
-            availableOptions
-         )
-         return availableOptions
-      }
-   }
-
    React.useEffect(() => {
       if (isSelected !== undefined) {
          const component = data.customizableProductOptions[isSelected]
@@ -285,10 +260,7 @@ const Item = ({
                            <Text style={styles.options_text}>
                               Available Servings:
                            </Text>
-                           {getActiveOptions(
-                              simpleRecipeProduct?.simpleRecipeProductOptions,
-                              item.options
-                           )
+                           {simpleRecipeProduct?.simpleRecipeProductOptions
                               ?.filter(serving => serving.type === typeSelected)
                               .map((item_data, key) => {
                                  return (
@@ -473,40 +445,41 @@ const Item = ({
                            >
                               Available Options:
                            </Text>
-                           {getActiveOptions(
-                              inventoryProduct?.inventoryProductOptions,
-                              item.options
-                           ).map((item_data, key) => {
-                              return (
-                                 <ServingSelect
-                                    key={key}
-                                    index={key + 1}
-                                    isSelected={
-                                       servingIndex == key ? true : false
-                                    }
-                                    setServingIndex={index =>
-                                       setServingIndex(index)
-                                    }
-                                    size={item_data.label}
-                                    price={parseFloat(item_data.price[0].value)}
-                                    discount={parseFloat(
-                                       item_data.price[0].discount
-                                    )}
-                                    setSelectedOption={() =>
-                                       setSelectedOption(item_data)
-                                    }
-                                    setProductOption={() =>
-                                       setProductOption(
-                                          item_data,
-                                          inventoryProduct,
-                                          'inventoryProduct',
-                                          item.id
-                                       )
-                                    }
-                                    type="inventoryProduct"
-                                 />
-                              )
-                           })}
+                           {inventoryProduct?.inventoryProductOptions.map(
+                              (item_data, key) => {
+                                 return (
+                                    <ServingSelect
+                                       key={key}
+                                       index={key + 1}
+                                       isSelected={
+                                          servingIndex == key ? true : false
+                                       }
+                                       setServingIndex={index =>
+                                          setServingIndex(index)
+                                       }
+                                       size={item_data.label}
+                                       price={parseFloat(
+                                          item_data.price[0].value
+                                       )}
+                                       discount={parseFloat(
+                                          item_data.price[0].discount
+                                       )}
+                                       setSelectedOption={() =>
+                                          setSelectedOption(item_data)
+                                       }
+                                       setProductOption={() =>
+                                          setProductOption(
+                                             item_data,
+                                             inventoryProduct,
+                                             'inventoryProduct',
+                                             item.id
+                                          )
+                                       }
+                                       type="inventoryProduct"
+                                    />
+                                 )
+                              }
+                           )}
                            {selectedOption?.modifier && (
                               <Modifiers
                                  data={selectedOption.modifier.data}
