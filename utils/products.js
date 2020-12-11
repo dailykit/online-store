@@ -13,36 +13,38 @@ export const resolvePrices = products => {
       product.customizableProductOptions.map(customizableProductOption => {
          if (customizableProductOption.options?.length) {
             console.log('🧑 Product: ', product)
-            if (customizableProductOption.inventoryProduct) {
-               const updatedProductOptions = customizableProductOption.inventoryProduct.inventoryProductOptions
-                  .filter(({ id }) =>
-                     containsOptionId(id, customizableProductOption.options)
+            let type = customizableProductOption.inventoryProduct
+               ? 'inventoryProduct'
+               : 'simpleRecipeProduct'
+            const updatedProductOptions = customizableProductOption[type][
+               `${type}Options`
+            ]
+               .filter(({ id }) =>
+                  containsOptionId(id, customizableProductOption.options)
+               )
+               .map(op => {
+                  const listedOption = customizableProductOption.options.find(
+                     ({ optionId }) => optionId === op.id
                   )
-                  .map(op => {
-                     const listedOption = customizableProductOption.options.find(
-                        ({ optionId }) => optionId === op.id
-                     )
-                     if (
-                        'price' in listedOption &&
-                        'discount' in listedOption
-                     ) {
-                        const updatedOption = {
-                           ...op,
-                           price: [
-                              {
-                                 rrule: '',
-                                 value: listedOption.price,
-                                 discount: listedOption.discount,
-                              },
-                           ],
-                        }
-                        return updatedOption
-                     } else {
-                        return op
+                  if ('price' in listedOption && 'discount' in listedOption) {
+                     const updatedOption = {
+                        ...op,
+                        price: [
+                           {
+                              rrule: '',
+                              value: listedOption.price,
+                              discount: listedOption.discount,
+                           },
+                        ],
                      }
-                  })
-               customizableProductOption.inventoryProduct.inventoryProductOptions = updatedProductOptions
-            }
+                     return updatedOption
+                  } else {
+                     return op
+                  }
+               })
+            customizableProductOption[type][
+               `${type}Options`
+            ] = updatedProductOptions
             console.log('🐔 Product: ', product)
          }
       })
