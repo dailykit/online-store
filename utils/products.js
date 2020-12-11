@@ -26,20 +26,36 @@ export const resolvePrices = products => {
                   const listedOption = customizableProductOption.options.find(
                      ({ optionId }) => optionId === op.id
                   )
-                  if ('price' in listedOption && 'discount' in listedOption) {
-                     const updatedOption = {
+                  if (product.price) {
+                     return {
                         ...op,
                         price: [
                            {
                               rrule: '',
-                              value: listedOption.price,
-                              discount: listedOption.discount,
+                              value: product.price.value,
+                              discount: product.price.discount,
                            },
                         ],
                      }
-                     return updatedOption
                   } else {
-                     return op
+                     if (
+                        'price' in listedOption &&
+                        'discount' in listedOption
+                     ) {
+                        const updatedOption = {
+                           ...op,
+                           price: [
+                              {
+                                 rrule: '',
+                                 value: listedOption.price,
+                                 discount: listedOption.discount,
+                              },
+                           ],
+                        }
+                        return updatedOption
+                     } else {
+                        return op
+                     }
                   }
                })
             customizableProductOption[type][
