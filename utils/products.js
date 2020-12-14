@@ -30,36 +30,20 @@ export const resolveCustomizableProductPrices = products => {
                   const listedOption = customizableProductOption.options.find(
                      ({ optionId }) => optionId === op.id
                   )
-                  if (product.price) {
-                     return {
+                  if ('price' in listedOption && 'discount' in listedOption) {
+                     const updatedOption = {
                         ...op,
                         price: [
                            {
                               rrule: '',
-                              value: product.price.value,
-                              discount: product.price.discount,
+                              value: listedOption.price,
+                              discount: listedOption.discount,
                            },
                         ],
                      }
+                     return updatedOption
                   } else {
-                     if (
-                        'price' in listedOption &&
-                        'discount' in listedOption
-                     ) {
-                        const updatedOption = {
-                           ...op,
-                           price: [
-                              {
-                                 rrule: '',
-                                 value: listedOption.price,
-                                 discount: listedOption.discount,
-                              },
-                           ],
-                        }
-                        return updatedOption
-                     } else {
-                        return op
-                     }
+                     return op
                   }
                })
             // overwriting(only if listed options are provided) default to be first element from available options because it may be the case that default option was not provided in listed options

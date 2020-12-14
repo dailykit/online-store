@@ -191,7 +191,7 @@ const InventoryProductCollapsed = ({
                               setSelectedOption(item_data)
                            }
                            type="inventoryProduct"
-                           comboProductComponent={comboProductComponent}
+                           showPlusIcon={!!comboProductComponent}
                         />
                      )
                   }

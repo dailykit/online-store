@@ -297,6 +297,7 @@ const Item = ({
                                           )
                                        }
                                        type="simpleRecipeProduct"
+                                       showPlusIcon={true}
                                     />
                                  )
                               })}
@@ -476,6 +477,7 @@ const Item = ({
                                           )
                                        }
                                        type="inventoryProduct"
+                                       showPlusIcon={true}
                                     />
                                  )
                               }

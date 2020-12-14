@@ -26,6 +26,7 @@ const SimpleProductItemCollapsed = ({
    refType,
    onModifiersSelected,
    onValidityChange,
+   comboProductComponent,
 }) => {
    const { visual } = useAppContext()
    const [types, setTypes] = useState([])
@@ -242,6 +243,7 @@ const SimpleProductItemCollapsed = ({
                               setSelectedOption(item_data)
                            }
                            type="simpleRecipeProduct"
+                           showPlusIcon={!!comboProductComponent}
                         />
                      )
                   })}

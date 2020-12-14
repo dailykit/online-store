@@ -16,7 +16,7 @@ const ServingSelect = ({
    setProductOption,
    setSelectedOption,
    type,
-   comboProductComponent,
+   showPlusIcon,
 }) => {
    const { visual } = useAppContext()
 
@@ -51,7 +51,7 @@ const ServingSelect = ({
                      }).format(price.toFixed(2))}
                   </ContentText>
                   <ContentText>
-                     {comboProductComponent ? '+' : ''}
+                     {showPlusIcon ? '+' : ''}
                      {new Intl.NumberFormat('en-US', {
                         style: 'currency',
                         currency: CURRENCY,
@@ -62,7 +62,7 @@ const ServingSelect = ({
                </>
             ) : (
                <ContentText>
-                  {comboProductComponent ? '+' : ''}
+                  {showPlusIcon ? '+' : ''}
                   {new Intl.NumberFormat('en-US', {
                      style: 'currency',
                      currency: CURRENCY,
