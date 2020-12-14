@@ -218,7 +218,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         fontStyle: 'italic',
                      }}
                   >
-                     {discount}% off
+                     {discount.toFixed(2)}% off
                   </Text>
                </View>
             )}
