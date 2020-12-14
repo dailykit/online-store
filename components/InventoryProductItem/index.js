@@ -102,6 +102,7 @@ const InventoryProductItem = ({
          refId={refId}
          onModifiersSelected={modifiersHandler}
          onValidityChange={onModifiersValidityChange}
+         comboProductComponent={comboProductComponent}
       />
    )
 }
