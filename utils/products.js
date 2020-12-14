@@ -100,36 +100,23 @@ export const resolveComboProductPrices = products => {
                      const listedOption = comboProductComponent.options.find(
                         ({ optionId }) => optionId === op.id
                      )
-                     if (product.price) {
-                        return {
+                     if (
+                        'price' in listedOption &&
+                        'discount' in listedOption
+                     ) {
+                        const updatedOption = {
                            ...op,
                            price: [
                               {
                                  rrule: '',
-                                 value: product.price.value,
-                                 discount: product.price.discount,
+                                 value: listedOption.price,
+                                 discount: listedOption.discount,
                               },
                            ],
                         }
+                        return updatedOption
                      } else {
-                        if (
-                           'price' in listedOption &&
-                           'discount' in listedOption
-                        ) {
-                           const updatedOption = {
-                              ...op,
-                              price: [
-                                 {
-                                    rrule: '',
-                                    value: listedOption.price,
-                                    discount: listedOption.discount,
-                                 },
-                              ],
-                           }
-                           return updatedOption
-                        } else {
-                           return op
-                        }
+                        return op
                      }
                   })
                comboProductComponent[type][
