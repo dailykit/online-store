@@ -71,8 +71,12 @@ const CustomizableProductItem = ({
          delete newItem.option.type
          delete newItem.option.serving
       }
-      newItem.price = product.price.value + parseFloat(option.price[0].value)
-      newItem.discount = getDiscount(product.price, option.price[0]).percentage
+      newItem.price =
+         (!!comboProductComponent ? 0 : product.price.value) +
+         parseFloat(option.price[0].value)
+      newItem.discount = !!comboProductComponent
+         ? option.price[0].discount
+         : getDiscount(product.price, option.price[0]).percentage
       newItem.id = slaveProduct.id
       newItem.customizableProductOptionId = customizableOptionId
       newItem.name = `[${product.name}] ${slaveProduct.name}`
@@ -126,10 +130,12 @@ const CustomizableProductItem = ({
             id: default_product.id,
             name: default_product.name,
             price:
-               product.price.value +
+               (!!comboProductComponent ? 0 : product.price.value) +
                parseFloat(_default_option?.price[0]?.value),
-            discount: getDiscount(product.price, _default_option?.price[0])
-               .percentage,
+            discount: !!comboProductComponent
+               ? _default_option?.price[0].discount
+               : getDiscount(product.price, _default_option?.price[0])
+                    .percentage,
             image: default_product.assets?.images[0],
             option: {
                id: _default_option?.id, // product option id

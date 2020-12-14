@@ -213,15 +213,18 @@ export const COMBO_PRODUCT = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
          comboProductComponents {
             id
             label
+            options
             customizableProductId
             inventoryProductId
             simpleRecipeProductId
             customizableProduct {
                id
                name
+               price
                defaultCustomizableProductOption {
                   inventoryProduct {
                      assets
@@ -400,6 +403,7 @@ export const CUSTOMIZABLE_PRODUCT = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
          customizableProductOptions {
             id
             options
