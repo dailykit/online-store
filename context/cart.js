@@ -77,6 +77,8 @@ export const CartContextProvider = ({ children }) => {
    const [wallet, setWallet] = useState(undefined)
    const [loyaltyPoints, setLoyaltyPoints] = useState(undefined)
    const [customerReferral, setCustomerReferral] = useState(undefined)
+   // To clear modifiers after adding
+   const [modifiersAdded, setModifiersAdded] = useState(undefined)
 
    // local
    const [distance, setDistance] = useState(0)
@@ -302,6 +304,8 @@ export const CartContextProvider = ({ children }) => {
             setLoyaltyPoints,
             customerReferral,
             setCustomerReferral,
+            modifiersAdded,
+            setModifiersAdded,
          }}
       >
          {children}

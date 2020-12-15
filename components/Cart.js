@@ -31,7 +31,13 @@ const Cart = ({
    product,
    isDisabled,
 }) => {
-   const { cart, customerDetails, customer, setCart } = useCartContext()
+   const {
+      cart,
+      customerDetails,
+      customer,
+      setCart,
+      setModifiersAdded,
+   } = useCartContext()
    const { brandId, visual } = useAppContext()
    const { open } = useDrawerContext()
    const { isAuthenticated, login, user } = useAuth()
@@ -237,6 +243,7 @@ const Cart = ({
             }
          }
          if (text === 'Checkout') navigation.navigate('OrderSummary')
+         setModifiersAdded(Math.random() * 1000 + 1)
          setIsModalVisible(false)
       } catch (error) {
          console.log(error)
