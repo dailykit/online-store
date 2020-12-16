@@ -17,6 +17,7 @@ import {
    PAYMENT_PARTNERSHIP,
    SET_REFERRAL_CODE,
    POWER_QUERY,
+   SETTINGS,
 } from './queries'
 
 import {
@@ -96,4 +97,5 @@ export {
    SET_REFERRAL_CODE,
    DELIVERY_BREAKUP,
    POWER_QUERY,
+   SETTINGS
 }

@@ -1403,7 +1403,23 @@ export const POWER_QUERY = gql`
          id
          brandId
          settings
-         customer
+      }
+   }
+`
+
+export const SETTINGS = gql`
+   query StoreSettings($brandId: Int!, $identifier: String!, $type: String!) {
+      storeSettings(
+         where: {
+            brand: { brandId: { _eq: $brandId } }
+            identifier: { _eq: $identifier }
+            type: { _eq: $type }
+         }
+      ) {
+         value
+         brandSettings {
+            value
+         }
       }
    }
 `

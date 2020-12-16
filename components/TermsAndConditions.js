@@ -1,16 +1,39 @@
 import React from 'react'
 import styled from 'styled-components/native'
+import { useQuery } from '@apollo/react-hooks'
 import { useAppContext } from '../context/app'
+import { SETTINGS } from '../graphql'
+import Policy from './skeletons/policy'
 
 const TermsAndConditions = () => {
-   const { brand } = useAppContext()
+   const { brandId } = useAppContext()
+   const [html, setHtml] = React.useState('')
+
+   const { loading, error } = useQuery(SETTINGS, {
+      variables: { brandId, identifier: 'Terms and Conditions', type: 'brand' },
+      onCompleted: data => {
+         const setting = data.storeSettings[0]
+         console.log(setting)
+         if (setting.brandSettings.length) {
+            setHtml(setting.brandSettings[0].value?.value)
+         } else {
+            setHtml(setting.value?.value ?? '<p>Not found!</p>')
+         }
+      },
+   })
 
    React.useEffect(() => {
-      if (document) {
+      if (document && html) {
          const content = document.getElementById('terms-and-conditions')
-         content.innerHTML = brand.termsAndConditions
+         if (content) {
+            content.innerHTML = html
+         }
       }
-   }, [])
+   }, [html])
+
+   if (loading || error) {
+      return <Policy />
+   }
 
    return (
       <Wrapper stickyHeaderIndices={[0]}>
