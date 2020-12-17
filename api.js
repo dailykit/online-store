@@ -62,8 +62,9 @@ export const registerUser = async ({ email, password }) => {
    return response.data
 }
 
-export const getStoreData = async ({ domain, email, keycloakId }) => {
+export const getStoreData = async ({ clientId, domain, email, keycloakId }) => {
    const response = await axios.post(`${DAILYOS_SERVER_URL}/api/store/data`, {
+      clientId,
       domain,
       email,
       keycloakId,

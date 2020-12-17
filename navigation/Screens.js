@@ -3,7 +3,7 @@ import { useLazyQuery, useMutation, useSubscription } from '@apollo/react-hooks'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createStackNavigator } from '@react-navigation/stack'
 import { AsyncStorage } from 'react-native'
-import { CURRENCY, MAPS_API_KEY } from 'react-native-dotenv'
+import { CURRENCY, MAPS_API_KEY, CLIENTID } from 'react-native-dotenv'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { useCartContext } from '../context/cart'
@@ -89,6 +89,7 @@ export default function OnboardingStack(props) {
          if (isInitialized) {
             try {
                const data = await getStoreData({
+                  clientId: CLIENTID,
                   domain: window.location.hostname,
                   email: user.email,
                   keycloakId: user.sub || user.id,
