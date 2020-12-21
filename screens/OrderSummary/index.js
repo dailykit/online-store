@@ -49,6 +49,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    const { isAuthenticated } = useAuth()
    const { cart } = useCartContext()
    const {
+      availability,
       visual,
       brand,
       masterLoading,
@@ -68,8 +69,15 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             razorpayLoaded &&
             paymentJsLoaded
          ) {
+            const brandObject = {
+               name: brand.name,
+               logo: brand.logo,
+               color: visual.color,
+               description: '',
+               isStoreLive: availability.payments.isStoreLive,
+            }
             await window.payments.provider({
-               cart,
+               cart: { ...cart, brand: brandObject },
                currency: CURRENCY,
                partnershipIds: paymentPartnerShipIds,
                admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
@@ -92,6 +100,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             logo: brand.logo,
             color: visual.color,
             description: '',
+            isStoreLive: availability.payments.isStoreLive,
          }
          window.payments.checkout({
             cart: { ...cart, brand: brandObject },
