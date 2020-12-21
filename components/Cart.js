@@ -37,6 +37,7 @@ const Cart = ({
       customer,
       setCart,
       setModifiersAdded,
+      setComboProductAdded,
    } = useCartContext()
    const { brandId, visual } = useAppContext()
    const { open } = useDrawerContext()
@@ -244,6 +245,7 @@ const Cart = ({
          }
          if (text === 'Checkout') navigation.navigate('OrderSummary')
          setModifiersAdded(Math.random() * 1000 + 1)
+         setComboProductAdded(Math.random() * 1000 + 1)
          setIsModalVisible(false)
       } catch (error) {
          console.log(error)

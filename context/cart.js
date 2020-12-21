@@ -82,6 +82,7 @@ export const CartContextProvider = ({ children }) => {
    const [customerReferral, setCustomerReferral] = useState(undefined)
    // To clear modifiers after adding
    const [modifiersAdded, setModifiersAdded] = useState(undefined)
+   const [comboProductAdded, setComboProductAdded] = useState(undefined)
 
    // local
    const [distance, setDistance] = useState(0)
@@ -309,6 +310,8 @@ export const CartContextProvider = ({ children }) => {
             setCustomerReferral,
             modifiersAdded,
             setModifiersAdded,
+            comboProductAdded,
+            setComboProductAdded,
          }}
       >
          {children}
