@@ -6,7 +6,7 @@ import { useAppContext } from '../../context/app'
 import { useDrawerContext } from '../../context/drawer'
 import { useStoreToast } from '../../utils'
 
-const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
 const Register = () => {
    const { visual } = useAppContext()
@@ -28,16 +28,22 @@ const Register = () => {
          if (!emailRegex.test(email)) {
             throw new Error('Enter a valid email!')
          }
-         if (password.trim().length < 6) {
+         if (password.length < 6) {
             throw new Error('Password must contain at least 6 characters!')
          }
-         if (password.trim() !== confirmPassword.trim()) {
+         if (password !== confirmPassword) {
             throw new Error('Password and Confirm password must match!')
          }
-         const { data, errors } = await registerUser({ email, password })
+         const { data, errors } = await registerUser({
+            email,
+            password,
+         })
          if (data?.registerCustomer?.success) {
             setMessage('Account created! Logging you in...')
-            const { data, error } = await loginUser({ email, password })
+            const { data, error } = await loginUser({
+               email,
+               password,
+            })
             if (data?.access_token) {
                await AsyncStorage.setItem('token', data.access_token)
                window.location.href = `${window.location.origin}/store`
@@ -62,18 +68,22 @@ const Register = () => {
          <Heading>Register</Heading>
          <Content>
             <Label>Email</Label>
-            <Field value={email} onChangeText={text => setEmail(text)} />
+            <Field
+               autoCompleteType="email"
+               value={email}
+               onChangeText={text => setEmail(text.trim())}
+            />
             <Label>Password</Label>
             <Field
                value={password}
                secureTextEntry={true}
-               onChangeText={text => setPassword(text)}
+               onChangeText={text => setPassword(text.trim())}
             />
             <Label>Confirm Password</Label>
             <Field
                value={confirmPassword}
                secureTextEntry={true}
-               onChangeText={text => setConfirmPassword(text)}
+               onChangeText={text => setConfirmPassword(text.trim())}
             />
             <CTA
                disabled={

@@ -17,12 +17,14 @@ import {
    isPickUpAvailable,
 } from '../utils/fulfillment'
 import { useAppContext } from './app'
+import { useAuth } from './auth'
 import { useDrawerContext } from './drawer'
 
 const CartContext = React.createContext()
 
 export const CartContextProvider = ({ children }) => {
    const { availability, brandId } = useAppContext()
+   const { user } = useAuth()
 
    const { saved } = useDrawerContext()
 
@@ -57,7 +59,8 @@ export const CartContextProvider = ({ children }) => {
                         customerFirstName: saved.data.customerInfo.firstName,
                         customerLastName: saved.data.customerInfo.lastName,
                         customerPhone: saved.data.customerInfo.phoneNumber,
-                        customerEmail: saved.data.customerInfo.email,
+                        customerEmail:
+                           saved.data.customerInfo.email || user.email,
                      },
                   },
                },
