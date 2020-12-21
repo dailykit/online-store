@@ -74,7 +74,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
                logo: brand.logo,
                color: visual.color,
                description: '',
-               isStoreLive: availability.payments.isStoreLive,
+               isStoreLive: availability?.payments?.isStoreLive,
             }
             await window.payments.provider({
                cart: { ...cart, brand: brandObject },
@@ -100,7 +100,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             logo: brand.logo,
             color: visual.color,
             description: '',
-            isStoreLive: availability.payments.isStoreLive,
+            isStoreLive: availability?.payments?.isStoreLive,
          }
          window.payments.checkout({
             cart: { ...cart, brand: brandObject },
