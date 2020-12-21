@@ -153,6 +153,7 @@ const Checkout = ({ cart, navigation }) => {
    const { open } = useDrawerContext()
    const { visual } = useAppContext()
    const { isAuthenticated } = useAuth()
+   const { toastr } = useStoreToast()
 
    const [editing, setEditing] = React.useState(false)
 
@@ -161,6 +162,13 @@ const Checkout = ({ cart, navigation }) => {
          setEditing(true)
       }
    }, [cart.fulfillmentInfo])
+
+   React.useEffect(() => {
+      console.log({ cartValidity: cart.isValid })
+      if (!cart.isValid.status && cart.isValid.type === 'fulfillment') {
+         toastr('error', 'Fulfillment is no longer valid!')
+      }
+   }, [cart.isValid])
 
    const renderFulfillment = React.useCallback(type => {
       switch (type) {
