@@ -36,6 +36,12 @@ const ModalContent = ({
 
    const [isDisabled, setIsDisabled] = React.useState(false)
 
+   React.useEffect(() => {
+      if (data.comboProductComponents) {
+         setnumberOfComboProductItem(data.comboProductComponents.length)
+      }
+   }, [data.comboProductComponents])
+
    const selectComponent = item => {
       console.log('Item recived: ', item)
       // filter removes empty objects
