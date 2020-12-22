@@ -17,7 +17,9 @@ import MenuSkeleton from '../../components/skeletons/menu'
 import { useAppContext } from '../../context/app'
 import { height, width } from '../../utils/Scaling'
 import { styles } from './styles'
-import { useAuth } from '../../context/auth'
+import { useAuth } from '../../context/auth';
+import AllCouponList from '../../components/AllCouponList';
+import { useDrawerContext } from '../../context/drawer'
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
@@ -33,6 +35,7 @@ const Home = props => {
    } = useAppContext()
 
    const { isAuthenticated } = useAuth()
+   const { open } = useDrawerContext()
 
    React.useEffect(() => {
       console.log('Checking Auth...')
@@ -49,6 +52,16 @@ const Home = props => {
          }
       }
    }, [isAuthenticated])
+
+   React.useEffect(() => {
+      console.log('window.location', window.location)
+      console.log('window.parent.location', window.parent.location)
+      if (
+         window.location.pathname.includes('store/AllCouponsList')
+      ) {
+            open('AllCouponsList')
+      }
+   },[])
 
    const isStoreOpen = () => {
       const current = new Date()
