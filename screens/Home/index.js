@@ -17,8 +17,7 @@ import MenuSkeleton from '../../components/skeletons/menu'
 import { useAppContext } from '../../context/app'
 import { height, width } from '../../utils/Scaling'
 import { styles } from './styles'
-import { useAuth } from '../../context/auth';
-import AllCouponList from '../../components/AllCouponList';
+import { useAuth } from '../../context/auth'
 import { useDrawerContext } from '../../context/drawer'
 
 const BannerWidth = Dimensions.get('window').width
@@ -38,30 +37,22 @@ const Home = props => {
    const { open } = useDrawerContext()
 
    React.useEffect(() => {
-      console.log('Checking Auth...')
-      console.log('window.location', window.location)
-      console.log('window.parent.location', window.parent.location)
       if (
          isAuthenticated &&
          window.location.pathname.includes('LoginSuccess')
       ) {
-         console.log('Logged in and not on success page...')
          if (window.location !== window.parent.location) {
-            console.log('Reloading...')
             window.parent.location.reload()
          }
       }
    }, [isAuthenticated])
 
    React.useEffect(() => {
-      console.log('window.location', window.location)
-      console.log('window.parent.location', window.parent.location)
-      if (
-         window.location.pathname.includes('store/AllCouponsList')
-      ) {
-            open('AllCouponsList')
+      const loadCoupons = window.location.pathname.includes('show-coupons')
+      if (loadCoupons && !masterLoading) {
+         open('AllCouponList')
       }
-   },[])
+   }, [masterLoading])
 
    const isStoreOpen = () => {
       const current = new Date()

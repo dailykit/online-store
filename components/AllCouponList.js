@@ -1,40 +1,29 @@
 import React from 'react'
-import styled from 'styled-components/native'
-import { useMutation, useSubscription } from '@apollo/react-hooks'
-import { COUPONS, CREATE_ORDER_CART_REWARDS } from '../graphql'
-import { useCartContext, useDrawerContext } from '../context/cart'
-import { useAppContext } from '../context/app'
+import { useQuery } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
-import { useStoreToast } from '../utils'
+import styled from 'styled-components/native'
+import { useAppContext } from '../context/app'
+import { ALL_COUPONS } from '../graphql'
 import CouponsSkeleton from './skeletons/coupons'
 
-const AllCouponList = () => {
-   const { cart, customer } = useCartContext()
+export default function AllCouponList() {
    const { brandId } = useAppContext()
-   const { setIsDrawerOpen } = useDrawerContext()
-   const { toastr } = useStoreToast()
 
-   const [applying, setApplying] = React.useState(false)
    const [availableCoupons, setAvailableCoupons] = React.useState([])
 
-   // Subscription
-   const { data, loading, error } = useSubscription(COUPONS, {
+   const { loading } = useQuery(ALL_COUPONS, {
       variables: {
-         params: {
-            cartId: cart.id,
-            keycloakId: customer.keycloakId,
-         },
          brandId,
       },
-      onSubscriptionData: data => {
-         const coupons = data.subscriptionData.data.coupons
-         setAvailableCoupons([coupons])
+      onCompleted: data => {
+         const coupons = data.coupons
+         console.log({ coupons })
+         setAvailableCoupons([...coupons])
+      },
+      onError: error => {
+         console.log(error)
       },
    })
-
-   console.log(availableCoupons);
-
-   if (error) console.log(error)
 
    if (loading) return <CouponsSkeleton />
 
@@ -55,8 +44,6 @@ const AllCouponList = () => {
    )
 }
 
-export default AllCouponList;
-
 const Coupon = ({ coupon }) => {
    const { visual } = useAppContext()
 
@@ -66,7 +53,6 @@ const Coupon = ({ coupon }) => {
       <CouponContainer>
          <CouponHeader>
             <CouponCode>{coupon.code}</CouponCode>
-            
          </CouponHeader>
          <TitleText>{coupon.metaDetails?.title || ''}</TitleText>
          {isDescVisible ? (
