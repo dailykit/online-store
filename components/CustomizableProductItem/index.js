@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Text } from 'react-native'
-import { priceSort } from '../../utils'
+import { priceSort, discountedPrice } from '../../utils'
 import CustomizableProductItemCollapsed from './CustomizableProductItemCollapsed'
 import CustomizableProductItemExpanded from './CustomizableProductItemExpanded'
 
@@ -28,6 +28,27 @@ const CustomizableProductItem = ({
    const [numberOfOptions, setnumberOfOptions] = useState(0)
    const [objToAdd, setobjToAdd] = useState({})
 
+   const getDiscount = (productPrice, optionPrice) => {
+      const productDiscount =
+         productPrice.value -
+         discountedPrice({
+            value: productPrice.value,
+            discount: productPrice.discount,
+         })
+      const optionDiscount =
+         optionPrice.value -
+         discountedPrice({
+            value: optionPrice.value,
+            discount: optionPrice.discount,
+         })
+      const totalDiscount = productDiscount + optionDiscount
+      const totalPrice = productPrice.value + optionPrice.value
+      return {
+         absolute: totalDiscount,
+         percentage: (totalDiscount / totalPrice) * 100,
+      }
+   }
+
    const setProductOption = (
       option,
       slaveProduct,
@@ -50,8 +71,12 @@ const CustomizableProductItem = ({
          delete newItem.option.type
          delete newItem.option.serving
       }
-      newItem.price = parseFloat(option.price[0].value)
-      newItem.discount = parseFloat(option.price[0].discount)
+      newItem.price =
+         (!!comboProductComponent ? 0 : product.price.value) +
+         parseFloat(option.price[0].value)
+      newItem.discount = !!comboProductComponent
+         ? option.price[0].discount
+         : getDiscount(product.price, option.price[0]).percentage
       newItem.id = slaveProduct.id
       newItem.customizableProductOptionId = customizableOptionId
       newItem.name = `[${product.name}] ${slaveProduct.name}`
@@ -60,6 +85,7 @@ const CustomizableProductItem = ({
          option => option[type]
       )
       newItem.image = cusOption[type].assets?.images[0]
+      console.log({ newItem })
       setobjToAdd({ ...newItem, modifiers: [] })
       setcartItem({ ...newItem, modifiers: [] })
    }
@@ -103,8 +129,13 @@ const CustomizableProductItem = ({
             customizableProductOptionId: default_product?.id,
             id: default_product.id,
             name: default_product.name,
-            price: parseFloat(_default_option?.price[0]?.value),
-            discount: parseFloat(_default_option?.price[0].discount),
+            price:
+               (!!comboProductComponent ? 0 : product.price.value) +
+               parseFloat(_default_option?.price[0]?.value),
+            discount: !!comboProductComponent
+               ? _default_option?.price[0].discount
+               : getDiscount(product.price, _default_option?.price[0])
+                    .percentage,
             image: default_product.assets?.images[0],
             option: {
                id: _default_option?.id, // product option id
@@ -120,9 +151,15 @@ const CustomizableProductItem = ({
          }
          setobjToAdd(objToAddToCart)
          if (!tunnelItem && independantItem) {
-            setPrice(_default_option?.price[0].value)
-            if (_default_option.price[0].discount)
-               setDiscount(parseFloat(_default_option.price[0].discount))
+            const discount = getDiscount(
+               product.price,
+               _default_option?.price[0]
+            )
+            setDiscount(discount.percentage)
+            const value =
+               product.price.value +
+               parseFloat(_default_option?.price[0]?.value)
+            setPrice(discountedPrice({ value, discount: discount.percentage }))
             setcardData(product)
          }
          if (tunnelItem && isSelected) {

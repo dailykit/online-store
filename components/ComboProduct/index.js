@@ -4,7 +4,7 @@ import { Image, Text, View } from 'react-native'
 import Carousel from 'react-native-banner-carousel'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAppContext } from '../../context/app'
-import { priceSort } from '../../utils'
+import { discountedPrice, priceSort } from '../../utils'
 import { width } from '../../utils/Scaling'
 import CustomizableProductItem from '../CustomizableProductItem'
 import InventoryProductItem from '../InventoryProductItem'
@@ -20,6 +20,7 @@ const ComboProduct = ({
    currentComboProductIndex,
    setCurrentComboProductIndex,
    setPrice,
+   setDiscount,
    product,
    onModifiersValidityChange,
    clickHandler,
@@ -62,6 +63,8 @@ const ComboProduct = ({
          }
       })
       setOptionImages(images)
+      setPrice?.(discountedPrice(product.price))
+      setDiscount?.(product.price.discount)
    }, [])
 
    React.useEffect(() => {

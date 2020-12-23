@@ -36,11 +36,20 @@ import {
 } from 'react-native-dotenv'
 import CartSkeleton from '../../components/skeletons/cart'
 import { isKeycloakSupported } from '../../utils'
+import { useScript } from '../../utils/useScript'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
+   const [razorpayLoaded, razorpayError] = useScript(
+      `https://checkout.razorpay.com/v1/checkout.js`
+   )
+   const [paymentJsLoaded, paymentJsError] = useScript(
+      `https://s3.us-east-2.amazonaws.com/dailykit.org/payments.js`
+   )
+
    const { isAuthenticated } = useAuth()
    const { cart } = useCartContext()
    const {
+      availability,
       visual,
       brand,
       masterLoading,
@@ -53,9 +62,22 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    React.useEffect(() => {
       ;(async () => {
-         if (cart && paymentPartnerShipIds?.length && isAuthenticated) {
+         if (
+            cart &&
+            paymentPartnerShipIds?.length &&
+            isAuthenticated &&
+            razorpayLoaded &&
+            paymentJsLoaded
+         ) {
+            const brandObject = {
+               name: brand.name,
+               logo: brand.logo,
+               color: visual.color,
+               description: '',
+               isStoreLive: availability?.payments?.isStoreLive,
+            }
             await window.payments.provider({
-               cart,
+               cart: { ...cart, brand: brandObject },
                currency: CURRENCY,
                partnershipIds: paymentPartnerShipIds,
                admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
@@ -63,15 +85,22 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             })
          }
       })()
-   }, [cart, paymentPartnerShipIds, isAuthenticated])
+   }, [
+      cart,
+      paymentPartnerShipIds,
+      isAuthenticated,
+      paymentJsLoaded,
+      razorpayLoaded,
+   ])
 
    React.useEffect(() => {
-      if (isAuthenticated) {
+      if (isAuthenticated && razorpayLoaded && paymentJsLoaded) {
          const brandObject = {
             name: brand.name,
             logo: brand.logo,
             color: visual.color,
             description: '',
+            isStoreLive: availability?.payments?.isStoreLive,
          }
          window.payments.checkout({
             cart: { ...cart, brand: brandObject },
@@ -80,11 +109,11 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             currency: CURRENCY,
          })
       }
-   }, [cart, isAuthenticated, brand])
+   }, [cart, isAuthenticated, brand, paymentJsLoaded, razorpayLoaded])
 
-   console.log(cart)
+   console.log('Cart:', cart)
 
-   if (masterLoading) {
+   if (masterLoading || !razorpayLoaded || !paymentJsLoaded) {
       return <AppSkeleton />
    }
 
@@ -153,6 +182,7 @@ const Checkout = ({ cart, navigation }) => {
    const { open } = useDrawerContext()
    const { visual } = useAppContext()
    const { isAuthenticated } = useAuth()
+   const { toastr } = useStoreToast()
 
    const [editing, setEditing] = React.useState(false)
 
@@ -161,6 +191,28 @@ const Checkout = ({ cart, navigation }) => {
          setEditing(true)
       }
    }, [cart.fulfillmentInfo])
+
+   React.useEffect(() => {
+      console.log({ cartValidity: cart.isValid })
+      if (!cart.isValid.status && cart.isValid.type === 'fulfillment') {
+         toastr('error', 'Fulfillment is no longer valid!')
+      }
+   }, [cart.isValid])
+
+   const renderFulfillment = React.useCallback(type => {
+      switch (type) {
+         case 'ONDEMAND_DELIVERY':
+            return 'Deliver Now'
+         case 'ONDEMAND_PICKUP':
+            return 'Pickup Now'
+         case 'PREORDER_PICKUP':
+            return 'Pickup Later'
+         case 'PREORDER_DELIVERY':
+            return 'Deliver Later'
+         default:
+            '-'
+      }
+   }, [])
 
    return (
       <StyledCheckout>
@@ -257,13 +309,19 @@ const Checkout = ({ cart, navigation }) => {
                      ) : (
                         <SelectedFulfillment>
                            <SelectedFulfillmentType color={visual.color}>
-                              {cart.fulfillmentInfo?.type.replace('_', ' ')}
+                              {renderFulfillment(cart.fulfillmentInfo?.type)}
                            </SelectedFulfillmentType>
-                           <SelectedFulfillmentTime>
-                              {moment
-                                 .parseZone(cart?.fulfillmentInfo?.slot?.from)
-                                 .format('MMMM Do YYYY, h:mm a')}
-                           </SelectedFulfillmentTime>
+                           {Boolean(
+                              cart.fulfillmentInfo?.type.includes('PREORDER')
+                           ) && (
+                              <SelectedFulfillmentTime>
+                                 {moment
+                                    .parseZone(
+                                       cart?.fulfillmentInfo?.slot?.from
+                                    )
+                                    .format('MMMM Do YYYY, h:mm a')}
+                              </SelectedFulfillmentTime>
+                           )}
                            {cart?.fulfillmentInfo?.type.includes(
                               'DELIVERY'
                            ) && (
@@ -866,7 +924,7 @@ const SelectedFulfillmentType = styled.Text`
    font-weight: 500;
    color: ${props => props.color || '#7e808c'};
    line-height: 1.18;
-   text-transform: capitalize;
+   text-transform: uppercase;
 `
 
 const SelectedFulfillmentTime = styled.Text`

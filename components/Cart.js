@@ -31,7 +31,14 @@ const Cart = ({
    product,
    isDisabled,
 }) => {
-   const { cart, customerDetails, customer, setCart } = useCartContext()
+   const {
+      cart,
+      customerDetails,
+      customer,
+      setCart,
+      setModifiersAdded,
+      setComboProductAdded,
+   } = useCartContext()
    const { brandId, visual } = useAppContext()
    const { open } = useDrawerContext()
    const { isAuthenticated, login, user } = useAuth()
@@ -67,6 +74,7 @@ const Cart = ({
 
    React.useEffect(() => {
       if (comboProductItems?.length && type === 'comboProduct') {
+         console.log(product)
          setPriceShown(
             comboProductItems.reduce(
                (acc, product) =>
@@ -87,7 +95,11 @@ const Cart = ({
                      0
                   ),
                0
-            )
+            ) +
+               discountedPrice({
+                  value: product.price.value,
+                  discount: product.price.discount,
+               })
          )
       }
    }, [comboProductItems])
@@ -127,16 +139,18 @@ const Cart = ({
             if (type === 'comboProduct') {
                console.log(comboProductItems)
                const price = priceShown
-               const priceWithoutDiscount = comboProductItems.reduce(
-                  (acc, product) =>
-                     acc +
-                     parseFloat(product.unitPrice) +
-                     product.modifiers.reduce(
-                        (acc, modifier) => acc + parseFloat(modifier.price),
-                        0
-                     ),
-                  0
-               )
+               const priceWithoutDiscount =
+                  comboProductItems.reduce(
+                     (acc, product) =>
+                        acc +
+                        parseFloat(product.unitPrice) +
+                        product.modifiers.reduce(
+                           (acc, modifier) => acc + parseFloat(modifier.price),
+                           0
+                        ),
+                     0
+                  ) + product.price.value
+               console.log({ price, priceWithoutDiscount })
                const totalPrice = parseFloat((price * quantity).toFixed(2))
                total = total + totalPrice
                products.push({
@@ -230,6 +244,8 @@ const Cart = ({
             }
          }
          if (text === 'Checkout') navigation.navigate('OrderSummary')
+         setModifiersAdded(Math.random() * 1000 + 1)
+         setComboProductAdded(Math.random() * 1000 + 1)
          setIsModalVisible(false)
       } catch (error) {
          console.log(error)

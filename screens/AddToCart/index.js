@@ -1,6 +1,7 @@
 import React, { lazy, useState } from 'react'
 import { ScrollView, View } from 'react-native'
 import Cart, { ComboProductItemProceed } from '../../components/Cart'
+import { useCartContext } from '../../context/cart'
 import { height } from '../../utils/Scaling'
 import { styles } from './styles'
 const ComboProduct = lazy(() => import('../../components/ComboProduct'))
@@ -24,7 +25,7 @@ const ModalContent = ({
    id,
    ...restProps
 }) => {
-   console.log(type)
+   const { comboProductAdded } = useCartContext()
 
    const [cartItem, setcartItem] = useState(null) // obj to push to jaguar
    const [isLastComboItem, setIsLastComboItem] = useState(false)
@@ -35,6 +36,16 @@ const ModalContent = ({
    const [currentComboProductIndex, setCurrentComboProductIndex] = useState(0)
 
    const [isDisabled, setIsDisabled] = React.useState(false)
+
+   React.useEffect(() => {
+      if (data.comboProductComponents) {
+         setnumberOfComboProductItem(data.comboProductComponents.length)
+      }
+   }, [data.comboProductComponents])
+
+   React.useEffect(() => {
+      setCurrentComboProductIndex(0)
+   }, [comboProductAdded])
 
    const selectComponent = item => {
       console.log('Item recived: ', item)

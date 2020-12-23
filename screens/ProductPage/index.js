@@ -17,6 +17,10 @@ import {
 import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
 import Recommendations from '../../components/Recommendations'
+import {
+   resolveComboProductPrices,
+   resolveCustomizableProductPrices,
+} from '../../utils/products'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
@@ -56,7 +60,9 @@ const ProductPage = ({ navigation, route }) => {
       CUSTOMIZABLE_PRODUCT,
       {
          onCompleted: data => {
-            setProduct(data.customizableProduct)
+            setProduct(
+               resolveCustomizableProductPrices([data.customizableProduct])[0]
+            )
          },
          fetchPolicy: 'cache-and-network',
       }
@@ -65,7 +71,7 @@ const ProductPage = ({ navigation, route }) => {
       COMBO_PRODUCT,
       {
          onCompleted: data => {
-            setProduct(data.comboProduct)
+            setProduct(resolveComboProductPrices([data.comboProduct])[0])
          },
          fetchPolicy: 'cache-and-network',
       }

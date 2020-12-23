@@ -213,15 +213,18 @@ export const COMBO_PRODUCT = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
          comboProductComponents {
             id
             label
+            options
             customizableProductId
             inventoryProductId
             simpleRecipeProductId
             customizableProduct {
                id
                name
+               price
                defaultCustomizableProductOption {
                   inventoryProduct {
                      assets
@@ -232,6 +235,7 @@ export const COMBO_PRODUCT = gql`
                }
                customizableProductOptions {
                   id
+                  options
                   inventoryProduct {
                      id
                      assets
@@ -399,8 +403,10 @@ export const CUSTOMIZABLE_PRODUCT = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
          customizableProductOptions {
             id
+            options
             inventoryProduct {
                id
                assets
@@ -680,8 +686,10 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
          customizableProductOptions {
             id
+            options
             inventoryProduct {
                id
                assets
@@ -773,15 +781,18 @@ export const COMBO_PRODUCTS = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
          comboProductComponents {
             id
             label
+            options
             customizableProductId
             inventoryProductId
             simpleRecipeProductId
             customizableProduct {
                id
                name
+               price
                defaultCustomizableProductOption {
                   inventoryProduct {
                      assets
@@ -792,6 +803,7 @@ export const COMBO_PRODUCTS = gql`
                }
                customizableProductOptions {
                   id
+                  options
                   inventoryProduct {
                      id
                      assets
@@ -1381,6 +1393,23 @@ export const SET_REFERRAL_CODE = gql`
       crm_setReferralCode(args: { params: $params }) {
          success
          message
+      }
+   }
+`
+
+export const SETTINGS = gql`
+   query StoreSettings($brandId: Int!, $identifier: String!, $type: String!) {
+      storeSettings(
+         where: {
+            brand: { brandId: { _eq: $brandId } }
+            identifier: { _eq: $identifier }
+            type: { _eq: $type }
+         }
+      ) {
+         value
+         brandSettings {
+            value
+         }
       }
    }
 `

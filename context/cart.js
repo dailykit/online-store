@@ -17,12 +17,14 @@ import {
    isPickUpAvailable,
 } from '../utils/fulfillment'
 import { useAppContext } from './app'
+import { useAuth } from './auth'
 import { useDrawerContext } from './drawer'
 
 const CartContext = React.createContext()
 
 export const CartContextProvider = ({ children }) => {
    const { availability, brandId } = useAppContext()
+   const { user } = useAuth()
 
    const { saved } = useDrawerContext()
 
@@ -57,7 +59,8 @@ export const CartContextProvider = ({ children }) => {
                         customerFirstName: saved.data.customerInfo.firstName,
                         customerLastName: saved.data.customerInfo.lastName,
                         customerPhone: saved.data.customerInfo.phoneNumber,
-                        customerEmail: saved.data.customerInfo.email,
+                        customerEmail:
+                           saved.data.customerInfo.email || user.email,
                      },
                   },
                },
@@ -77,6 +80,9 @@ export const CartContextProvider = ({ children }) => {
    const [wallet, setWallet] = useState(undefined)
    const [loyaltyPoints, setLoyaltyPoints] = useState(undefined)
    const [customerReferral, setCustomerReferral] = useState(undefined)
+   // To clear modifiers after adding
+   const [modifiersAdded, setModifiersAdded] = useState(undefined)
+   const [comboProductAdded, setComboProductAdded] = useState(undefined)
 
    // local
    const [distance, setDistance] = useState(0)
@@ -302,6 +308,10 @@ export const CartContextProvider = ({ children }) => {
             setLoyaltyPoints,
             customerReferral,
             setCustomerReferral,
+            modifiersAdded,
+            setModifiersAdded,
+            comboProductAdded,
+            setComboProductAdded,
          }}
       >
          {children}

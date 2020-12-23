@@ -25,6 +25,7 @@ const InventoryProductCollapsed = ({
    refId,
    onModifiersSelected,
    onValidityChange,
+   comboProductComponent,
 }) => {
    const { visual } = useAppContext()
 
@@ -190,6 +191,7 @@ const InventoryProductCollapsed = ({
                               setSelectedOption(item_data)
                            }
                            type="inventoryProduct"
+                           showPlusIcon={!!comboProductComponent}
                         />
                      )
                   }

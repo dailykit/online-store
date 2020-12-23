@@ -2,12 +2,18 @@ import React from 'react'
 import CheckBox from './form/CheckBox'
 import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
+import { useCartContext } from '../context/cart'
 
 const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
    const { visual } = useAppContext()
+   const { modifiersAdded } = useCartContext()
 
    const [selected, setSelected] = React.useState([])
    let isValid = React.useRef(false)
+
+   React.useEffect(() => {
+      setSelected([])
+   }, [modifiersAdded])
 
    const checkValidity = async () => {
       const requiredModifers = data.categories.filter(
@@ -58,7 +64,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                      productType: option.productType,
                      quantity: option.productQuantity,
                      image: option.image,
-                     operationConfigId: option.operationConfig.id,
+                     operationConfigId: option.operationConfig?.id,
                   },
                ])
             } else {
@@ -72,7 +78,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                   productType: option.productType,
                   quantity: option.productQuantity,
                   image: option.image,
-                  operationConfigId: option.operationConfig.id,
+                  operationConfigId: option.operationConfig?.id,
                }
                setSelected([...updatedModifers])
             }
@@ -92,6 +98,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                      productType: option.productType,
                      quantity: option.productQuantity,
                      image: option.image,
+                     operationConfigId: option.operationConfig?.id,
                   },
                ])
             } else {
