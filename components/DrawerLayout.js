@@ -81,6 +81,7 @@ const DrawerLayout = () => {
             'LoginSelf',
             'RegisterSelf',
             'DailyKeyBackup',
+            'AllCouponList',
          ].includes(drawerView)
       ) {
          setDrawerView(undefined)
