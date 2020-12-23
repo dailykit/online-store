@@ -198,6 +198,11 @@ export default function OnboardingStack(props) {
                            brandSettings[0]?.value || value
                         return
                      }
+                     case 'Store Live': {
+                        availabilityState.payments =
+                           brandSettings[0]?.value || value
+                        return
+                     }
                      case 'Loyalty Points Availability': {
                         rewardsState.isLoyaltyPointsAvailable =
                            brandSettings[0]?.value.isAvailable ??
