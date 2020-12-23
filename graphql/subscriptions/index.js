@@ -245,6 +245,9 @@ export const CART = gql`
          customerKeycloakId
          cartSource
          brandId
+         customer {
+            isTest
+         }
       }
    }
 `

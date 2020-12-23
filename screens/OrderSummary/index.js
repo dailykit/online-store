@@ -43,6 +43,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    const {
       visual,
       brand,
+      availability,
       masterLoading,
       paymentPartnerShipIds,
    } = useAppContext()
@@ -53,9 +54,21 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    React.useEffect(() => {
       ;(async () => {
-         if (cart && paymentPartnerShipIds?.length && isAuthenticated) {
+         if (
+            cart &&
+            paymentPartnerShipIds?.length &&
+            isAuthenticated &&
+            availability.payments
+         ) {
+            const brandObject = {
+               name: brand.name,
+               logo: brand.logo,
+               color: visual.color,
+               description: '',
+               isStoreLive: availability.payments.isStoreLive,
+            }
             await window.payments.provider({
-               cart,
+               cart: { ...cart, brand: brandObject },
                currency: CURRENCY,
                partnershipIds: paymentPartnerShipIds,
                admin_secret: HASURA_GRAPHQL_ADMIN_SECRET,
@@ -63,15 +76,16 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             })
          }
       })()
-   }, [cart, paymentPartnerShipIds, isAuthenticated])
+   }, [availability, cart, paymentPartnerShipIds, isAuthenticated])
 
    React.useEffect(() => {
-      if (isAuthenticated) {
+      if (isAuthenticated && availability.payments && brand && cart) {
          const brandObject = {
             name: brand.name,
             logo: brand.logo,
             color: visual.color,
             description: '',
+            isStoreLive: availability.payments.isStoreLive,
          }
          window.payments.checkout({
             cart: { ...cart, brand: brandObject },
@@ -80,7 +94,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             currency: CURRENCY,
          })
       }
-   }, [cart, isAuthenticated, brand])
+   }, [availability, cart, isAuthenticated, brand])
 
    console.log(cart)
 
