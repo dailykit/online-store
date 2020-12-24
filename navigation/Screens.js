@@ -376,17 +376,6 @@ export default function OnboardingStack(props) {
    }, [availability, brandId])
 
    React.useEffect(() => {
-      console.table({
-         brandId,
-         fetchingCart,
-         fetchingCustomer,
-         isInitialized,
-         subscribingCart,
-         isAuthenticated,
-         settingCart,
-         settingUser,
-         dataLoading,
-      })
       if (!isInitialized) {
          setMasterLoading(true)
       } else {
