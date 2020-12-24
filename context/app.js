@@ -31,11 +31,11 @@ export const AppContextProvider = ({ children }) => {
 
    React.useEffect(() => {
       if (appSettings?.scripts) {
-         const body = document.getElementsByTagName('body')[0]
+         const head = document.querySelector('head')
          const tempElement = document.createElement('div')
          tempElement.innerHTML = appSettings.scripts
          Array.from(tempElement.children).forEach(script => {
-            body.appendChild(script)
+            head.appendChild(script)
          })
       }
    }, [appSettings])
