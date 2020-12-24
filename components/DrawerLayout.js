@@ -46,7 +46,6 @@ const DrawerLayout = () => {
          brandId,
       },
       onCompleted: data => {
-         console.log('platform -> data', data)
          if (data.customer.platform_customer) {
             setCustomerDetails(data.customer.platform_customer)
          } else {

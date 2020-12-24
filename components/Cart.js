@@ -74,7 +74,6 @@ const Cart = ({
 
    React.useEffect(() => {
       if (comboProductItems?.length && type === 'comboProduct') {
-         console.log(product)
          setPriceShown(
             comboProductItems.reduce(
                (acc, product) =>
@@ -106,10 +105,8 @@ const Cart = ({
 
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
-         console.log('Product added!')
          toastr('success', 'Item added!')
          if (!customer) {
-            console.log(data.updateCart)
             setCart(data.updateCart.returning[0])
          }
       },
@@ -119,7 +116,6 @@ const Cart = ({
    })
    const [createCart] = useMutation(CREATE_CART, {
       onCompleted: data => {
-         console.log('Cart created!')
          toastr('success', 'Item added!')
          if (!customer) {
             AsyncStorage.setItem('PENDING_CART_ID', data.createCart.id)
@@ -137,7 +133,6 @@ const Cart = ({
          let total = parseFloat(cart?.cartInfo?.total) || 0
          if (tunnelItem) {
             if (type === 'comboProduct') {
-               console.log(comboProductItems)
                const price = priceShown
                const priceWithoutDiscount =
                   comboProductItems.reduce(
@@ -150,7 +145,6 @@ const Cart = ({
                         ),
                      0
                   ) + product.price.value
-               console.log({ price, priceWithoutDiscount })
                const totalPrice = parseFloat((price * quantity).toFixed(2))
                total = total + totalPrice
                products.push({
@@ -168,7 +162,6 @@ const Cart = ({
                   specialInstructions: '',
                })
             } else {
-               console.log('cartItem', cartItem)
                const price = priceShown
                const priceWithoutDiscount =
                   parseFloat(cartItem.price) +
@@ -192,7 +185,6 @@ const Cart = ({
                   specialInstructions: '',
                }
                delete item.price
-               console.log(item)
                products.push(item)
                total = total + parseFloat(item.totalPrice)
             }
@@ -202,7 +194,6 @@ const Cart = ({
                   products,
                   total,
                }
-               console.log('Cart ID', cart)
                updateCart({
                   variables: {
                      id: cart.id,

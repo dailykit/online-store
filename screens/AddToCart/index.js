@@ -48,7 +48,6 @@ const ModalContent = ({
    }, [comboProductAdded])
 
    const selectComponent = item => {
-      console.log('Item recived: ', item)
       // filter removes empty objects
       let auxArray = comboProductItems.filter(
          item => item.comboProductComponentId

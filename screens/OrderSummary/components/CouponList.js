@@ -35,14 +35,11 @@ const CouponList = () => {
       },
    })
 
-   console.log(data)
-
    if (error) console.log(error)
 
    // Mutation
    const [createOrderCartRewards] = useMutation(CREATE_ORDER_CART_REWARDS, {
       onCompleted: data => {
-         console.log(data)
          toastr('success', 'Coupon applied!')
          setIsDrawerOpen(false)
       },

@@ -26,10 +26,6 @@ export const AppContextProvider = ({ children }) => {
    const [menuLoading, setMenuLoading] = React.useState(false)
 
    React.useEffect(() => {
-      console.log('Master loading:', masterLoading)
-   }, [masterLoading])
-
-   React.useEffect(() => {
       if (appSettings?.scripts) {
          const head = document.querySelector('head')
          const tempElement = document.createElement('div')

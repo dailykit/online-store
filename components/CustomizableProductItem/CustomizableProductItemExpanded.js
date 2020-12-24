@@ -29,8 +29,6 @@ const Item = ({
 }) => {
    const { visual } = useAppContext()
 
-   console.log('Pdct data:', data)
-
    const [types, setTypes] = useState([])
    const [typeSelected, setTypeSelected] = useState('mealKit')
    const [servingIndex, setServingIndex] = useState(undefined)

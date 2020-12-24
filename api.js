@@ -24,7 +24,6 @@ export const loginUser = async ({ email, password }) => {
       })
       .join('&')
 
-   console.log('searchParams', searchParams)
    const response = await axios({
       url: BASE_URL,
       method: 'POST',

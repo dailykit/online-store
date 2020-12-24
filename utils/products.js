@@ -16,7 +16,6 @@ export const resolveCustomizableProductPrices = products => {
    for (const product of products) {
       product.customizableProductOptions.map(customizableProductOption => {
          if (customizableProductOption.options?.length) {
-            console.log('🧑 Product: ', product)
             let type = customizableProductOption.inventoryProduct
                ? 'inventoryProduct'
                : 'simpleRecipeProduct'
@@ -53,7 +52,6 @@ export const resolveCustomizableProductPrices = products => {
             customizableProductOption[type][
                `${type}Options`
             ] = updatedProductOptions
-            console.log('🐔 Product: ', product)
          }
       })
       updatedProducts = [...updatedProducts, product]
@@ -64,7 +62,6 @@ export const resolveCustomizableProductPrices = products => {
 const resolveCustomizableProductInCombo = product => {
    product.customizableProductOptions.map(customizableProductOption => {
       if (customizableProductOption.options?.length) {
-         console.log('🧑 Product: ', product)
          let type = customizableProductOption.inventoryProduct
             ? 'inventoryProduct'
             : 'simpleRecipeProduct'
@@ -101,10 +98,8 @@ const resolveCustomizableProductInCombo = product => {
          customizableProductOption[type][
             `${type}Options`
          ] = updatedProductOptions
-         console.log('🐔 Product: ', product)
       }
    })
-   console.log('✈  Product:', product)
    return product
 }
 
@@ -112,7 +107,6 @@ export const resolveComboProductPrices = products => {
    let updatedProducts = []
    for (const product of products) {
       product.comboProductComponents.map(comboProductComponent => {
-         console.log('🍚 Product: ', product)
          if (
             comboProductComponent.options?.length ||
             comboProductComponent.customizableProduct
@@ -160,12 +154,10 @@ export const resolveComboProductPrices = products => {
                ] = updatedProductOptions
             } else {
                // customizable product
-               console.log('HERE')
                return resolveCustomizableProductInCombo(
                   comboProductComponent.customizableProduct
                )
             }
-            console.log('🐿 Product: ', product)
          }
       })
       updatedProducts = [...updatedProducts, product]

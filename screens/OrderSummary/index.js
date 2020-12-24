@@ -111,8 +111,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       }
    }, [cart, isAuthenticated, brand, paymentJsLoaded, razorpayLoaded])
 
-   console.log('Cart:', cart)
-
    if (masterLoading || !razorpayLoaded || !paymentJsLoaded) {
       return <AppSkeleton />
    }
@@ -193,7 +191,6 @@ const Checkout = ({ cart, navigation }) => {
    }, [cart.fulfillmentInfo])
 
    React.useEffect(() => {
-      console.log({ cartValidity: cart.isValid })
       if (!cart.isValid.status && cart.isValid.type === 'fulfillment') {
          toastr('error', 'Fulfillment is no longer valid!')
       }
@@ -418,7 +415,6 @@ const Cart = ({ cart }) => {
 
    const [deleteCarts] = useMutation(DELETE_CARTS, {
       onCompleted: data => {
-         console.log('Carts deleted: ', data.deleteCarts.returning)
          if (data.deleteCarts.returning.length) {
             AsyncStorage.removeItem('PENDING_CART_ID')
             setCart(undefined)
@@ -431,7 +427,6 @@ const Cart = ({ cart }) => {
 
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
-         console.log('Cart updated!')
          if (!isAuthenticated) {
             setCart(data.updateCart.returning[0])
          }
@@ -475,8 +470,8 @@ const Cart = ({ cart }) => {
          } else {
             removeFromCart(product)
          }
-      } catch (e) {
-         console.log(e)
+      } catch (error) {
+         console.log(error)
       }
    }
 

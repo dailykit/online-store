@@ -105,7 +105,6 @@ const Search = ({ navigation }) => {
    }, [])
 
    React.useEffect(() => {
-      console.log('Menu Data: ', menuData)
       squashAndMerge(menuData)
    }, [menuData])
 

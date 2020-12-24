@@ -25,9 +25,6 @@ const PaymentProcessing = ({ cartId }) => {
 
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
-         console.log('Cart confirmed!')
-      },
       onError: error => {
          console.log(error)
       },
@@ -38,7 +35,6 @@ const PaymentProcessing = ({ cartId }) => {
       // !cartId = payment made without razorpay
       if (!cartId) {
          if (cart?.id) {
-            console.log('Paying through stripe...')
             updateCart({
                variables: {
                   id: cart.id,

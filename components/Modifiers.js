@@ -115,10 +115,8 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
    React.useEffect(() => {
       ;(async () => {
          await checkValidity()
-         console.log('isValid', isValid.current)
          onValidityChange(isValid.current)
          // if (isValid.current) {
-         console.log('Selected: ', selected)
          onModifiersSelected(selected)
          // }
       })()

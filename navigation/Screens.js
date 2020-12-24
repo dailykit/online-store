@@ -94,7 +94,6 @@ export default function OnboardingStack(props) {
                   email: user.email,
                   keycloakId: user.sub || user.id,
                })
-               console.log(data)
                if (data.success) {
                   const { settings, brandId, customer } = data.data
                   setBrandId(brandId)
@@ -118,15 +117,12 @@ export default function OnboardingStack(props) {
       CUSTOMER,
       {
          onCompleted: data => {
-            console.log('Customer:', data)
-
             if (data.customer) {
                setCustomer(data.customer)
                setCustomerDetails(data.customer.platform_customer)
 
                // check if any existing carts
                if (data.customer.orderCarts.length) {
-                  console.log('Found cart with customer...')
                   setCart(data.customer.orderCarts[0])
                }
 
@@ -184,10 +180,6 @@ export default function OnboardingStack(props) {
    const [fetchPaymentPartnerships] = useLazyQuery(PAYMENT_PARTNERSHIP, {
       onCompleted: data => {
          if (data.brands_brand_paymentPartnership.length) {
-            console.log(
-               'Fetched payment partnerships: ',
-               data.brands_brand_paymentPartnership
-            )
             setPaymentPartnershipIds(data.brands_brand_paymentPartnership)
          }
       },
@@ -198,7 +190,6 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       if (brandId && CURRENCY === 'INR') {
-         console.log('Fetching payment partnership...')
          fetchPaymentPartnerships({
             variables: {
                brandId,
@@ -208,7 +199,6 @@ export default function OnboardingStack(props) {
    }, [brandId])
 
    React.useEffect(() => {
-      console.log('Screens -> cart.paymentStatus ', cart?.paymentStatus)
       if (cart?.paymentStatus === 'SUCCEEDED' && CURRENCY === 'INR') {
          open('Payment', { cartId: cart.id })
       }
@@ -222,12 +212,10 @@ export default function OnboardingStack(props) {
       },
       skip: !Boolean(customer?.id && brandId),
       onSubscriptionData: data => {
-         console.log('Found carts:', data.subscriptionData.data.cart)
          if (data.subscriptionData.data.cart.length > 1) {
             const [mergedCart, mergedCartIds] = mergeCarts(
                data.subscriptionData.data.cart
             )
-            console.log('mergedCart', mergedCart)
             updateCart({
                variables: {
                   id: mergedCart.id,
@@ -257,11 +245,6 @@ export default function OnboardingStack(props) {
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.customerReferrals.length) {
-            console.log(
-               'Customer Referral: ',
-               data.subscriptionData.data.customerReferrals[0]
-            )
-
             setCustomerReferral(data.subscriptionData.data.customerReferrals[0])
          }
       },
@@ -274,8 +257,6 @@ export default function OnboardingStack(props) {
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.wallets.length) {
-            console.log('Wallet: ', data.subscriptionData.data.wallets[0])
-
             setWallet(data.subscriptionData.data.wallets[0])
          }
       },
@@ -287,11 +268,6 @@ export default function OnboardingStack(props) {
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.loyaltyPoints.length) {
-            console.log(
-               'Loyalty Points: ',
-               data.subscriptionData.data.loyaltyPoints[0]
-            )
-
             setLoyaltyPoints(data.subscriptionData.data.loyaltyPoints[0])
          }
       },
@@ -299,9 +275,6 @@ export default function OnboardingStack(props) {
 
    // Mutation for deleting carts
    const [deleteCarts] = useMutation(DELETE_CARTS, {
-      onCompleted: data => {
-         console.log('Carts deleted: ', data.deleteCarts.returning)
-      },
       onError: error => {
          console.log('Deleteing carts error: ', error)
       },
@@ -310,7 +283,6 @@ export default function OnboardingStack(props) {
    const [fetchCart, { loading: fetchingCart }] = useLazyQuery(FETCH_CART, {
       onCompleted: data => {
          if (data?.cartByPK?.id) {
-            console.log('Setting cart......', data.cartByPK)
             setCart(data.cartByPK)
             setSettingCart(false)
          }
@@ -333,7 +305,6 @@ export default function OnboardingStack(props) {
       ;(async () => {
          if (brandId) {
             const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
-            console.log('Pending Cart ID: ', cartId)
             setCartId(cartId)
             if (!isAuthenticated && cartId) {
                fetchCart({
@@ -350,7 +321,6 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       if (cartId && cart?.customerId) {
-         console.log('Removed pending cart id!')
          setCartId(null)
          AsyncStorage.removeItem('PENDING_CART_ID')
       }
@@ -358,7 +328,6 @@ export default function OnboardingStack(props) {
 
    const [fetchMenu, { loading: queryMenuLoading }] = useLazyQuery(GET_MENU, {
       onCompleted: data => {
-         console.log('MENU:', data.onDemand_getMenu[0].data.menu)
          if (data.onDemand_getMenu[0].data.menu.length) {
             setMenuData([...data.onDemand_getMenu[0].data.menu])
          }
@@ -471,11 +440,8 @@ function AppStack(props) {
 
    React.useEffect(() => {
       if (props.navigation) {
-         console.log('Setting up navigation...')
          setNavigation(props.navigation)
       }
-      console.log(initRender, width)
-      console.log('Setting initRender...')
       setTimeout(() => setInitRender(false), 1)
    }, [])
 
