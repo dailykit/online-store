@@ -219,7 +219,7 @@ const Home = props => {
             {Boolean(menuData.length) && (
                <View style={styles.sections}>
                   {menuData.map(category => (
-                     <View style={styles.category}>
+                     <View key={category.name} style={styles.category}>
                         <CategoryBanner
                            navigation={props.navigation}
                            title={category.name}
@@ -244,7 +244,7 @@ const Home = props => {
                      minHeight: 200,
                   }}
                >
-                  <Feather name="frown" size={28} color="#666" />
+                  <Feather name="alert-triangle" size={28} color="#666" />
                   <Text
                      style={{
                         fontSize: '1.2rem',
