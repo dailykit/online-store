@@ -52,7 +52,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       availability,
       visual,
       brand,
-      availability,
       masterLoading,
       paymentPartnerShipIds,
    } = useAppContext()
