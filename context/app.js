@@ -27,12 +27,43 @@ export const AppContextProvider = ({ children }) => {
 
    React.useEffect(() => {
       if (appSettings?.scripts) {
-         const head = document.querySelector('head')
-         const tempElement = document.createElement('div')
-         tempElement.innerHTML = appSettings.scripts
-         Array.from(tempElement.children).forEach(script => {
-            head.appendChild(script)
+         const body = document.querySelector('body')
+
+         let srcScripts = []
+         let inlineScripts = []
+
+         const allScripts = appSettings.scripts
+            .split('</script>')
+            .filter(script => script)
+
+         allScripts.forEach(script => {
+            if (script.includes('src')) {
+               const startIndex = script.indexOf('src=') + 5
+               const substr = script.substr(startIndex)
+               const endIndex = substr.indexOf("'")
+               const src = substr.substr(0, endIndex)
+               srcScripts.push(src)
+            } else {
+               const code = script.replace('<script>', '')
+               inlineScripts.push(code)
+            }
          })
+
+         const fragment = document.createDocumentFragment()
+
+         srcScripts.forEach(src => {
+            const script = document.createElement('script')
+            script.setAttribute('src', src)
+            fragment.appendChild(script)
+         })
+
+         inlineScripts.forEach(content => {
+            const script = document.createElement('script')
+            script.innerHTML = content
+            fragment.appendChild(script)
+         })
+
+         body.appendChild(fragment)
       }
    }, [appSettings])
 
