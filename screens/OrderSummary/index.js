@@ -52,6 +52,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       availability,
       visual,
       brand,
+      availability,
       masterLoading,
       paymentPartnerShipIds,
    } = useAppContext()
@@ -67,14 +68,15 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             paymentPartnerShipIds?.length &&
             isAuthenticated &&
             razorpayLoaded &&
-            paymentJsLoaded
+            paymentJsLoaded &&
+            availability.payments
          ) {
             const brandObject = {
                name: brand.name,
                logo: brand.logo,
                color: visual.color,
                description: '',
-               isStoreLive: availability?.payments?.isStoreLive,
+               isStoreLive: availability.payments.isStoreLive,
             }
             await window.payments.provider({
                cart: { ...cart, brand: brandObject },
@@ -91,16 +93,22 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       isAuthenticated,
       paymentJsLoaded,
       razorpayLoaded,
+      availability,
    ])
 
    React.useEffect(() => {
-      if (isAuthenticated && razorpayLoaded && paymentJsLoaded) {
+      if (
+         isAuthenticated &&
+         razorpayLoaded &&
+         paymentJsLoaded &&
+         availability.payments
+      ) {
          const brandObject = {
             name: brand.name,
             logo: brand.logo,
             color: visual.color,
             description: '',
-            isStoreLive: availability?.payments?.isStoreLive,
+            isStoreLive: availability.payments.isStoreLive,
          }
          window.payments.checkout({
             cart: { ...cart, brand: brandObject },
@@ -109,7 +117,14 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             currency: CURRENCY,
          })
       }
-   }, [cart, isAuthenticated, brand, paymentJsLoaded, razorpayLoaded])
+   }, [
+      cart,
+      isAuthenticated,
+      brand,
+      paymentJsLoaded,
+      razorpayLoaded,
+      availability,
+   ])
 
    if (masterLoading || !razorpayLoaded || !paymentJsLoaded) {
       return <AppSkeleton />
