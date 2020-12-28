@@ -1,7 +1,7 @@
 {
    "expo": {
-      "name": "CIY",
-      "slug": "ciy-online-store",
+      "name": "Online Store",
+      "slug": "online-store",
       "privacy": "public",
       "sdkVersion": "36.0.0",
       "platforms": ["ios", "android"],

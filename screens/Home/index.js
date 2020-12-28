@@ -19,6 +19,7 @@ import { height, width } from '../../utils/Scaling'
 import { styles } from './styles'
 import { useAuth } from '../../context/auth'
 import { useDrawerContext } from '../../context/drawer'
+import { Helmet } from 'react-helmet'
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
@@ -148,6 +149,10 @@ const Home = props => {
    })
    return (
       <>
+         <Helmet>
+            <title>{visual.appTitle} | Home</title>
+            <link rel="icon" href={visual.favicon} />
+         </Helmet>
          <Header
             title={brand?.name ? brand?.name : 'Home'}
             search
