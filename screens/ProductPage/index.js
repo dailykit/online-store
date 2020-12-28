@@ -132,6 +132,9 @@ const ProductPage = ({ navigation, route }) => {
          />
          <Helmet>
             <title>{visual.appTitle} | Product</title>
+            <script type="application/ld+json">
+               {JSON.stringify(product.richResult)}
+            </script>
          </Helmet>
          <Header title="Home" navigation={navigation} />
          <Wrapper>

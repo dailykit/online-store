@@ -215,6 +215,7 @@ export const COMBO_PRODUCT = gql`
          defaultCartItem
          assets
          price
+         richResult
          comboProductComponents {
             id
             label
@@ -405,6 +406,7 @@ export const CUSTOMIZABLE_PRODUCT = gql`
          defaultCartItem
          assets
          price
+         richResult
          customizableProductOptions {
             id
             options
@@ -505,6 +507,7 @@ export const INVENTORY_PRODUCT = gql`
          defaultCartItem
          allergens
          nutritionalInfo
+         richResult
          defaultInventoryProductOption {
             id
             price
