@@ -21,6 +21,7 @@ import {
    resolveComboProductPrices,
    resolveCustomizableProductPrices,
 } from '../../utils/products'
+import { Helmet } from 'react-helmet'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
@@ -129,6 +130,9 @@ const ProductPage = ({ navigation, route }) => {
             setIsModalVisible={setIsModalVisible}
             showInfo={true}
          />
+         <Helmet>
+            <title>{visual.appTitle} | Product</title>
+         </Helmet>
          <Header title="Home" navigation={navigation} />
          <Wrapper>
             <DetailsContainer

@@ -10,6 +10,7 @@ import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { width } from '../../utils/Scaling'
 import { CURRENCY } from 'react-native-dotenv'
+import { Helmet } from 'react-helmet'
 // 12
 
 const ProfileScreen = ({ navigation }) => {
@@ -26,6 +27,9 @@ const ProfileScreen = ({ navigation }) => {
 
    return (
       <Container>
+         <Helmet>
+            <title>{visual.appTitle} | Profile</title>
+         </Helmet>
          <Header title="Home" navigation={navigation} />
          <Wrapper>
             <Banner color={visual.color}>

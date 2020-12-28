@@ -11,10 +11,11 @@ import { useAppContext } from '../../context/app'
 import { useCartContext } from '../../context/cart'
 import { ORDERS } from '../../graphql'
 import { styles } from './styles'
+import { Helmet } from 'react-helmet'
 
 export default ({ navigation }) => {
    const { customer, customerDetails } = useCartContext()
-   const { masterLoading, brandId } = useAppContext()
+   const { masterLoading, brandId, visual } = useAppContext()
 
    // Query
    const { data, loading, error } = useSubscription(ORDERS, {
@@ -60,6 +61,9 @@ export default ({ navigation }) => {
 
    return (
       <View style={{ backgroundColor: '#E9ECEE', flex: 1 }}>
+         <Helmet>
+            <title>{visual.appTitle} | Orders</title>
+         </Helmet>
          <Header title="Home" navigation={navigation} />
          <View style={styles.outerContainer}>
             <Text style={styles.heading}>Order History</Text>

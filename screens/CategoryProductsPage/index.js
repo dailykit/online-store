@@ -9,11 +9,12 @@ import Products from '../../components/Products'
 import AppSkeleton from '../../components/skeletons/app'
 import { useAppContext } from '../../context/app'
 import { width } from '../../utils/Scaling'
+import { Helmet } from 'react-helmet'
 
 const CategoryProductsPage = ({ navigation, route }) => {
    const { category } = route.params
 
-   const { masterLoading, menuData } = useAppContext()
+   const { masterLoading, menuData, visual } = useAppContext()
    const [index, setIndex] = React.useState(-1)
 
    React.useEffect(() => {
@@ -28,6 +29,11 @@ const CategoryProductsPage = ({ navigation, route }) => {
    return (
       <>
          <Header title="Home" navigation={navigation} />
+         <Helmet>
+            <title>
+               {visual.appTitle} | {category}
+            </title>
+         </Helmet>
          <View
             style={{
                height: 80,

@@ -37,6 +37,7 @@ import {
 import CartSkeleton from '../../components/skeletons/cart'
 import { isKeycloakSupported } from '../../utils'
 import { useScript } from '../../utils/useScript'
+import { Helmet } from 'react-helmet'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const [razorpayLoaded, razorpayError] = useScript(
@@ -131,6 +132,9 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    return (
       <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
+         <Helmet>
+            <title>{visual.appTitle} | Cart</title>
+         </Helmet>
          <Header title="Home" navigation={navigation} />
          {cart?.cartInfo?.products?.length ? (
             <>
