@@ -24,7 +24,6 @@ import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 import Recommendations from '../../components/Recommendations'
 import { View } from 'react-native'
 import { Helmet } from 'react-helmet'
-import sample from './recipe.json'
 
 const Recipe = ({ navigation, route }) => {
    const { recipeId, refId, refType } = route.params
@@ -250,7 +249,9 @@ const Recipe = ({ navigation, route }) => {
          />
          <Helmet>
             <title>{visual.appTitle} | Recipe</title>
-            <script type="application/ld+json">{JSON.stringify(sample)}</script>
+            <script type="application/ld+json">
+               {JSON.stringify(simpleRecipe.richResult)}
+            </script>
          </Helmet>
          <Header title="Home" navigation={navigation} />
          {/* <Banner source={{ uri: simpleRecipe.image }}></Banner> */}

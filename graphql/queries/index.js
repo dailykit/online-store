@@ -75,6 +75,7 @@ export const SIMPLE_RECIPE = gql`
          showIngredientsQuantity
          showProcedures
          procedures
+         richResult
          simpleRecipeYields(order_by: { yield: asc }) {
             id
             yield
