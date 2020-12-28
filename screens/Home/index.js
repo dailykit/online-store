@@ -20,7 +20,6 @@ import { styles } from './styles'
 import { useAuth } from '../../context/auth'
 import { useDrawerContext } from '../../context/drawer'
 import { Helmet } from 'react-helmet'
-import sample from './local.json'
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
@@ -153,7 +152,6 @@ const Home = props => {
          <Helmet>
             <title>{visual.appTitle} | Home</title>
             <link rel="icon" href={visual.favicon} />
-            <script type="application/ld+json">{JSON.stringify(sample)}</script>
          </Helmet>
          <Header
             title={brand?.name ? brand?.name : 'Home'}
