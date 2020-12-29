@@ -1,5 +1,6 @@
+import { Feather } from '@expo/vector-icons'
 import React, { lazy, useState } from 'react'
-import { ScrollView, View } from 'react-native'
+import { ScrollView, View, Text, TouchableOpacity } from 'react-native'
 import Cart, { ComboProductItemProceed } from '../../components/Cart'
 import { useCartContext } from '../../context/cart'
 import { height } from '../../utils/Scaling'
@@ -72,7 +73,51 @@ const ModalContent = ({
 
    return (
       <View style={{ flex: 1 }}>
-         <ScrollView style={styles.container}>
+         <ScrollView
+            style={styles.container}
+            stickyHeaderIndices={type === 'comboProduct' ? [0] : []}
+         >
+            {Boolean(type === 'comboProduct') && (
+               <View
+                  style={{
+                     flexDirection: 'row',
+                     alignItems: 'center',
+                     justifyContent: 'space-between',
+                     height: 40,
+                     paddingHorizontal: 5,
+                     backgroundColor: '#fff',
+                  }}
+               >
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                     {Boolean(currentComboProductIndex) && (
+                        <TouchableOpacity
+                           onPress={() =>
+                              setCurrentComboProductIndex(
+                                 currentComboProductIndex - 1
+                              )
+                           }
+                           style={{ marginRight: 8 }}
+                        >
+                           <Feather
+                              name="chevron-left"
+                              size={24}
+                              color="#666"
+                           />
+                        </TouchableOpacity>
+                     )}
+                     <Text
+                        style={{
+                           fontSize: 18,
+                           color: '#666',
+                           fontWeight: 'bold',
+                        }}
+                     >{`Selecting ${data.comboProductComponents[currentComboProductIndex].label}`}</Text>
+                  </View>
+                  <Text style={{ fontSize: 18, color: '#666' }}>{`${
+                     currentComboProductIndex + 1
+                  }/${data.comboProductComponents.length}`}</Text>
+               </View>
+            )}
             <View style={styles.item_parent_container}>
                {type == 'comboProduct' && (
                   <ComboProduct

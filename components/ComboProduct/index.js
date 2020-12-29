@@ -109,44 +109,6 @@ const ComboProduct = ({
       <TouchableOpacity onPress={clickHandler} style={styles.container}>
          {tunnelItem ? (
             <>
-               <View
-                  style={{
-                     flexDirection: 'row',
-                     alignItems: 'center',
-                     justifyContent: 'space-between',
-                     height: 40,
-                     paddingHorizontal: 5,
-                  }}
-               >
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                     {Boolean(currentComboProductIndex) && (
-                        <TouchableOpacity
-                           onPress={() =>
-                              setCurrentComboProductIndex(
-                                 currentComboProductIndex - 1
-                              )
-                           }
-                           style={{ marginRight: 8 }}
-                        >
-                           <Feather
-                              name="chevron-left"
-                              size={24}
-                              color="#666"
-                           />
-                        </TouchableOpacity>
-                     )}
-                     <Text
-                        style={{
-                           fontSize: 18,
-                           color: '#666',
-                           fontWeight: 'bold',
-                        }}
-                     >{`Selecting ${product.comboProductComponents[currentComboProductIndex].label}`}</Text>
-                  </View>
-                  <Text style={{ fontSize: 18, color: '#666' }}>{`${
-                     currentComboProductIndex + 1
-                  }/${product.comboProductComponents.length}`}</Text>
-               </View>
                <View style={styles.item_parent_container}>
                   {product.comboProductComponents.map((el, _id) => {
                      let last = false
