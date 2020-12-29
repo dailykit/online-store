@@ -124,6 +124,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
 
    React.useEffect(() => {
       setSelected([])
+      console.log('Modifiers changed!')
    }, [data])
 
    return (
