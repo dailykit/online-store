@@ -26,17 +26,44 @@ export const AppContextProvider = ({ children }) => {
    const [menuLoading, setMenuLoading] = React.useState(false)
 
    React.useEffect(() => {
-      console.log('Master loading:', masterLoading)
-   }, [masterLoading])
-
-   React.useEffect(() => {
       if (appSettings?.scripts) {
-         const body = document.getElementsByTagName('body')[0]
-         const tempElement = document.createElement('div')
-         tempElement.innerHTML = appSettings.scripts
-         Array.from(tempElement.children).forEach(script => {
-            body.appendChild(script)
+         const body = document.querySelector('body')
+
+         let srcScripts = []
+         let inlineScripts = []
+
+         const allScripts = appSettings.scripts
+            .split('</script>')
+            .filter(script => script)
+
+         allScripts.forEach(script => {
+            if (script.includes('src')) {
+               const startIndex = script.indexOf('src=') + 5
+               const substr = script.substr(startIndex)
+               const endIndex = substr.indexOf("'")
+               const src = substr.substr(0, endIndex)
+               srcScripts.push(src)
+            } else {
+               const code = script.replace('<script>', '')
+               inlineScripts.push(code)
+            }
          })
+
+         const fragment = document.createDocumentFragment()
+
+         srcScripts.forEach(src => {
+            const script = document.createElement('script')
+            script.setAttribute('src', src)
+            fragment.appendChild(script)
+         })
+
+         inlineScripts.forEach(content => {
+            const script = document.createElement('script')
+            script.innerHTML = content
+            fragment.appendChild(script)
+         })
+
+         body.appendChild(fragment)
       }
    }, [appSettings])
 

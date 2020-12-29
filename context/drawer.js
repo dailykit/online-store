@@ -13,7 +13,6 @@ export const DrawerContextProvider = ({ children }) => {
    const [saved, setSaved] = React.useState(undefined)
 
    const open = (screen, params) => {
-      console.log('Opening drawer', screen)
       setDrawerView(screen)
       if (params) setParams(params)
       setIsDrawerOpen(true)

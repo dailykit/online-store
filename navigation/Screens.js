@@ -1,36 +1,32 @@
 import React from 'react'
-import { AsyncStorage } from 'react-native'
-import { CLIENTID, MAPS_API_KEY, CURRENCY } from 'react-native-dotenv'
-// 12
+import { useLazyQuery, useMutation, useSubscription } from '@apollo/react-hooks'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import { useNavigation } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import {
-   useLazyQuery,
-   useMutation,
-   useQuery,
-   useSubscription,
-} from '@apollo/react-hooks'
+import { AsyncStorage } from 'react-native'
+import { CURRENCY, MAPS_API_KEY, CLIENTID } from 'react-native-dotenv'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { useCartContext } from '../context/cart'
+import { useDrawerContext } from '../context/drawer'
 import {
    CART,
-   CREATE_CUSTOMER,
    CUSTOMER,
+   CUSTOMER_REFERRAL,
    DELETE_CARTS,
    FETCH_CART,
-   STORE_SETTINGS,
+   GET_MENU,
+   LOYALTY_POINTS,
+   PAYMENT_PARTNERSHIP,
    UPDATE_CART,
    WALLETS,
-   LOYALTY_POINTS,
-   CUSTOMER_REFERRAL,
-   BRANDS,
-   GET_MENU,
-   CREATE_BRAND_CUSTOMER,
-   PAYMENT_PARTNERSHIP,
-   POWER_QUERY,
 } from '../graphql'
+import { mergeCarts } from '../utils'
+import { width } from '../utils/Scaling'
+import { useScript } from '../utils/useScript'
+import { getStoreData } from '../api'
+
+// drawer
+import CustomDrawerContent from './Menu'
 // screens
 const Home = React.lazy(() => import('../screens/Home'))
 const LoginSuccess = React.lazy(() => import('../screens/LoginSuccess'))
@@ -45,13 +41,6 @@ const ProfileScreen = React.lazy(() => import('../screens/ProfileScreen'))
 const Recipe = React.lazy(() => import('../screens/Recipe'))
 const Search = React.lazy(() => import('../screens/Search'))
 
-import { mergeCarts } from '../utils'
-import { width } from '../utils/Scaling'
-import { useScript } from '../utils/useScript'
-// drawer
-import CustomDrawerContent from './Menu'
-import { useDrawerContext } from '../context/drawer'
-
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
 
@@ -61,8 +50,6 @@ export default function OnboardingStack(props) {
    )
 
    if (mapsError) console.log('Error loading Maps:', mapsError)
-
-   const [settingsMapped, setSettingsMapped] = React.useState(false)
 
    const { user, isInitialized, isAuthenticated } = useAuth()
    const {
@@ -95,67 +82,47 @@ export default function OnboardingStack(props) {
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
    const [settingCart, setSettingCart] = React.useState(true)
    const [settingUser, setSettingUser] = React.useState(true)
-
-   const [powerQuery, { loading: runningPowerQuery }] = useLazyQuery(
-      POWER_QUERY,
-      {
-         onCompleted: ({ onDemand_getStoreData }) => {
-            const data = onDemand_getStoreData[0]
-            console.log('🚀', data)
-            setBrandId(data.brandId)
-            setCustomer(data.customer)
-            setBrand(data.settings.brand)
-            setVisual(data.settings.visual)
-            setAvailability(data.settings.availability)
-            setRewardsSettings(data.settings.rewardsSettings)
-         },
-         onError: error => {
-            console.log(error)
-         },
-      }
-   )
+   const [dataLoading, setDataLoading] = React.useState(true)
 
    React.useEffect(() => {
-      if (isInitialized) {
-         console.log('🚀 isAuthenticated', isAuthenticated)
-         if (isAuthenticated && user.email) {
-            powerQuery({
-               variables: {
-                  params: {
-                     domain: window.location.hostname,
-                     clientId: CLIENTID,
-                     keycloakId: user.sub || user.id,
-                     email: user.email,
-                  },
-               },
-            })
-         } else {
-            powerQuery({
-               variables: {
-                  params: {
-                     domain: window.location.hostname,
-                     clientId: CLIENTID,
-                  },
-               },
-            })
-            setSettingUser(false)
+      ;(async () => {
+         if (isInitialized) {
+            try {
+               const data = await getStoreData({
+                  clientId: CLIENTID,
+                  domain: window.location.hostname,
+                  email: user.email,
+                  keycloakId: user.sub || user.id,
+               })
+               if (data.success) {
+                  const { settings, brandId, customer } = data.data
+                  setBrandId(brandId)
+                  setBrand(settings.brand)
+                  setVisual(settings.visual)
+                  setAppSettings(settings.appSettings)
+                  setAvailability(settings.availability)
+                  setRewardsSettings(settings.rewardsSettings)
+                  setCustomer(customer)
+               }
+            } catch (err) {
+               console.log(err)
+            } finally {
+               setDataLoading(false)
+            }
          }
-      }
-   }, [isInitialized, isAuthenticated, user])
+      })()
+   }, [isInitialized, user])
 
-   const [fetchCustomer, { error, loading: fetchingCustomer }] = useLazyQuery(
+   const [fetchCustomer, { loading: fetchingCustomer }] = useLazyQuery(
       CUSTOMER,
       {
          onCompleted: data => {
-            console.log('Customer:', data)
-
             if (data.customer) {
                setCustomer(data.customer)
                setCustomerDetails(data.customer.platform_customer)
 
                // check if any existing carts
                if (data.customer.orderCarts.length) {
-                  console.log('Found cart with customer...')
                   setCart(data.customer.orderCarts[0])
                }
 
@@ -191,15 +158,18 @@ export default function OnboardingStack(props) {
                }
             }
          },
+         onError: error => {
+            console.log(error)
+         },
       }
    )
 
    React.useEffect(() => {
       if (customer && customer.id && brandId) {
-         console.log('Fetching customer....')
+         console.log('Fetching customer again for platform details....')
          fetchCustomer({
             variables: {
-               keycloakId: user.sub || user.userid,
+               keycloakId: customer.keycloakId,
                brandId,
             },
          })
@@ -210,10 +180,6 @@ export default function OnboardingStack(props) {
    const [fetchPaymentPartnerships] = useLazyQuery(PAYMENT_PARTNERSHIP, {
       onCompleted: data => {
          if (data.brands_brand_paymentPartnership.length) {
-            console.log(
-               'Fetched payment partnerships: ',
-               data.brands_brand_paymentPartnership
-            )
             setPaymentPartnershipIds(data.brands_brand_paymentPartnership)
          }
       },
@@ -224,7 +190,6 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       if (brandId && CURRENCY === 'INR') {
-         console.log('Fetching payment partnership...')
          fetchPaymentPartnerships({
             variables: {
                brandId,
@@ -234,7 +199,6 @@ export default function OnboardingStack(props) {
    }, [brandId])
 
    React.useEffect(() => {
-      console.log('Screens -> cart.paymentStatus ', cart?.paymentStatus)
       if (cart?.paymentStatus === 'SUCCEEDED' && CURRENCY === 'INR') {
          open('Payment', { cartId: cart.id })
       }
@@ -248,12 +212,10 @@ export default function OnboardingStack(props) {
       },
       skip: !Boolean(customer?.id && brandId),
       onSubscriptionData: data => {
-         console.log('Found carts:', data.subscriptionData.data.cart)
          if (data.subscriptionData.data.cart.length > 1) {
             const [mergedCart, mergedCartIds] = mergeCarts(
                data.subscriptionData.data.cart
             )
-            console.log('mergedCart', mergedCart)
             updateCart({
                variables: {
                   id: mergedCart.id,
@@ -283,11 +245,6 @@ export default function OnboardingStack(props) {
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.customerReferrals.length) {
-            console.log(
-               'Customer Referral: ',
-               data.subscriptionData.data.customerReferrals[0]
-            )
-
             setCustomerReferral(data.subscriptionData.data.customerReferrals[0])
          }
       },
@@ -300,8 +257,6 @@ export default function OnboardingStack(props) {
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.wallets.length) {
-            console.log('Wallet: ', data.subscriptionData.data.wallets[0])
-
             setWallet(data.subscriptionData.data.wallets[0])
          }
       },
@@ -313,11 +268,6 @@ export default function OnboardingStack(props) {
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.loyaltyPoints.length) {
-            console.log(
-               'Loyalty Points: ',
-               data.subscriptionData.data.loyaltyPoints[0]
-            )
-
             setLoyaltyPoints(data.subscriptionData.data.loyaltyPoints[0])
          }
       },
@@ -325,9 +275,6 @@ export default function OnboardingStack(props) {
 
    // Mutation for deleting carts
    const [deleteCarts] = useMutation(DELETE_CARTS, {
-      onCompleted: data => {
-         console.log('Carts deleted: ', data.deleteCarts.returning)
-      },
       onError: error => {
          console.log('Deleteing carts error: ', error)
       },
@@ -336,7 +283,6 @@ export default function OnboardingStack(props) {
    const [fetchCart, { loading: fetchingCart }] = useLazyQuery(FETCH_CART, {
       onCompleted: data => {
          if (data?.cartByPK?.id) {
-            console.log('Setting cart......', data.cartByPK)
             setCart(data.cartByPK)
             setSettingCart(false)
          }
@@ -359,7 +305,6 @@ export default function OnboardingStack(props) {
       ;(async () => {
          if (brandId) {
             const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
-            console.log('Pending Cart ID: ', cartId)
             setCartId(cartId)
             if (!isAuthenticated && cartId) {
                fetchCart({
@@ -376,7 +321,6 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       if (cartId && cart?.customerId) {
-         console.log('Removed pending cart id!')
          setCartId(null)
          AsyncStorage.removeItem('PENDING_CART_ID')
       }
@@ -384,7 +328,6 @@ export default function OnboardingStack(props) {
 
    const [fetchMenu, { loading: queryMenuLoading }] = useLazyQuery(GET_MENU, {
       onCompleted: data => {
-         console.log('MENU:', data.onDemand_getMenu[0].data.menu)
          if (data.onDemand_getMenu[0].data.menu.length) {
             setMenuData([...data.onDemand_getMenu[0].data.menu])
          }
@@ -433,17 +376,6 @@ export default function OnboardingStack(props) {
    }, [availability, brandId])
 
    React.useEffect(() => {
-      console.table({
-         brandId,
-         fetchingCart,
-         fetchingCustomer,
-         isInitialized,
-         subscribingCart,
-         isAuthenticated,
-         settingCart,
-         settingUser,
-         runningPowerQuery,
-      })
       if (!isInitialized) {
          setMasterLoading(true)
       } else {
@@ -453,7 +385,7 @@ export default function OnboardingStack(props) {
                !fetchingCart, // true
                !fetchingCustomer, //true
                !subscribingCart, // true
-               !runningPowerQuery, // true
+               !dataLoading, // true
                !settingUser, // true
                !settingCart, // true
             ].every(notLoading => notLoading)
@@ -465,7 +397,7 @@ export default function OnboardingStack(props) {
                Boolean(brandId), // 1
                !fetchingCart, // true
                !settingCart,
-               !runningPowerQuery,
+               !dataLoading,
             ].every(notLoading => notLoading)
             if (status) {
                setMasterLoading(false)
@@ -481,7 +413,7 @@ export default function OnboardingStack(props) {
       isAuthenticated,
       settingCart,
       settingUser,
-      runningPowerQuery,
+      dataLoading,
    ])
 
    return (
@@ -497,11 +429,8 @@ function AppStack(props) {
 
    React.useEffect(() => {
       if (props.navigation) {
-         console.log('Setting up navigation...')
          setNavigation(props.navigation)
       }
-      console.log(initRender, width)
-      console.log('Setting initRender...')
       setTimeout(() => setInitRender(false), 1)
    }, [])
 
@@ -525,7 +454,7 @@ function AppStack(props) {
                width: width * 0.75,
                backgroundColor: 'transparent',
                paddingVertical: 16,
-               paddingHorizonal: 12,
+               paddingHorizontal: 12,
                justifyContent: 'center',
                alignContent: 'center',
                alignItems: 'center',

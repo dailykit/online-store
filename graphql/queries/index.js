@@ -75,6 +75,7 @@ export const SIMPLE_RECIPE = gql`
          showIngredientsQuantity
          showProcedures
          procedures
+         richResult
          simpleRecipeYields(order_by: { yield: asc }) {
             id
             yield
@@ -213,15 +214,19 @@ export const COMBO_PRODUCT = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
+         richResult
          comboProductComponents {
             id
             label
+            options
             customizableProductId
             inventoryProductId
             simpleRecipeProductId
             customizableProduct {
                id
                name
+               price
                defaultCustomizableProductOption {
                   inventoryProduct {
                      assets
@@ -232,6 +237,7 @@ export const COMBO_PRODUCT = gql`
                }
                customizableProductOptions {
                   id
+                  options
                   inventoryProduct {
                      id
                      assets
@@ -399,8 +405,11 @@ export const CUSTOMIZABLE_PRODUCT = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
+         richResult
          customizableProductOptions {
             id
+            options
             inventoryProduct {
                id
                assets
@@ -498,6 +507,7 @@ export const INVENTORY_PRODUCT = gql`
          defaultCartItem
          allergens
          nutritionalInfo
+         richResult
          defaultInventoryProductOption {
             id
             price
@@ -680,8 +690,10 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
          customizableProductOptions {
             id
+            options
             inventoryProduct {
                id
                assets
@@ -773,15 +785,18 @@ export const COMBO_PRODUCTS = gql`
          isPopupAllowed
          defaultCartItem
          assets
+         price
          comboProductComponents {
             id
             label
+            options
             customizableProductId
             inventoryProductId
             simpleRecipeProductId
             customizableProduct {
                id
                name
+               price
                defaultCustomizableProductOption {
                   inventoryProduct {
                      assets
@@ -792,6 +807,7 @@ export const COMBO_PRODUCTS = gql`
                }
                customizableProductOptions {
                   id
+                  options
                   inventoryProduct {
                      id
                      assets
@@ -1385,13 +1401,35 @@ export const SET_REFERRAL_CODE = gql`
    }
 `
 
-export const POWER_QUERY = gql`
-   query GetStoreData($params: jsonb!) {
-      onDemand_getStoreData(args: { params: $params }) {
+export const SETTINGS = gql`
+   query StoreSettings($brandId: Int!, $identifier: String!, $type: String!) {
+      storeSettings(
+         where: {
+            brand: { brandId: { _eq: $brandId } }
+            identifier: { _eq: $identifier }
+            type: { _eq: $type }
+         }
+      ) {
+         value
+         brandSettings {
+            value
+         }
+      }
+   }
+`
+
+export const ALL_COUPONS = gql`
+   query Coupons($brandId: Int!) {
+      coupons(
+         where: {
+            isActive: { _eq: true }
+            isArchived: { _eq: false }
+            brands: { brandId: { _eq: $brandId }, isActive: { _eq: true } }
+         }
+      ) {
          id
-         brandId
-         settings
-         customer
+         code
+         metaDetails
       }
    }
 `

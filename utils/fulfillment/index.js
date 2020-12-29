@@ -2,7 +2,6 @@ import { rrulestr } from 'rrule'
 import * as moment from 'moment'
 
 export const generateTimeStamp = (time, date) => {
-   console.log('generateTimeStamp -> time, date', { time, date })
    let formatedTime = time.split(':')
    formatedTime =
       makeDoubleDigit(formatedTime[0]) + ':' + makeDoubleDigit(formatedTime[1])
@@ -12,11 +11,9 @@ export const generateTimeStamp = (time, date) => {
    const from = `${selectedDate.split('T')[0]}T${formatedTime}:00.${
       currTimestamp.split('.')[1]
    }`
-   console.log('generateTimeStamp -> from', from)
    const to = moment(from)
       .minutes(moment(from).minutes() + 15)
       .toISOString(true)
-   console.log('generateTimeStamp -> to', to)
    return { from, to }
 }
 
@@ -61,7 +58,6 @@ export const getDistance = (lat1, lon1, lat2, lon2) => {
 
 export const generateMiniSlots = (data, size) => {
    let newData = []
-   console.log('generateMiniSlots -> data', data)
    data.forEach(el => {
       el.slots.forEach(slot => {
          const startMinutes = getMinutes(slot.start)
@@ -243,7 +239,6 @@ export const isDeliveryAvailable = recurrences => {
                         mileRangeId: timeslot.mileRanges[0].id,
                      }
                   } else {
-                     console.log('isDeliveryAvailable -> time failure')
                      return {
                         status: false,
                         message:
@@ -251,7 +246,6 @@ export const isDeliveryAvailable = recurrences => {
                      }
                   }
                } else {
-                  console.log('isDeliveryAvailable -> mile range failure')
                   return {
                      status: false,
                      message:
@@ -260,14 +254,12 @@ export const isDeliveryAvailable = recurrences => {
                }
             }
          } else {
-            console.log('isDeliveryAvailable -> time slots failure')
             return {
                status: false,
                message: 'Sorry, We do not offer Delivery at this time.',
             }
          }
       } else {
-         console.log('isDeliveryAvailable -> dates failure')
          return {
             status: false,
             message: 'Sorry, We do not offer Delivery on this day.',

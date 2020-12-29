@@ -24,7 +24,6 @@ const Recommendations = ({ navigation, recommendations }) => {
                simpleRecipeProducts,
             }
          })
-         console.log('Recommendations -> temp', temp)
          setData([...temp])
       }
    }, [recommendations])

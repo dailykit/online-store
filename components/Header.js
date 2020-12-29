@@ -12,6 +12,8 @@ import { isKeycloakSupported } from '../utils'
 import { width } from '../utils/Scaling'
 import Icon from './Icon'
 
+import { Helmet } from 'react-helmet'
+
 const BasketButton = ({ isWhite, size = 24 }) => {
    const { cart } = useCartContext()
    const { visual } = useAppContext()
@@ -64,8 +66,25 @@ const BasketButton = ({ isWhite, size = 24 }) => {
 }
 
 const Header = ({ navigation }) => {
+   const { visual } = useAppContext()
+
    return (
       <Wrapper>
+         <Helmet
+            link={[
+               { rel: 'icon', type: 'image/png', href: visual.favicon },
+               {
+                  rel: 'shortcut icon',
+                  type: 'image/png',
+                  href: visual.favicon,
+               },
+               {
+                  rel: 'apple-touch-icon',
+                  type: 'image/png',
+                  href: visual.favicon,
+               },
+            ]}
+         />
          {width > 768 ? (
             <WebNav navigation={navigation} />
          ) : (

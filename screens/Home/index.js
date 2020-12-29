@@ -18,6 +18,8 @@ import { useAppContext } from '../../context/app'
 import { height, width } from '../../utils/Scaling'
 import { styles } from './styles'
 import { useAuth } from '../../context/auth'
+import { useDrawerContext } from '../../context/drawer'
+import { Helmet } from 'react-helmet'
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
@@ -33,22 +35,25 @@ const Home = props => {
    } = useAppContext()
 
    const { isAuthenticated } = useAuth()
+   const { open } = useDrawerContext()
 
    React.useEffect(() => {
-      console.log('Checking Auth...')
-      console.log('window.location', window.location)
-      console.log('window.parent.location', window.parent.location)
       if (
          isAuthenticated &&
          window.location.pathname.includes('LoginSuccess')
       ) {
-         console.log('Logged in and not on success page...')
          if (window.location !== window.parent.location) {
-            console.log('Reloading...')
             window.parent.location.reload()
          }
       }
    }, [isAuthenticated])
+
+   React.useEffect(() => {
+      const loadCoupons = window.location.pathname.includes('show-coupons')
+      if (loadCoupons && !masterLoading) {
+         open('AllCouponList')
+      }
+   }, [masterLoading])
 
    const isStoreOpen = () => {
       const current = new Date()
@@ -144,6 +149,9 @@ const Home = props => {
    })
    return (
       <>
+         <Helmet>
+            <title>Home | {visual.appTitle}</title>
+         </Helmet>
          <Header
             title={brand?.name ? brand?.name : 'Home'}
             search
@@ -215,7 +223,7 @@ const Home = props => {
             {Boolean(menuData.length) && (
                <View style={styles.sections}>
                   {menuData.map(category => (
-                     <View style={styles.category}>
+                     <View key={category.name} style={styles.category}>
                         <CategoryBanner
                            navigation={props.navigation}
                            title={category.name}
@@ -240,7 +248,7 @@ const Home = props => {
                      minHeight: 200,
                   }}
                >
-                  <Feather name="frown" size={28} color="#666" />
+                  <Feather name="alert-triangle" size={28} color="#666" />
                   <Text
                      style={{
                         fontSize: '1.2rem',

@@ -42,10 +42,6 @@ const DailyKeyBackup = ({ params }) => {
    useQuery(STRIPE_PK, {
       onCompleted: data => {
          if (data.organizations) {
-            console.log(
-               'DailyKeyBackup -> data.organizations',
-               data.organizations
-            )
             setStripePromise(
                loadStripe(data.organizations[0].stripePublishableKey)
             )
@@ -306,7 +302,6 @@ const Address = () => {
 
    const save = async () => {
       try {
-         console.log(populated)
          setSaving(true)
          setFormError('')
          if (!validateFields()) {
@@ -352,7 +347,6 @@ const Address = () => {
    }
 
    const cannotFindLocation = () => {
-      console.log('Could not find location!')
       setMode('SELF')
       setTracking(false)
    }
@@ -363,7 +357,6 @@ const Address = () => {
          const timer = setTimeout(cannotFindLocation, 8000)
          window.navigator.geolocation.getCurrentPosition(
             async data => {
-               console.log(data.coords)
                const response = await fetch(
                   `https://maps.googleapis.com/maps/api/geocode/json?key=${MAPS_API_KEY}&latlng=${data.coords.latitude.toString()},${data.coords.longitude.toString()}`
                )
@@ -641,14 +634,12 @@ const Card = () => {
    const [createPaymentMethod] = useMutation(CREATE_STRIPE_PAYMENT_METHOD)
 
    React.useEffect(() => {
-      console.log('Running intent code: ', customerDetails)
       if (customerDetails?.stripeCustomerId) {
          ;(async () => {
             try {
                const intent = await createSetupIntent(
                   customerDetails?.stripeCustomerId
                )
-               console.log('Intent: ', intent)
                if (intent.id) {
                   setIntent(intent)
                   setStatus('SUCCESS')
@@ -667,7 +658,6 @@ const Card = () => {
    const save = async e => {
       try {
          e.preventDefault()
-         console.log('Trying to save...')
          setError('')
          setSaving(true)
          if (!stripe || !elements) {
@@ -676,8 +666,6 @@ const Card = () => {
             setSaving(false)
             return
          }
-         console.log('Name: ', name)
-         console.log('Intent: ', intent)
          if (!name) {
             setError('All fields are required!')
             return
@@ -696,13 +684,10 @@ const Card = () => {
          })
 
          if (result.error) {
-            console.log('Error')
             console.log(result.error)
 
             setError(result.error.message)
          } else {
-            console.log('Result: ', result)
-
             const { setupIntent } = result
             if (setupIntent.status === 'succeeded') {
                const { data: { success, data = {} } = {} } = await axios.get(

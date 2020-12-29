@@ -19,7 +19,6 @@ const AddDetails = ({ params }) => {
          if (e.origin !== DAILYKEY_URL) return
          let message = JSON.parse(e.data)
          if (message.success) {
-            console.log(message)
             setSaved(message)
             setIsDrawerOpen(false)
          }

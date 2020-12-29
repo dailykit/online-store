@@ -11,9 +11,10 @@ import CardSkeleton from '../../components/skeletons/card'
 import { useAppContext } from '../../context/app'
 import { SEARCH_PRODUCTS } from '../../graphql/queries'
 import { width } from '../../utils/Scaling'
+import { Helmet } from 'react-helmet'
 
 const Search = ({ navigation }) => {
-   const { menuData, masterLoading } = useAppContext()
+   const { menuData, masterLoading, visual } = useAppContext()
 
    const [mergedData, setMergedData] = React.useState(undefined)
    const [query, setQuery] = React.useState('')
@@ -105,7 +106,6 @@ const Search = ({ navigation }) => {
    }, [])
 
    React.useEffect(() => {
-      console.log('Menu Data: ', menuData)
       squashAndMerge(menuData)
    }, [menuData])
 
@@ -115,6 +115,9 @@ const Search = ({ navigation }) => {
 
    return (
       <View style={{ backgroundColor: '#fff', flex: 1 }}>
+         <Helmet>
+            <title>Search | {visual.appTitle}</title>
+         </Helmet>
          <Header navigation={navigation} />
          <Wrapper>
             <SearchContainer>

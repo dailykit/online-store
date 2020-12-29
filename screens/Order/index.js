@@ -15,6 +15,7 @@ import { useAppContext } from '../../context/app'
 import { useCartContext } from '../../context/cart'
 import { ORDER } from '../../graphql'
 import { styles } from './styles'
+import { Helmet } from 'react-helmet'
 
 const Order = ({ route, navigation }) => {
    const { orderId } = route.params
@@ -42,6 +43,9 @@ const Order = ({ route, navigation }) => {
 
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+         <Helmet>
+            <title>Order | {visual.appTitle}</title>
+         </Helmet>
          <Header title="Home" navigation={navigation} />
          {loading ? (
             <View

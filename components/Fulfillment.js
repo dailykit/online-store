@@ -46,7 +46,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
-         console.log('Cart updated!')
          setEditing(false)
       },
       onError: error => {
@@ -95,12 +94,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
    React.useEffect(() => {
       setTime('')
       setOops('')
-      console.log('User LatLng: ', cart?.address?.lat, cart?.address?.lng)
-      console.log(
-         'Store LatLng: ',
-         availability.location.lat,
-         availability.location.lng
-      )
       if (
          cart?.address?.lat &&
          cart?.address?.lng &&
@@ -215,7 +208,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
                   break
                }
                case 'DELIVERY': {
-                  console.log('Distance: ', distance)
                   if (!distance) {
                      return setOops('Please add an address first!')
                   }
@@ -226,7 +218,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
                               const result = generateDeliverySlots(
                                  preOrderDelivery[0].recurrences
                               )
-                              console.log('Fulfillment -> result', result)
                               if (result.status) {
                                  const miniSlots = generateMiniSlots(
                                     result.data,
@@ -315,7 +306,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
                ...generateTimeStamp(fulfillment.slot.time, fulfillment.date),
             },
          }
-         console.log(fulfillmentInfo)
          updateCart({
             variables: {
                id: cart.id,

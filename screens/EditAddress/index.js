@@ -17,12 +17,9 @@ export default ({ navigation }) => {
 
    const [loading, setLoading] = React.useState(false)
 
-   console.log('customerDetails', customerDetails)
-
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
-         console.log('Address updated!')
          setLoading(false)
          setIsDrawerOpen(false)
       },

@@ -17,9 +17,6 @@ const PayWithWallet = () => {
    const [error, setError] = React.useState('')
 
    const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
-         console.log('Wallet amount added!')
-      },
       onError: error => {
          console.log(error)
       },

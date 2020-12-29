@@ -37,7 +37,6 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
-         console.log('Product added!')
          setBusy(false)
          toastr('success', 'Item added!')
          if (!customer) {
@@ -52,7 +51,6 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    })
    const [createCart] = useMutation(CREATE_CART, {
       onCompleted: data => {
-         console.log('Cart created!')
          setBusy(false)
          toastr('success', 'Item added!')
          if (!customer) {
@@ -218,7 +216,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         fontStyle: 'italic',
                      }}
                   >
-                     {discount}% off
+                     {discount.toFixed(2)}% off
                   </Text>
                </View>
             )}
@@ -234,7 +232,8 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         setcardData={item => setcardData(item)}
                         product={product}
                         navigation={navigation}
-                        setPrice={setPrice}
+                        setPrice={price => setPrice(price)}
+                        setDiscount={setDiscount}
                         clickHandler={() =>
                            product.isPopupAllowed &&
                            navigation.navigate('ProductPage', {
@@ -322,89 +321,43 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
             </View>
 
             <View style={styles.bottom_container}>
-               {!['comboProduct', 'customizableProduct'].includes(
-                  product?.__typename.split('_')[1]
-               ) && (
-                  <View style={styles.price}>
-                     {discount ? (
-                        <>
-                           <Text
-                              style={[
-                                 styles.price_text,
-                                 {
-                                    textDecoration: 'line-through',
-                                    marginRight: '0.5rem',
-                                    fontSize: '0.9rem',
-                                    fontWeight: 'normal',
-                                 },
-                              ]}
-                           >
-                              {new Intl.NumberFormat('en-US', {
-                                 style: 'currency',
-                                 currency: CURRENCY,
-                              }).format(
-                                 originalPrice(price, discount)?.toFixed(2)
-                              )}
-                           </Text>
-                           <Text style={styles.price_text}>
-                              {new Intl.NumberFormat('en-US', {
-                                 style: 'currency',
-                                 currency: CURRENCY,
-                              }).format(price?.toFixed(2))}
-                           </Text>
-                        </>
-                     ) : (
+               <View style={styles.price}>
+                  {discount ? (
+                     <>
+                        <Text
+                           style={[
+                              styles.price_text,
+                              {
+                                 textDecoration: 'line-through',
+                                 marginRight: '0.5rem',
+                                 fontSize: '0.9rem',
+                                 fontWeight: 'normal',
+                              },
+                           ]}
+                        >
+                           {new Intl.NumberFormat('en-US', {
+                              style: 'currency',
+                              currency: CURRENCY,
+                           }).format(
+                              originalPrice(price, discount)?.toFixed(2)
+                           )}
+                        </Text>
                         <Text style={styles.price_text}>
                            {new Intl.NumberFormat('en-US', {
                               style: 'currency',
                               currency: CURRENCY,
-                           }).format(price?.toFixed(2))}
+                           }).format(price)}
                         </Text>
-                     )}
-                  </View>
-               )}
-               {['comboProduct', 'customizableProduct'].includes(
-                  product?.__typename.split('_')[1]
-               ) &&
-                  !product.isPopupAllowed && (
-                     <View style={styles.price}>
-                        {discount ? (
-                           <>
-                              <Text
-                                 style={[
-                                    styles.price_text,
-                                    {
-                                       textDecoration: 'line-through',
-                                       marginRight: '0.5rem',
-                                       fontSize: '0.9rem',
-                                       fontWeight: 'normal',
-                                    },
-                                 ]}
-                              >
-                                 {new Intl.NumberFormat('en-US', {
-                                    style: 'currency',
-                                    currency: CURRENCY,
-                                 }).format(
-                                    originalPrice(price, discount)?.toFixed(2)
-                                 )}
-                              </Text>
-                              <Text style={styles.price_text}>
-                                 {new Intl.NumberFormat('en-US', {
-                                    style: 'currency',
-                                    currency: CURRENCY,
-                                 }).format(price?.toFixed(2))}
-                              </Text>
-                           </>
-                        ) : (
-                           <Text style={styles.price_text}>
-                              {new Intl.NumberFormat('en-US', {
-                                 style: 'currency',
-                                 currency: CURRENCY,
-                              }).format(price?.toFixed(2))}
-                           </Text>
-                        )}
-                     </View>
+                     </>
+                  ) : (
+                     <Text style={styles.price_text}>
+                        {new Intl.NumberFormat('en-US', {
+                           style: 'currency',
+                           currency: CURRENCY,
+                        }).format(price?.toFixed(2))}
+                     </Text>
                   )}
+               </View>
                <View style={styles.add_to_cart_container}>
                   <TouchableOpacity
                      onPress={addToCart}

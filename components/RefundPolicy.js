@@ -1,16 +1,38 @@
 import React from 'react'
 import styled from 'styled-components/native'
+import { useQuery } from '@apollo/react-hooks'
 import { useAppContext } from '../context/app'
+import { SETTINGS } from '../graphql'
+import Policy from './skeletons/policy'
 
 const RefundPolicy = () => {
-   const { brand } = useAppContext()
+   const { brandId } = useAppContext()
+   const [html, setHtml] = React.useState('')
+
+   const { loading, error } = useQuery(SETTINGS, {
+      variables: { brandId, identifier: 'Refund Policy', type: 'brand' },
+      onCompleted: data => {
+         const setting = data.storeSettings[0]
+         if (setting.brandSettings.length) {
+            setHtml(setting.brandSettings[0].value?.value)
+         } else {
+            setHtml(setting.value?.value ?? '<p>No policy found!</p>')
+         }
+      },
+   })
 
    React.useEffect(() => {
-      if (document) {
+      if (document && html) {
          const content = document.getElementById('refund-policy')
-         content.innerHTML = brand.refundPolicy
+         if (content) {
+            content.innerHTML = html
+         }
       }
-   }, [])
+   }, [html])
+
+   if (loading || error) {
+      return <Policy />
+   }
 
    return (
       <Wrapper stickyHeaderIndices={[0]}>

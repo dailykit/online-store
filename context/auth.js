@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }) => {
       if (authenticated) {
          setIsAuthenticated(authenticated)
          const profile = await keycloak.loadUserInfo()
-         console.log('AuthProvider -> profile', profile)
          setUser(profile)
       }
    }
@@ -65,7 +64,6 @@ export const AuthProvider = ({ children }) => {
                   console.log('Refreshing token....')
                } else {
                   // token valid
-                  console.log(decoded)
                   setUser({
                      email: decoded['email'],
                      email_verified: decoded['email_verified'],
