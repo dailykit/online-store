@@ -151,7 +151,6 @@ const Home = props => {
       <>
          <Helmet>
             <title>{visual.appTitle} | Home</title>
-            <link rel="icon" href={visual.favicon} />
          </Helmet>
          <Header
             title={brand?.name ? brand?.name : 'Home'}
