@@ -44,7 +44,7 @@ const Order = ({ route, navigation }) => {
    return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Helmet>
-            <title>{visual.appTitle} | Order</title>
+            <title>Order | {visual.appTitle}</title>
          </Helmet>
          <Header title="Home" navigation={navigation} />
          {loading ? (

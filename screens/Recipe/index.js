@@ -248,7 +248,14 @@ const Recipe = ({ navigation, route }) => {
             showInfo={true}
          />
          <Helmet>
-            <title>{visual.appTitle} | Recipe</title>
+            <title>{`${refProduct.name} | ${visual.appTitle}`}</title>
+            <meta name="description" content={simpleRecipe.description || ''} />
+            <meta
+               name="keywords"
+               content={
+                  simpleRecipe.tags?.length ? simpleRecipe.tags.join(',') : ''
+               }
+            />
             <script type="application/ld+json">
                {JSON.stringify(simpleRecipe.richResult)}
             </script>

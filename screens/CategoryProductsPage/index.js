@@ -31,7 +31,7 @@ const CategoryProductsPage = ({ navigation, route }) => {
          <Header title="Home" navigation={navigation} />
          <Helmet>
             <title>
-               {visual.appTitle} | {category}
+               {category} | {visual.appTitle}
             </title>
          </Helmet>
          <View

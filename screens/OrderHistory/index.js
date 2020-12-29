@@ -62,7 +62,7 @@ export default ({ navigation }) => {
    return (
       <View style={{ backgroundColor: '#E9ECEE', flex: 1 }}>
          <Helmet>
-            <title>{visual.appTitle} | Orders</title>
+            <title>Orders | {visual.appTitle}</title>
          </Helmet>
          <Header title="Home" navigation={navigation} />
          <View style={styles.outerContainer}>

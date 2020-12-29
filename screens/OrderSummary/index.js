@@ -133,7 +133,7 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    return (
       <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
          <Helmet>
-            <title>{visual.appTitle} | Cart</title>
+            <title>Cart | {visual.appTitle}</title>
          </Helmet>
          <Header title="Home" navigation={navigation} />
          {cart?.cartInfo?.products?.length ? (

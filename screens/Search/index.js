@@ -116,7 +116,7 @@ const Search = ({ navigation }) => {
    return (
       <View style={{ backgroundColor: '#fff', flex: 1 }}>
          <Helmet>
-            <title>{visual.appTitle} | Search</title>
+            <title>Search | {visual.appTitle}</title>
          </Helmet>
          <Header navigation={navigation} />
          <Wrapper>

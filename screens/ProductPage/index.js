@@ -131,7 +131,12 @@ const ProductPage = ({ navigation, route }) => {
             showInfo={true}
          />
          <Helmet>
-            <title>{visual.appTitle} | Product</title>
+            <title>{`${product.name} | ${visual.appTitle}`}</title>
+            <meta name="description" content={product.description || ''} />
+            <meta
+               name="keywords"
+               content={product.tags?.length ? product.tags.join(',') : ''}
+            />
             <script type="application/ld+json">
                {JSON.stringify(product.richResult)}
             </script>

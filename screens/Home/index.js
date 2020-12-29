@@ -150,7 +150,7 @@ const Home = props => {
    return (
       <>
          <Helmet>
-            <title>{visual.appTitle} | Home</title>
+            <title>Home | {visual.appTitle}</title>
          </Helmet>
          <Header
             title={brand?.name ? brand?.name : 'Home'}
