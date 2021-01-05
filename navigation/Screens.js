@@ -27,7 +27,6 @@ import { getStoreData } from '../api'
 
 // drawer
 import CustomDrawerContent from './Menu'
-import CouponsPage from '../components/CouponsPage'
 // screens
 const Home = React.lazy(() => import('../screens/Home'))
 const LoginSuccess = React.lazy(() => import('../screens/LoginSuccess'))
