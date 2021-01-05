@@ -98,9 +98,10 @@ const Order = ({ route, navigation }) => {
                               marginBottom: 20,
                            }}
                         >
-                           {order?.fulfillmentType?.includes('DELIVERY') ? (
-                              <Delivery order={order} />
-                           ) : (
+                           {order?.fulfillmentType?.includes(
+                              'DELIVERY'
+                           ) ? // <Delivery order={order} />
+                           null : (
                               <Pickup order={order} />
                            )}
                         </View>
