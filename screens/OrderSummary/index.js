@@ -63,13 +63,14 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    React.useEffect(() => {
       ;(async () => {
+         console.log('Payments: ', availability?.payments)
          if (
             cart &&
             paymentPartnerShipIds?.length &&
             isAuthenticated &&
             razorpayLoaded &&
             paymentJsLoaded &&
-            availability.payments
+            availability?.payments
          ) {
             const brandObject = {
                name: brand.name,
@@ -97,11 +98,12 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    ])
 
    React.useEffect(() => {
+      console.log('Payments: ', availability?.payments)
       if (
          isAuthenticated &&
          razorpayLoaded &&
          paymentJsLoaded &&
-         availability.payments
+         availability?.payments
       ) {
          const brandObject = {
             name: brand.name,
