@@ -54,11 +54,12 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    React.useEffect(() => {
       ;(async () => {
+         console.log({ payments: availability?.payments })
          if (
             cart &&
             paymentPartnerShipIds?.length &&
             isAuthenticated &&
-            availability.payments
+            availability?.payments
          ) {
             const brandObject = {
                name: brand.name,
@@ -79,7 +80,8 @@ const OrderSummary = ({ navigation, ...restProps }) => {
    }, [availability, cart, paymentPartnerShipIds, isAuthenticated])
 
    React.useEffect(() => {
-      if (isAuthenticated && availability.payments && brand && cart) {
+      console.log({ payments: availability?.payments })
+      if (isAuthenticated && availability?.payments && brand && cart) {
          const brandObject = {
             name: brand.name,
             logo: brand.logo,
@@ -95,8 +97,6 @@ const OrderSummary = ({ navigation, ...restProps }) => {
          })
       }
    }, [availability, cart, isAuthenticated, brand])
-
-   console.log(cart)
 
    if (masterLoading) {
       return <AppSkeleton />
