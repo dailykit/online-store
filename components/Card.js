@@ -139,6 +139,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         customerKeycloakId: user.sub || user.id || null,
                         cartSource: 'a-la-carte',
                         brandId: brandId,
+                        isTest: !!customer?.isTest,
                      },
                   },
                })

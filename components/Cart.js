@@ -229,6 +229,7 @@ const Cart = ({
                         customerKeycloakId: user.sub || user.id || null,
                         cartSource: 'a-la-carte',
                         brandId: brandId,
+                        isTest: !!customer?.isTest,
                      },
                   },
                })

@@ -152,6 +152,7 @@ export default function OnboardingStack(props) {
                               customerEmail:
                                  data.customer.platform_customer?.email,
                            },
+                           isTest: !!data.customer.isTest,
                         },
                      },
                   })
