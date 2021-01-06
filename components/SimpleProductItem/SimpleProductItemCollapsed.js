@@ -89,7 +89,7 @@ const SimpleProductItemCollapsed = ({
       if (tunnelItem) {
          return width > 768 ? 18 : 14
       } else {
-         return 12
+         return width > 768 ? 16 : 12
       }
    }
 
@@ -162,7 +162,7 @@ const SimpleProductItemCollapsed = ({
                         style={{
                            flexDirection: 'row',
                            alignItems: 'center',
-                           minHeight: width > 768 ? 68 : 56,
+                           minHeight: width > 768 ? 60 : 56,
                            alignItems: 'flex-start',
                         }}
                      >
@@ -178,6 +178,22 @@ const SimpleProductItemCollapsed = ({
                            ellipsizeMode="tail"
                         >{`${simpleRecipeProduct.name} `}</Text>
                      </View>
+                     {Boolean(simpleRecipeProduct.additionalText) && (
+                        <Text
+                           style={[
+                              styles.item_title,
+                              {
+                                 fontSize: width > 768 ? 13 : 12,
+                                 lineHeight: 24,
+                                 color: '#686b78',
+                              },
+                           ]}
+                           numberOfLines={2}
+                           ellipsizeMode="tail"
+                        >
+                           {simpleRecipeProduct.additionalText}
+                        </Text>
+                     )}
                      <View style={styles.item_three_lower}>
                         {Boolean(tunnelItem) && (
                            <Text

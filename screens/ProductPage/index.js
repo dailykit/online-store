@@ -267,6 +267,9 @@ const ProductPage = ({ navigation, route }) => {
             {Boolean(width > 768) && (
                <PricingContainer>
                   <Title>{product.name}</Title>
+                  {Boolean(product.additionalText) && (
+                     <AdditionalText>{product.additionalText}</AdditionalText>
+                  )}
                   <Spacer size="16px" />
                   <TagsContainer>
                      {product?.tags?.map((tag, i) => (
@@ -350,6 +353,10 @@ const Title = styled(ContentText)`
    font-size: 28px;
    line-height: 40px;
    font-weight: bold;
+`
+
+const AdditionalText = styled(ContentText)`
+   color: #686b78;
 `
 
 const SectionHeader = styled.Text`

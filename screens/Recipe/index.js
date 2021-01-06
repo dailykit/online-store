@@ -562,6 +562,11 @@ const Recipe = ({ navigation, route }) => {
                   ) : (
                      <>
                         <Title>{refProduct.name}</Title>
+                        {Boolean(refProduct.additionalText) && (
+                           <AdditionalText>
+                              {refProduct.additionalText}
+                           </AdditionalText>
+                        )}
                         <Spacer size="8px" />
                         <SubSectionWrapper>
                            <TypeWrapper type={simpleRecipe.type}>
@@ -754,6 +759,10 @@ const Title = styled(ContentText)`
    font-size: 28px;
    line-height: 40px;
    font-weight: bold;
+`
+
+const AdditionalText = styled(ContentText)`
+   color: #686b78;
 `
 
 const TypeWrapper = styled.Text`
