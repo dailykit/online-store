@@ -209,6 +209,7 @@ export const COMBO_PRODUCT = gql`
       comboProduct(id: $id) {
          id
          name
+         additionalText
          description
          tags
          isPopupAllowed
@@ -400,6 +401,7 @@ export const CUSTOMIZABLE_PRODUCT = gql`
       customizableProduct(id: $id) {
          id
          name
+         additionalText
          description
          tags
          isPopupAllowed
@@ -498,6 +500,7 @@ export const INVENTORY_PRODUCT = gql`
       inventoryProduct(id: $id) {
          id
          name
+         additionalText
          description
          tags
          assets
@@ -539,6 +542,7 @@ export const SIMPLE_PRODUCT = gql`
       simpleRecipeProduct(id: $id) {
          id
          name
+         additionalText
          default
          tags
          description
@@ -594,6 +598,7 @@ export const INVENTORY_PRODUCTS = gql`
          default
          description
          name
+         additionalText
          tags
          isPopupAllowed
          defaultCartItem
@@ -638,6 +643,7 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          default
          assets
          isPopupAllowed
@@ -687,6 +693,7 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
@@ -782,6 +789,7 @@ export const COMBO_PRODUCTS = gql`
       comboProducts(where: { id: { _in: $ids }, isPublished: { _eq: true } }) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
@@ -988,6 +996,7 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
@@ -1180,6 +1189,7 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
@@ -1281,6 +1291,7 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          default
          tags
          description
@@ -1338,6 +1349,7 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          description
          tags
          assets
