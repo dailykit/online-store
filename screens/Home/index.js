@@ -217,7 +217,7 @@ const Home = props => {
                   </ScrollView>
                </View>
             )}
-            <CouponsCarousel />
+            <CouponsCarousel navigation={props.navigation} />
             {Boolean(menuData.length) && (
                <View style={styles.sections}>
                   {menuData.map(category => (

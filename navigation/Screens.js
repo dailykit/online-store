@@ -16,7 +16,7 @@ import {
    FETCH_CART,
    GET_MENU,
    LOYALTY_POINTS,
-   PAYMENT_PARTNERSHIP,
+   PAYMENT_PARTNERSHIP, 
    UPDATE_CART,
    WALLETS,
 } from '../graphql'
@@ -27,6 +27,7 @@ import { getStoreData } from '../api'
 
 // drawer
 import CustomDrawerContent from './Menu'
+const CouponsPage = React.lazy(() => import('../components/CouponsPage'))
 // screens
 const Home = React.lazy(() => import('../screens/Home'))
 const LoginSuccess = React.lazy(() => import('../screens/LoginSuccess'))
@@ -585,6 +586,13 @@ function AppStack(props) {
                headerShown: false,
             }}
          />    
+         <Stack.Screen
+            name="CouponsPage"
+            component={CouponsPage}
+            options={{
+               headerShown: false,
+            }}
+         />  
       </Drawer.Navigator>
    )
 }

@@ -3,16 +3,14 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks'
 import { useAppContext } from '../context/app'
 import { ALL_COUPONS } from '../graphql'
-import { Feather } from '@expo/vector-icons'
-import { Dimensions, Image, Text, View, ScrollView } from 'react-native'
+import { Dimensions, Image, Text, View, ScrollView, Button } from 'react-native'
 import { useDrawerContext } from '../context/drawer';
-import { flex } from 'styled-system';
 
 const BannerWidth = 250
 const BannerHeight = 250
 
-export default function CouponsCarousel() {
-    const { brandId } = useAppContext()
+export default function CouponsCarousel({ navigation }) {
+    const { brandId, brand } = useAppContext()
     const { open } = useDrawerContext()
 
     const [availableCoupons, setAvailableCoupons] = React.useState([])
@@ -48,7 +46,7 @@ export default function CouponsCarousel() {
                            backgroundColor: '#440',
                         }}
                   >
-                     <ShowMore>
+                     <ShowMore onPress={() => navigation.navigate('CouponsPage')}>
                         More Offers
                      </ShowMore>
                   </View>
@@ -148,10 +146,10 @@ const Wrapperflex = styled.View`
     margin-bottom: 0.5rem;
  `
  
- const Button = styled.TouchableOpacity`
-    flex-direction: row;
-    align-items: center;
- `
+//  const Button = styled.TouchableOpacity`
+//     flex-direction: row;
+//     align-items: center;
+// `
  
  const ButtonText = styled.Text`
     font-size: 0.8rem;
