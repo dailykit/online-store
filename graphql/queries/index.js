@@ -1465,14 +1465,10 @@ export const SET_REFERRAL_CODE = gql`
 export const SETTINGS = gql`
    query StoreSettings($brandId: Int!, $identifier: String!, $type: String!) {
       storeSettings(
-         where: {
-            brand: { brandId: { _eq: $brandId } }
-            identifier: { _eq: $identifier }
-            type: { _eq: $type }
-         }
+         where: { identifier: { _eq: $identifier }, type: { _eq: $type } }
       ) {
          value
-         brandSettings {
+         brandSettings(where: { brandId: { _eq: $brandId } }) {
             value
          }
       }
