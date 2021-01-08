@@ -37,6 +37,7 @@ import {
 import CartSkeleton from '../../components/skeletons/cart'
 import { isKeycloakSupported } from '../../utils'
 import { useScript } from '../../utils/useScript'
+import { Helmet } from 'react-helmet'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const [razorpayLoaded, razorpayError] = useScript(
@@ -62,19 +63,21 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    React.useEffect(() => {
       ;(async () => {
+         console.log('Payments: ', availability?.payments)
          if (
             cart &&
             paymentPartnerShipIds?.length &&
             isAuthenticated &&
             razorpayLoaded &&
-            paymentJsLoaded
+            paymentJsLoaded &&
+            availability?.payments
          ) {
             const brandObject = {
                name: brand.name,
                logo: brand.logo,
                color: visual.color,
                description: '',
-               isStoreLive: availability?.payments?.isStoreLive,
+               isStoreLive: availability.payments.isStoreLive,
             }
             await window.payments.provider({
                cart: { ...cart, brand: brandObject },
@@ -91,16 +94,23 @@ const OrderSummary = ({ navigation, ...restProps }) => {
       isAuthenticated,
       paymentJsLoaded,
       razorpayLoaded,
+      availability,
    ])
 
    React.useEffect(() => {
-      if (isAuthenticated && razorpayLoaded && paymentJsLoaded) {
+      console.log('Payments: ', availability?.payments)
+      if (
+         isAuthenticated &&
+         razorpayLoaded &&
+         paymentJsLoaded &&
+         availability?.payments
+      ) {
          const brandObject = {
             name: brand.name,
             logo: brand.logo,
             color: visual.color,
             description: '',
-            isStoreLive: availability?.payments?.isStoreLive,
+            isStoreLive: availability.payments.isStoreLive,
          }
          window.payments.checkout({
             cart: { ...cart, brand: brandObject },
@@ -109,9 +119,14 @@ const OrderSummary = ({ navigation, ...restProps }) => {
             currency: CURRENCY,
          })
       }
-   }, [cart, isAuthenticated, brand, paymentJsLoaded, razorpayLoaded])
-
-   console.log('Cart:', cart)
+   }, [
+      cart,
+      isAuthenticated,
+      brand,
+      paymentJsLoaded,
+      razorpayLoaded,
+      availability,
+   ])
 
    if (masterLoading || !razorpayLoaded || !paymentJsLoaded) {
       return <AppSkeleton />
@@ -119,6 +134,9 @@ const OrderSummary = ({ navigation, ...restProps }) => {
 
    return (
       <ScrollView style={{ flex: 1, backgroundColor: '#fff' }}>
+         <Helmet>
+            <title>Cart | {visual.appTitle}</title>
+         </Helmet>
          <Header title="Home" navigation={navigation} />
          {cart?.cartInfo?.products?.length ? (
             <>
@@ -193,7 +211,6 @@ const Checkout = ({ cart, navigation }) => {
    }, [cart.fulfillmentInfo])
 
    React.useEffect(() => {
-      console.log({ cartValidity: cart.isValid })
       if (!cart.isValid.status && cart.isValid.type === 'fulfillment') {
          toastr('error', 'Fulfillment is no longer valid!')
       }
@@ -418,7 +435,6 @@ const Cart = ({ cart }) => {
 
    const [deleteCarts] = useMutation(DELETE_CARTS, {
       onCompleted: data => {
-         console.log('Carts deleted: ', data.deleteCarts.returning)
          if (data.deleteCarts.returning.length) {
             AsyncStorage.removeItem('PENDING_CART_ID')
             setCart(undefined)
@@ -431,7 +447,6 @@ const Cart = ({ cart }) => {
 
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
-         console.log('Cart updated!')
          if (!isAuthenticated) {
             setCart(data.updateCart.returning[0])
          }
@@ -475,8 +490,8 @@ const Cart = ({ cart }) => {
          } else {
             removeFromCart(product)
          }
-      } catch (e) {
-         console.log(e)
+      } catch (error) {
+         console.log(error)
       }
    }
 

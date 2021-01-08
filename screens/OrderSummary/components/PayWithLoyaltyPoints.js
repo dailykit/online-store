@@ -14,9 +14,6 @@ const PayWithLoyaltyPoints = () => {
    const [isInputing, setIsInputing] = React.useState(false)
 
    const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
-         console.log('Loyalty points added!')
-      },
       onError: error => {
          console.log(error)
       },

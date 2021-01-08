@@ -17,7 +17,6 @@ export default function AllCouponList() {
       },
       onCompleted: data => {
          const coupons = data.coupons
-         console.log({ coupons })
          setAvailableCoupons([...coupons])
       },
       onError: error => {

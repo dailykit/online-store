@@ -55,7 +55,6 @@ const CustomizableProductItem = ({
       type,
       customizableOptionId
    ) => {
-      console.log(option, product, type, customizableOptionId)
       let newItem = objToAdd
       newItem.option.id = option.id
       if (type === 'simpleRecipeProduct') {
@@ -85,7 +84,6 @@ const CustomizableProductItem = ({
          option => option[type]
       )
       newItem.image = cusOption[type].assets?.images[0]
-      console.log({ newItem })
       setobjToAdd({ ...newItem, modifiers: [] })
       setcartItem({ ...newItem, modifiers: [] })
    }

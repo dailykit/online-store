@@ -73,18 +73,41 @@ const CustomizableProductItemCollapsed = ({ product, clickHandler }) => {
                ))}
             </Carousel>
          )}
-         <Text
+         <View
             style={{
-               marginTop: 8,
-               color: visual.color,
-               fontSize: width > 768 ? 20 : 16,
-               paddingHorizontal: 20,
+               flexDirection: 'row',
+               alignItems: 'center',
+               minHeight: width > 768 ? 60 : 56,
+               alignItems: 'flex-start',
             }}
-            numberOfLines={1}
-            ellipsizeMode="tail"
          >
-            {product.name}
-         </Text>
+            <Text
+               style={{
+                  marginTop: 8,
+                  color: visual.color,
+                  fontSize: width > 768 ? 20 : 16,
+                  paddingHorizontal: 20,
+               }}
+               numberOfLines={2}
+               ellipsizeMode="tail"
+            >
+               {product.name}
+            </Text>
+         </View>
+         {Boolean(product.additionalText) && (
+            <Text
+               style={{
+                  fontSize: width > 768 ? 13 : 12,
+                  lineHeight: 24,
+                  color: '#686b78',
+                  paddingHorizontal: 20,
+               }}
+               numberOfLines={2}
+               ellipsizeMode="tail"
+            >
+               {product.additionalText}
+            </Text>
+         )}
          <Text
             style={{
                marginTop: 8,

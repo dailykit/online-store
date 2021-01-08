@@ -75,6 +75,7 @@ export const SIMPLE_RECIPE = gql`
          showIngredientsQuantity
          showProcedures
          procedures
+         richResult
          simpleRecipeYields(order_by: { yield: asc }) {
             id
             yield
@@ -208,12 +209,14 @@ export const COMBO_PRODUCT = gql`
       comboProduct(id: $id) {
          id
          name
+         additionalText
          description
          tags
          isPopupAllowed
          defaultCartItem
          assets
          price
+         richResult
          comboProductComponents {
             id
             label
@@ -398,12 +401,14 @@ export const CUSTOMIZABLE_PRODUCT = gql`
       customizableProduct(id: $id) {
          id
          name
+         additionalText
          description
          tags
          isPopupAllowed
          defaultCartItem
          assets
          price
+         richResult
          customizableProductOptions {
             id
             options
@@ -495,6 +500,7 @@ export const INVENTORY_PRODUCT = gql`
       inventoryProduct(id: $id) {
          id
          name
+         additionalText
          description
          tags
          assets
@@ -504,6 +510,7 @@ export const INVENTORY_PRODUCT = gql`
          defaultCartItem
          allergens
          nutritionalInfo
+         richResult
          defaultInventoryProductOption {
             id
             price
@@ -535,6 +542,7 @@ export const SIMPLE_PRODUCT = gql`
       simpleRecipeProduct(id: $id) {
          id
          name
+         additionalText
          default
          tags
          description
@@ -590,6 +598,7 @@ export const INVENTORY_PRODUCTS = gql`
          default
          description
          name
+         additionalText
          tags
          isPopupAllowed
          defaultCartItem
@@ -634,6 +643,7 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          default
          assets
          isPopupAllowed
@@ -683,6 +693,7 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
@@ -778,6 +789,7 @@ export const COMBO_PRODUCTS = gql`
       comboProducts(where: { id: { _in: $ids }, isPublished: { _eq: true } }) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
@@ -984,6 +996,7 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
@@ -1176,6 +1189,7 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
@@ -1277,6 +1291,7 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          default
          tags
          description
@@ -1334,6 +1349,7 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          description
          tags
          assets

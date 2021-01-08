@@ -21,6 +21,7 @@ import {
    resolveComboProductPrices,
    resolveCustomizableProductPrices,
 } from '../../utils/products'
+import { Helmet } from 'react-helmet'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
@@ -129,6 +130,17 @@ const ProductPage = ({ navigation, route }) => {
             setIsModalVisible={setIsModalVisible}
             showInfo={true}
          />
+         <Helmet>
+            <title>{`${product.name} | ${visual.appTitle}`}</title>
+            <meta name="description" content={product.description || ''} />
+            <meta
+               name="keywords"
+               content={product.tags?.length ? product.tags.join(',') : ''}
+            />
+            <script type="application/ld+json">
+               {JSON.stringify(product.richResult)}
+            </script>
+         </Helmet>
          <Header title="Home" navigation={navigation} />
          <Wrapper>
             <DetailsContainer
@@ -255,6 +267,9 @@ const ProductPage = ({ navigation, route }) => {
             {Boolean(width > 768) && (
                <PricingContainer>
                   <Title>{product.name}</Title>
+                  {Boolean(product.additionalText) && (
+                     <AdditionalText>{product.additionalText}</AdditionalText>
+                  )}
                   <Spacer size="16px" />
                   <TagsContainer>
                      {product?.tags?.map((tag, i) => (
@@ -338,6 +353,10 @@ const Title = styled(ContentText)`
    font-size: 28px;
    line-height: 40px;
    font-weight: bold;
+`
+
+const AdditionalText = styled(ContentText)`
+   color: #686b78;
 `
 
 const SectionHeader = styled.Text`

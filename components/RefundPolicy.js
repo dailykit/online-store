@@ -13,7 +13,6 @@ const RefundPolicy = () => {
       variables: { brandId, identifier: 'Refund Policy', type: 'brand' },
       onCompleted: data => {
          const setting = data.storeSettings[0]
-         console.log(setting)
          if (setting.brandSettings.length) {
             setHtml(setting.brandSettings[0].value?.value)
          } else {

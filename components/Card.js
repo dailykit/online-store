@@ -37,7 +37,6 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
-         console.log('Product added!')
          setBusy(false)
          toastr('success', 'Item added!')
          if (!customer) {
@@ -52,7 +51,6 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
    })
    const [createCart] = useMutation(CREATE_CART, {
       onCompleted: data => {
-         console.log('Cart created!')
          setBusy(false)
          toastr('success', 'Item added!')
          if (!customer) {
@@ -141,6 +139,7 @@ const Card = ({ id, type, navigation, label, product, ...restProps }) => {
                         customerKeycloakId: user.sub || user.id || null,
                         cartSource: 'a-la-carte',
                         brandId: brandId,
+                        isTest: !!customer?.isTest,
                      },
                   },
                })

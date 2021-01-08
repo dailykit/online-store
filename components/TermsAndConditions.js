@@ -13,7 +13,6 @@ const TermsAndConditions = () => {
       variables: { brandId, identifier: 'Terms and Conditions', type: 'brand' },
       onCompleted: data => {
          const setting = data.storeSettings[0]
-         console.log(setting)
          if (setting.brandSettings.length) {
             setHtml(setting.brandSettings[0].value?.value)
          } else {

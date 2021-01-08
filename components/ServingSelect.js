@@ -20,8 +20,6 @@ const ServingSelect = ({
 }) => {
    const { visual } = useAppContext()
 
-   console.log({ type })
-
    return (
       <Wrapper
          onPress={() => {

@@ -30,7 +30,6 @@ export const CartContextProvider = ({ children }) => {
 
    React.useEffect(() => {
       if (saved && cart) {
-         console.log('Saved:', saved)
          if (saved.type.includes('card')) {
             updateCart({
                variables: {
@@ -128,9 +127,6 @@ export const CartContextProvider = ({ children }) => {
 
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
-         console.log('Cart updated!')
-      },
       onError: error => {
          console.log(error)
       },
@@ -184,7 +180,6 @@ export const CartContextProvider = ({ children }) => {
                         },
                         type: 'PREORDER_DELIVERY',
                      }
-                     console.log('Default fulfillment: ', fulfillmentInfo)
                      return updateCart({
                         variables: {
                            id: cart.id,
@@ -211,7 +206,6 @@ export const CartContextProvider = ({ children }) => {
                      },
                      type: 'ONDEMAND_DELIVERY',
                   }
-                  console.log('Default fulfillment: ', fulfillmentInfo)
                   return updateCart({
                      variables: {
                         id: cart.id,
@@ -236,7 +230,6 @@ export const CartContextProvider = ({ children }) => {
                      ),
                      type: 'PREORDER_PICKUP',
                   }
-                  console.log('Default fulfillment: ', fulfillmentInfo)
                   return updateCart({
                      variables: {
                         id: cart.id,
@@ -257,7 +250,6 @@ export const CartContextProvider = ({ children }) => {
                   slot: generateTimeStamp(time, date.toDateString()),
                   type: 'ONDEMAND_PICKUP',
                }
-               console.log('Default fulfillment: ', fulfillmentInfo)
                return updateCart({
                   variables: {
                      id: cart.id,
@@ -278,8 +270,8 @@ export const CartContextProvider = ({ children }) => {
          if (cart && !cart.fulfillmentInfo) {
             generateDefaultFulfillment()
          }
-      } catch (e) {
-         console.log(e)
+      } catch (error) {
+         console.log(error)
       }
    }, [cart])
 
@@ -288,8 +280,8 @@ export const CartContextProvider = ({ children }) => {
          if (cart?.address) {
             generateDefaultFulfillment()
          }
-      } catch (e) {
-         console.log(e)
+      } catch (error) {
+         console.log(error)
       }
    }, [cart?.address?.id])
 

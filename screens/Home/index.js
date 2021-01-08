@@ -19,7 +19,11 @@ import { height, width } from '../../utils/Scaling'
 import { styles } from './styles'
 import { useAuth } from '../../context/auth'
 import { useDrawerContext } from '../../context/drawer'
+<<<<<<< HEAD
 import CouponsCarousel from '../../components/CouponsCarousel';
+=======
+import { Helmet } from 'react-helmet'
+>>>>>>> staging
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
@@ -149,6 +153,9 @@ const Home = props => {
    })
    return (
       <>
+         <Helmet>
+            <title>Home | {visual.appTitle}</title>
+         </Helmet>
          <Header
             title={brand?.name ? brand?.name : 'Home'}
             search
@@ -221,7 +228,7 @@ const Home = props => {
             {Boolean(menuData.length) && (
                <View style={styles.sections}>
                   {menuData.map(category => (
-                     <View style={styles.category}>
+                     <View key={category.name} style={styles.category}>
                         <CategoryBanner
                            navigation={props.navigation}
                            title={category.name}
@@ -246,7 +253,7 @@ const Home = props => {
                      minHeight: 200,
                   }}
                >
-                  <Feather name="frown" size={28} color="#666" />
+                  <Feather name="alert-triangle" size={28} color="#666" />
                   <Text
                      style={{
                         fontSize: '1.2rem',
