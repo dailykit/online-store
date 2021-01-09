@@ -11,6 +11,10 @@ export function uuid() {
    })
 }
 
+export const beautifyType = type => {
+   return type === 'mealKit' ? 'Meal Kit' : 'Ready to Eat'
+}
+
 export const priceSort = (item1, item2) => {
    if (item1.price[0].value > item2.price[0].value) {
       return 1

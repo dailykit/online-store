@@ -14,6 +14,7 @@ import {
    resolveCustomizableProductPrices,
    resolveComboProductPrices,
 } from '../utils/products'
+import ProductCard from './ProductCard'
 
 const Products = ({
    category,
@@ -138,7 +139,7 @@ const Products = ({
                   data={products}
                   keyExtractor={item => item.id.toString()}
                   renderItem={({ item: product }) => (
-                     <Card navigation={navigation} product={product} />
+                     <ProductCard product={product} navigation={navigation} />
                   )}
                />
             ) : (
@@ -149,7 +150,7 @@ const Products = ({
                   numColumns={width > 768 ? 4 : 2}
                   keyExtractor={item => item.id.toString()}
                   renderItem={({ item: product }) => (
-                     <Card navigation={navigation} product={product} />
+                     <ProductCard product={product} navigation={navigation} />
                   )}
                />
             ))}
