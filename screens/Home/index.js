@@ -19,11 +19,9 @@ import { height, width } from '../../utils/Scaling'
 import { styles } from './styles'
 import { useAuth } from '../../context/auth'
 import { useDrawerContext } from '../../context/drawer'
-<<<<<<< HEAD
+
 import CouponsCarousel from '../../components/CouponsCarousel';
-=======
 import { Helmet } from 'react-helmet'
->>>>>>> staging
 
 const BannerWidth = Dimensions.get('window').width
 const BannerHeight = width > 768 ? height * 0.6 : height * 0.3
