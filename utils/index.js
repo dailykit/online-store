@@ -35,6 +35,7 @@ export const useStoreToast = () => {
             color: '#fff',
             closeIconColor: '#fff',
             iconColor: '#fff',
+            duration: 1500,
          })
       } else if (type === 'error') {
          toast({
@@ -44,6 +45,7 @@ export const useStoreToast = () => {
             color: '#fff',
             closeIconColor: '#fff',
             iconColor: '#fff',
+            duration: 1500,
          })
       } else {
          toast({
@@ -53,6 +55,7 @@ export const useStoreToast = () => {
             color: '#fff',
             closeIconColor: '#fff',
             iconColor: '#fff',
+            duration: 1500,
          })
       }
    }
@@ -166,6 +169,7 @@ export const isKeycloakSupported = () => {
    console.log({ browser, version })
    const v = +version.split('.')[0]
    const { userAgent } = window.navigator
+   return false
    if (userAgent.includes('Mac') || userAgent.includes('Apple')) {
       return false
    }

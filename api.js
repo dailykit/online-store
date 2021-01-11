@@ -3,9 +3,10 @@ import {
    CLIENTID,
    HASURA_URL,
    HASURA_GRAPHQL_ADMIN_SECRET,
+   DAILYOS_SERVER_URL,
 } from 'react-native-dotenv'
 
-// Constants sdfs
+// Constants
 const BASE_URL = `https://secure.dailykit.org/auth/realms/consumers/protocol/openid-connect/token`
 const SIGNUP_URL = `https://beryl-material-chokeberry.glitch.me/users`
 
@@ -23,7 +24,6 @@ export const loginUser = async ({ email, password }) => {
       })
       .join('&')
 
-   console.log('searchParams', searchParams)
    const response = await axios({
       url: BASE_URL,
       method: 'POST',
@@ -57,6 +57,16 @@ export const registerUser = async ({ email, password }) => {
             password,
          },
       },
+   })
+   return response.data
+}
+
+export const getStoreData = async ({ clientId, domain, email, keycloakId }) => {
+   const response = await axios.post(`${DAILYOS_SERVER_URL}/api/store/data`, {
+      clientId,
+      domain,
+      email,
+      keycloakId,
    })
    return response.data
 }

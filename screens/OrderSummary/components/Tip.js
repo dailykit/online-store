@@ -34,7 +34,6 @@ const Tip = ({ cart }) => {
          if (Number.isNaN(+amount)) {
             throw Error('Amount Invalid!')
          }
-         console.log('Tip: ', +amount)
          updateCart({
             variables: {
                id: cart.id,

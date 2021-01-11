@@ -33,7 +33,7 @@ const Item = ({
    const [typeSelected, setTypeSelected] = useState('mealKit')
    const [servingIndex, setServingIndex] = useState(undefined)
    const [selectedOption, setSelectedOption] = useState(undefined)
-   const [isSelected, setisSelected] = useState(undefined)
+   const [isSelected, setisSelected] = useState(0)
 
    const generateTypes = srp => {
       const _types = new Set(srp.simpleRecipeProductOptions.map(op => op.type))
@@ -295,6 +295,7 @@ const Item = ({
                                           )
                                        }
                                        type="simpleRecipeProduct"
+                                       showPlusIcon={true}
                                     />
                                  )
                               })}
@@ -474,6 +475,7 @@ const Item = ({
                                           )
                                        }
                                        type="inventoryProduct"
+                                       showPlusIcon={true}
                                     />
                                  )
                               }

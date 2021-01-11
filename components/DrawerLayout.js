@@ -25,6 +25,7 @@ import DeliveryBreakup from './DeliveryBreakup'
 import TermsAndConditions from './TermsAndConditions'
 import PrivacyPolicy from './PrivacyPolicy'
 import RefundPolicy from './RefundPolicy'
+import AllCouponList from './AllCouponList'
 
 const DrawerLayout = () => {
    const {
@@ -45,7 +46,6 @@ const DrawerLayout = () => {
          brandId,
       },
       onCompleted: data => {
-         console.log('platform -> data', data)
          if (data.customer.platform_customer) {
             setCustomerDetails(data.customer.platform_customer)
          } else {
@@ -80,6 +80,7 @@ const DrawerLayout = () => {
             'LoginSelf',
             'RegisterSelf',
             'DailyKeyBackup',
+            'AllCouponList',
          ].includes(drawerView)
       ) {
          setDrawerView(undefined)
@@ -123,6 +124,8 @@ const DrawerLayout = () => {
             return <PrivacyPolicy />
          case 'RefundPolicy':
             return <RefundPolicy />
+         case 'AllCouponList':
+            return <AllCouponList />
          default:
             return <Text>.</Text>
       }

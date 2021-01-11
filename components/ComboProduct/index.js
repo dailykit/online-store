@@ -4,7 +4,7 @@ import { Image, Text, View } from 'react-native'
 import Carousel from 'react-native-banner-carousel'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAppContext } from '../../context/app'
-import { priceSort } from '../../utils'
+import { discountedPrice, priceSort } from '../../utils'
 import { width } from '../../utils/Scaling'
 import CustomizableProductItem from '../CustomizableProductItem'
 import InventoryProductItem from '../InventoryProductItem'
@@ -20,6 +20,7 @@ const ComboProduct = ({
    currentComboProductIndex,
    setCurrentComboProductIndex,
    setPrice,
+   setDiscount,
    product,
    onModifiersValidityChange,
    clickHandler,
@@ -62,6 +63,8 @@ const ComboProduct = ({
          }
       })
       setOptionImages(images)
+      setPrice?.(discountedPrice(product.price))
+      setDiscount?.(product.price.discount)
    }, [])
 
    React.useEffect(() => {
@@ -106,44 +109,6 @@ const ComboProduct = ({
       <TouchableOpacity onPress={clickHandler} style={styles.container}>
          {tunnelItem ? (
             <>
-               <View
-                  style={{
-                     flexDirection: 'row',
-                     alignItems: 'center',
-                     justifyContent: 'space-between',
-                     height: 40,
-                     paddingHorizontal: 5,
-                  }}
-               >
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                     {Boolean(currentComboProductIndex) && (
-                        <TouchableOpacity
-                           onPress={() =>
-                              setCurrentComboProductIndex(
-                                 currentComboProductIndex - 1
-                              )
-                           }
-                           style={{ marginRight: 8 }}
-                        >
-                           <Feather
-                              name="chevron-left"
-                              size={24}
-                              color="#666"
-                           />
-                        </TouchableOpacity>
-                     )}
-                     <Text
-                        style={{
-                           fontSize: 18,
-                           color: '#666',
-                           fontWeight: 'bold',
-                        }}
-                     >{`Selecting ${product.comboProductComponents[currentComboProductIndex].label}`}</Text>
-                  </View>
-                  <Text style={{ fontSize: 18, color: '#666' }}>{`${
-                     currentComboProductIndex + 1
-                  }/${product.comboProductComponents.length}`}</Text>
-               </View>
                <View style={styles.item_parent_container}>
                   {product.comboProductComponents.map((el, _id) => {
                      let last = false
@@ -305,18 +270,41 @@ const ComboProduct = ({
                      ))}
                   </Carousel>
                )}
-               <Text
+               <View
                   style={{
-                     marginTop: 8,
-                     color: visual.color,
-                     fontSize: width > 768 ? 20 : 16,
-                     paddingHorizontal: 20,
+                     flexDirection: 'row',
+                     alignItems: 'center',
+                     minHeight: width > 768 ? 60 : 56,
+                     alignItems: 'flex-start',
                   }}
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
                >
-                  {product.name}
-               </Text>
+                  <Text
+                     style={{
+                        marginTop: 8,
+                        color: visual.color,
+                        fontSize: width > 768 ? 20 : 16,
+                        paddingHorizontal: 20,
+                     }}
+                     numberOfLines={1}
+                     ellipsizeMode="tail"
+                  >
+                     {product.name}
+                  </Text>
+               </View>
+               {Boolean(product.additionalText) && (
+                  <Text
+                     style={{
+                        fontSize: width > 768 ? 13 : 12,
+                        lineHeight: 24,
+                        color: '#686b78',
+                        paddingHorizontal: 20,
+                     }}
+                     numberOfLines={2}
+                     ellipsizeMode="tail"
+                  >
+                     {product.additionalText}
+                  </Text>
+               )}
                <Text
                   style={{
                      marginTop: 8,

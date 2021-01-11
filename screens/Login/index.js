@@ -17,7 +17,6 @@ const Login = () => {
       try {
          setError('')
          setLoading(true)
-         console.log({ email, password })
          const { data, error } = await loginUser({ email, password })
          if (data?.access_token) {
             await AsyncStorage.setItem('token', data.access_token)

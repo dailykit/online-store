@@ -162,7 +162,7 @@ const App = () => {
       return <AppSkeleton />
    } else {
       return (
-         <Suspense fallback={<Spinner size="large" />}>
+         <Suspense fallback={<AppSkeleton />}>
             <ErrorBoundary>
                <ThemeProvider theme={theme}>
                   <ToastProvider position="BOTTOM">

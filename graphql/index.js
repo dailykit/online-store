@@ -16,6 +16,8 @@ import {
    CART_PAYMENT,
    PAYMENT_PARTNERSHIP,
    SET_REFERRAL_CODE,
+   ALL_COUPONS,
+   SETTINGS,
 } from './queries'
 
 import {
@@ -94,4 +96,6 @@ export {
    PAYMENT_PARTNERSHIP,
    SET_REFERRAL_CODE,
    DELIVERY_BREAKUP,
+   ALL_COUPONS,
+   SETTINGS,
 }

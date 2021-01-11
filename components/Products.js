@@ -10,6 +10,10 @@ import {
 import { width } from '../utils/Scaling'
 import Card from './Card'
 import CardSkeleton from './skeletons/card'
+import {
+   resolveCustomizableProductPrices,
+   resolveComboProductPrices,
+} from '../utils/products'
 
 const Products = ({
    category,
@@ -63,7 +67,10 @@ const Products = ({
          ids: category.customizableProducts,
       },
       onCompleted: data => {
-         setProducts([...products, ...data.customizableProducts])
+         const updatedCustomizableProducts = resolveCustomizableProductPrices(
+            data.customizableProducts
+         )
+         setProducts([...products, ...updatedCustomizableProducts])
       },
       fetchPolicy: 'cache-and-network',
    })
@@ -75,7 +82,10 @@ const Products = ({
             ids: category.comboProducts,
          },
          onCompleted: data => {
-            setProducts([...products, ...data.comboProducts])
+            const updatedComboProducts = resolveComboProductPrices(
+               data.comboProducts
+            )
+            setProducts([...products, ...updatedComboProducts])
          },
          fetchPolicy: 'cache-and-network',
       }

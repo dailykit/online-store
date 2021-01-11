@@ -75,6 +75,7 @@ export const SIMPLE_RECIPE = gql`
          showIngredientsQuantity
          showProcedures
          procedures
+         richResult
          simpleRecipeYields(order_by: { yield: asc }) {
             id
             yield
@@ -208,20 +209,25 @@ export const COMBO_PRODUCT = gql`
       comboProduct(id: $id) {
          id
          name
+         additionalText
          description
          tags
          isPopupAllowed
          defaultCartItem
          assets
-         comboProductComponents {
+         price
+         richResult
+         comboProductComponents(where: { isArchived: { _eq: false } }) {
             id
             label
+            options
             customizableProductId
             inventoryProductId
             simpleRecipeProductId
             customizableProduct {
                id
                name
+               price
                defaultCustomizableProductOption {
                   inventoryProduct {
                      assets
@@ -230,8 +236,11 @@ export const COMBO_PRODUCT = gql`
                      assets
                   }
                }
-               customizableProductOptions {
+               customizableProductOptions(
+                  where: { isArchived: { _eq: false } }
+               ) {
                   id
+                  options
                   inventoryProduct {
                      id
                      assets
@@ -258,7 +267,9 @@ export const COMBO_PRODUCT = gql`
                            data
                         }
                      }
-                     inventoryProductOptions {
+                     inventoryProductOptions(
+                        where: { isArchived: { _eq: false } }
+                     ) {
                         id
                         price
                         quantity
@@ -289,7 +300,10 @@ export const COMBO_PRODUCT = gql`
                         }
                      }
                      simpleRecipeProductOptions(
-                        where: { isActive: { _eq: true } }
+                        where: {
+                           isActive: { _eq: true }
+                           isArchived: { _eq: false }
+                        }
                      ) {
                         id
                         price
@@ -332,7 +346,7 @@ export const COMBO_PRODUCT = gql`
                      data
                   }
                }
-               inventoryProductOptions {
+               inventoryProductOptions(where: { isArchived: { _eq: false } }) {
                   id
                   price
                   quantity
@@ -362,7 +376,9 @@ export const COMBO_PRODUCT = gql`
                      data
                   }
                }
-               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+               simpleRecipeProductOptions(
+                  where: { isActive: { _eq: true }, isArchived: { _eq: false } }
+               ) {
                   id
                   price
                   type
@@ -394,13 +410,17 @@ export const CUSTOMIZABLE_PRODUCT = gql`
       customizableProduct(id: $id) {
          id
          name
+         additionalText
          description
          tags
          isPopupAllowed
          defaultCartItem
          assets
-         customizableProductOptions {
+         price
+         richResult
+         customizableProductOptions(where: { isArchived: { _eq: false } }) {
             id
+            options
             inventoryProduct {
                id
                assets
@@ -427,7 +447,7 @@ export const CUSTOMIZABLE_PRODUCT = gql`
                      data
                   }
                }
-               inventoryProductOptions {
+               inventoryProductOptions(where: { isArchived: { _eq: false } }) {
                   id
                   price
                   quantity
@@ -457,7 +477,9 @@ export const CUSTOMIZABLE_PRODUCT = gql`
                      data
                   }
                }
-               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+               simpleRecipeProductOptions(
+                  where: { isActive: { _eq: true }, isArchived: { _eq: false } }
+               ) {
                   id
                   price
                   type
@@ -489,6 +511,7 @@ export const INVENTORY_PRODUCT = gql`
       inventoryProduct(id: $id) {
          id
          name
+         additionalText
          description
          tags
          assets
@@ -498,6 +521,7 @@ export const INVENTORY_PRODUCT = gql`
          defaultCartItem
          allergens
          nutritionalInfo
+         richResult
          defaultInventoryProductOption {
             id
             price
@@ -509,7 +533,7 @@ export const INVENTORY_PRODUCT = gql`
                data
             }
          }
-         inventoryProductOptions {
+         inventoryProductOptions(where: { isArchived: { _eq: false } }) {
             id
             price
             quantity
@@ -529,6 +553,7 @@ export const SIMPLE_PRODUCT = gql`
       simpleRecipeProduct(id: $id) {
          id
          name
+         additionalText
          default
          tags
          description
@@ -549,7 +574,9 @@ export const SIMPLE_PRODUCT = gql`
                data
             }
          }
-         simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+         simpleRecipeProductOptions(
+            where: { isActive: { _eq: true }, isArchived: { _eq: false } }
+         ) {
             id
             price
             type
@@ -584,6 +611,7 @@ export const INVENTORY_PRODUCTS = gql`
          default
          description
          name
+         additionalText
          tags
          isPopupAllowed
          defaultCartItem
@@ -606,7 +634,7 @@ export const INVENTORY_PRODUCTS = gql`
                data
             }
          }
-         inventoryProductOptions {
+         inventoryProductOptions(where: { isArchived: { _eq: false } }) {
             id
             price
             quantity
@@ -628,6 +656,7 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          default
          assets
          isPopupAllowed
@@ -673,15 +702,22 @@ export const SIMPLE_RECIPE_PRODUCTS = gql`
 export const CUSTOMIZABLE_PRODUCTS = gql`
    query CustomizableProducts($ids: [Int!]!) {
       customizableProducts(
-         where: { id: { _in: $ids }, isPublished: { _eq: true } }
+         where: {
+            id: { _in: $ids }
+            isPublished: { _eq: true }
+            isArchived: { _eq: false }
+         }
       ) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
-         customizableProductOptions {
+         price
+         customizableProductOptions(where: { isArchived: { _eq: false } }) {
             id
+            options
             inventoryProduct {
                id
                assets
@@ -708,7 +744,7 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
                      data
                   }
                }
-               inventoryProductOptions {
+               inventoryProductOptions(where: { isArchived: { _eq: false } }) {
                   id
                   price
                   quantity
@@ -738,7 +774,9 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
                      data
                   }
                }
-               simpleRecipeProductOptions {
+               simpleRecipeProductOptions(
+                  where: { isActive: { _eq: true }, isArchived: { _eq: false } }
+               ) {
                   id
                   price
                   type
@@ -767,21 +805,31 @@ export const CUSTOMIZABLE_PRODUCTS = gql`
 
 export const COMBO_PRODUCTS = gql`
    query ComboProducts($ids: [Int!]!) {
-      comboProducts(where: { id: { _in: $ids }, isPublished: { _eq: true } }) {
+      comboProducts(
+         where: {
+            id: { _in: $ids }
+            isPublished: { _eq: true }
+            isArchived: { _eq: false }
+         }
+      ) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
-         comboProductComponents {
+         price
+         comboProductComponents(where: { isArchived: { _eq: false } }) {
             id
             label
+            options
             customizableProductId
             inventoryProductId
             simpleRecipeProductId
             customizableProduct {
                id
                name
+               price
                defaultCustomizableProductOption {
                   inventoryProduct {
                      assets
@@ -790,8 +838,11 @@ export const COMBO_PRODUCTS = gql`
                      assets
                   }
                }
-               customizableProductOptions {
+               customizableProductOptions(
+                  where: { isArchived: { _eq: false } }
+               ) {
                   id
+                  options
                   inventoryProduct {
                      id
                      assets
@@ -818,7 +869,9 @@ export const COMBO_PRODUCTS = gql`
                            data
                         }
                      }
-                     inventoryProductOptions {
+                     inventoryProductOptions(
+                        where: { isArchived: { _eq: false } }
+                     ) {
                         id
                         price
                         quantity
@@ -848,7 +901,12 @@ export const COMBO_PRODUCTS = gql`
                            data
                         }
                      }
-                     simpleRecipeProductOptions {
+                     simpleRecipeProductOptions(
+                        where: {
+                           isActive: { _eq: true }
+                           isArchived: { _eq: false }
+                        }
+                     ) {
                         id
                         price
                         type
@@ -890,7 +948,7 @@ export const COMBO_PRODUCTS = gql`
                      data
                   }
                }
-               inventoryProductOptions {
+               inventoryProductOptions(where: { isArchived: { _eq: false } }) {
                   id
                   price
                   quantity
@@ -920,7 +978,9 @@ export const COMBO_PRODUCTS = gql`
                      data
                   }
                }
-               simpleRecipeProductOptions {
+               simpleRecipeProductOptions(
+                  where: { isActive: { _eq: true }, isArchived: { _eq: false } }
+               ) {
                   id
                   price
                   type
@@ -972,10 +1032,11 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
-         comboProductComponents {
+         comboProductComponents(where: { isArchived: { _eq: false } }) {
             id
             label
             customizableProductId
@@ -992,7 +1053,9 @@ export const SEARCH_PRODUCTS = gql`
                      assets
                   }
                }
-               customizableProductOptions {
+               customizableProductOptions(
+                  where: { isArchived: { _eq: false } }
+               ) {
                   id
                   inventoryProduct {
                      id
@@ -1020,7 +1083,9 @@ export const SEARCH_PRODUCTS = gql`
                            data
                         }
                      }
-                     inventoryProductOptions {
+                     inventoryProductOptions(
+                        where: { isArchived: { _eq: false } }
+                     ) {
                         id
                         price
                         quantity
@@ -1051,7 +1116,10 @@ export const SEARCH_PRODUCTS = gql`
                         }
                      }
                      simpleRecipeProductOptions(
-                        where: { isActive: { _eq: true } }
+                        where: {
+                           isActive: { _eq: true }
+                           isArchived: { _eq: false }
+                        }
                      ) {
                         id
                         price
@@ -1094,7 +1162,7 @@ export const SEARCH_PRODUCTS = gql`
                      data
                   }
                }
-               inventoryProductOptions {
+               inventoryProductOptions(where: { isArchived: { _eq: false } }) {
                   id
                   price
                   quantity
@@ -1124,7 +1192,9 @@ export const SEARCH_PRODUCTS = gql`
                      data
                   }
                }
-               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+               simpleRecipeProductOptions(
+                  where: { isActive: { _eq: true }, isArchived: { _eq: true } }
+               ) {
                   id
                   price
                   type
@@ -1164,10 +1234,11 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          isPopupAllowed
          defaultCartItem
          assets
-         customizableProductOptions {
+         customizableProductOptions(where: { isArchived: { _eq: false } }) {
             id
             inventoryProduct {
                id
@@ -1195,7 +1266,7 @@ export const SEARCH_PRODUCTS = gql`
                      data
                   }
                }
-               inventoryProductOptions {
+               inventoryProductOptions(where: { isArchived: { _eq: false } }) {
                   id
                   price
                   quantity
@@ -1225,7 +1296,9 @@ export const SEARCH_PRODUCTS = gql`
                      data
                   }
                }
-               simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+               simpleRecipeProductOptions(
+                  where: { isActive: { _eq: true }, isArchived: { _eq: false } }
+               ) {
                   id
                   price
                   type
@@ -1265,6 +1338,7 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          default
          tags
          description
@@ -1284,7 +1358,9 @@ export const SEARCH_PRODUCTS = gql`
                data
             }
          }
-         simpleRecipeProductOptions(where: { isActive: { _eq: true } }) {
+         simpleRecipeProductOptions(
+            where: { isActive: { _eq: true }, isArchived: { _eq: false } }
+         ) {
             id
             price
             type
@@ -1322,6 +1398,7 @@ export const SEARCH_PRODUCTS = gql`
       ) {
          id
          name
+         additionalText
          description
          tags
          assets
@@ -1339,7 +1416,7 @@ export const SEARCH_PRODUCTS = gql`
                data
             }
          }
-         inventoryProductOptions {
+         inventoryProductOptions(where: { isArchived: { _eq: false } }) {
             id
             price
             quantity
@@ -1381,6 +1458,35 @@ export const SET_REFERRAL_CODE = gql`
       crm_setReferralCode(args: { params: $params }) {
          success
          message
+      }
+   }
+`
+
+export const SETTINGS = gql`
+   query StoreSettings($brandId: Int!, $identifier: String!, $type: String!) {
+      storeSettings(
+         where: { identifier: { _eq: $identifier }, type: { _eq: $type } }
+      ) {
+         value
+         brandSettings(where: { brandId: { _eq: $brandId } }) {
+            value
+         }
+      }
+   }
+`
+
+export const ALL_COUPONS = gql`
+   query Coupons($brandId: Int!) {
+      coupons(
+         where: {
+            isActive: { _eq: true }
+            isArchived: { _eq: false }
+            brands: { brandId: { _eq: $brandId }, isActive: { _eq: true } }
+         }
+      ) {
+         id
+         code
+         metaDetails
       }
    }
 `

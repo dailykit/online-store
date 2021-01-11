@@ -63,7 +63,9 @@ const Footer = () => {
                </Text>
             </View>
             <View>
-               {Boolean(brand.termsAndConditions) && (
+               {Boolean(
+                  brand.policyAvailability?.isTermsAndConditionsAvailable
+               ) && (
                   <Text
                      style={{
                         fontSize: '0.9rem',
@@ -76,7 +78,7 @@ const Footer = () => {
                      Terms and Conditions
                   </Text>
                )}
-               {Boolean(brand.privacyPolicy) && (
+               {Boolean(brand.policyAvailability?.isPrivacyPolicyAvailable) && (
                   <Text
                      style={{
                         fontSize: '0.9rem',
@@ -89,7 +91,7 @@ const Footer = () => {
                      Privacy Policy
                   </Text>
                )}
-               {Boolean(brand.refundPolicy) && (
+               {Boolean(brand.policyAvailability?.isRefundPolicyAvailable) && (
                   <Text
                      style={{
                         fontSize: '0.9rem',

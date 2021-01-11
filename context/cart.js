@@ -1,5 +1,5 @@
-import { useMutation, useSubscription } from '@apollo/react-hooks'
 import React, { useState } from 'react'
+import { useMutation, useSubscription } from '@apollo/react-hooks'
 import {
    ONDEMAND_DELIVERY,
    ONDEMAND_PICKUP,
@@ -17,18 +17,19 @@ import {
    isPickUpAvailable,
 } from '../utils/fulfillment'
 import { useAppContext } from './app'
+import { useAuth } from './auth'
 import { useDrawerContext } from './drawer'
 
 const CartContext = React.createContext()
 
 export const CartContextProvider = ({ children }) => {
    const { availability, brandId } = useAppContext()
+   const { user } = useAuth()
 
    const { saved } = useDrawerContext()
 
    React.useEffect(() => {
       if (saved && cart) {
-         console.log('Saved:', saved)
          if (saved.type.includes('card')) {
             updateCart({
                variables: {
@@ -57,7 +58,8 @@ export const CartContextProvider = ({ children }) => {
                         customerFirstName: saved.data.customerInfo.firstName,
                         customerLastName: saved.data.customerInfo.lastName,
                         customerPhone: saved.data.customerInfo.phoneNumber,
-                        customerEmail: saved.data.customerInfo.email,
+                        customerEmail:
+                           saved.data.customerInfo.email || user.email,
                      },
                   },
                },
@@ -77,9 +79,12 @@ export const CartContextProvider = ({ children }) => {
    const [wallet, setWallet] = useState(undefined)
    const [loyaltyPoints, setLoyaltyPoints] = useState(undefined)
    const [customerReferral, setCustomerReferral] = useState(undefined)
+   // To clear modifiers after adding
+   const [modifiersAdded, setModifiersAdded] = useState(undefined)
+   const [comboProductAdded, setComboProductAdded] = useState(undefined)
 
    // local
-   const [distance, setDistance] = useState(0)
+   const [distance, setDistance] = useState(null)
 
    // Subscriptions
    const { data: { preOrderPickup = [] } = {} } = useSubscription(
@@ -103,6 +108,7 @@ export const CartContextProvider = ({ children }) => {
    const { data: { preOrderDelivery = [] } = {} } = useSubscription(
       PREORDER_DELIVERY,
       {
+         skip: distance === null,
          variables: {
             distance,
             brandId,
@@ -113,6 +119,7 @@ export const CartContextProvider = ({ children }) => {
    const { data: { onDemandDelivery = [] } = {} } = useSubscription(
       ONDEMAND_DELIVERY,
       {
+         skip: distance === null,
          variables: {
             distance,
             brandId,
@@ -122,9 +129,6 @@ export const CartContextProvider = ({ children }) => {
 
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
-      onCompleted: () => {
-         console.log('Cart updated!')
-      },
       onError: error => {
          console.log(error)
       },
@@ -152,6 +156,7 @@ export const CartContextProvider = ({ children }) => {
             +availability.location.lat,
             +availability.location.lng
          )
+         console.log('🚀 C distance: ', distance)
          setDistance(distance)
       }
    }, [customerDetails])
@@ -160,6 +165,32 @@ export const CartContextProvider = ({ children }) => {
       try {
          // set fulfillment
          if (distance) {
+            // check for on-demand delivery
+            if (onDemandDelivery[0].recurrences.length) {
+               const result = isDeliveryAvailable(
+                  onDemandDelivery[0].recurrences
+               )
+               if (result.status) {
+                  const date = new Date()
+                  const time = date.getHours() + ':' + date.getMinutes()
+                  const fulfillmentInfo = {
+                     slot: {
+                        distance,
+                        mileRangeId: result.mileRangeId,
+                        ...generateTimeStamp(time, date.toDateString()),
+                     },
+                     type: 'ONDEMAND_DELIVERY',
+                  }
+                  return updateCart({
+                     variables: {
+                        id: cart.id,
+                        set: {
+                           fulfillmentInfo,
+                        },
+                     },
+                  })
+               }
+            }
             // check for pre-order delivery
             if (preOrderDelivery[0].recurrences.length) {
                const result = generateDeliverySlots(
@@ -170,6 +201,7 @@ export const CartContextProvider = ({ children }) => {
                   if (miniSlots.length) {
                      const fulfillmentInfo = {
                         slot: {
+                           distance,
                            mileRangeId: miniSlots[0].slots[0].mileRangeId,
                            ...generateTimeStamp(
                               miniSlots[0].slots[0].time,
@@ -178,7 +210,6 @@ export const CartContextProvider = ({ children }) => {
                         },
                         type: 'PREORDER_DELIVERY',
                      }
-                     console.log('Default fulfillment: ', fulfillmentInfo)
                      return updateCart({
                         variables: {
                            id: cart.id,
@@ -190,34 +221,27 @@ export const CartContextProvider = ({ children }) => {
                   }
                }
             }
-            // check for on-demand delivery
-            if (onDemandDelivery[0].recurrences.length) {
-               const result = isDeliveryAvailable(
-                  onDemandDelivery[0].recurrences
-               )
-               if (result.status) {
-                  const date = new Date()
-                  const time = date.getHours() + ':' + date.getMinutes()
-                  const fulfillmentInfo = {
-                     slot: {
-                        mileRangeId: result.mileRangeId,
-                        ...generateTimeStamp(time, date.toDateString()),
-                     },
-                     type: 'ONDEMAND_DELIVERY',
-                  }
-                  console.log('Default fulfillment: ', fulfillmentInfo)
-                  return updateCart({
-                     variables: {
-                        id: cart.id,
-                        set: {
-                           fulfillmentInfo,
-                        },
-                     },
-                  })
-               }
-            }
          }
          // delivery not possible, then look for pickup options
+         if (onDemandPickup[0].recurrences.length) {
+            const result = isPickUpAvailable(onDemandPickup[0].recurrences)
+            if (result.status) {
+               const date = new Date()
+               const time = date.getHours() + ':' + date.getMinutes()
+               const fulfillmentInfo = {
+                  slot: generateTimeStamp(time, date.toDateString()),
+                  type: 'ONDEMAND_PICKUP',
+               }
+               return updateCart({
+                  variables: {
+                     id: cart.id,
+                     set: {
+                        fulfillmentInfo,
+                     },
+                  },
+               })
+            }
+         }
          if (preOrderPickup[0].recurrences.length) {
             const result = generatePickUpSlots(preOrderPickup[0].recurrences)
             if (result.status) {
@@ -230,7 +254,6 @@ export const CartContextProvider = ({ children }) => {
                      ),
                      type: 'PREORDER_PICKUP',
                   }
-                  console.log('Default fulfillment: ', fulfillmentInfo)
                   return updateCart({
                      variables: {
                         id: cart.id,
@@ -240,26 +263,6 @@ export const CartContextProvider = ({ children }) => {
                      },
                   })
                }
-            }
-         }
-         if (onDemandPickup[0].recurrences.length) {
-            const result = isPickUpAvailable(onDemandPickup[0].recurrences)
-            if (result.status) {
-               const date = new Date()
-               const time = date.getHours() + ':' + date.getMinutes()
-               const fulfillmentInfo = {
-                  slot: generateTimeStamp(time, date.toDateString()),
-                  type: 'ONDEMAND_PICKUP',
-               }
-               console.log('Default fulfillment: ', fulfillmentInfo)
-               return updateCart({
-                  variables: {
-                     id: cart.id,
-                     set: {
-                        fulfillmentInfo,
-                     },
-                  },
-               })
             }
          }
       } catch (error) {
@@ -272,8 +275,8 @@ export const CartContextProvider = ({ children }) => {
          if (cart && !cart.fulfillmentInfo) {
             generateDefaultFulfillment()
          }
-      } catch (e) {
-         console.log(e)
+      } catch (error) {
+         console.log(error)
       }
    }, [cart])
 
@@ -282,8 +285,8 @@ export const CartContextProvider = ({ children }) => {
          if (cart?.address) {
             generateDefaultFulfillment()
          }
-      } catch (e) {
-         console.log(e)
+      } catch (error) {
+         console.log(error)
       }
    }, [cart?.address?.id])
 
@@ -302,6 +305,10 @@ export const CartContextProvider = ({ children }) => {
             setLoyaltyPoints,
             customerReferral,
             setCustomerReferral,
+            modifiersAdded,
+            setModifiersAdded,
+            comboProductAdded,
+            setComboProductAdded,
          }}
       >
          {children}

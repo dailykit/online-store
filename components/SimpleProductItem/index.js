@@ -112,6 +112,7 @@ const SimpleProductItem = ({
          refType={refType}
          onModifiersSelected={modifiersHandler}
          onValidityChange={onModifiersValidityChange}
+         comboProductComponent={comboProductComponent}
       />
    )
 }

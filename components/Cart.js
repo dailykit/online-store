@@ -31,7 +31,14 @@ const Cart = ({
    product,
    isDisabled,
 }) => {
-   const { cart, customerDetails, customer, setCart } = useCartContext()
+   const {
+      cart,
+      customerDetails,
+      customer,
+      setCart,
+      setModifiersAdded,
+      setComboProductAdded,
+   } = useCartContext()
    const { brandId, visual } = useAppContext()
    const { open } = useDrawerContext()
    const { isAuthenticated, login, user } = useAuth()
@@ -87,17 +94,19 @@ const Cart = ({
                      0
                   ),
                0
-            )
+            ) +
+               discountedPrice({
+                  value: product.price.value,
+                  discount: product.price.discount,
+               })
          )
       }
    }, [comboProductItems])
 
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: data => {
-         console.log('Product added!')
          toastr('success', 'Item added!')
          if (!customer) {
-            console.log(data.updateCart)
             setCart(data.updateCart.returning[0])
          }
       },
@@ -107,7 +116,6 @@ const Cart = ({
    })
    const [createCart] = useMutation(CREATE_CART, {
       onCompleted: data => {
-         console.log('Cart created!')
          toastr('success', 'Item added!')
          if (!customer) {
             AsyncStorage.setItem('PENDING_CART_ID', data.createCart.id)
@@ -125,18 +133,18 @@ const Cart = ({
          let total = parseFloat(cart?.cartInfo?.total) || 0
          if (tunnelItem) {
             if (type === 'comboProduct') {
-               console.log(comboProductItems)
                const price = priceShown
-               const priceWithoutDiscount = comboProductItems.reduce(
-                  (acc, product) =>
-                     acc +
-                     parseFloat(product.unitPrice) +
-                     product.modifiers.reduce(
-                        (acc, modifier) => acc + parseFloat(modifier.price),
-                        0
-                     ),
-                  0
-               )
+               const priceWithoutDiscount =
+                  comboProductItems.reduce(
+                     (acc, product) =>
+                        acc +
+                        parseFloat(product.unitPrice) +
+                        product.modifiers.reduce(
+                           (acc, modifier) => acc + parseFloat(modifier.price),
+                           0
+                        ),
+                     0
+                  ) + product.price.value
                const totalPrice = parseFloat((price * quantity).toFixed(2))
                total = total + totalPrice
                products.push({
@@ -154,7 +162,6 @@ const Cart = ({
                   specialInstructions: '',
                })
             } else {
-               console.log('cartItem', cartItem)
                const price = priceShown
                const priceWithoutDiscount =
                   parseFloat(cartItem.price) +
@@ -178,7 +185,6 @@ const Cart = ({
                   specialInstructions: '',
                }
                delete item.price
-               console.log(item)
                products.push(item)
                total = total + parseFloat(item.totalPrice)
             }
@@ -188,7 +194,6 @@ const Cart = ({
                   products,
                   total,
                }
-               console.log('Cart ID', cart)
                updateCart({
                   variables: {
                      id: cart.id,
@@ -224,12 +229,15 @@ const Cart = ({
                         customerKeycloakId: user.sub || user.id || null,
                         cartSource: 'a-la-carte',
                         brandId: brandId,
+                        isTest: !!customer?.isTest,
                      },
                   },
                })
             }
          }
          if (text === 'Checkout') navigation.navigate('OrderSummary')
+         setModifiersAdded(Math.random() * 1000 + 1)
+         setComboProductAdded(Math.random() * 1000 + 1)
          setIsModalVisible(false)
       } catch (error) {
          console.log(error)

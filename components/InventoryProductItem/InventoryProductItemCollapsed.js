@@ -25,6 +25,7 @@ const InventoryProductCollapsed = ({
    refId,
    onModifiersSelected,
    onValidityChange,
+   comboProductComponent,
 }) => {
    const { visual } = useAppContext()
 
@@ -117,7 +118,7 @@ const InventoryProductCollapsed = ({
                      style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        minHeight: width > 768 ? 68 : 56,
+                        minHeight: width > 768 ? 60 : 56,
                         alignItems: 'flex-start',
                      }}
                   >
@@ -133,6 +134,22 @@ const InventoryProductCollapsed = ({
                         ellipsizeMode="tail"
                      >{`${inventoryProduct.name} `}</Text>
                   </View>
+                  {Boolean(inventoryProduct.additionalText) && (
+                     <Text
+                        style={[
+                           styles.item_title,
+                           {
+                              fontSize: width > 768 ? 13 : 12,
+                              lineHeight: 24,
+                              color: '#686b78',
+                           },
+                        ]}
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                     >
+                        {inventoryProduct.additionalText}
+                     </Text>
+                  )}
                   <View style={styles.item_three_lower}>
                      {!tunnelItem && (
                         <Text
@@ -190,6 +207,7 @@ const InventoryProductCollapsed = ({
                               setSelectedOption(item_data)
                            }
                            type="inventoryProduct"
+                           showPlusIcon={!!comboProductComponent}
                         />
                      )
                   }

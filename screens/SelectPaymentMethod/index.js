@@ -17,15 +17,9 @@ export default ({ navigation }) => {
 
    const [loading, setLoading] = React.useState(false)
 
-   const _onChange = formData =>
-      console.log(JSON.stringify(formData, null, ' '))
-   const _onFocus = field => console.log('focusing', field)
-   const _setUseLiteCreditCardInput = useLiteCreditCardInput =>
-      setUseLiteCreditCardInput(useLiteCreditCardInput)
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
-         console.log('Payment method updated!')
          setLoading(false)
          setIsDrawerOpen(false)
       },

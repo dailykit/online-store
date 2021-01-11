@@ -1,80 +1,28 @@
 import React from 'react'
-import styled from 'styled-components/native'
-import { useMutation, useSubscription } from '@apollo/react-hooks'
-import { COUPONS, CREATE_ORDER_CART_REWARDS } from '../../../graphql'
-import { useCartContext } from '../../../context/cart'
-import { useAppContext } from '../../../context/app'
+import { useQuery } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
-import { useDrawerContext } from '../../../context/drawer'
-import { useStoreToast } from '../../../utils'
-import CouponsSkeleton from '../../../components/skeletons/coupons'
+import styled from 'styled-components/native'
+import { useAppContext } from '../context/app'
+import { ALL_COUPONS } from '../graphql'
+import CouponsSkeleton from './skeletons/coupons'
 
-const CouponList = () => {
-   const { cart, customer } = useCartContext()
+export default function AllCouponList() {
    const { brandId } = useAppContext()
-   const { setIsDrawerOpen } = useDrawerContext()
-   const { toastr } = useStoreToast()
 
-   const [applying, setApplying] = React.useState(false)
    const [availableCoupons, setAvailableCoupons] = React.useState([])
 
-   // Subscription
-   const { data, loading, error } = useSubscription(COUPONS, {
+   const { loading } = useQuery(ALL_COUPONS, {
       variables: {
-         params: {
-            cartId: cart.id,
-            keycloakId: customer.keycloakId,
-         },
          brandId,
       },
-      onSubscriptionData: data => {
-         const coupons = data.subscriptionData.data.coupons
-         setAvailableCoupons([
-            ...coupons.filter(coupon => coupon.visibilityCondition?.isValid),
-         ])
-      },
-   })
-
-   if (error) console.log(error)
-
-   // Mutation
-   const [createOrderCartRewards] = useMutation(CREATE_ORDER_CART_REWARDS, {
       onCompleted: data => {
-         toastr('success', 'Coupon applied!')
-         setIsDrawerOpen(false)
+         const coupons = data.coupons
+         setAvailableCoupons([...coupons])
       },
       onError: error => {
          console.log(error)
       },
    })
-
-   // Handler
-   const applyCoupon = coupon => {
-      try {
-         if (applying) return
-         setApplying(true)
-         const objects = []
-         if (coupon.isRewardMulti) {
-            for (const reward in coupon.rewards) {
-               objects.push({ rewardId: reward.id, orderCartId: cart.id })
-            }
-         } else {
-            objects.push({
-               rewardId: coupon.rewards[0].id,
-               orderCartId: cart.id,
-            })
-         }
-         createOrderCartRewards({
-            variables: {
-               objects,
-            },
-         })
-      } catch (err) {
-         console.log(err)
-      } finally {
-         setApplying(false)
-      }
-   }
 
    if (loading) return <CouponsSkeleton />
 
@@ -83,7 +31,7 @@ const CouponList = () => {
          {availableCoupons.length ? (
             <Wrapper>
                {availableCoupons.map(coupon => (
-                  <Coupon coupon={coupon} applyCoupon={applyCoupon} />
+                  <Coupon coupon={coupon} />
                ))}
             </Wrapper>
          ) : (
@@ -95,9 +43,7 @@ const CouponList = () => {
    )
 }
 
-export default CouponList
-
-const Coupon = ({ coupon, applyCoupon }) => {
+const Coupon = ({ coupon }) => {
    const { visual } = useAppContext()
 
    const [isDescVisible, setIsDescVisible] = React.useState(false)
@@ -106,14 +52,6 @@ const Coupon = ({ coupon, applyCoupon }) => {
       <CouponContainer>
          <CouponHeader>
             <CouponCode>{coupon.code}</CouponCode>
-            <CTA
-               onPress={() => applyCoupon(coupon)}
-               disabled={
-                  !coupon.rewards.every(reward => reward.condition?.isValid)
-               }
-            >
-               <CTAText color={visual.color}>Apply</CTAText>
-            </CTA>
          </CouponHeader>
          <TitleText>{coupon.metaDetails?.title || ''}</TitleText>
          {isDescVisible ? (

@@ -1,8 +1,7 @@
+import React from 'react'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { Picker } from '@react-native-picker/picker'
-import { Spinner } from 'native-base'
-import React from 'react'
 import {
    ScrollView,
    StyleSheet,
@@ -10,10 +9,8 @@ import {
    TouchableOpacity,
    View,
 } from 'react-native'
-import FulfillmentSkeleton from './skeletons/fulfillment'
 import { useAppContext } from '../context/app'
 import { useCartContext } from '../context/cart'
-import { useDrawerContext } from '../context/drawer'
 import {
    ONDEMAND_DELIVERY,
    ONDEMAND_PICKUP,
@@ -31,11 +28,12 @@ import {
    isPickUpAvailable,
 } from '../utils/fulfillment'
 import { DefaultAddressFloater } from './DefaultFloater'
+import FulfillmentSkeleton from './skeletons/fulfillment'
 
 const Fulfillment = ({ navigation, setEditing }) => {
    const { visual, availability, brandId } = useAppContext()
    const { cart } = useCartContext()
-   const [distance, setDistance] = React.useState(0)
+   const [distance, setDistance] = React.useState(null)
    const [type, setType] = React.useState('')
    const [time, setTime] = React.useState('')
    const [oops, setOops] = React.useState('')
@@ -46,7 +44,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
-         console.log('Cart updated!')
          setEditing(false)
       },
       onError: error => {
@@ -76,6 +73,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
       data: { preOrderDelivery = [] } = {},
       loading: PDLoading,
    } = useSubscription(PREORDER_DELIVERY, {
+      skip: distance === null,
       variables: {
          distance,
          brandId,
@@ -86,6 +84,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
       data: { onDemandDelivery = [] } = {},
       loading: ODLoading,
    } = useSubscription(ONDEMAND_DELIVERY, {
+      skip: distance === null,
       variables: {
          distance,
          brandId,
@@ -95,12 +94,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
    React.useEffect(() => {
       setTime('')
       setOops('')
-      console.log('User LatLng: ', cart?.address?.lat, cart?.address?.lng)
-      console.log(
-         'Store LatLng: ',
-         availability.location.lat,
-         availability.location.lng
-      )
       if (
          cart?.address?.lat &&
          cart?.address?.lng &&
@@ -150,6 +143,32 @@ const Fulfillment = ({ navigation, setEditing }) => {
                case 'PICKUP': {
                   if (availability.pickup.isAvailable) {
                      switch (time) {
+                        case 'ONDEMAND': {
+                           if (onDemandPickup[0]?.recurrences?.length) {
+                              const result = isPickUpAvailable(
+                                 onDemandPickup[0].recurrences
+                              )
+                              if (result.status) {
+                                 const date = new Date()
+                                 setFulfillment({
+                                    date: date.toDateString(),
+                                    slot: {
+                                       time:
+                                          date.getHours() +
+                                          ':' +
+                                          date.getMinutes(),
+                                    },
+                                 })
+                              } else {
+                                 setOops(
+                                    'Sorry! Option not available currently!'
+                                 )
+                              }
+                           } else {
+                              setOops('Sorry! Option not available currently.')
+                           }
+                           break
+                        }
                         case 'PREORDER': {
                            if (preOrderPickup[0]?.recurrences?.length) {
                               const result = generatePickUpSlots(
@@ -179,32 +198,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
                            }
                            break
                         }
-                        case 'ONDEMAND': {
-                           if (onDemandPickup[0]?.recurrences?.length) {
-                              const result = isPickUpAvailable(
-                                 onDemandPickup[0].recurrences
-                              )
-                              if (result.status) {
-                                 const date = new Date()
-                                 setFulfillment({
-                                    date: date.toDateString(),
-                                    slot: {
-                                       time:
-                                          date.getHours() +
-                                          ':' +
-                                          date.getMinutes(),
-                                    },
-                                 })
-                              } else {
-                                 setOops(
-                                    'Sorry! Option not available currently!'
-                                 )
-                              }
-                           } else {
-                              setOops('Sorry! Option not available currently.')
-                           }
-                           break
-                        }
                         default: {
                            return setOops('Unknown error!')
                         }
@@ -215,18 +208,45 @@ const Fulfillment = ({ navigation, setEditing }) => {
                   break
                }
                case 'DELIVERY': {
-                  console.log('Distance: ', distance)
                   if (!distance) {
                      return setOops('Please add an address first!')
                   }
                   if (availability.delivery.isAvailable) {
                      switch (time) {
+                        case 'ONDEMAND': {
+                           if (onDemandDelivery[0]?.recurrences?.length) {
+                              const result = isDeliveryAvailable(
+                                 onDemandDelivery[0].recurrences
+                              )
+                              if (result.status) {
+                                 const date = new Date()
+                                 setFulfillment({
+                                    distance,
+                                    date: date.toDateString(),
+                                    slot: {
+                                       time:
+                                          date.getHours() +
+                                          ':' +
+                                          date.getMinutes(),
+                                       mileRangeId: result.mileRangeId,
+                                    },
+                                 })
+                              } else {
+                                 setOops(
+                                    result.message ||
+                                       'Sorry! Delivery not available at the moment.'
+                                 )
+                              }
+                           } else {
+                              setOops('Sorry! Option not available currently.')
+                           }
+                           break
+                        }
                         case 'PREORDER': {
                            if (preOrderDelivery[0]?.recurrences?.length) {
                               const result = generateDeliverySlots(
                                  preOrderDelivery[0].recurrences
                               )
-                              console.log('Fulfillment -> result', result)
                               if (result.status) {
                                  const miniSlots = generateMiniSlots(
                                     result.data,
@@ -235,6 +255,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
                                  if (miniSlots.length) {
                                     setPickerDates([...miniSlots])
                                     setFulfillment({
+                                       distance,
                                        date: miniSlots[0].date,
                                        slot: {
                                           time: miniSlots[0].slots[0].time,
@@ -253,34 +274,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
                               }
                            } else {
                               setOops('Sorry! No time slots available.')
-                           }
-                           break
-                        }
-                        case 'ONDEMAND': {
-                           if (onDemandDelivery[0]?.recurrences?.length) {
-                              const result = isDeliveryAvailable(
-                                 onDemandDelivery[0].recurrences
-                              )
-                              if (result.status) {
-                                 const date = new Date()
-                                 setFulfillment({
-                                    date: date.toDateString(),
-                                    slot: {
-                                       time:
-                                          date.getHours() +
-                                          ':' +
-                                          date.getMinutes(),
-                                       mileRangeId: result.mileRangeId,
-                                    },
-                                 })
-                              } else {
-                                 setOops(
-                                    result.message ||
-                                       'Sorry! Delivery not available at the moment.'
-                                 )
-                              }
-                           } else {
-                              setOops('Sorry! Option not available currently.')
                            }
                            break
                         }
@@ -310,12 +303,12 @@ const Fulfillment = ({ navigation, setEditing }) => {
          }
          const fulfillmentInfo = {
             type: time + '_' + type,
+            distance,
             slot: {
                mileRangeId: fulfillment.slot?.mileRangeId || null,
                ...generateTimeStamp(fulfillment.slot.time, fulfillment.date),
             },
          }
-         console.log(fulfillmentInfo)
          updateCart({
             variables: {
                id: cart.id,

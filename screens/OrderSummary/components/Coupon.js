@@ -44,9 +44,6 @@ const Coupon = ({ cart }) => {
       variables: {
          cartId: cart.id,
       },
-      onCompleted: () => {
-         console.log('Coupon removed!')
-      },
       onError: err => {
          console.log(err)
       },

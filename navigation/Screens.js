@@ -1,52 +1,45 @@
 import React from 'react'
-import { AsyncStorage } from 'react-native'
-import { CLIENTID, MAPS_API_KEY, CURRENCY } from 'react-native-dotenv'
-// 12
+import { useLazyQuery, useMutation, useSubscription } from '@apollo/react-hooks'
 import { createDrawerNavigator } from '@react-navigation/drawer'
-import { useNavigation } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import {
-   useLazyQuery,
-   useMutation,
-   useQuery,
-   useSubscription,
-} from '@apollo/react-hooks'
+import { AsyncStorage } from 'react-native'
+import { CURRENCY, MAPS_API_KEY, CLIENTID } from 'react-native-dotenv'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { useCartContext } from '../context/cart'
+import { useDrawerContext } from '../context/drawer'
 import {
    CART,
-   CREATE_CUSTOMER,
    CUSTOMER,
+   CUSTOMER_REFERRAL,
    DELETE_CARTS,
    FETCH_CART,
-   STORE_SETTINGS,
+   GET_MENU,
+   LOYALTY_POINTS,
+   PAYMENT_PARTNERSHIP,
    UPDATE_CART,
    WALLETS,
-   LOYALTY_POINTS,
-   CUSTOMER_REFERRAL,
-   BRANDS,
-   GET_MENU,
-   CREATE_BRAND_CUSTOMER,
-   PAYMENT_PARTNERSHIP,
 } from '../graphql'
-import CategoryProductsPage from '../screens/CategoryProductsPage'
-// screens
-import Home from '../screens/Home'
-import LoginSuccess from '../screens/LoginSuccess'
-import Order from '../screens/Order'
-import OrderHistory from '../screens/OrderHistory'
-import OrderSummary from '../screens/OrderSummary'
-import ProductPage from '../screens/ProductPage'
-import ProfileScreen from '../screens/ProfileScreen'
-import Recipe from '../screens/Recipe'
-import Search from '../screens/Search'
 import { mergeCarts } from '../utils'
 import { width } from '../utils/Scaling'
 import { useScript } from '../utils/useScript'
+import { getStoreData } from '../api'
+
 // drawer
 import CustomDrawerContent from './Menu'
-import { useDrawerContext } from '../context/drawer'
+// screens
+const Home = React.lazy(() => import('../screens/Home'))
+const LoginSuccess = React.lazy(() => import('../screens/LoginSuccess'))
+const Order = React.lazy(() => import('../screens/Order'))
+const OrderHistory = React.lazy(() => import('../screens/OrderHistory'))
+const OrderSummary = React.lazy(() => import('../screens/OrderSummary'))
+const ProductPage = React.lazy(() => import('../screens/ProductPage'))
+const CategoryProductsPage = React.lazy(() =>
+   import('../screens/CategoryProductsPage')
+)
+const ProfileScreen = React.lazy(() => import('../screens/ProfileScreen'))
+const Recipe = React.lazy(() => import('../screens/Recipe'))
+const Search = React.lazy(() => import('../screens/Search'))
 
 const Stack = createStackNavigator()
 const Drawer = createDrawerNavigator()
@@ -57,8 +50,6 @@ export default function OnboardingStack(props) {
    )
 
    if (mapsError) console.log('Error loading Maps:', mapsError)
-
-   const [settingsMapped, setSettingsMapped] = React.useState(false)
 
    const { user, isInitialized, isAuthenticated } = useAuth()
    const {
@@ -91,321 +82,47 @@ export default function OnboardingStack(props) {
    const [cartId, setCartId] = React.useState(null) // Pending Cart Id
    const [settingCart, setSettingCart] = React.useState(true)
    const [settingUser, setSettingUser] = React.useState(true)
-
-   // Query for Brand ID
-   useQuery(BRANDS, {
-      variables: {
-         domain: window.location.hostname,
-      },
-      onCompleted: data => {
-         if (data.brands.length) {
-            const domain = window.location.hostname
-            const brand =
-               data.brands.find(brand => brand.domain === domain) ||
-               data.brands.find(brand => brand.isDefault)
-            setBrandId(brand.id)
-         } else {
-            console.log('COULD NOT RESOLVE BRAND')
-         }
-      },
-      onError: error => {
-         console.log(error)
-      },
-   })
-
-   // Query for settings
-   const { loading: settingsLoading, error: settingsError } = useSubscription(
-      STORE_SETTINGS,
-      {
-         variables: {
-            brandId,
-         },
-         skip: Boolean(!brandId),
-         onSubscriptionData: data => {
-            let brandState = {}
-            let visualState = {}
-            let availabilityState = {}
-            let rewardsState = {}
-            let appState = {}
-
-            data.subscriptionData.data.storeSettings.forEach(
-               ({ identifier, value, brandSettings }) => {
-                  switch (identifier) {
-                     case 'Brand Logo': {
-                        brandState.logo =
-                           brandSettings[0]?.value.url || value.url
-                        return
-                     }
-                     case 'Brand Name': {
-                        brandState.name =
-                           brandSettings[0]?.value.name || value.name
-                        return
-                     }
-                     case 'Nav Links': {
-                        brandState.navLinks = brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Contact': {
-                        brandState.contact = brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Terms and Conditions': {
-                        brandState.termsAndConditions =
-                           brandSettings[0]?.value?.value || value.value
-                        return
-                     }
-                     case 'Privacy Policy': {
-                        brandState.privacyPolicy =
-                           brandSettings[0]?.value?.value || value.value
-                        return
-                     }
-                     case 'Refund Policy': {
-                        brandState.refundPolicy =
-                           brandSettings[0]?.value?.value || value.value
-                        return
-                     }
-                     case 'Primary Color': {
-                        visualState.color =
-                           brandSettings[0]?.value.color || value.color
-                        return
-                     }
-                     case 'Slides': {
-                        visualState.slides = brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Store Availability': {
-                        availabilityState.store =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Pickup Availability': {
-                        availabilityState.pickup =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Delivery Availability': {
-                        availabilityState.delivery =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Referral Availability': {
-                        availabilityState.referral =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Location': {
-                        availabilityState.location =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Loyalty Points Availability': {
-                        rewardsState.isLoyaltyPointsAvailable =
-                           brandSettings[0]?.value.isAvailable ??
-                           value.isAvailable
-                        return
-                     }
-                     case 'Wallet Availability': {
-                        rewardsState.isWalletAvailable =
-                           brandSettings[0]?.value.isAvailable ??
-                           value.isAvailable
-                        return
-                     }
-                     case 'Coupons Availability': {
-                        rewardsState.isCouponsAvailable =
-                           brandSettings[0]?.value.isAvailable ??
-                           value.isAvailable
-                        return
-                     }
-                     case 'Loyalty Points Usage': {
-                        rewardsState.loyaltyPointsUsage =
-                           brandSettings[0]?.value || value
-                        return
-                     }
-                     case 'Scripts': {
-                        appState.scripts =
-                           brandSettings[0]?.value?.value || value?.value
-                        return
-                     }
-                     default: {
-                        return
-                     }
-                  }
-               }
-            )
-
-            console.log(
-               'OnboardingStack -> availabilityState',
-               availabilityState
-            )
-            setBrand({ ...brandState })
-            setVisual({ ...visualState })
-            setAvailability({ ...availabilityState })
-            setRewardsSettings({ ...rewardsState })
-            setAppSettings({ ...appState })
-
-            setSettingsMapped(true)
-         },
-      }
-   )
-
-   if (settingsError) {
-      setSettingsMapped(true)
-      console.log(error)
-   }
-
-   // Payment Partnership
-   const [fetchPaymentPartnerships] = useLazyQuery(PAYMENT_PARTNERSHIP, {
-      onCompleted: data => {
-         if (data.brands_brand_paymentPartnership.length) {
-            console.log(
-               'Fetched payment partnerships: ',
-               data.brands_brand_paymentPartnership
-            )
-            setPaymentPartnershipIds(data.brands_brand_paymentPartnership)
-         }
-      },
-      onError: error => {
-         console.log(error)
-      },
-   })
+   const [dataLoading, setDataLoading] = React.useState(true)
 
    React.useEffect(() => {
-      if (brandId) {
-         console.log('Fetching payment partnership...')
-         fetchPaymentPartnerships({
-            variables: {
-               brandId,
-            },
-         })
-      }
-   }, [brandId])
-
-   React.useEffect(() => {
-      console.log('Screens -> cart.paymentStatus ', cart?.paymentStatus)
-      if (cart?.paymentStatus === 'SUCCEEDED' && CURRENCY === 'INR') {
-         open('Payment', { cartId: cart.id })
-      }
-   }, [cart?.paymentStatus])
-
-   // Subscription for Cart when logged in
-   const { loading: subscribingCart } = useSubscription(CART, {
-      variables: {
-         customerId: customer?.id,
-         brandId,
-      },
-      skip: !Boolean(customer?.id && brandId),
-      onSubscriptionData: data => {
-         console.log('Found carts:', data.subscriptionData.data.cart)
-         if (data.subscriptionData.data.cart.length > 1) {
-            const [mergedCart, mergedCartIds] = mergeCarts(
-               data.subscriptionData.data.cart
-            )
-            console.log('mergedCart', mergedCart)
-            updateCart({
-               variables: {
-                  id: mergedCart.id,
-                  set: {
-                     cartInfo: mergedCart.cartInfo,
-                  },
-               },
-            })
-            deleteCarts({
-               variables: {
-                  ids: mergedCartIds,
-               },
-            })
-         } else {
-            const cart = data.subscriptionData.data.cart[0]
-            setCart(cart)
-         }
-         setSettingCart(false)
-      },
-   })
-
-   // Mutation for creating customer
-   const [createCustomer, { loading: creatingCustomer }] = useMutation(
-      CREATE_CUSTOMER,
-      {
-         onCompleted: data => {
-            setCustomer(data.createCustomer)
-            setCustomerDetails(data.createCustomer.platform_customer)
-            // Check for any pending cart
-            if (cartId) {
-               updateCart({
-                  variables: {
-                     id: cartId,
-                     set: {
-                        customerId: data.createCustomer.id,
-                        customerKeycloakId: data.createCustomer.keycloakId,
-                        stripeCustomerId: null,
-                        customerInfo: null,
-                     },
-                  },
+      ;(async () => {
+         if (isInitialized) {
+            try {
+               const data = await getStoreData({
+                  clientId: CLIENTID,
+                  domain: window.location.hostname,
+                  email: user.email,
+                  keycloakId: user.sub || user.id,
                })
+               if (data.success) {
+                  const { settings, brandId, customer } = data.data
+                  setBrandId(brandId)
+                  setBrand(settings.brand)
+                  setVisual(settings.visual)
+                  setAppSettings(settings.appSettings)
+                  setAvailability(settings.availability)
+                  setRewardsSettings(settings.rewardsSettings)
+                  setCustomer(customer)
+               }
+            } catch (err) {
+               console.log(err)
+            } finally {
+               setDataLoading(false)
             }
-            setSettingUser(false)
-            console.log('Customer created: ', data.createCustomer)
-            if (availability?.referral?.isAvailable) {
-               console.log('Referral available')
-               open('ReferralCode')
-            }
-         },
-         onError: error => {
-            console.log(error)
-         },
-      }
-   )
+         }
+      })()
+   }, [isInitialized, user])
 
-   const [
-      createBrandCustomer,
-      { loading: creatingBrandCustomer },
-   ] = useMutation(CREATE_BRAND_CUSTOMER, {
-      onCompleted: data => {
-         setCustomer({
-            ...customer,
-            brandCustomers: [
-               ...customer.brandCustomers,
-               data.createBrandCustomer,
-            ],
-         })
-         console.log('Created brand customer!')
-      },
-      onError: error => {
-         console.log(error)
-         console.error('Could not create brand customer!')
-      },
-   })
-
-   // Query Customer and Data from platform
-   const [fetchCustomer, { error, loading: fetchingCustomer }] = useLazyQuery(
+   const [fetchCustomer, { loading: fetchingCustomer }] = useLazyQuery(
       CUSTOMER,
       {
          onCompleted: data => {
-            console.log('Customer:', data)
-
             if (data.customer) {
                setCustomer(data.customer)
                setCustomerDetails(data.customer.platform_customer)
 
-               // check if customer exists on brand
-               const brandCustomerRecord = data.customer.brandCustomers.find(
-                  record => record.brandId === brandId
-               )
-               console.log('brandCustomerRecord', brandCustomerRecord)
-               if (!brandCustomerRecord) {
-                  createBrandCustomer({
-                     variables: {
-                        object: {
-                           brandId,
-                           keycloakId: data.customer.keycloakId,
-                        },
-                     },
-                  })
-               }
-
-               // check if any exisiting carts
+               // check if any existing carts
                if (data.customer.orderCarts.length) {
-                  console.log('Found cart with customer...')
                   setCart(data.customer.orderCarts[0])
                }
 
@@ -435,46 +152,91 @@ export default function OnboardingStack(props) {
                               customerEmail:
                                  data.customer.platform_customer?.email,
                            },
+                           isTest: !!data.customer.isTest,
                         },
                      },
                   })
                }
-            } else {
-               createCustomer({
-                  variables: {
-                     object: {
-                        keycloakId: user.sub || user.userid,
-                        email: user.email,
-                        source: 'online store',
-                        clientId: CLIENTID,
-                        sourceBrandId: brandId,
-                        brandCustomers: {
-                           data: {
-                              brandId,
-                           },
-                        },
-                     },
-                  },
-               })
             }
+         },
+         onError: error => {
+            console.log(error)
          },
       }
    )
 
    React.useEffect(() => {
-      if (brandId && (user.sub || user.id)) {
+      if (customer && customer.id && brandId) {
+         console.log('Fetching customer again for platform details....')
          fetchCustomer({
             variables: {
-               keycloakId: user.sub || user.userid,
+               keycloakId: customer.keycloakId,
                brandId,
             },
          })
-      } else {
-         setSettingUser(false)
       }
-   }, [brandId, user])
+   }, [customer, brandId])
 
-   // if (error) console.log('Customer fetch error: ', error)
+   // Payment Partnership
+   const [fetchPaymentPartnerships] = useLazyQuery(PAYMENT_PARTNERSHIP, {
+      onCompleted: data => {
+         if (data.brands_brand_paymentPartnership.length) {
+            setPaymentPartnershipIds(data.brands_brand_paymentPartnership)
+         }
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   React.useEffect(() => {
+      if (brandId && CURRENCY === 'INR') {
+         fetchPaymentPartnerships({
+            variables: {
+               brandId,
+            },
+         })
+      }
+   }, [brandId])
+
+   React.useEffect(() => {
+      if (cart?.paymentStatus === 'SUCCEEDED' && CURRENCY === 'INR') {
+         open('Payment', { cartId: cart.id })
+      }
+   }, [cart?.paymentStatus])
+
+   // Subscription for Cart when logged in
+   const { loading: subscribingCart } = useSubscription(CART, {
+      variables: {
+         customerId: customer?.id,
+         brandId,
+      },
+      skip: !Boolean(customer?.id && brandId),
+      onSubscriptionData: data => {
+         if (data.subscriptionData.data.cart.length > 1) {
+            const [mergedCart, mergedCartIds] = mergeCarts(
+               data.subscriptionData.data.cart
+            )
+            updateCart({
+               variables: {
+                  id: mergedCart.id,
+                  set: {
+                     cartInfo: mergedCart.cartInfo,
+                  },
+               },
+            })
+            deleteCarts({
+               variables: {
+                  ids: mergedCartIds,
+               },
+            })
+         } else {
+            const cart = data.subscriptionData.data.cart[0]
+            setCart(cart)
+         }
+         setSettingCart(false)
+      },
+   })
 
    // Subscription for Wallet, Loyalty Points
    useSubscription(CUSTOMER_REFERRAL, {
@@ -484,11 +246,6 @@ export default function OnboardingStack(props) {
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.customerReferrals.length) {
-            console.log(
-               'Customer Referral: ',
-               data.subscriptionData.data.customerReferrals[0]
-            )
-
             setCustomerReferral(data.subscriptionData.data.customerReferrals[0])
          }
       },
@@ -501,8 +258,6 @@ export default function OnboardingStack(props) {
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.wallets.length) {
-            console.log('Wallet: ', data.subscriptionData.data.wallets[0])
-
             setWallet(data.subscriptionData.data.wallets[0])
          }
       },
@@ -514,11 +269,6 @@ export default function OnboardingStack(props) {
       },
       onSubscriptionData: data => {
          if (data.subscriptionData.data.loyaltyPoints.length) {
-            console.log(
-               'Loyalty Points: ',
-               data.subscriptionData.data.loyaltyPoints[0]
-            )
-
             setLoyaltyPoints(data.subscriptionData.data.loyaltyPoints[0])
          }
       },
@@ -526,9 +276,6 @@ export default function OnboardingStack(props) {
 
    // Mutation for deleting carts
    const [deleteCarts] = useMutation(DELETE_CARTS, {
-      onCompleted: data => {
-         console.log('Carts deleted: ', data.deleteCarts.returning)
-      },
       onError: error => {
          console.log('Deleteing carts error: ', error)
       },
@@ -546,7 +293,7 @@ export default function OnboardingStack(props) {
       },
    })
 
-   const [updateCart, { loading: updatingCart }] = useMutation(UPDATE_CART, {
+   const [updateCart] = useMutation(UPDATE_CART, {
       onCompleted: () => {
          console.log('Cart updated!')
       },
@@ -557,24 +304,24 @@ export default function OnboardingStack(props) {
 
    React.useEffect(() => {
       ;(async () => {
-         const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
-         console.log('Pending Cart ID: ', cartId)
-         setCartId(cartId)
-         if ((!user.sub || !user.id) && cartId) {
-            fetchCart({
-               variables: {
-                  id: cartId,
-               },
-            })
-         } else {
-            setSettingCart(false)
+         if (brandId) {
+            const cartId = await AsyncStorage.getItem('PENDING_CART_ID')
+            setCartId(cartId)
+            if (!isAuthenticated && cartId) {
+               fetchCart({
+                  variables: {
+                     id: cartId,
+                  },
+               })
+            } else {
+               setSettingCart(false)
+            }
          }
       })()
-   }, [user])
+   }, [isAuthenticated, brandId])
 
    React.useEffect(() => {
       if (cartId && cart?.customerId) {
-         console.log('Removed pending cart id!')
          setCartId(null)
          AsyncStorage.removeItem('PENDING_CART_ID')
       }
@@ -582,7 +329,6 @@ export default function OnboardingStack(props) {
 
    const [fetchMenu, { loading: queryMenuLoading }] = useLazyQuery(GET_MENU, {
       onCompleted: data => {
-         console.log('MENU:', data.onDemand_getMenu[0].data.menu)
          if (data.onDemand_getMenu[0].data.menu.length) {
             setMenuData([...data.onDemand_getMenu[0].data.menu])
          }
@@ -631,34 +377,18 @@ export default function OnboardingStack(props) {
    }, [availability, brandId])
 
    React.useEffect(() => {
-      console.table({
-         brandId,
-         fetchingCustomer,
-         creatingCustomer,
-         creatingBrandCustomer,
-         fetchingCart,
-         isInitialized,
-         user: Object.keys(user).length,
-         subscribingCart,
-         settingsMapped,
-         settingCart,
-         settingUser,
-      })
       if (!isInitialized) {
          setMasterLoading(true)
       } else {
          if (isAuthenticated) {
             const status = [
                Boolean(brandId), // 1
-               !fetchingCustomer, // true
-               !creatingCustomer, // true
-               !creatingBrandCustomer, // true
                !fetchingCart, // true
-               Object.keys(user).length, // > 0
+               !fetchingCustomer, //true
                !subscribingCart, // true
-               settingsMapped, // true
-               !settingCart,
-               !settingUser,
+               !dataLoading, // true
+               !settingUser, // true
+               !settingCart, // true
             ].every(notLoading => notLoading)
             if (status) {
                setMasterLoading(false)
@@ -666,9 +396,9 @@ export default function OnboardingStack(props) {
          } else {
             const status = [
                Boolean(brandId), // 1
-               settingsMapped, // true
                !fetchingCart, // true
                !settingCart,
+               !dataLoading,
             ].every(notLoading => notLoading)
             if (status) {
                setMasterLoading(false)
@@ -677,17 +407,14 @@ export default function OnboardingStack(props) {
       }
    }, [
       brandId,
-      fetchingCustomer,
-      creatingCustomer,
-      creatingBrandCustomer,
       fetchingCart,
+      fetchingCustomer,
       isInitialized,
-      user,
       subscribingCart,
       isAuthenticated,
-      settingsMapped,
       settingCart,
       settingUser,
+      dataLoading,
    ])
 
    return (
@@ -703,26 +430,22 @@ function AppStack(props) {
 
    React.useEffect(() => {
       if (props.navigation) {
-         console.log('Setting up navigation...')
          setNavigation(props.navigation)
       }
-      console.log(initRender, width)
-      console.log('Setting initRender...')
-      setInitRender(false)
+      setTimeout(() => setInitRender(false), 1)
    }, [])
 
    return (
       <Drawer.Navigator
          style={{ flex: 1 }}
          drawerContent={props => <CustomDrawerContent {...props} />}
-         drawerStyle={
-            initRender
-               ? { backgroundColor: 'black' }
-               : {
-                    backgroundColor: 'white',
-                    width: width * 0.8,
-                 }
-         }
+         // drawerType={initRender ? 'permanent' : 'front'}
+         openByDefault={false}
+         drawerStyle={{
+            width: 299,
+            display: initRender ? 'none' : 'flex',
+            backgroundColor: initRender ? 'transparent' : 'white',
+         }}
          gestureHandlerProps={{ enabled: false }}
          drawerContentOptions={{
             activeTintcolor: 'white',
@@ -732,7 +455,7 @@ function AppStack(props) {
                width: width * 0.75,
                backgroundColor: 'transparent',
                paddingVertical: 16,
-               paddingHorizonal: 12,
+               paddingHorizontal: 12,
                justifyContent: 'center',
                alignContent: 'center',
                alignItems: 'center',
