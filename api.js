@@ -6,7 +6,7 @@ import {
    DAILYOS_SERVER_URL,
 } from 'react-native-dotenv'
 
-// Constants sdfs
+// Constants
 const BASE_URL = `https://secure.dailykit.org/auth/realms/consumers/protocol/openid-connect/token`
 const SIGNUP_URL = `https://beryl-material-chokeberry.glitch.me/users`
 

@@ -35,7 +35,7 @@ import { DefaultAddressFloater } from './DefaultFloater'
 const Fulfillment = ({ navigation, setEditing }) => {
    const { visual, availability, brandId } = useAppContext()
    const { cart } = useCartContext()
-   const [distance, setDistance] = React.useState(0)
+   const [distance, setDistance] = React.useState(null)
    const [type, setType] = React.useState('')
    const [time, setTime] = React.useState('')
    const [oops, setOops] = React.useState('')
@@ -75,6 +75,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
       data: { preOrderDelivery = [] } = {},
       loading: PDLoading,
    } = useSubscription(PREORDER_DELIVERY, {
+      skip: distance === null,
       variables: {
          distance,
          brandId,
@@ -85,6 +86,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
       data: { onDemandDelivery = [] } = {},
       loading: ODLoading,
    } = useSubscription(ONDEMAND_DELIVERY, {
+      skip: distance === null,
       variables: {
          distance,
          brandId,
@@ -143,6 +145,32 @@ const Fulfillment = ({ navigation, setEditing }) => {
                case 'PICKUP': {
                   if (availability.pickup.isAvailable) {
                      switch (time) {
+                        case 'ONDEMAND': {
+                           if (onDemandPickup[0]?.recurrences?.length) {
+                              const result = isPickUpAvailable(
+                                 onDemandPickup[0].recurrences
+                              )
+                              if (result.status) {
+                                 const date = new Date()
+                                 setFulfillment({
+                                    date: date.toDateString(),
+                                    slot: {
+                                       time:
+                                          date.getHours() +
+                                          ':' +
+                                          date.getMinutes(),
+                                    },
+                                 })
+                              } else {
+                                 setOops(
+                                    'Sorry! Option not available currently!'
+                                 )
+                              }
+                           } else {
+                              setOops('Sorry! Option not available currently.')
+                           }
+                           break
+                        }
                         case 'PREORDER': {
                            if (preOrderPickup[0]?.recurrences?.length) {
                               const result = generatePickUpSlots(
@@ -172,32 +200,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
                            }
                            break
                         }
-                        case 'ONDEMAND': {
-                           if (onDemandPickup[0]?.recurrences?.length) {
-                              const result = isPickUpAvailable(
-                                 onDemandPickup[0].recurrences
-                              )
-                              if (result.status) {
-                                 const date = new Date()
-                                 setFulfillment({
-                                    date: date.toDateString(),
-                                    slot: {
-                                       time:
-                                          date.getHours() +
-                                          ':' +
-                                          date.getMinutes(),
-                                    },
-                                 })
-                              } else {
-                                 setOops(
-                                    'Sorry! Option not available currently!'
-                                 )
-                              }
-                           } else {
-                              setOops('Sorry! Option not available currently.')
-                           }
-                           break
-                        }
                         default: {
                            return setOops('Unknown error!')
                         }
@@ -213,6 +215,35 @@ const Fulfillment = ({ navigation, setEditing }) => {
                   }
                   if (availability.delivery.isAvailable) {
                      switch (time) {
+                        case 'ONDEMAND': {
+                           if (onDemandDelivery[0]?.recurrences?.length) {
+                              const result = isDeliveryAvailable(
+                                 onDemandDelivery[0].recurrences
+                              )
+                              if (result.status) {
+                                 const date = new Date()
+                                 setFulfillment({
+                                    distance,
+                                    date: date.toDateString(),
+                                    slot: {
+                                       time:
+                                          date.getHours() +
+                                          ':' +
+                                          date.getMinutes(),
+                                       mileRangeId: result.mileRangeId,
+                                    },
+                                 })
+                              } else {
+                                 setOops(
+                                    result.message ||
+                                       'Sorry! Delivery not available at the moment.'
+                                 )
+                              }
+                           } else {
+                              setOops('Sorry! Option not available currently.')
+                           }
+                           break
+                        }
                         case 'PREORDER': {
                            if (preOrderDelivery[0]?.recurrences?.length) {
                               const result = generateDeliverySlots(
@@ -226,6 +257,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
                                  if (miniSlots.length) {
                                     setPickerDates([...miniSlots])
                                     setFulfillment({
+                                       distance,
                                        date: miniSlots[0].date,
                                        slot: {
                                           time: miniSlots[0].slots[0].time,
@@ -244,34 +276,6 @@ const Fulfillment = ({ navigation, setEditing }) => {
                               }
                            } else {
                               setOops('Sorry! No time slots available.')
-                           }
-                           break
-                        }
-                        case 'ONDEMAND': {
-                           if (onDemandDelivery[0]?.recurrences?.length) {
-                              const result = isDeliveryAvailable(
-                                 onDemandDelivery[0].recurrences
-                              )
-                              if (result.status) {
-                                 const date = new Date()
-                                 setFulfillment({
-                                    date: date.toDateString(),
-                                    slot: {
-                                       time:
-                                          date.getHours() +
-                                          ':' +
-                                          date.getMinutes(),
-                                       mileRangeId: result.mileRangeId,
-                                    },
-                                 })
-                              } else {
-                                 setOops(
-                                    result.message ||
-                                       'Sorry! Delivery not available at the moment.'
-                                 )
-                              }
-                           } else {
-                              setOops('Sorry! Option not available currently.')
                            }
                            break
                         }
