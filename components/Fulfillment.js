@@ -1,8 +1,7 @@
+import React from 'react'
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 import { Feather, MaterialIcons } from '@expo/vector-icons'
 import { Picker } from '@react-native-picker/picker'
-import { Spinner } from 'native-base'
-import React from 'react'
 import {
    ScrollView,
    StyleSheet,
@@ -10,10 +9,8 @@ import {
    TouchableOpacity,
    View,
 } from 'react-native'
-import FulfillmentSkeleton from './skeletons/fulfillment'
 import { useAppContext } from '../context/app'
 import { useCartContext } from '../context/cart'
-import { useDrawerContext } from '../context/drawer'
 import {
    ONDEMAND_DELIVERY,
    ONDEMAND_PICKUP,
@@ -31,6 +28,7 @@ import {
    isPickUpAvailable,
 } from '../utils/fulfillment'
 import { DefaultAddressFloater } from './DefaultFloater'
+import FulfillmentSkeleton from './skeletons/fulfillment'
 
 const Fulfillment = ({ navigation, setEditing }) => {
    const { visual, availability, brandId } = useAppContext()
@@ -305,6 +303,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
          }
          const fulfillmentInfo = {
             type: time + '_' + type,
+            distance,
             slot: {
                mileRangeId: fulfillment.slot?.mileRangeId || null,
                ...generateTimeStamp(fulfillment.slot.time, fulfillment.date),

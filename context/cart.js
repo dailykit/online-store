@@ -1,5 +1,5 @@
-import { useMutation, useSubscription } from '@apollo/react-hooks'
 import React, { useState } from 'react'
+import { useMutation, useSubscription } from '@apollo/react-hooks'
 import {
    ONDEMAND_DELIVERY,
    ONDEMAND_PICKUP,
@@ -19,7 +19,6 @@ import {
 import { useAppContext } from './app'
 import { useAuth } from './auth'
 import { useDrawerContext } from './drawer'
-import { CURRENCY } from 'react-native-dotenv'
 
 const CartContext = React.createContext()
 
