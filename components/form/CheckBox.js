@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { Feather } from '@expo/vector-icons'
 import { discountedPrice, imageUrl } from '../../utils'
-import { CURRENCY } from 'react-native-dotenv'
+import { CURRENCY } from '@env'
 
 const CheckBox = ({
    type,

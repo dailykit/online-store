@@ -4,7 +4,7 @@ import {
    HASURA_URL,
    HASURA_GRAPHQL_ADMIN_SECRET,
    DAILYOS_SERVER_URL,
-} from 'react-native-dotenv'
+} from '@env'
 
 // Constants
 const BASE_URL = `https://secure.dailykit.org/auth/realms/consumers/protocol/openid-connect/token`

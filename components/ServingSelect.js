@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons'
 import React from 'react'
-import { CURRENCY } from 'react-native-dotenv'
+import { CURRENCY } from '@env'
 import styled, { css } from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { discountedPrice } from '../utils'

@@ -14,11 +14,7 @@ import Constants from 'expo-constants'
 import * as Font from 'expo-font'
 import React, { useEffect, useRef, useState, Suspense } from 'react'
 import { Image, Platform, SafeAreaView, StatusBar, View } from 'react-native'
-import {
-   HASURA_URL,
-   HASURA_WS,
-   HASURA_GRAPHQL_ADMIN_SECRET,
-} from 'react-native-dotenv'
+import { HASURA_URL, HASURA_WS, HASURA_GRAPHQL_ADMIN_SECRET } from '@env'
 // setup rem
 import EStyleSheet from 'react-native-extended-stylesheet'
 import 'react-native-get-random-values'

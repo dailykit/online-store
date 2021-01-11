@@ -6,7 +6,7 @@ import { UPDATE_CART } from '../../../graphql'
 import { Feather } from '@expo/vector-icons'
 import { useAuth } from '../../../context/auth'
 import { useCartContext } from '../../../context/cart'
-import { CURRENCY } from 'react-native-dotenv'
+import { CURRENCY } from '@env'
 // 12
 
 const Tip = ({ cart }) => {

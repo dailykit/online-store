@@ -29,11 +29,7 @@ import Tip from './components/Tip'
 import Footer from '../../components/Footer'
 import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
 import PayWithWallet from './components/PayWithWallet'
-import {
-   HASURA_GRAPHQL_ADMIN_SECRET,
-   HASURA_URL,
-   CURRENCY,
-} from 'react-native-dotenv'
+import { HASURA_GRAPHQL_ADMIN_SECRET, HASURA_URL, CURRENCY } from '@env'
 import CartSkeleton from '../../components/skeletons/cart'
 import { isKeycloakSupported } from '../../utils'
 import { useScript } from '../../utils/useScript'

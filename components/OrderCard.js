@@ -4,7 +4,7 @@ import React from 'react'
 import { Image, Text, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import defaultProductImage from '../assets/imgs/default-product-image.png'
-import { CURRENCY } from 'react-native-dotenv'
+import { CURRENCY } from '@env'
 import { imageUrl } from '../utils'
 // 12
 
