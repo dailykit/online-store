@@ -5,7 +5,7 @@ import { useAppContext } from '../../../context/app'
 import { UPDATE_CART } from '../../../graphql'
 import { useMutation } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
-import { CURRENCY } from 'react-native-dotenv'
+import { CURRENCY } from '@env'
 // 12
 
 const PayWithWallet = () => {
