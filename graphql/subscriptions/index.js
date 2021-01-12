@@ -169,7 +169,11 @@ export const ONDEMAND_DELIVERY = gql`
 export const ORDERS = gql`
    subscription Orders($keycloakId: String!, $brandId: Int!) {
       orders(
-         where: { keycloakId: { _eq: $keycloakId }, brandId: { _eq: $brandId } }
+         where: {
+            keycloakId: { _eq: $keycloakId }
+            brandId: { _eq: $brandId }
+            source: { _eq: "a-la-carte" }
+         }
          order_by: { created_at: desc }
       ) {
          id
