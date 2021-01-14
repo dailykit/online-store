@@ -1,14 +1,14 @@
-import * as axios from 'axios'
+import axios from 'axios'
 import {
    CLIENTID,
    HASURA_URL,
    HASURA_GRAPHQL_ADMIN_SECRET,
    DAILYOS_SERVER_URL,
+   MAPS_API_KEY,
 } from '@env'
 
 // Constants
 const BASE_URL = `https://secure.dailykit.org/auth/realms/consumers/protocol/openid-connect/token`
-const SIGNUP_URL = `https://beryl-material-chokeberry.glitch.me/users`
 
 export const loginUser = async ({ email, password }) => {
    const params = {
@@ -68,5 +68,19 @@ export const getStoreData = async ({ clientId, domain, email, keycloakId }) => {
       email,
       keycloakId,
    })
+   return response.data
+}
+
+export const getdrivableDistance = async ({ lat1, lon1, lat2, lon2 }) => {
+   const response = await axios.post(
+      `${DAILYOS_SERVER_URL}/api/distance-matrix`,
+      {
+         lat1,
+         lon1,
+         lat2,
+         lon2,
+         key: MAPS_API_KEY,
+      }
+   )
    return response.data
 }

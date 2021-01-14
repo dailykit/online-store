@@ -1,5 +1,6 @@
 import { rrulestr } from 'rrule'
 import * as moment from 'moment'
+import { getdrivableDistance } from '../../api'
 
 export const generateTimeStamp = (time, date) => {
    let formatedTime = time.split(':')
@@ -41,7 +42,28 @@ export const deg2rad = deg => {
    return deg * (Math.PI / 180)
 }
 
-export const getDistance = (lat1, lon1, lat2, lon2) => {
+export const getDistance = async (lat1, lon1, lat2, lon2) => {
+   const res = { aerial: null, drivable: null }
+
+   try {
+      const { rows } = await getdrivableDistance({ lat1, lon1, lat2, lon2 })
+      if (rows.length) {
+         const [best] = rows
+         if (best.elements.length) {
+            const [record] = best.elements
+            console.log({ record })
+            res.drivable = +record.distance.text.split(' ')[0]
+         } else {
+            throw Error('No elements found!')
+         }
+      } else {
+         throw Error('No rows found!')
+      }
+   } catch (err) {
+      console.log('Error calculating distance!')
+      console.log(err.message)
+   }
+
    let R = 6371 // Radius of the earth in km
    let dLat = deg2rad(lat2 - lat1) // deg2rad below
    let dLon = deg2rad(lon2 - lon1)
@@ -53,7 +75,9 @@ export const getDistance = (lat1, lon1, lat2, lon2) => {
          Math.sin(dLon / 2)
    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
    let d = R * c * 0.621 // Distance in miles
-   return d
+
+   res.aerial = d
+   return res
 }
 
 export const generateMiniSlots = (data, size) => {

@@ -85,6 +85,7 @@ export const CartContextProvider = ({ children }) => {
 
    // local
    const [distance, setDistance] = useState(null)
+   const storedDistance = React.useRef()
 
    // Subscriptions
    const { data: { preOrderPickup = [] } = {} } = useSubscription(
@@ -144,21 +145,23 @@ export const CartContextProvider = ({ children }) => {
    }, [customer])
 
    React.useEffect(() => {
-      if (
-         customerDetails?.defaultCustomerAddress?.lat &&
-         customerDetails?.defaultCustomerAddress?.lng &&
-         availability?.location?.lat &&
-         availability?.location?.lng
-      ) {
-         const distance = getDistance(
-            customerDetails.defaultCustomerAddress.lat,
-            customerDetails.defaultCustomerAddress.lng,
-            +availability.location.lat,
-            +availability.location.lng
-         )
-         console.log('🚀 C distance: ', distance)
-         setDistance(distance)
-      }
+      ;(async () => {
+         if (
+            customerDetails?.defaultCustomerAddress?.lat &&
+            customerDetails?.defaultCustomerAddress?.lng &&
+            availability?.location?.lat &&
+            availability?.location?.lng
+         ) {
+            const distance = await getDistance(
+               customerDetails.defaultCustomerAddress.lat,
+               customerDetails.defaultCustomerAddress.lng,
+               +availability.location.lat,
+               +availability.location.lng
+            )
+            storedDistance.current = distance
+            setDistance(distance.drivable || distance.aerial)
+         }
+      })()
    }, [customerDetails])
 
    const generateDefaultFulfillment = () => {
@@ -175,7 +178,7 @@ export const CartContextProvider = ({ children }) => {
                   const time = date.getHours() + ':' + date.getMinutes()
                   const fulfillmentInfo = {
                      slot: {
-                        distance,
+                        distance: storedDistance.current,
                         mileRangeId: result.mileRangeId,
                         ...generateTimeStamp(time, date.toDateString()),
                      },
@@ -201,7 +204,7 @@ export const CartContextProvider = ({ children }) => {
                   if (miniSlots.length) {
                      const fulfillmentInfo = {
                         slot: {
-                           distance,
+                           distance: storedDistance.current,
                            mileRangeId: miniSlots[0].slots[0].mileRangeId,
                            ...generateTimeStamp(
                               miniSlots[0].slots[0].time,

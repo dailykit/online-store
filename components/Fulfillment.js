@@ -30,6 +30,8 @@ import {
 import { DefaultAddressFloater } from './DefaultFloater'
 import FulfillmentSkeleton from './skeletons/fulfillment'
 
+import { CURRENCY } from 'react-native-dotenv'
+
 const Fulfillment = ({ navigation, setEditing }) => {
    const { visual, availability, brandId } = useAppContext()
    const { cart } = useCartContext()
@@ -40,6 +42,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
    const [pickerDates, setPickerDates] = React.useState([])
    const [pickerSlots, setPickerSlots] = React.useState([])
    const [fulfillment, setFulfillment] = React.useState({})
+   const storedDistance = React.useRef()
 
    // Mutation
    const [updateCart] = useMutation(UPDATE_CART, {
@@ -94,20 +97,24 @@ const Fulfillment = ({ navigation, setEditing }) => {
    React.useEffect(() => {
       setTime('')
       setOops('')
-      if (
-         cart?.address?.lat &&
-         cart?.address?.lng &&
-         availability?.location?.lat &&
-         availability?.location?.lng
-      ) {
-         const distance = getDistance(
-            +cart?.address?.lat,
-            +cart?.address?.lng,
-            +availability.location.lat,
-            +availability.location.lng
-         )
-         setDistance(distance)
-      }
+      ;(async () => {
+         if (
+            cart?.address?.lat &&
+            cart?.address?.lng &&
+            availability?.location?.lat &&
+            availability?.location?.lng
+         ) {
+            const distance = await getDistance(
+               +cart?.address?.lat,
+               +cart?.address?.lng,
+               +availability.location.lat,
+               +availability.location.lng
+            )
+            console.log({ distance })
+            storedDistance.current = distance
+            setDistance(distance.drivable || distance.aerial)
+         }
+      })()
    }, [cart?.address])
 
    React.useEffect(() => {
@@ -303,7 +310,7 @@ const Fulfillment = ({ navigation, setEditing }) => {
          }
          const fulfillmentInfo = {
             type: time + '_' + type,
-            distance,
+            distance: storedDistance.current,
             slot: {
                mileRangeId: fulfillment.slot?.mileRangeId || null,
                ...generateTimeStamp(fulfillment.slot.time, fulfillment.date),
@@ -392,6 +399,24 @@ const Fulfillment = ({ navigation, setEditing }) => {
                      Select an address:
                   </Text>
                   <DefaultAddressFloater navigation={navigation} />
+                  {distance && (
+                     <Text
+                        style={[
+                           styles.text,
+                           {
+                              opacity: 0.6,
+                              fontSize: 12,
+                              fontWeight: 'normal',
+                              marginTop: 4,
+                           },
+                        ]}
+                     >
+                        Distance:{' '}
+                        {CURRENCY === 'INR'
+                           ? `${(distance * 1.61).toFixed(2)} kms`
+                           : `${distance} miles`}
+                     </Text>
+                  )}
                </View>
             )}
             {Boolean(type) && (
