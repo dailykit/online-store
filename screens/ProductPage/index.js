@@ -58,6 +58,7 @@ const ProductPage = ({ navigation, route }) => {
       onError: error => {
          console.log(error)
       },
+      fetchPolicy: 'cache-and-network',
    })
 
    if (masterLoading) {

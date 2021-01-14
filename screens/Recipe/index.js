@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { useLazyQuery, useQuery } from '@apollo/react-hooks'
 import styled, { css } from 'styled-components/native'
 import Chef from '../../assets/svgs/Chef'
 import CookingTime from '../../assets/svgs/CookingTime'
@@ -11,12 +11,7 @@ import Nutrition from '../../components/Nutrition'
 import AppSkeleton from '../../components/skeletons/app'
 import RecipeSkeleton from '../../components/skeletons/recipe'
 import { useAppContext } from '../../context/app'
-import {
-   COMBO_PRODUCT,
-   CUSTOMIZABLE_PRODUCT,
-   SIMPLE_PRODUCT,
-   SIMPLE_RECIPE,
-} from '../../graphql'
+import { GET_STORE_PRODUCT, SIMPLE_RECIPE } from '../../graphql'
 import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
 import PhotoShowcase from '../../components/PhotoShowcase'
@@ -30,7 +25,6 @@ const Recipe = ({ navigation, route }) => {
 
    const { visual, masterLoading } = useAppContext()
 
-   const [fetching, setFetching] = React.useState(false)
    const [simpleRecipe, setSimpleRecipe] = React.useState(undefined)
    const [scrollHeight, setScrollHeight] = React.useState(0)
    const [activeTab, setActiveTab] = React.useState('description')
@@ -71,7 +65,10 @@ const Recipe = ({ navigation, route }) => {
    const [isModalVisible, setIsModalVisible] = React.useState(false)
    const [refProduct, setRefProduct] = React.useState({})
 
-   const [fetchRecipe, { loading, error }] = useLazyQuery(SIMPLE_RECIPE, {
+   const { loading, error } = useQuery(SIMPLE_RECIPE, {
+      variables: {
+         id: recipeId,
+      },
       onCompleted: data => {
          if (data.simpleRecipe) {
             setSimpleRecipe(data.simpleRecipe)
@@ -80,49 +77,19 @@ const Recipe = ({ navigation, route }) => {
       fetchPolicy: 'cache-and-network',
    })
 
-   React.useEffect(() => {
-      if (recipeId) {
-         fetchRecipe({
-            variables: {
-               id: recipeId,
-            },
-         })
-         setSimpleRecipe(undefined)
-      }
-   }, [recipeId])
-
-   const [fetchSimpleRecipeProduct] = useLazyQuery(SIMPLE_PRODUCT, {
+   const { loading: productLoading } = useQuery(GET_STORE_PRODUCT, {
+      variables: {
+         id: refId,
+         type: refType,
+      },
       onCompleted: data => {
-         setRefProduct(data.simpleRecipeProduct)
-         setFetching(false)
+         const [
+            { id, data: fetchedProduct },
+         ] = data.onDemand_getOnlineStoreProduct
+         setRefProduct(fetchedProduct)
       },
       onError: error => {
          console.log(error)
-         setFetching(false)
-      },
-      fetchPolicy: 'cache-and-network',
-   })
-
-   const [fetchCustomizableProduct] = useLazyQuery(CUSTOMIZABLE_PRODUCT, {
-      onCompleted: data => {
-         setRefProduct(data.customizableProduct)
-         setFetching(false)
-      },
-      onError: error => {
-         console.log(error)
-         setFetching(false)
-      },
-      fetchPolicy: 'cache-and-network',
-   })
-
-   const [fetchComboProduct] = useLazyQuery(COMBO_PRODUCT, {
-      onCompleted: data => {
-         setRefProduct(data.comboProduct)
-         setFetching(false)
-      },
-      onError: error => {
-         console.log(error)
-         setFetching(false)
       },
       fetchPolicy: 'cache-and-network',
    })
@@ -162,19 +129,6 @@ const Recipe = ({ navigation, route }) => {
             return <ContentText>No matching product found!</ContentText>
       }
    }
-
-   React.useEffect(() => {
-      switch (refType) {
-         case 'simpleRecipeProduct':
-            return fetchSimpleRecipeProduct({ variables: { id: refId } })
-         case 'customizableProduct':
-            return fetchCustomizableProduct({ variables: { id: refId } })
-         case 'comboProduct':
-            return fetchComboProduct({ variables: { id: refId } })
-         default:
-            return console.log('No type matched for fetching!')
-      }
-   }, [refType, refId])
 
    const renderCookingSteps = () => {
       return (
@@ -557,7 +511,7 @@ const Recipe = ({ navigation, route }) => {
             </DetailsContainer>
             {Boolean(width > 768) && (
                <PricingContainer>
-                  {fetching ? (
+                  {productLoading ? (
                      <ContentText>Loading...</ContentText>
                   ) : (
                      <>
