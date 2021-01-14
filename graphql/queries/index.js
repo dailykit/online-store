@@ -204,6 +204,18 @@ export const GET_MENU = gql`
       }
    }
 `
+
+export const GET_STORE_PRODUCT = gql`
+   query GetStoreProduct($id: Int!, $type: String!) {
+      onDemand_getOnlineStoreProduct(
+         args: { productid: $id, producttype: $type }
+      ) {
+         id
+         data
+      }
+   }
+`
+
 export const COMBO_PRODUCT = gql`
    query ComboProduct($id: Int!) {
       comboProduct(id: $id) {

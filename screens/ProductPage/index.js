@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { useLazyQuery, useQuery } from '@apollo/react-hooks'
 import styled, { css } from 'styled-components/native'
 import { Header } from '../../components'
 import { Drawer } from '../../components/Drawer'
@@ -9,11 +9,7 @@ import AppSkeleton from '../../components/skeletons/app'
 import RecipeSkeleton from '../../components/skeletons/recipe'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 import { useAppContext } from '../../context/app'
-import {
-   COMBO_PRODUCT,
-   CUSTOMIZABLE_PRODUCT,
-   INVENTORY_PRODUCT,
-} from '../../graphql'
+import { GET_STORE_PRODUCT } from '../../graphql'
 import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
 import Recommendations from '../../components/Recommendations'
@@ -48,70 +44,27 @@ const ProductPage = ({ navigation, route }) => {
       return setActiveTab('description')
    }, [scrollHeight])
 
-   const [fetchInventoryProduct, { loading: IPLoading }] = useLazyQuery(
-      INVENTORY_PRODUCT,
-      {
-         onCompleted: data => {
-            setProduct(data.inventoryProduct)
-         },
-         fetchPolicy: 'cache-and-network',
-      }
-   )
-   const [fetchCustomizableProduct, { loading: CUSLoading }] = useLazyQuery(
-      CUSTOMIZABLE_PRODUCT,
-      {
-         onCompleted: data => {
-            setProduct(
-               resolveCustomizableProductPrices([data.customizableProduct])[0]
-            )
-         },
-         fetchPolicy: 'cache-and-network',
-      }
-   )
-   const [fetchComboProduct, { loading: COMLoading }] = useLazyQuery(
-      COMBO_PRODUCT,
-      {
-         onCompleted: data => {
-            setProduct(resolveComboProductPrices([data.comboProduct])[0])
-         },
-         fetchPolicy: 'cache-and-network',
-      }
-   )
-
-   React.useEffect(() => {
-      switch (type) {
-         case 'inventoryProduct': {
-            return fetchInventoryProduct({
-               variables: {
-                  id,
-               },
-            })
-         }
-         case 'customizableProduct': {
-            return fetchCustomizableProduct({
-               variables: {
-                  id,
-               },
-            })
-         }
-         case 'comboProduct': {
-            return fetchComboProduct({
-               variables: {
-                  id,
-               },
-            })
-         }
-         default: {
-            return console.log('Invalid type')
-         }
-      }
-   }, [id, type])
+   const { loading } = useQuery(GET_STORE_PRODUCT, {
+      variables: {
+         id,
+         type,
+      },
+      onCompleted: data => {
+         const [
+            { id, data: fetchedProduct },
+         ] = data.onDemand_getOnlineStoreProduct
+         setProduct(fetchedProduct)
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
 
    if (masterLoading) {
       return <AppSkeleton />
    }
 
-   if (IPLoading || COMLoading || CUSLoading)
+   if (loading)
       return (
          <>
             <Header title="Home" navigation={navigation} />
