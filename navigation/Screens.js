@@ -329,8 +329,8 @@ export default function OnboardingStack(props) {
 
    const [fetchMenu, { loading: queryMenuLoading }] = useLazyQuery(GET_MENU, {
       onCompleted: data => {
-         if (data.onDemand_getMenu[0].data.menu.length) {
-            setMenuData([...data.onDemand_getMenu[0].data.menu])
+         if (data.onDemand_getMenuV2[0].data.menu.length) {
+            setMenuData([...data.onDemand_getMenuV2[0].data.menu])
          }
       },
       onError: error => {

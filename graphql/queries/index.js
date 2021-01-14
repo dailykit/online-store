@@ -198,7 +198,7 @@ export const CUSTOMER = gql`
 
 export const GET_MENU = gql`
    query GetMenu($params: jsonb!) {
-      onDemand_getMenu(args: { params: $params }) {
+      onDemand_getMenuV2(args: { params: $params }) {
          id
          data
       }

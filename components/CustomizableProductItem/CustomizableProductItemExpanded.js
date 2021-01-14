@@ -113,7 +113,7 @@ const Item = ({
       <View key={_id} style={styles.container}>
          {data.customizableProductOptions.map((item, _key) => {
             let simpleRecipeProduct = item?.simpleRecipeProduct
-            if (simpleRecipeProduct !== null) {
+            if (simpleRecipeProduct) {
                return (
                   <>
                      <TouchableOpacity
@@ -311,7 +311,7 @@ const Item = ({
                   </>
                )
             }
-            if (item.inventoryProduct !== null) {
+            if (item.inventoryProduct) {
                let inventoryProduct = item.inventoryProduct
                return (
                   <>
