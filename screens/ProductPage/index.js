@@ -1,10 +1,12 @@
 import React from 'react'
-import { useLazyQuery, useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
+import { Helmet } from 'react-helmet'
 import styled, { css } from 'styled-components/native'
 import { Header } from '../../components'
 import { Drawer } from '../../components/Drawer'
 import Nutrition from '../../components/Nutrition'
 import PhotoShowcase from '../../components/PhotoShowcase'
+import Recommendations from '../../components/Recommendations'
 import AppSkeleton from '../../components/skeletons/app'
 import RecipeSkeleton from '../../components/skeletons/recipe'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
@@ -12,12 +14,6 @@ import { useAppContext } from '../../context/app'
 import { GET_STORE_PRODUCT } from '../../graphql'
 import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
-import Recommendations from '../../components/Recommendations'
-import {
-   resolveComboProductPrices,
-   resolveCustomizableProductPrices,
-} from '../../utils/products'
-import { Helmet } from 'react-helmet'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
