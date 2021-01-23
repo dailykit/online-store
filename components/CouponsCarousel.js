@@ -3,15 +3,14 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks'
 import { useAppContext } from '../context/app'
 import { ALL_COUPONS } from '../graphql'
-import { Dimensions, Image, Text, View, ScrollView, Button } from 'react-native'
-import { useDrawerContext } from '../context/drawer';
+import { View, ImageBackground, Text, StyleSheet } from 'react-native'
 
 const BannerWidth = 250
 const BannerHeight = 250
 
 export default function CouponsCarousel({ navigation }) {
-    const { brandId, brand } = useAppContext()
-    const { open } = useDrawerContext()
+
+    const { brandId, visual } = useAppContext()
 
     const [availableCoupons, setAvailableCoupons] = React.useState([])
 
@@ -37,19 +36,46 @@ export default function CouponsCarousel({ navigation }) {
              {availableCoupons.map(coupon => (
                 <Coupon coupon={coupon} />
              ))}
-               <CouponContainer>
+               {/* <CouponContainer>
                   <View style={{
                            width: BannerWidth,
                            height: BannerHeight,
                            resizeMode: 'cover',
                            justifyContent: 'center',
-                           backgroundColor: '#440',
+                           backgroundColor: visual.color,
+                           borderRadius: 2,
                         }}
                   >
                      <ShowMore onPress={() => navigation.navigate('CouponsPage')}>
                         More Offers
                      </ShowMore>
                   </View>
+               </CouponContainer> */}
+               <CouponContainer >
+                  <ImageBackground source={require("../assets/imgs/Frame3.png")} 
+                     imageStyle={{ borderRadius: 2}}
+                     style={{
+                        height: '250px',
+                        width: '700px',
+                        resizeMode: 'cover',
+                        borderRadius: 2,
+                        padding: '10px',
+                  }}>
+                     <View style={{
+                        alignItems: 'flex-end',
+                        marginRight: '20px',
+                        marginTop: '20px',
+                     }}>
+                        <Text
+                           onPress={() => navigation.navigate('CouponsPage')}
+                           style={styles.text1}
+                        >Speacial <br/>Offers </Text>
+                        <Text
+                           onPress={() => navigation.navigate('CouponsPage')}
+                           style={styles.text2}
+                        >Get the Coupons</Text>
+                     </View>
+                  </ImageBackground>
                </CouponContainer>
              </Wrapperflex>
           </Wrapper>
@@ -62,37 +88,68 @@ export default function CouponsCarousel({ navigation }) {
  )
 
 }
-
-const Coupon = ({ coupon }) => {
-    const { visual } = useAppContext()
  
-    const [isDescVisible, setIsDescVisible] = React.useState(false)
+const Coupon = ({ coupon }) => {
  
     return (
-       <CouponContainer>
-            <View>
-               <Image 
-                  style={{
-                     width: BannerWidth,
-                     height: BannerHeight,
-                     resizeMode: 'cover',
-                  }}
-                  source={{ uri: coupon.metaDetails.image }}
-               />
-            </View>
-          <CouponHeader>
-             <CouponCode>{coupon.code}</CouponCode>
-          </CouponHeader>
-          <TitleText>{coupon.metaDetails?.title || ''}</TitleText>
+       <CouponContainer >
+         <ImageBackground source={{ uri: coupon.metaDetails.image }} 
+            imageStyle={{ borderRadius: 2}}
+            style={{
+               width: BannerWidth,
+               height: BannerHeight,
+               resizeMode: 'contain',
+               justifyContent: 'flex-end',
+               borderRadius: 2,
+         }}>
+            <Background1>
+               <CouponHeader>
+                  <CouponCode>{coupon.code}</CouponCode>
+               </CouponHeader>
+               <TitleText>{coupon.metaDetails?.title || ''}</TitleText>
+            </Background1>
+         </ImageBackground>
        </CouponContainer>
     )
  }
+
+const styles = StyleSheet.create({
+   text1: {
+      fontSize: 36,
+      fontWeight: 'bold',   
+      color: '#1A0C1A',
+      cursor: 'pointer',
+   },
+   text2: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      textDecorationColor: 'black',
+      textDecorationStyle: 'solid',
+      textDecorationLine: 'underline',   
+      marginTop: "55px", 
+      color: '#1A0C1A',
+      cursor: 'pointer',
+   },
+})
+
+const carouselTitle = styled.Text`
+   font-size: 4rem;
+   font-weight: bold;
+`
 
 const ShowMore = styled.Text`
    font-size: 2.5rem;
    text-transform: uppercase;
    font-weight: bold;
    text-align: center;
+   color: white;
+`
+
+const Background1 = styled.View`
+   backgroundColor: white;
+   margin: 10px;
+   alignItems: center;
+   borderRadius: 2px;
 `
  
 const Wrapperflex = styled.View`
@@ -105,16 +162,15 @@ const Wrapperflex = styled.View`
     padding: 1rem;
     background: #fff;
     margin: 1.25rem;
+    overflow: scroll;
  `
  
  const CouponContainer = styled.View`
     padding: 1rem;
-    background: #fcfcfc;
-    border: 0px solid black;
     box-sizing: border-box;
     margin: 0.5rem;
-    border-radius: 0.25rem;
     cursor: pointer;
+    borderRadius: 2px ;
  `
  
  const CouponHeader = styled.View`
@@ -131,34 +187,9 @@ const Wrapperflex = styled.View`
     font-size: 1.1rem;
  `
  
- const CTA = styled.TouchableOpacity`
-    opacity: ${props => (props.disabled ? 0.6 : 1)};
- `
- 
- const CTAText = styled.Text`
-    color: ${props => props.color || '#686b78'};
-    text-transform: uppercase;
-    font-weight: bold;
- `
- 
  const TitleText = styled.Text`
     color: #686b78;
     margin-bottom: 0.5rem;
- `
- 
-//  const Button = styled.TouchableOpacity`
-//     flex-direction: row;
-//     align-items: center;
-// `
- 
- const ButtonText = styled.Text`
-    font-size: 0.8rem;
-    color: #686b78;
-    margin-left: 0.25rem;
- `
- 
- const Description = styled.Text`
-    color: #686b78;
  `
  
  const EmptyWrapper = styled.View`

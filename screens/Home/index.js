@@ -54,6 +54,7 @@ const Home = props => {
       const loadCoupons = window.location.pathname.includes('show-coupons')
       if (loadCoupons && !masterLoading) {
          open('AllCouponList')
+
       }
    }, [masterLoading])
 
