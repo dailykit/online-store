@@ -1,4 +1,5 @@
 import { useToast } from 'react-native-styled-toast'
+import { S3_ENDPOINT } from '@env'
 
 export function uuid() {
    let d = new Date().getTime()
@@ -183,10 +184,7 @@ export const isKeycloakSupported = () => {
 }
 
 export const imageUrl = (url, size = 400) => {
-   return (
-      url
-         ?.replace('https', 'http')
-         ?.replace('s3', 's3-website.us-east-2')
-         ?.replace('/images/', `/${size}x${size}/`) || url
-   )
+   const image = url.split('/').slice(-1)
+   const updatedUrl = `${S3_ENDPOINT}/${size}x${size}/${image}`
+   return updatedUrl
 }
