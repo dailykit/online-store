@@ -16,15 +16,15 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
    }, [modifiersAdded])
 
    const checkValidity = async () => {
-      const requiredModifers = data.categories.filter(
+      const requiredModifiers = data.categories.filter(
          category => category.isRequired && category.isActive
       )
-      if (!requiredModifers.length) {
-         // can proceed without modifers
+      if (!requiredModifiers.length) {
+         // can proceed without modifiers
          isValid.current = true
       } else {
-         // needs some modifers
-         for (const category of requiredModifers) {
+         // needs some modifiers
+         for (const category of requiredModifiers) {
             const requiredSelected = selected.filter(
                modifier => modifier.category === category.name
             )
@@ -68,8 +68,8 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                   },
                ])
             } else {
-               const updatedModifers = selected
-               updatedModifers[index] = {
+               const updatedModifiers = selected
+               updatedModifiers[index] = {
                   category: category.name,
                   name: option.name,
                   price: option.price,
@@ -80,13 +80,18 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                   image: option.image,
                   operationConfigId: option.operationConfig?.id,
                }
-               setSelected([...updatedModifers])
+               setSelected([...updatedModifiers])
             }
          } else {
-            const selectedMutiple = selected.filter(
+            const selectedMultiple = selected.filter(
                modifier => modifier.category === category.name
             )
-            if (selectedMutiple.length < category.limits.max) {
+            if (
+               category.limits.max &&
+               selectedMultiple.length > category.limits.max
+            ) {
+               return
+            } else {
                setSelected([
                   ...selected,
                   {
@@ -101,14 +106,26 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                      operationConfigId: option.operationConfig?.id,
                   },
                ])
-            } else {
-               return
             }
          }
       } else {
-         const updatedModifers = selected
-         updatedModifers.splice(index, 1)
-         setSelected([...updatedModifers])
+         const updatedModifiers = selected
+         updatedModifiers.splice(index, 1)
+         setSelected([...updatedModifiers])
+      }
+   }
+
+   const renderCategoryCondition = category => {
+      if (category.type === 'single') {
+         return `Choose one`
+      } else {
+         if (category.limits.min === 0 && category.limits.max === null) {
+            return `Choose as many as you like`
+         }
+         if (category.limits.min > 0 && category.limits.max === null) {
+            return `Choose Min: ${category.limits.min}`
+         }
+         return `Choose Min: ${category.limits.min} Max: ${category.limits.max}`
       }
    }
 
@@ -137,9 +154,7 @@ const Modifiers = ({ data, onModifiersSelected, onValidityChange }) => {
                   <CategoryName>
                      {`${category.name}${category.isRequired ? '*' : ''}`}
                      <CategoryCondition>
-                        {category.type === 'single'
-                           ? `Choose one`
-                           : `Choose Min: ${category.limits.min} Max: ${category.limits.max}`}
+                        {renderCategoryCondition(category)}
                      </CategoryCondition>
                   </CategoryName>
                   {category.options
