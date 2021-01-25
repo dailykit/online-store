@@ -183,5 +183,10 @@ export const isKeycloakSupported = () => {
 }
 
 export const imageUrl = (url, size = 400) => {
-   return url?.replace('/images/', `/resized-${size}/`) || url
+   return (
+      url
+         ?.replace('https', 'http')
+         ?.replace('s3', 's3-website.us-east-2')
+         ?.replace('/images/', `/${size}x${size}/`) || url
+   )
 }
