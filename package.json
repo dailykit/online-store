@@ -57,6 +57,7 @@
       "react-native-web-maps": "0.2.0",
       "react-share": "4.3.1",
       "rrule": "2.6.4",
+      "sentry-expo": "^3.0.4",
       "styled-components": "5.1.1",
       "styled-system": "5.1.5",
       "subscriptions-transport-ws": "0.9.16"

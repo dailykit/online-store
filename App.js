@@ -1,5 +1,10 @@
 import { ApolloProvider } from '@apollo/react-hooks'
-import { HASURA_GRAPHQL_ADMIN_SECRET, HASURA_URL, HASURA_WS } from '@env'
+import {
+   HASURA_GRAPHQL_ADMIN_SECRET,
+   HASURA_URL,
+   HASURA_WS,
+   NODE_ENV,
+} from '@env'
 import { NavigationContainer } from '@react-navigation/native'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
@@ -11,6 +16,7 @@ import { getMainDefinition } from 'apollo-utilities'
 import { decode, encode } from 'base-64'
 import React, { Suspense, useEffect, useRef, useState } from 'react'
 import { Platform, SafeAreaView, StatusBar, View } from 'react-native'
+import * as Sentry from 'sentry-expo'
 // setup rem
 import EStyleSheet from 'react-native-extended-stylesheet'
 import 'react-native-get-random-values'
@@ -31,6 +37,13 @@ import Screens from './navigation/Screens'
 // linking
 import useLinking from './navigation/useLinking'
 import { width } from './utils/Scaling'
+
+Sentry.init({
+   dsn:
+      'https://378ec473db7e476a823dc946f1a5dd43@o460444.ingest.sentry.io/5607834',
+   enableInExpoDevelopment: true,
+   debug: NODE_ENV === 'development',
+})
 
 const authLink = setContext((_, { headers }) => {
    return {
