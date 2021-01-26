@@ -1,5 +1,5 @@
 import { useSubscription } from '@apollo/react-hooks'
-import { Spinner } from 'react-native'
+import { Spinner } from 'native-base'
 import React from 'react'
 import { ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { Header } from '../../components'

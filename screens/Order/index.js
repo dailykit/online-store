@@ -1,5 +1,5 @@
 import { useSubscription } from '@apollo/react-hooks'
-import { Spinner } from 'react-native'
+import { Spinner } from 'native-base'
 import React from 'react'
 import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native'
 import MapView from 'react-native-maps'

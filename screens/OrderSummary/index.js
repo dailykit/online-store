@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
 import format from 'date-fns/format'
-import { Accordion } from 'react-native'
+import { Accordion } from 'native-base'
 import React from 'react'
 import {
    AsyncStorage,
