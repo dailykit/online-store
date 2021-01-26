@@ -15,11 +15,11 @@ module.exports = async function (env, argv) {
       path: path.resolve(__dirname, 'web-build/'),
       publicPath: '/store',
    }
-   config.mode =
-      process.env.NODE_ENV === 'development' ? 'development' : 'production'
-   config.optimization = {
-      usedExports: true,
-   }
+   // config.mode =
+   //    process.env.NODE_ENV === 'development' ? 'development' : 'production'
+   // config.optimization = {
+   //    usedExports: true,
+   // }
    // config.plugins = [
    //    new BundleAnalyzerPlugin({
    //       generateStatsFile: true,
