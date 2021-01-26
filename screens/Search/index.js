@@ -1,113 +1,50 @@
-import { useLazyQuery } from '@apollo/react-hooks'
-import { Feather } from '@expo/vector-icons'
 import React from 'react'
+import { Feather } from '@expo/vector-icons'
+import { Helmet } from 'react-helmet'
 import { FlatList, View } from 'react-native'
 import styled from 'styled-components/native'
 import { Card } from '../../components'
 import CheckoutBar from '../../components/CheckoutBar'
 import Header from '../../components/Header'
 import AppSkeleton from '../../components/skeletons/app'
-import CardSkeleton from '../../components/skeletons/card'
 import { useAppContext } from '../../context/app'
-import { SEARCH_PRODUCTS } from '../../graphql/queries'
 import { width } from '../../utils/Scaling'
-import { Helmet } from 'react-helmet'
 
 const Search = ({ navigation }) => {
    const { menuData, masterLoading, visual } = useAppContext()
 
-   const [mergedData, setMergedData] = React.useState(undefined)
    const [query, setQuery] = React.useState('')
 
    const [products, setProducts] = React.useState([])
    const [error, setError] = React.useState('')
 
-   // Query
-   const [searchProducts, { loading }] = useLazyQuery(SEARCH_PRODUCTS, {
-      variables: {
-         ...mergedData,
-         name: `%${query}%`,
-         tag: query,
-      },
-      onCompleted: data => {
-         const items = [
-            ...data.comboProducts,
-            ...data.customizableProducts,
-            ...data.simpleRecipeProducts,
-            ...data.inventoryProducts,
-         ]
-         if (items.length && query) {
-            setProducts(items)
-            setError('')
-         } else {
-            setProducts([])
-            if (query) {
-               setError('Sorry! No items found.')
+   // Search function
+   React.useMemo(() => {
+      setError('')
+      const q = query.trim().toLowerCase()
+      if (q) {
+         const foundProducts = []
+         for (let category of menuData) {
+            for (let product of category.products) {
+               const ts = product.tags
+                  ? product.tags.map(tag => tag.toLowerCase())
+                  : null
+               if (
+                  product.name.toLowerCase().includes(q) ||
+                  (ts && ts.includes(q))
+               ) {
+                  foundProducts.push(product)
+               }
             }
          }
-      },
-      onError: error => {
-         console.log(error)
-      },
-   })
-
-   const squashAndMerge = data => {
-      const prepData = data.reduce(
-         (prepData, category) => {
-            prepData.comboProducts = [
-               ...new Set([
-                  ...prepData.comboProducts,
-                  ...category.comboProducts,
-               ]),
-            ]
-            prepData.simpleRecipeProducts = [
-               ...new Set([
-                  ...prepData.simpleRecipeProducts,
-                  ...category.simpleRecipeProducts,
-               ]),
-            ]
-            prepData.customizableProducts = [
-               ...new Set([
-                  ...prepData.customizableProducts,
-                  ...category.customizableProducts,
-               ]),
-            ]
-            prepData.inventoryProducts = [
-               ...new Set([
-                  ...prepData.inventoryProducts,
-                  ...category.inventoryProducts,
-               ]),
-            ]
-            return prepData
-         },
-         {
-            comboProducts: [],
-            customizableProducts: [],
-            simpleRecipeProducts: [],
-            inventoryProducts: [],
+         setProducts([...foundProducts])
+         if (!foundProducts.length) {
+            setError('No products found!')
          }
-      )
-      setMergedData(prepData)
-   }
-
-   const autoSearch = () => {
-      let timer
-      clearTimeout(timer)
-      timer = setTimeout(() => {
-         searchProducts()
-      }, 500)
-   }
-
-   React.useEffect(() => {
-      document.addEventListener('keyup', autoSearch)
-      return () => {
-         document.removeEventListener('keyup', autoSearch)
+      } else {
+         setProducts([])
       }
-   }, [])
-
-   React.useEffect(() => {
-      squashAndMerge(menuData)
-   }, [menuData])
+   }, [query])
 
    if (masterLoading) {
       return <AppSkeleton />
@@ -148,7 +85,7 @@ const Search = ({ navigation }) => {
             </SearchContainer>
             {Boolean(error) && <Error>{error}</Error>}
             <ProductsContainer>
-               {loading ? (
+               {Boolean(products.length) && (
                   <FlatList
                      showsVerticalScrollIndicator={false}
                      style={{
@@ -156,30 +93,13 @@ const Search = ({ navigation }) => {
                         flexWrap: 'wrap',
                         marginHorizontal: 'auto',
                      }}
+                     data={products}
                      numColumns={width > 768 ? 3 : 2}
-                     data={[1, 2, 3]}
-                     keyExtractor={item => item.toString()}
-                     renderItem={() => <CardSkeleton />}
-                  />
-               ) : (
-                  <>
-                     {Boolean(products.length) && (
-                        <FlatList
-                           showsVerticalScrollIndicator={false}
-                           style={{
-                              flexDirection: 'row',
-                              flexWrap: 'wrap',
-                              marginHorizontal: 'auto',
-                           }}
-                           data={products}
-                           numColumns={width > 768 ? 3 : 2}
-                           keyExtractor={item => item.id.toString()}
-                           renderItem={({ item: product }) => (
-                              <Card navigation={navigation} product={product} />
-                           )}
-                        />
+                     keyExtractor={item => item.id.toString()}
+                     renderItem={({ item: product }) => (
+                        <Card navigation={navigation} product={product} />
                      )}
-                  </>
+                  />
                )}
             </ProductsContainer>
          </Wrapper>
