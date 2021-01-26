@@ -1,11 +1,11 @@
-import { Accordion } from 'react-native'
 import React from 'react'
+import { CURRENCY } from '@env'
+import format from 'date-fns/format'
+import { Accordion } from 'native-base'
 import { Image, Text, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import defaultProductImage from '../assets/imgs/default-product-image.png'
-import { CURRENCY } from '@env'
 import { imageUrl } from '../utils'
-import format from 'date-fns/format'
 // force update
 
 const OrderCard = ({ order, less }) => {
