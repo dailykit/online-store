@@ -11,29 +11,23 @@ import { height, width } from '../utils/Scaling'
 import { useAppContext } from '../context/app'
 
 // components
-const AddDetails = React.lazy(() => import('../screens/AddDetails'))
-const DailyKeyBackup = React.lazy(() => import('../screens/DailyKeyBackup'))
-const EditAddress = React.lazy(() => import('../screens/EditAddress'))
-const Keycloak = React.lazy(() => import('../screens/Keycloak'))
-const Login = React.lazy(() => import('../screens/Login'))
-const CouponList = React.lazy(() =>
-   import('../screens/OrderSummary/components/CouponList')
-)
-const PaymentProcessing = React.lazy(() =>
-   import('../screens/PaymentProcessing')
-)
-const Register = React.lazy(() => import('../screens/Register'))
-const SafetyScreen = React.lazy(() => import('../screens/SafetyScreen'))
-const SelectPaymentMethod = React.lazy(() =>
-   import('../screens/SelectPaymentMethod')
-)
-const AllCouponList = React.lazy(() => import('./AllCouponList'))
-const DeliveryBreakup = React.lazy(() => import('./DeliveryBreakup'))
-const Fulfillment = React.lazy(() => import('./Fulfillment'))
-const PrivacyPolicy = React.lazy(() => import('./PrivacyPolicy'))
-const ReferralCode = React.lazy(() => import('./ReferralCode'))
-const RefundPolicy = React.lazy(() => import('./RefundPolicy'))
-const TermsAndConditions = React.lazy(() => import('./TermsAndConditions'))
+import AddDetails from '../screens/AddDetails'
+import DailyKeyBackup from '../screens/DailyKeyBackup'
+import EditAddress from '../screens/EditAddress'
+import Keycloak from '../screens/Keycloak'
+import PaymentProcessing from '../screens/PaymentProcessing'
+import SafetyScreen from '../screens/SafetyScreen'
+import SelectPaymentMethod from '../screens/SelectPaymentMethod'
+import Fulfillment from './Fulfillment'
+import CouponList from '../screens/OrderSummary/components/CouponList'
+import ReferralCode from './ReferralCode'
+import Login from '../screens/Login'
+import Register from '../screens/Register'
+import DeliveryBreakup from './DeliveryBreakup'
+import TermsAndConditions from './TermsAndConditions'
+import PrivacyPolicy from './PrivacyPolicy'
+import RefundPolicy from './RefundPolicy'
+import AllCouponList from './AllCouponList'
 
 const DrawerLayout = () => {
    const {
