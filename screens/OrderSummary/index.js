@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
-import moment from 'moment'
-import { Accordion } from 'native-base'
+import format from 'date-fns/format'
+import { Accordion } from 'react-native'
 import React from 'react'
 import {
    AsyncStorage,
@@ -328,11 +328,10 @@ const Checkout = ({ cart, navigation }) => {
                               cart.fulfillmentInfo?.type.includes('PREORDER')
                            ) && (
                               <SelectedFulfillmentTime>
-                                 {moment
-                                    .parseZone(
-                                       cart?.fulfillmentInfo?.slot?.from
-                                    )
-                                    .format('MMMM Do YYYY, h:mm a')}
+                                 {format(
+                                    new Date(cart?.fulfillmentInfo?.slot?.from),
+                                    'PPp'
+                                 )}
                               </SelectedFulfillmentTime>
                            )}
                            {cart?.fulfillmentInfo?.type.includes(

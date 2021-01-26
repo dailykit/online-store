@@ -1,6 +1,5 @@
 import { useSubscription } from '@apollo/react-hooks'
-import * as moment from 'moment'
-import { Spinner } from 'native-base'
+import { Spinner } from 'react-native'
 import React from 'react'
 import { Image, SafeAreaView, ScrollView, Text, View } from 'react-native'
 import MapView from 'react-native-maps'
@@ -16,6 +15,7 @@ import { useCartContext } from '../../context/cart'
 import { ORDER } from '../../graphql'
 import { styles } from './styles'
 import { Helmet } from 'react-helmet'
+import format from 'date-fns/format'
 
 const Order = ({ route, navigation }) => {
    const { orderId } = route.params
@@ -88,7 +88,7 @@ const Order = ({ route, navigation }) => {
                                  }}
                               >
                                  {' '}
-                                 {moment(order?.created_at).format('LLLL')}
+                                 {format(new Date(order?.created_at), 'PPp')}
                               </Text>
                            </View>
                         </View>
@@ -100,8 +100,7 @@ const Order = ({ route, navigation }) => {
                         >
                            {order?.fulfillmentType?.includes(
                               'DELIVERY'
-                           ) ? // <Delivery order={order} />
-                           null : (
+                           ) ? null : ( // <Delivery order={order} />
                               <Pickup order={order} />
                            )}
                         </View>

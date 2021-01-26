@@ -1,5 +1,7 @@
 const path = require('path')
 const createExpoWebpackConfigAsync = require('@expo/webpack-config')
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+//    .BundleAnalyzerPlugin
 
 module.exports = async function (env, argv) {
    const config = await createExpoWebpackConfigAsync(env, argv)
@@ -13,5 +15,15 @@ module.exports = async function (env, argv) {
       path: path.resolve(__dirname, 'web-build/'),
       publicPath: '/store',
    }
+   config.mode =
+      process.env.NODE_ENV === 'development' ? 'development' : 'production'
+   config.optimization = {
+      usedExports: true,
+   }
+   // config.plugins = [
+   //    new BundleAnalyzerPlugin({
+   //       generateStatsFile: true,
+   //    }),
+   // ]
    return config
 }

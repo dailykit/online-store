@@ -1,4 +1,5 @@
 import { ApolloProvider } from '@apollo/react-hooks'
+import { HASURA_GRAPHQL_ADMIN_SECRET, HASURA_URL, HASURA_WS } from '@env'
 import { NavigationContainer } from '@react-navigation/native'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloClient } from 'apollo-client'
@@ -8,20 +9,18 @@ import { HttpLink } from 'apollo-link-http'
 import { WebSocketLink } from 'apollo-link-ws'
 import { getMainDefinition } from 'apollo-utilities'
 import { decode, encode } from 'base-64'
-import { AppLoading } from 'expo'
-import { Asset } from 'expo-asset'
-import Constants from 'expo-constants'
-import * as Font from 'expo-font'
-import React, { useEffect, useRef, useState, Suspense } from 'react'
-import { Image, Platform, SafeAreaView, StatusBar, View } from 'react-native'
-import { HASURA_URL, HASURA_WS, HASURA_GRAPHQL_ADMIN_SECRET } from '@env'
+import React, { Suspense, useEffect, useRef, useState } from 'react'
+import { Platform, SafeAreaView, StatusBar, View } from 'react-native'
 // setup rem
 import EStyleSheet from 'react-native-extended-stylesheet'
 import 'react-native-get-random-values'
 // Before rendering any navigation stack
 import { enableScreens } from 'react-native-screens'
+import { ToastProvider } from 'react-native-styled-toast'
+import { ThemeProvider } from 'styled-components'
+import DrawerLayout from './components/DrawerLayout'
 import ErrorBoundary from './components/ErrorBoundary'
-import { articles, Images } from './constants'
+import AppSkeleton from './components/skeletons/app'
 import { AppContextProvider } from './context/app'
 // Context Providers
 import { AuthProvider } from './context/auth'
@@ -32,12 +31,6 @@ import Screens from './navigation/Screens'
 // linking
 import useLinking from './navigation/useLinking'
 import { width } from './utils/Scaling'
-import { Spinner } from 'native-base'
-import { ThemeProvider } from 'styled-components'
-import { ToastProvider } from 'react-native-styled-toast'
-
-import DrawerLayout from './components/DrawerLayout'
-import AppSkeleton from './components/skeletons/app'
 
 const authLink = setContext((_, { headers }) => {
    return {
@@ -106,29 +99,6 @@ EStyleSheet.build({
    $xxxs: `${BASE_SIZE - 0.4}rem`,
 })
 
-// cache app images
-const assetImages = [
-   Images.Onboarding,
-   Images.LogoOnboarding,
-   Images.Logo,
-   Images.ArgonLogo,
-   Images.iOSLogo,
-   Images.androidLogo,
-]
-
-// cache product images
-articles.map(article => assetImages.push(article.image))
-
-function cacheImages(images) {
-   return images.map(image => {
-      if (typeof image === 'string') {
-         return Image.prefetch(image)
-      } else {
-         return Asset.fromModule(image).downloadAsync()
-      }
-   })
-}
-
 const theme = {
    space: [0, 4, 8, 12, 16, 20, 24, 32, 40, 48],
    colors: {
@@ -171,10 +141,6 @@ const App = () => {
                         >
                            <View
                               style={{
-                                 marginTop:
-                                    Platform.OS == 'android'
-                                       ? Constants.statusBarHeight
-                                       : 0,
                                  flex: 1,
                                  backgroundColor: '#fff',
                               }}

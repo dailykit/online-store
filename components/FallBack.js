@@ -1,4 +1,4 @@
-import { Spinner } from 'native-base'
+import { Spinner } from 'react-native'
 import { StyleSheet, View } from 'react-native'
 
 const fallBackComponent = () => {

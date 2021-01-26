@@ -1,7 +1,7 @@
 import React from 'react'
 import { Text, TouchableOpacity, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
-import { Badge } from '../assets/imgs/Badge'
+import Badge from '../assets/svgs/Badge'
 import { useDrawerContext } from '../context/drawer'
 import { height, width } from '../utils/Scaling'
 

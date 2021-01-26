@@ -7,7 +7,7 @@ import {
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import axios from 'axios'
-import { Spinner, View } from 'native-base'
+import { Spinner, View } from 'react-native'
 import React from 'react'
 import {
    MAPS_API_KEY,

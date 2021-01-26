@@ -1,5 +1,5 @@
 import { rrulestr } from 'rrule'
-import * as moment from 'moment'
+import { formatISO, add } from 'date-fns'
 import { getdrivableDistance } from '../../api'
 
 export const generateTimeStamp = (time, date) => {
@@ -7,14 +7,13 @@ export const generateTimeStamp = (time, date) => {
    formatedTime =
       makeDoubleDigit(formatedTime[0]) + ':' + makeDoubleDigit(formatedTime[1])
 
-   const currTimestamp = moment().toISOString(true)
-   const selectedDate = moment(date).toISOString(true)
-   const from = `${selectedDate.split('T')[0]}T${formatedTime}:00.${
-      currTimestamp.split('.')[1]
+   const currTimestamp = formatISO(new Date())
+   const selectedDate = formatISO(new Date(date))
+   const from = `${selectedDate.split('T')[0]}T${formatedTime}:00+${
+      currTimestamp.split('+')[1]
    }`
-   const to = moment(from)
-      .minutes(moment(from).minutes() + 15)
-      .toISOString(true)
+
+   const to = formatISO(add(new Date(from), { minutes: 15 }))
    return { from, to }
 }
 

@@ -1,5 +1,5 @@
 import { Feather } from '@expo/vector-icons'
-import { Spinner } from 'native-base'
+import { Spinner } from 'react-native'
 import React from 'react'
 import { Dimensions, Image, ScrollView, Text, View } from 'react-native'
 import Carousel from 'react-native-banner-carousel'
