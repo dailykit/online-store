@@ -12,7 +12,11 @@ const PlatformError = () => {
                <CTA onPress={() => window.location.reload()} highlight>
                   <CTAText highlight>Reload</CTAText>
                </CTA>
-               <CTA onPress={() => window.location.href('/')}>
+               <CTA
+                  onPress={() =>
+                     window.location.assign(`${window.location.origin}/store`)
+                  }
+               >
                   <CTAText>Back to Home</CTAText>
                </CTA>
             </CTAContainer>
