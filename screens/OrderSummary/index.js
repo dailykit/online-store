@@ -1,11 +1,12 @@
-import { useMutation } from '@apollo/react-hooks'
-import { Feather } from '@expo/vector-icons'
-import moment from 'moment'
-import { Accordion } from 'native-base'
 import React from 'react'
+import { useMutation } from '@apollo/react-hooks'
+import { CURRENCY, HASURA_GRAPHQL_ADMIN_SECRET, HASURA_URL } from '@env'
+import { Feather } from '@expo/vector-icons'
+import format from 'date-fns/format'
+import { Accordion } from 'native-base'
+import { Helmet } from 'react-helmet'
 import {
    AsyncStorage,
-   SafeAreaView,
    ScrollView,
    Text,
    TouchableOpacity,
@@ -14,6 +15,7 @@ import {
 import styled, { css } from 'styled-components/native'
 import defaultProductImage from '../../assets/imgs/default-product-image.png'
 import { DefaultPaymentFloater } from '../../components/DefaultFloater'
+import Footer from '../../components/Footer'
 import Fulfillment from '../../components/Fulfillment'
 import Header from '../../components/Header'
 import AppSkeleton from '../../components/skeletons/app'
@@ -22,22 +24,13 @@ import { useAuth } from '../../context/auth'
 import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { DELETE_CARTS, UPDATE_CART } from '../../graphql'
-import { imageUrl, useStoreToast } from '../../utils'
+import { imageUrl, isKeycloakSupported, useStoreToast } from '../../utils'
 import { width } from '../../utils/Scaling'
+import { useScript } from '../../utils/useScript'
 import Coupon from './components/Coupon'
-import Tip from './components/Tip'
-import Footer from '../../components/Footer'
 import PayWithLoyaltyPoints from './components/PayWithLoyaltyPoints'
 import PayWithWallet from './components/PayWithWallet'
-import {
-   HASURA_GRAPHQL_ADMIN_SECRET,
-   HASURA_URL,
-   CURRENCY,
-} from 'react-native-dotenv'
-import CartSkeleton from '../../components/skeletons/cart'
-import { isKeycloakSupported } from '../../utils'
-import { useScript } from '../../utils/useScript'
-import { Helmet } from 'react-helmet'
+import Tip from './components/Tip'
 
 const OrderSummary = ({ navigation, ...restProps }) => {
    const [razorpayLoaded, razorpayError] = useScript(
@@ -332,11 +325,10 @@ const Checkout = ({ cart, navigation }) => {
                               cart.fulfillmentInfo?.type.includes('PREORDER')
                            ) && (
                               <SelectedFulfillmentTime>
-                                 {moment
-                                    .parseZone(
-                                       cart?.fulfillmentInfo?.slot?.from
-                                    )
-                                    .format('MMMM Do YYYY, h:mm a')}
+                                 {format(
+                                    new Date(cart?.fulfillmentInfo?.slot?.from),
+                                    'PPp'
+                                 )}
                               </SelectedFulfillmentTime>
                            )}
                            {cart?.fulfillmentInfo?.type.includes(

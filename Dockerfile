@@ -9,6 +9,7 @@ ARG MAPS_API_KEY
 ARG PAYMENTS_API_URL
 ARG CURRENCY
 ARG SECURE_PASSWORD
+ARG S3_ENDPOINT
 WORKDIR /usr/src/app
 COPY package.json ./
 RUN npm install
@@ -23,6 +24,7 @@ RUN echo "MAPS_API_KEY=${MAPS_API_KEY}" >> .env
 RUN echo "PAYMENTS_API_URL=${PAYMENTS_API_URL}" >> .env
 RUN echo "CURRENCY=${CURRENCY}" >> .env
 RUN echo "SECURE_PASSWORD=${SECURE_PASSWORD}" >> .env
+RUN echo "S3_ENDPOINT=${S3_ENDPOINT}" >> .env
 
 ENV PATH /app/node_modules/.bin:$PATH
 

@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components/native'
 import { useAppContext } from '../context/app'
 import { useCartContext } from '../context/cart'
-import { CURRENCY } from 'react-native-dotenv'
+import { CURRENCY } from '@env'
 // 12
 
 const CheckoutBar = ({ navigation }) => {

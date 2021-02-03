@@ -198,12 +198,24 @@ export const CUSTOMER = gql`
 
 export const GET_MENU = gql`
    query GetMenu($params: jsonb!) {
-      onDemand_getMenu(args: { params: $params }) {
+      onDemand_getMenuV2(args: { params: $params }) {
          id
          data
       }
    }
 `
+
+export const GET_STORE_PRODUCT = gql`
+   query GetStoreProduct($id: Int!, $type: String!) {
+      onDemand_getOnlineStoreProduct(
+         args: { productid: $id, producttype: $type }
+      ) {
+         id
+         data
+      }
+   }
+`
+
 export const COMBO_PRODUCT = gql`
    query ComboProduct($id: Int!) {
       comboProduct(id: $id) {

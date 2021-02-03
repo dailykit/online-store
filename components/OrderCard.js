@@ -1,12 +1,12 @@
-import * as moment from 'moment'
-import { Accordion } from 'native-base'
 import React from 'react'
+import { CURRENCY } from '@env'
+import format from 'date-fns/format'
+import { Accordion } from 'native-base'
 import { Image, Text, View } from 'react-native'
 import EStyleSheet from 'react-native-extended-stylesheet'
 import defaultProductImage from '../assets/imgs/default-product-image.png'
-import { CURRENCY } from 'react-native-dotenv'
 import { imageUrl } from '../utils'
-// 12
+// force update
 
 const OrderCard = ({ order, less }) => {
    const whatColor = status => {
@@ -75,7 +75,7 @@ const OrderCard = ({ order, less }) => {
                <Text style={[styles.muted, styles.bold]}>
                   Ordered on:{' '}
                   <Text style={styles.lite}>
-                     {moment(order?.created_at).format('LLLL')}
+                     {format(new Date(order?.created_at), 'PPp')}
                   </Text>
                </Text>
                {order.deliveryInfo?.dropoff?.dropoffInfo?.customerAddress && (

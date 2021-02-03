@@ -28,6 +28,8 @@ const CustomizableProductItem = ({
    const [numberOfOptions, setnumberOfOptions] = useState(0)
    const [objToAdd, setobjToAdd] = useState({})
 
+   console.log('Product:', product)
+
    const getDiscount = (productPrice, optionPrice) => {
       const productDiscount =
          productPrice.value -
@@ -104,7 +106,7 @@ const CustomizableProductItem = ({
          let default_product
          let _default_option
          let _type
-         if (product.customizableProductOptions[0]?.inventoryProduct !== null) {
+         if (product.customizableProductOptions[0]?.inventoryProduct) {
             default_product =
                product?.customizableProductOptions[0]?.inventoryProduct
             _default_option =
@@ -112,9 +114,7 @@ const CustomizableProductItem = ({
                default_product.inventoryProductOptions.sort(priceSort)[0]
             _type = 'inventoryProduct'
          }
-         if (
-            product.customizableProductOptions[0]?.simpleRecipeProduct !== null
-         ) {
+         if (product.customizableProductOptions[0]?.simpleRecipeProduct) {
             default_product =
                product?.customizableProductOptions[0]?.simpleRecipeProduct
             _default_option =
@@ -157,7 +157,8 @@ const CustomizableProductItem = ({
             const value =
                product.price.value +
                parseFloat(_default_option?.price[0]?.value)
-            setPrice(discountedPrice({ value, discount: discount.percentage }))
+            const p = discountedPrice({ value, discount: discount.percentage })
+            setPrice(p)
             setcardData(product)
          }
          if (tunnelItem && isSelected) {
@@ -176,7 +177,7 @@ const CustomizableProductItem = ({
          ? customizableProduct?.customizableProductOptions[0]
          : null
    if (!customizableProduct) {
-      return <Text>Bad Data / Empty customizableProduct product id {id}</Text>
+      return <Text>Bad Data / Empty customizableProduct product id</Text>
    }
    if (
       (isSelected && expanded) ||

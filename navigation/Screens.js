@@ -3,7 +3,7 @@ import { useLazyQuery, useMutation, useSubscription } from '@apollo/react-hooks'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import { createStackNavigator } from '@react-navigation/stack'
 import { AsyncStorage } from 'react-native'
-import { CURRENCY, MAPS_API_KEY, CLIENTID } from 'react-native-dotenv'
+import { CURRENCY, MAPS_API_KEY, CLIENTID } from '@env'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { useCartContext } from '../context/cart'
@@ -329,8 +329,8 @@ export default function OnboardingStack(props) {
 
    const [fetchMenu, { loading: queryMenuLoading }] = useLazyQuery(GET_MENU, {
       onCompleted: data => {
-         if (data.onDemand_getMenu[0].data.menu.length) {
-            setMenuData([...data.onDemand_getMenu[0].data.menu])
+         if (data.onDemand_getMenuV2[0].data.menu.length) {
+            setMenuData([...data.onDemand_getMenuV2[0].data.menu])
          }
       },
       onError: error => {

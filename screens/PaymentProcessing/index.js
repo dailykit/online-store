@@ -1,6 +1,6 @@
 import { useMutation, useSubscription } from '@apollo/react-hooks'
 import { Feather } from '@expo/vector-icons'
-import { Spinner, Text, View } from 'native-base'
+import { Spinner, Text, View } from 'react-native'
 import React from 'react'
 import { useAppContext } from '../../context/app'
 import { useCartContext } from '../../context/cart'

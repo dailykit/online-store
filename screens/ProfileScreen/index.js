@@ -9,7 +9,7 @@ import { useAppContext } from '../../context/app'
 import { useCartContext } from '../../context/cart'
 import { useDrawerContext } from '../../context/drawer'
 import { width } from '../../utils/Scaling'
-import { CURRENCY } from 'react-native-dotenv'
+import { CURRENCY } from '@env'
 import { Helmet } from 'react-helmet'
 // 12
 

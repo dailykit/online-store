@@ -32,7 +32,9 @@ const ComboProduct = ({
    const [optionImages, setOptionImages] = React.useState([])
 
    React.useEffect(() => {
+      console.log('Product: ', product)
       const images = product.comboProductComponents.map(component => {
+         console.log(component)
          if (component.inventoryProduct) {
             return (
                component.inventoryProduct?.assets?.images[0] ||
@@ -44,6 +46,7 @@ const ComboProduct = ({
                require('../../assets/imgs/default-product-image.png')
             )
          } else {
+            console.log('CUSP:', component.customizableProduct)
             if (
                component.customizableProduct.defaultCustomizableProductOption
                   .inventoryProduct
@@ -70,7 +73,7 @@ const ComboProduct = ({
    React.useEffect(() => {
       let price = 0
       product.comboProductComponents.forEach(product => {
-         if (product.inventoryProductId !== null) {
+         if (product.inventoryProduct) {
             price =
                price +
                parseFloat(
@@ -79,7 +82,7 @@ const ComboProduct = ({
                   )[0].price[0].value
                )
          }
-         if (product.simpleRecipeProductId !== null) {
+         if (product.simpleRecipeProduct) {
             price =
                price +
                parseFloat(
@@ -88,7 +91,7 @@ const ComboProduct = ({
                   )[0].price[0].value
                )
          }
-         if (product.customizableProductId !== null) {
+         if (product.customizableProduct) {
             price =
                price +
                parseFloat(
@@ -125,7 +128,7 @@ const ComboProduct = ({
                            last = true
                         }
                      }
-                     if (el.customizableProductId !== null && isSelected) {
+                     if (el.customizableProduct && isSelected) {
                         return (
                            <CustomizableProductItem
                               isSelected={isSelected}
@@ -142,7 +145,7 @@ const ComboProduct = ({
                               key={_id}
                               navigation={navigation}
                               tunnelItem={tunnelItem}
-                              id={el.customizableProductId}
+                              id={el.customizableProduct.id}
                               setcartItem={setcartItem}
                               name={el.name}
                               refId={product.id}
@@ -157,7 +160,7 @@ const ComboProduct = ({
                            />
                         )
                      }
-                     if (el.simpleRecipeProductId !== null && isSelected) {
+                     if (el.simpleRecipeProduct && isSelected) {
                         return (
                            <SimpleProductItem
                               isSelected={isSelected}
@@ -173,7 +176,7 @@ const ComboProduct = ({
                               isLast={last}
                               key={_id}
                               navigation={navigation}
-                              id={el.simpleRecipeProductId}
+                              id={el.simpleRecipeProduct.id}
                               tunnelItem={tunnelItem}
                               setcartItem={setcartItem}
                               name={el.name}
@@ -190,7 +193,7 @@ const ComboProduct = ({
                            />
                         )
                      }
-                     if (el.inventoryProductId !== null && isSelected) {
+                     if (el.inventoryProduct && isSelected) {
                         return (
                            <InventoryProductItem
                               isSelected={isSelected}
@@ -206,7 +209,7 @@ const ComboProduct = ({
                               isLast={last}
                               key={_id}
                               navigation={navigation}
-                              id={el.inventoryProductId}
+                              id={el.inventoryProduct.id}
                               tunnelItem={tunnelItem}
                               setcartItem={setcartItem}
                               name={el.name}

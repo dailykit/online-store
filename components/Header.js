@@ -3,7 +3,6 @@ import { useIsDrawerOpen } from '@react-navigation/drawer'
 import React from 'react'
 import { Text, View } from 'react-native'
 import styled, { css } from 'styled-components/native'
-import argonTheme from '../constants/Theme'
 import { useAppContext } from '../context/app'
 import { useAuth } from '../context/auth'
 import { useCartContext } from '../context/cart'
@@ -56,11 +55,7 @@ const BasketButton = ({ isWhite, size = 24 }) => {
                {numberOfProducts}
             </Text>
          )}
-         <Icon
-            size={size}
-            name="shopping-cart"
-            color={argonTheme.COLORS[isWhite ? 'WHITE' : 'ICON']}
-         />
+         <Icon size={size} name="shopping-cart" color="#111" />
       </View>
    )
 }

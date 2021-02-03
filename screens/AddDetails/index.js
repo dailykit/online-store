@@ -1,5 +1,5 @@
 import React from 'react'
-import { DAILYKEY_URL } from 'react-native-dotenv'
+import { DAILYKEY_URL } from '@env'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useDrawerContext } from '../../context/drawer'
 

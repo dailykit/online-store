@@ -1,27 +1,19 @@
 import React from 'react'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/react-hooks'
+import { Helmet } from 'react-helmet'
 import styled, { css } from 'styled-components/native'
 import { Header } from '../../components'
 import { Drawer } from '../../components/Drawer'
 import Nutrition from '../../components/Nutrition'
 import PhotoShowcase from '../../components/PhotoShowcase'
+import Recommendations from '../../components/Recommendations'
 import AppSkeleton from '../../components/skeletons/app'
 import RecipeSkeleton from '../../components/skeletons/recipe'
 import SocialMediaShareButtons from '../../components/SocialMediaShareButtons'
 import { useAppContext } from '../../context/app'
-import {
-   COMBO_PRODUCT,
-   CUSTOMIZABLE_PRODUCT,
-   INVENTORY_PRODUCT,
-} from '../../graphql'
+import { GET_STORE_PRODUCT } from '../../graphql'
 import { width } from '../../utils/Scaling'
 import AddToCart from '../AddToCart'
-import Recommendations from '../../components/Recommendations'
-import {
-   resolveComboProductPrices,
-   resolveCustomizableProductPrices,
-} from '../../utils/products'
-import { Helmet } from 'react-helmet'
 
 const ProductPage = ({ navigation, route }) => {
    const { id, type } = route.params
@@ -48,70 +40,28 @@ const ProductPage = ({ navigation, route }) => {
       return setActiveTab('description')
    }, [scrollHeight])
 
-   const [fetchInventoryProduct, { loading: IPLoading }] = useLazyQuery(
-      INVENTORY_PRODUCT,
-      {
-         onCompleted: data => {
-            setProduct(data.inventoryProduct)
-         },
-         fetchPolicy: 'cache-and-network',
-      }
-   )
-   const [fetchCustomizableProduct, { loading: CUSLoading }] = useLazyQuery(
-      CUSTOMIZABLE_PRODUCT,
-      {
-         onCompleted: data => {
-            setProduct(
-               resolveCustomizableProductPrices([data.customizableProduct])[0]
-            )
-         },
-         fetchPolicy: 'cache-and-network',
-      }
-   )
-   const [fetchComboProduct, { loading: COMLoading }] = useLazyQuery(
-      COMBO_PRODUCT,
-      {
-         onCompleted: data => {
-            setProduct(resolveComboProductPrices([data.comboProduct])[0])
-         },
-         fetchPolicy: 'cache-and-network',
-      }
-   )
-
-   React.useEffect(() => {
-      switch (type) {
-         case 'inventoryProduct': {
-            return fetchInventoryProduct({
-               variables: {
-                  id,
-               },
-            })
-         }
-         case 'customizableProduct': {
-            return fetchCustomizableProduct({
-               variables: {
-                  id,
-               },
-            })
-         }
-         case 'comboProduct': {
-            return fetchComboProduct({
-               variables: {
-                  id,
-               },
-            })
-         }
-         default: {
-            return console.log('Invalid type')
-         }
-      }
-   }, [id, type])
+   const { loading } = useQuery(GET_STORE_PRODUCT, {
+      variables: {
+         id,
+         type,
+      },
+      onCompleted: data => {
+         const [
+            { id, data: fetchedProduct },
+         ] = data.onDemand_getOnlineStoreProduct
+         setProduct(fetchedProduct)
+      },
+      onError: error => {
+         console.log(error)
+      },
+      fetchPolicy: 'cache-and-network',
+   })
 
    if (masterLoading) {
       return <AppSkeleton />
    }
 
-   if (IPLoading || COMLoading || CUSLoading)
+   if (loading)
       return (
          <>
             <Header title="Home" navigation={navigation} />

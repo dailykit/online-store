@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { PAYMENTS_API_URL } from 'react-native-dotenv'
+import { PAYMENTS_API_URL } from '@env'
 
 export const createSetupIntent = async customer => {
    try {

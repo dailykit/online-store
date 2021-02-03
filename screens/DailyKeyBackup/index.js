@@ -7,14 +7,14 @@ import {
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import axios from 'axios'
-import { Spinner, View } from 'native-base'
+import { Spinner, View } from 'react-native'
 import React from 'react'
 import {
    MAPS_API_KEY,
    PAYMENTS_API_URL,
    CURRENCY,
    DAILYOS_SERVER_URL,
-} from 'react-native-dotenv'
+} from '@env'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import MapView from 'react-native-maps'
 import styled, { css } from 'styled-components/native'

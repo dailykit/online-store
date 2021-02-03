@@ -2,7 +2,7 @@ import Keycloak from 'keycloak-js'
 import React from 'react'
 import { AsyncStorage } from 'react-native'
 // No. of times this file  had to be editied(cuz this package is garbage): 8
-import { CLIENTID } from 'react-native-dotenv'
+import { CLIENTID } from '@env'
 import { isKeycloakSupported } from '../utils'
 import jwt_decode from 'jwt-decode'
 
