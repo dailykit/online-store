@@ -26,6 +26,7 @@ import TermsAndConditions from './TermsAndConditions'
 import PrivacyPolicy from './PrivacyPolicy'
 import RefundPolicy from './RefundPolicy'
 import AllCouponList from './AllCouponList'
+import ShareCoupons from './ShareCoupons'
 
 const DrawerLayout = () => {
    const {
@@ -81,6 +82,7 @@ const DrawerLayout = () => {
             'RegisterSelf',
             'DailyKeyBackup',
             'AllCouponList',
+            'ShareCoupons',
          ].includes(drawerView)
       ) {
          setDrawerView(undefined)
@@ -126,6 +128,8 @@ const DrawerLayout = () => {
             return <RefundPolicy />
          case 'AllCouponList':
             return <AllCouponList />
+         case 'ShareCoupons':
+            return <ShareCoupons params={params}/>
          default:
             return <Text>.</Text>
       }

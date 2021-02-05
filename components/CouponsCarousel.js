@@ -57,7 +57,7 @@ export default function CouponsCarousel({ navigation }) {
                      style={{
                         height: '250px',
                         width: '700px',
-                        resizeMode: 'cover',
+                        resizeMode: 'contain',
                         borderRadius: 2,
                         padding: '10px',
                   }}>

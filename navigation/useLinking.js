@@ -34,7 +34,10 @@ export default function (containerRef) {
                   path: 'Search',
                },
                CouponsPage : {
-                  path: 'CouponsPage'
+                  path: 'CouponsPage',
+                  parse: {
+                     code: String
+                  }
                },
                recipe: {
                   path: 'recipe',

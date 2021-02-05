@@ -18,6 +18,7 @@ import {
    SET_REFERRAL_CODE,
    ALL_COUPONS,
    SETTINGS,
+   CAMPAIGNS
 } from './queries'
 
 import {
@@ -98,4 +99,5 @@ export {
    DELIVERY_BREAKUP,
    ALL_COUPONS,
    SETTINGS,
+   CAMPAIGNS
 }

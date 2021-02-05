@@ -3,11 +3,12 @@ import { View, Image, ScrollView, Text, StyleSheet, TouchableWithoutFeedback } f
 import styled from 'styled-components/native';
 import { useQuery } from '@apollo/react-hooks'
 import { useAppContext } from '../context/app'
-import { ALL_COUPONS } from '../graphql'
+import { ALL_COUPONS, CAMPAIGNS } from '../graphql'
 
 import Header from './Header.js';
 import Footer from './Footer.js';
 import { useDrawerContext } from '../context/drawer';
+import { flex } from 'styled-system';
 
 const BannerWidth = 250
 const BannerHeight = 200
@@ -15,11 +16,11 @@ const BannerHeight = 200
 export default function CouponsPage( props ) {
 
    const [active,setActive] = useState(1);
-   const { open } = useDrawerContext()
-   const { visual } = useAppContext()
 
+   const { visual } = useAppContext()
     const { brandId } = useAppContext();
     const [availableCoupons, setAvailableCoupons] = React.useState([]);
+    const [availableCampaigns, setAvailableCampaigns] = React.useState([]);
 
     const { loading } = useQuery(ALL_COUPONS, {
       variables: {
@@ -28,6 +29,19 @@ export default function CouponsPage( props ) {
       onCompleted: data => {
          const coupons = data.coupons
          setAvailableCoupons([...coupons])
+      },
+      onError: error => {
+         console.log(error)
+      },
+   })
+
+   const { loading1 } = useQuery(CAMPAIGNS, {
+      variables: {
+         brandId,
+      },
+      onCompleted: data => {
+         const campaigns = data.campaigns
+         setAvailableCampaigns([...campaigns])
       },
       onError: error => {
          console.log(error)
@@ -85,9 +99,9 @@ export default function CouponsPage( props ) {
                            <Wrapperflex>
                               {availableCoupons.map(coupon => (
                                  <>
-                                 <Coupon coupon={coupon} />
-                                 <Coupon coupon={coupon} />
-                                 <Coupon coupon={coupon} />
+                                 <Coupon 
+                                    navigation={props.navigation}
+                                    coupon={coupon} />
                                  </>
                               ))}
                            </Wrapperflex>
@@ -98,27 +112,86 @@ export default function CouponsPage( props ) {
                      )}
                   </MainContainer>
                ) : (
-                  <Text 
-                     style={styles.text}
-                  >
-                     Sorry no Campaigns are available!
-                  </Text>
+                  <View>
+                     {
+                        availableCampaigns.length ? (
+                           <View>
+                              {
+                                 availableCampaigns.map(campaigns => (
+                                    <View style={{
+                                       display: flex,
+                                       flexDirection: 'row',
+                                       margin: 35,
+                                       marginTop: 50,
+                                    }}>
+                                       <View style={{
+                                          marginTop: 35,  
+                                          flex: 1,             
+                                          padding: 25,
+                                          alignItems: 'center',
+
+                                       }}>
+                                          <Text style={{
+                                             fontSize: 50,
+                                             fontWeight: 700,
+                                             marginBottom: 10,
+                                             textDecorationLine: "underline",
+                                             textDecorationStyle: "solid",
+                                             textDecorationColor: "#000"
+                                             
+                                          }}>{campaigns.metaDetails.title}</Text>
+                                          <Text style={{
+                                             fontSize: 30,
+                                             fontWeight: 400,
+
+                                          }}>{campaigns.metaDetails.description}</Text>
+                                       </View>
+                                       <View>
+                                          <Image
+                                             style={{
+                                                width: 750,
+                                                height: 500,
+                                                resizeMode: 'cover',
+                                                borderRadius: 50,
+                                             }}
+                                             source={{ uri: campaigns.metaDetails.image }}
+                                          />
+                                       </View>
+                                    </View>
+                                 ))
+                              }
+                           </View>
+                        ): (
+                           <Text 
+                              style={styles.text}
+                           >
+                              Sorry no Campaigns are available!    
+                           </Text>                     
+                        )
+                     }
+                     
+                  </View>
                )
-            }
-            
+            }  
             <Footer/>
         </ScrollView>
         </>
     )
 }
 
-const Coupon = ({ coupon }) => {
+
+const Coupon = ({ navigation, coupon }) => {
     const { visual } = useAppContext();
-    const { open } = useDrawerContext();
-  
+    const { open } = useDrawerContext()
+    const code = coupon.code;
+
     return (
         <CouponContainer>
-            <TouchableWithoutFeedback >
+           <TouchableWithoutFeedback
+               onPress={() => 
+                  open('ShareCoupons',{code,navigation})
+               }
+           >
                <Image
                   style={{
                      width: 250,
@@ -128,6 +201,7 @@ const Coupon = ({ coupon }) => {
                   }}
                   source={{ uri: coupon.metaDetails.image }}
                />
+            </TouchableWithoutFeedback>
                <CouponHeader>
                   <CouponCode>{coupon.code}</CouponCode>
                </CouponHeader>
@@ -176,7 +250,6 @@ const Coupon = ({ coupon }) => {
                >{coupon.metaDetails?.description || ''}
                </Text>
             </Background>
-            </TouchableWithoutFeedback>
          </CouponContainer>
     )
  }
@@ -187,7 +260,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       alignItems: 'center',
       cursor: 'pointer',
-      marginRight:10,
+      marginRight:20,
    },
    activeBox: {
       borderBottomWidth: 2,
