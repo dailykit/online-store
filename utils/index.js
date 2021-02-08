@@ -184,6 +184,7 @@ export const isKeycloakSupported = () => {
 }
 
 export const imageUrl = (url, size = 400) => {
+   if (!url) return null
    const image = url.split('/').slice(-1)
    const updatedUrl = `${S3_ENDPOINT}/${size}x${size}/${image}`
    return updatedUrl
