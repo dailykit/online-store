@@ -396,9 +396,8 @@ const Recipe = ({ navigation, route }) => {
                         }}
                      >
                         {
-                           simpleRecipe.simpleRecipeYields[0].ingredientSachets.filter(
-                              ing => ing.isVisible
-                           ).length
+                           simpleRecipe.simpleRecipeYields[0].ingredientSachets
+                              .length
                         }{' '}
                         Ingredients
                      </SectionHeader>
