@@ -74,14 +74,35 @@ export const SIMPLE_RECIPE = gql`
          showIngredients
          showIngredientsQuantity
          showProcedures
-         procedures
          richResult
+         instructionSets(order_by: { position: desc_nulls_last }) {
+            id
+            title
+            instructionSteps(order_by: { position: desc_nulls_last }) {
+               id
+               title
+               description
+               assets
+               isVisible
+            }
+         }
          simpleRecipeYields(order_by: { yield: asc }) {
             id
             yield
             nutritionalInfo
             allergens
-            ingredientSachets(where: { isVisible: { _eq: true } }) {
+            ingredientSachets(
+               where: {
+                  simpleRecipeIngredientProcessing: {
+                     isArchived: { _eq: false }
+                  }
+               }
+               order_by: {
+                  simpleRecipeIngredientProcessing: {
+                     position: desc_nulls_last
+                  }
+               }
+            ) {
                ingredientSachetId
                slipName
                isVisible

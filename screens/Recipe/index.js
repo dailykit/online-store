@@ -7,6 +7,7 @@ import Chef from '../../assets/svgs/Chef'
 import CookingTime from '../../assets/svgs/CookingTime'
 import Cuisine from '../../assets/svgs/Cuisine'
 import Utensils from '../../assets/svgs/Utensils'
+import Lock from '../../assets/svgs/Lock'
 import { Drawer } from '../../components/Drawer'
 import Header from '../../components/Header'
 import Nutrition from '../../components/Nutrition'
@@ -133,34 +134,40 @@ const Recipe = ({ navigation, route }) => {
    const renderCookingSteps = () => {
       return (
          <>
-            {simpleRecipe.procedures.map((procedure, k) => (
-               <>
+            {simpleRecipe.instructionSets.map(procedure => (
+               <React.Fragment key={procedure.id}>
                   <ProcedureText>{procedure.title}</ProcedureText>
                   <Spacer size={width <= 768 ? '16px' : '20px'} />
                   <StepsWrapper>
-                     {procedure.steps
-                        .filter(step => step.isVisible)
-                        .map((step, i) => (
-                           <StepCard key={i}>
-                              <StepIndicator>
-                                 <StepIndicatorText>{i + 1}</StepIndicatorText>
-                              </StepIndicator>
-                              <ContentText>
-                                 <StepText>
-                                    {step.title ? step.title + ': ' : ''}
-                                 </StepText>
-                                 {step.description}
-                              </ContentText>
-                              {Boolean(step.assets.images.length) && (
-                                 <StepImage
-                                    source={{ uri: step.assets.images[0].url }}
-                                 />
-                              )}
-                           </StepCard>
-                        ))}
+                     {procedure.instructionSteps.map((step, i) => (
+                        <StepCard key={step.id} center={!step.isVisible}>
+                           <StepIndicator>
+                              <StepIndicatorText>{i + 1}</StepIndicatorText>
+                           </StepIndicator>
+                           {step.isVisible ? (
+                              <>
+                                 <ContentText>
+                                    <StepText>
+                                       {step.title ? step.title + ': ' : ''}
+                                    </StepText>
+                                    {step.description}
+                                 </ContentText>
+                                 {Boolean(step.assets.images.length) && (
+                                    <StepImage
+                                       source={{
+                                          uri: step.assets.images[0].url,
+                                       }}
+                                    />
+                                 )}
+                              </>
+                           ) : (
+                              <Lock />
+                           )}
+                        </StepCard>
+                     ))}
                   </StepsWrapper>
                   <Spacer size="40px" />
-               </>
+               </React.Fragment>
             ))}
          </>
       )
@@ -263,7 +270,7 @@ const Recipe = ({ navigation, route }) => {
                      </Tab>
                   )}
                   {simpleRecipe.showProcedures &&
-                     Boolean(simpleRecipe.procedures.length) && (
+                     Boolean(simpleRecipe.instructionSets.length) && (
                         <Tab
                            active={activeTab === 'cookingSteps'}
                            color={visual.color}
@@ -389,38 +396,42 @@ const Recipe = ({ navigation, route }) => {
                         }}
                      >
                         {
-                           simpleRecipe.simpleRecipeYields[0].ingredientSachets.filter(
-                              ing => ing.isVisible
-                           ).length
+                           simpleRecipe.simpleRecipeYields[0].ingredientSachets
+                              .length
                         }{' '}
                         Ingredients
                      </SectionHeader>
                      <Spacer size="20px" />
                      <Ingredients>
-                        {simpleRecipe.simpleRecipeYields[0].ingredientSachets
-                           .filter(ing => ing.isVisible)
-                           .map((ing, i) => (
-                              <IngredientWrapper>
-                                 <ContentText key={ing.id}>{`${
-                                    simpleRecipe.showIngredientsQuantity
-                                       ? ing.ingredientSachet.quantity +
-                                         ' ' +
-                                         ing.ingredientSachet.unit
-                                       : ''
-                                 } ${ing.slipName}`}</ContentText>
-                                 {Boolean(
-                                    ing.ingredientSachet.ingredient.image
-                                 ) && (
-                                    <IngredientImage
-                                       source={{
-                                          uri:
-                                             ing.ingredientSachet.ingredient
-                                                .image,
-                                       }}
-                                    />
-                                 )}
-                              </IngredientWrapper>
-                           ))}
+                        {simpleRecipe.simpleRecipeYields[0].ingredientSachets.map(
+                           ing =>
+                              ing.isVisible ? (
+                                 <IngredientWrapper>
+                                    <ContentText key={ing.id}>{`${
+                                       simpleRecipe.showIngredientsQuantity
+                                          ? ing.ingredientSachet.quantity +
+                                            ' ' +
+                                            ing.ingredientSachet.unit
+                                          : ''
+                                    } ${ing.slipName}`}</ContentText>
+                                    {Boolean(
+                                       ing.ingredientSachet.ingredient.image
+                                    ) && (
+                                       <IngredientImage
+                                          source={{
+                                             uri:
+                                                ing.ingredientSachet.ingredient
+                                                   .image,
+                                          }}
+                                       />
+                                    )}
+                                 </IngredientWrapper>
+                              ) : (
+                                 <IngredientWrapper center>
+                                    <Lock />
+                                 </IngredientWrapper>
+                              )
+                        )}
                      </Ingredients>
                      {Boolean(simpleRecipe.notIncluded?.length) && (
                         <>
@@ -435,7 +446,7 @@ const Recipe = ({ navigation, route }) => {
                   </>
                )}
                {simpleRecipe.showProcedures &&
-                  Boolean(simpleRecipe.procedures.length) && (
+                  Boolean(simpleRecipe.instructionSets.length) && (
                      <>
                         <SectionHeader
                            color={visual.color}
@@ -656,6 +667,12 @@ const StepCard = styled.View`
       width: ${width - 24}px;
       margin: 20px 0px;
    `}
+   ${props =>
+      props.center &&
+      css`
+         align-items: center;
+         justify-content: center;
+      `}
 `
 
 const StepIndicator = styled.View`
@@ -784,6 +801,11 @@ const IngredientWrapper = styled.View`
    justify-content: space-between;
    margin-right: 20px;
    margin-bottom: 20px;
+   ${props =>
+      props.center &&
+      css`
+         justify-content: center;
+      `}
 `
 
 const IngredientImage = styled.Image`
