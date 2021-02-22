@@ -1,19 +1,7 @@
-import { useLazyQuery } from '@apollo/react-hooks'
 import React from 'react'
 import { FlatList, SafeAreaView, StyleSheet } from 'react-native'
-import {
-   COMBO_PRODUCTS,
-   CUSTOMIZABLE_PRODUCTS,
-   INVENTORY_PRODUCTS,
-   SIMPLE_RECIPE_PRODUCTS,
-} from '../graphql'
 import { width } from '../utils/Scaling'
 import Card from './Card'
-import CardSkeleton from './skeletons/card'
-import {
-   resolveCustomizableProductPrices,
-   resolveComboProductPrices,
-} from '../utils/products'
 
 const Products = ({
    category,

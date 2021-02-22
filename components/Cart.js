@@ -186,6 +186,7 @@ const Cart = ({
                }
                delete item.price
                products.push(item)
+               console.log(item)
                total = total + parseFloat(item.totalPrice)
             }
             total = parseFloat(total.toFixed(2))
